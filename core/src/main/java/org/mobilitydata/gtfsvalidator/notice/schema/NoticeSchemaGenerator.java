@@ -26,11 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsJson;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -89,11 +85,17 @@ public class NoticeSchemaGenerator {
         schema.setDeprecationReason(noticeAnnotation.deprecationReason());
         schema.setDeprecationVersion(noticeAnnotation.deprecationVersion());
         // Validate that replacement notice is not Void.class and that it extends ValidationNotice
-        if (noticeAnnotation.replacementNotice() != Void.class
-            && ValidationNotice.class.isAssignableFrom(noticeAnnotation.replacementNotice())) {
-          String replacementNoticeCode =
-              Notice.getCode(noticeAnnotation.replacementNotice().asSubclass(Notice.class));
-          schema.setReplacementNoticeCode(replacementNoticeCode);
+        List<String> replacementNotices = new ArrayList<>();
+        for (Class<?> replacementNotice : noticeAnnotation.replacementNotices()) {
+          if (replacementNotice == Void.class
+              || !ValidationNotice.class.isAssignableFrom(replacementNotice)) {
+            continue;
+          }
+          String replacementNoticeCode = Notice.getCode(replacementNotice.asSubclass(Notice.class));
+          replacementNotices.add(replacementNoticeCode);
+        }
+        if (!replacementNotices.isEmpty()) {
+          schema.setReplacementNoticeCodes(replacementNotices);
         }
       }
     }

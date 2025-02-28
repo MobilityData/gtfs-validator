@@ -6,9 +6,7 @@ import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRulesSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
@@ -60,9 +58,15 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
 
   private static void validateMissingPriorDayBookingFields(
       GtfsBookingRules entity, NoticeContainer noticeContainer) {
-    if (entity.bookingType() == GtfsBookingType.PRIORDAY
-        && (!entity.hasPriorNoticeLastDay() || !entity.hasPriorNoticeLastTime())) {
-      noticeContainer.addValidationNotice(new MissingPriorDayBookingFieldValueNotice(entity));
+    if (entity.bookingType() == GtfsBookingType.PRIORDAY) {
+      if (!entity.hasPriorNoticeLastDay()) {
+        noticeContainer.addValidationNotice(
+            new MissingPriorNoticeLastDayNotice(entity.csvRowNumber(), entity.bookingRuleId()));
+      }
+      if (!entity.hasPriorNoticeLastTime()) {
+        noticeContainer.addValidationNotice(
+            new MissingPriorNoticeLastTimeNotice(entity.csvRowNumber(), entity.bookingRuleId()));
+      }
     }
   }
 
@@ -330,26 +334,6 @@ public class BookingRulesEntityValidator extends SingleEntityValidator<GtfsBooki
       this.csvRowNumber = bookingRule.csvRowNumber();
       this.priorNoticeLastDay = bookingRule.priorNoticeLastDay();
       this.priorNoticeStartDay = bookingRule.priorNoticeStartDay();
-    }
-  }
-
-  /**
-   * `prior_notice_last_day` and `prior_notice_last_time` values are required for prior day
-   * `booking_type` in booking_rules.txt.
-   */
-  @GtfsValidationNotice(
-      severity = SeverityLevel.ERROR,
-      files = @FileRefs(GtfsBookingRulesSchema.class))
-  static class MissingPriorDayBookingFieldValueNotice extends ValidationNotice {
-    /** The row number of the faulty record. */
-    private final int csvRowNumber;
-
-    /** The `booking_rules.booking_rule_id` of the faulty record. */
-    private final String bookingRuleId;
-
-    MissingPriorDayBookingFieldValueNotice(GtfsBookingRules bookingRule) {
-      this.csvRowNumber = bookingRule.csvRowNumber();
-      this.bookingRuleId = bookingRule.bookingRuleId();
     }
   }
 

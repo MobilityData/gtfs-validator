@@ -16,7 +16,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
     deprecated = true,
     deprecationVersion = "7.0.0",
     deprecationReason = "Renamed to `unused_station`",
-    replacementNotice = UnusedStationNotice.class)
+    replacementNotices = {UnusedStationNotice.class})
 class UnusedParentStationNotice extends ValidationNotice {
   /** The row number of the faulty record. */
   private final int csvRowNumber;

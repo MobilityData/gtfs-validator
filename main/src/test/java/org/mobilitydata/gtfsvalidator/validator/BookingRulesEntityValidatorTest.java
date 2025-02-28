@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastDayNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
@@ -214,10 +216,13 @@ public class BookingRulesEntityValidatorTest {
             .setBookingRuleId("rule-11")
             .setBookingType(GtfsBookingType.PRIORDAY) // PRIORDAY booking type
             .build(); // No prior_notice_last_day or prior_notice_last_time set
-
-    assertThat(generateNotices(bookingRule))
-        .containsExactly(
-            new BookingRulesEntityValidator.MissingPriorDayBookingFieldValueNotice(bookingRule));
+    List<ValidationNotice> expectedNotices =
+        List.of(
+            new MissingPriorNoticeLastDayNotice(
+                bookingRule.csvRowNumber(), bookingRule.bookingRuleId()),
+            new MissingPriorNoticeLastTimeNotice(
+                bookingRule.csvRowNumber(), bookingRule.bookingRuleId()));
+    assertThat(generateNotices(bookingRule)).containsExactlyElementsIn(expectedNotices);
 
     // Case 2: Missing prior_notice_last_time only
     GtfsBookingRules bookingRuleMissingTime =
@@ -230,8 +235,8 @@ public class BookingRulesEntityValidatorTest {
 
     assertThat(generateNotices(bookingRuleMissingTime))
         .containsExactly(
-            new BookingRulesEntityValidator.MissingPriorDayBookingFieldValueNotice(
-                bookingRuleMissingTime));
+            new MissingPriorNoticeLastTimeNotice(
+                bookingRuleMissingTime.csvRowNumber(), bookingRuleMissingTime.bookingRuleId()));
 
     // Case 3: Missing prior_notice_last_day only
     GtfsBookingRules bookingRuleMissingDay =
@@ -245,8 +250,8 @@ public class BookingRulesEntityValidatorTest {
 
     assertThat(generateNotices(bookingRuleMissingDay))
         .containsExactly(
-            new BookingRulesEntityValidator.MissingPriorDayBookingFieldValueNotice(
-                bookingRuleMissingDay));
+            new MissingPriorNoticeLastDayNotice(
+                bookingRuleMissingDay.csvRowNumber(), bookingRuleMissingDay.bookingRuleId()));
   }
 
   @Test

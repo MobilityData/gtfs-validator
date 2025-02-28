@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.notice.schema;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.annotation.Nullable;
@@ -57,10 +58,10 @@ public class NoticeSchema {
   @Nullable private String deprecationVersion;
 
   /**
-   * Replacement notice code for the deprecated notice. This field is only used if {@link
-   * #deprecated} is true and the notice has a replacement.
+   * Replacement notice codes for the deprecated notice. This field is only used if {@link
+   * #deprecated} is true and the notice has replacements.
    */
-  @Nullable private String replacementNoticeCode;
+  @Nullable private List<String> replacementNoticeCodes;
 
   public NoticeSchema(String code, SeverityLevel severityLevel) {
     this.code = code;
@@ -135,11 +136,11 @@ public class NoticeSchema {
   }
 
   @Nullable
-  public String getReplacementNoticeCode() {
-    return replacementNoticeCode;
+  public List<String> getReplacementNoticeCodes() {
+    return replacementNoticeCodes;
   }
 
-  public void setReplacementNoticeCode(@Nullable String replacementNoticeCode) {
-    this.replacementNoticeCode = replacementNoticeCode;
+  public void setReplacementNoticeCodes(@Nullable List<String> replacementNoticeCodes) {
+    this.replacementNoticeCodes = replacementNoticeCodes;
   }
 }
