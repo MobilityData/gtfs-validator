@@ -40,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.schema.ReferencesSchema.UrlReference;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
@@ -81,6 +82,21 @@ public class NoticeSchemaGenerator {
     }
 
     NoticeSchema schema = new NoticeSchema(Notice.getCode(noticeClass), severity);
+
+    if (noticeAnnotation != null) {
+      if (noticeAnnotation.deprecated()) {
+        schema.setDeprecated(true);
+        schema.setDeprecationReason(noticeAnnotation.deprecationReason());
+        schema.setDeprecationVersion(noticeAnnotation.deprecationVersion());
+        // Validate that replacement notice is not Void.class and that it extends ValidationNotice
+        if (noticeAnnotation.replacementNotice() != Void.class
+            && ValidationNotice.class.isAssignableFrom(noticeAnnotation.replacementNotice())) {
+          String replacementNoticeCode =
+              Notice.getCode(noticeAnnotation.replacementNotice().asSubclass(Notice.class));
+          schema.setReplacementNoticeCode(replacementNoticeCode);
+        }
+      }
+    }
 
     NoticeDocComments comments = loadComments(noticeClass);
     if (comments.getShortSummary() != null) {

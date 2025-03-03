@@ -14,7 +14,10 @@ def read_rule_file(filepath):
     """
     with open(filepath + "/rules.json", 'r') as f:
         rules = json.load(f)
-    return {key: rules[key]["severityLevel"] for key in rules}
+    return {
+    key: rules[key]["severityLevel"] for key in rules
+    if not 'deprecated' in rules[key] or not rules[key]['deprecated']
+    }
 
 
 def get_severity_symbol(severity):

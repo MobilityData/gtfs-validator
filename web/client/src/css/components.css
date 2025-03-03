@@ -19,3 +19,14 @@
     active:ring-4
     ring-mobi-purple/50;
 }
+
+.deprecated-tag {
+  font-weight: bold;
+  @apply
+    bg-mobi-purple/10
+    border border-mobi-dark-blue/75
+    text-mobi-dark-blue/80
+    rounded
+    px-2
+    py-1;
+}
