@@ -2,7 +2,9 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
-/** `prior_notice_last_time` value is required for prior day `booking_type` in booking_rules.txt. */
+/**
+ * The `prior_notice_last_time` value is required for prior day `booking_type` in booking_rules.txt.
+ */
 @GtfsValidationNotice(severity = SeverityLevel.ERROR)
 public class MissingPriorNoticeLastTimeNotice extends ValidationNotice {
   /** The row number of the faulty record. */
