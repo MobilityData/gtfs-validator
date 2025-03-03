@@ -3,14 +3,12 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import java.util.*;
-
+import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-
-import javax.inject.Inject;
 
 @GtfsValidator
 public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
@@ -41,7 +39,8 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
       String fareProductId = fareProduct.fareProductId();
       String riderCategoryId = fareProduct.riderCategoryId();
       for (GtfsRiderCategories riderCategory : riderCategoriesTable.getEntities()) {
-        if (riderCategory.riderCategoryId().equals(riderCategoryId) && !riderCategoryIdSet.contains(riderCategoryId)) {
+        if (riderCategory.riderCategoryId().equals(riderCategoryId)
+            && !riderCategoryIdSet.contains(riderCategoryId)) {
           if (riderCategory.isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)) {
             riderCategoryIdSet.add(riderCategoryId);
             fareProductDefaultCount.put(
@@ -75,10 +74,19 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   @GtfsValidationNotice(severity = ERROR)
   static class FareProductWithMultipleDefaultRiderCategoriesNotice extends ValidationNotice {
 
+    // The ID of the fare product associated with the notice
     private final String fareProductId;
+
+    // The CSV row number of the first occurrence of the default rider category
     private final int csvRowNumber1;
+
+    // The CSV row number of the second occurrence of the default rider category
     private final int csvRowNumber2;
+
+    // The ID of the first rider category that is marked as default
     private final String riderCategoryId1;
+
+    // The ID of the second rider category that is marked as default
     private final String riderCategoryId2;
 
     public FareProductWithMultipleDefaultRiderCategoriesNotice(
