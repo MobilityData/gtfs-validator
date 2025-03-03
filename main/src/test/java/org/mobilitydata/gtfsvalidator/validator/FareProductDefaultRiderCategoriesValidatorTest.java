@@ -1,16 +1,15 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
 public class FareProductDefaultRiderCategoriesValidatorTest {
@@ -49,7 +48,11 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
 
   private static List<ValidationNotice> generateNotices() {
     FareProductDefaultRiderCategoriesValidator validator =
-        new FareProductDefaultRiderCategoriesValidator(GtfsFareProductTableContainer.forEntities(createFareProductTable(), new NoticeContainer()), GtfsRiderCategoriesTableContainer.forEntities(createRiderCategoriesTable(), new NoticeContainer()));
+        new FareProductDefaultRiderCategoriesValidator(
+            GtfsFareProductTableContainer.forEntities(
+                createFareProductTable(), new NoticeContainer()),
+            GtfsRiderCategoriesTableContainer.forEntities(
+                createRiderCategoriesTable(), new NoticeContainer()));
     NoticeContainer noticeContainer = new NoticeContainer();
     validator.validate(noticeContainer);
     return noticeContainer.getValidationNotices();
@@ -57,6 +60,10 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
 
   @Test
   public void testMultipleDefaultRiderCategories() {
-    assertThat(generateNotices().contains(FareProductDefaultRiderCategoriesValidator.FareProductWithMultipleDefaultRiderCategoriesNotice.class));
+    assertThat(
+        generateNotices()
+            .contains(
+                FareProductDefaultRiderCategoriesValidator
+                    .FareProductWithMultipleDefaultRiderCategoriesNotice.class));
   }
 }

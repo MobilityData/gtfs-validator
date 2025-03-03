@@ -227,7 +227,10 @@ public class NoticeFieldsTest {
             "validator",
             "value",
             "duplicatedElement",
-            "unknownElement");
+            "unknownElement",
+            "fareProductId",
+            "riderCategoryId1",
+            "riderCategoryId2");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

@@ -71,22 +71,28 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
     }
   }
 
+  /**
+   * This notice is generated when a fare product is associated with multiple rider categories that
+   * are marked as default.
+   *
+   * <p>Each fare product should have at most one default rider category.
+   */
   @GtfsValidationNotice(severity = ERROR)
   static class FareProductWithMultipleDefaultRiderCategoriesNotice extends ValidationNotice {
 
-    // The ID of the fare product associated with the notice
+    /** The ID of the fare product associated with the notice */
     private final String fareProductId;
 
-    // The CSV row number of the first occurrence of the default rider category
+    /** The CSV row number of the first occurrence of the default rider category */
     private final int csvRowNumber1;
 
-    // The CSV row number of the second occurrence of the default rider category
+    /** The CSV row number of the second occurrence of the default rider category */
     private final int csvRowNumber2;
 
-    // The ID of the first rider category that is marked as default
+    /** The ID of the first rider category that is marked as default */
     private final String riderCategoryId1;
 
-    // The ID of the second rider category that is marked as default
+    /** The ID of the second rider category that is marked as default */
     private final String riderCategoryId2;
 
     public FareProductWithMultipleDefaultRiderCategoriesNotice(
