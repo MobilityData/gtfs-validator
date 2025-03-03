@@ -7,7 +7,7 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 
 /**
- * `prior_notice_last_day` and `prior_notice_last_time` values are required for prior day
+ * The `prior_notice_last_day` and the `prior_notice_last_time` values are required for prior day
  * `booking_type` in booking_rules.txt.
  */
 @GtfsValidationNotice(
