@@ -234,10 +234,12 @@
             >
               {rule.deprecationVersion}
             </a></b>.
-              {#if (rule.replacementNoticeCode)}
-                It has been replaced by
-                <code><a href="#{rule.replacementNoticeCode}-rule">{rule.replacementNoticeCode}</a></code>.
-              {/if}
+            {#if rule.replacementNoticeCodes}
+              It has been replaced by
+              {#each rule.replacementNoticeCodes as noticeCode, index}
+                <code><a href="#{noticeCode}-rule">{noticeCode}</a></code>{index < rule.replacementNoticeCodes.length - 1 ? ', ' : '.'}
+              {/each}
+            {/if}
             <blockquote>
               <b>Deprecation reason:</b>
               {@html marked.parse(rule?.deprecationReason ?? '')}
