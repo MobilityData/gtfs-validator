@@ -2,15 +2,15 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
+
+import javax.inject.Inject;
 
 @GtfsValidator
 public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
@@ -20,6 +20,15 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   HashMap<String, Integer> fareProductDefaultCount = new HashMap<>();
   Map<String, List<Integer>> fareProductRows = new HashMap<>();
   Map<String, List<String>> fareProductRiderCategories = new HashMap<>();
+  Set<String> riderCategoryIdSet = new HashSet<>();
+
+  @Inject
+  public FareProductDefaultRiderCategoriesValidator(
+      GtfsFareProductTableContainer fareProductTable,
+      GtfsRiderCategoriesTableContainer riderCategoriesTable) {
+    this.fareProductTable = fareProductTable;
+    this.riderCategoriesTable = riderCategoriesTable;
+  }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
@@ -32,13 +41,14 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
       String fareProductId = fareProduct.fareProductId();
       String riderCategoryId = fareProduct.riderCategoryId();
       for (GtfsRiderCategories riderCategory : riderCategoriesTable.getEntities()) {
-        if (riderCategory.riderCategoryId().equals(riderCategoryId)) {
+        if (riderCategory.riderCategoryId().equals(riderCategoryId) && !riderCategoryIdSet.contains(riderCategoryId)) {
           if (riderCategory.isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)) {
+            riderCategoryIdSet.add(riderCategoryId);
             fareProductDefaultCount.put(
                 fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
             fareProductRows
                 .computeIfAbsent(fareProductId, k -> new ArrayList<>())
-                .add(riderCategory.csvRowNumber());
+                .add(fareProduct.csvRowNumber());
             fareProductRiderCategories
                 .computeIfAbsent(fareProductId, k -> new ArrayList<>())
                 .add(riderCategory.riderCategoryId());
