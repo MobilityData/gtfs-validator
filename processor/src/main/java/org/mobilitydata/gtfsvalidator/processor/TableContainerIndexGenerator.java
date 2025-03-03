@@ -13,14 +13,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -321,18 +314,9 @@ class TableContainerIndexGenerator {
           .beginControlFlow("if (oldEntity != null)")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(\n"
-                  + "gtfsFilename(), newEntity.csvRowNumber(), "
-                  + "oldEntity.csvRowNumber(),\n"
-                  + "$L,\n$L))",
-              DuplicateKeyNotice.class,
-              fileDescriptor.primaryKeys().stream()
-                  .map(
-                      (field) ->
-                          CodeBlock.of("$T.$L", gtfsEntityType, fieldNameField(field.name())))
-                  .collect(CodeBlock.joining(" + \",\" + \n")),
-              fileDescriptor.primaryKeys().stream()
-                  .map((field) -> CodeBlock.of("oldEntity.$L()", field.name()))
-                  .collect(CodeBlock.joining(" + \",\" + \n")))
+                  + "gtfsFilename(), oldEntity.csvRowNumber(), newEntity.csvRowNumber(),\n"
+                  + "key.getDefinedKeys(oldEntity), key.getDefinedValues(oldEntity)))",
+              DuplicateKeyNotice.class)
           .nextControlFlow("else")
           .addStatement("$L.put(key, newEntity)", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
           .endControlFlow()
@@ -353,7 +337,7 @@ class TableContainerIndexGenerator {
           .beginControlFlow("if (oldEntity != null)")
           .addStatement(
               "noticeContainer.addValidationNotice(new $T(gtfsFilename(),"
-                  + " newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
+                  + " oldEntity.csvRowNumber(), newEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
               DuplicateKeyNotice.class,
               gtfsEntityType,
               fieldNameField(primaryKey.name()),
@@ -411,6 +395,53 @@ class TableContainerIndexGenerator {
       }
       keySpec.addMethod(getter.build());
     }
+
+    // Generic method to return only defined keys (using has<FieldName>() checks)
+    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    MethodSpec.Builder getDefinedKeysMethod =
+        MethodSpec.methodBuilder("getDefinedKeys")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(String.class)
+            .addParameter(gtfsEntityType, "entity")
+            .addStatement("List<String> keys = new ArrayList<>()");
+
+    // Generic method to return only defined values (using has<FieldName>() checks)
+    MethodSpec.Builder getDefinedValuesMethod =
+        MethodSpec.methodBuilder("getDefinedValues")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(Object.class)
+            .addParameter(gtfsEntityType, "entity")
+            .addStatement("List<Object> values = new ArrayList<>()");
+
+    // Iterate over primary keys and use has<FieldName>() checks
+    for (GtfsFieldDescriptor keyField : fileDescriptor.primaryKeys()) {
+      String hasMethodName = FieldNameConverter.hasMethodName(keyField.name());
+      String fieldGetter = keyField.name();
+      String columnName = FieldNameConverter.fieldNameField(keyField.name());
+
+      getDefinedKeysMethod
+          .beginControlFlow("if (entity.$L())", hasMethodName)
+          .addStatement(
+              "keys.add($T.$L)",
+              gtfsEntityType, // First placeholder for `$T`
+              columnName // Second placeholder for `$L`
+              )
+          .endControlFlow();
+
+      getDefinedValuesMethod
+          .beginControlFlow("if (entity.$L())", hasMethodName)
+          .addStatement(
+              "values.add(entity.$L())", fieldGetter // Third placeholder for entity method call
+              )
+          .endControlFlow();
+    }
+
+    getDefinedKeysMethod.addStatement("return String.join(\",\", keys)");
+    getDefinedValuesMethod.addStatement(
+        "return values.stream().reduce((a, b) -> (a.toString() + \",\" + b.toString())).orElse(null)");
+
+    keySpec.addMethod(getDefinedKeysMethod.build());
+    keySpec.addMethod(getDefinedValuesMethod.build());
 
     TypeSpec.Builder valueBuilderTypeSpec =
         TypeSpec.classBuilder("Builder")
