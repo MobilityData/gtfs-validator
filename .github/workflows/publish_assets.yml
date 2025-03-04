@@ -35,7 +35,7 @@ jobs:
         if: github.event_name == 'release'
         run: ./gradlew shadowJar
 
-      - name: Upload JAR Asset
+      - name: Upload CLI JAR Asset
         if: github.event_name == 'release'
         uses: actions/upload-release-asset@v1
         env:
@@ -44,6 +44,17 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./cli/build/libs/gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
           asset_name: gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload GUI JAR Asset
+        if: github.event_name == 'release'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./app/gui/build/libs/gui-${{ steps.get_version.outputs.version-without-v }}-all.jar
+          asset_name: gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
           asset_content_type: application/java-archive
 
       - name: Generate rules.json
