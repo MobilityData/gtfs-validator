@@ -31,13 +31,12 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
         .build();
   }
 
-  private static List<ValidationNotice> generateNotices(List<GtfsFareProduct> fareProducts, List<GtfsRiderCategories> riderCategories) {
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsFareProduct> fareProducts, List<GtfsRiderCategories> riderCategories) {
     FareProductDefaultRiderCategoriesValidator validator =
         new FareProductDefaultRiderCategoriesValidator(
-            GtfsFareProductTableContainer.forEntities(
-                    fareProducts, new NoticeContainer()),
-            GtfsRiderCategoriesTableContainer.forEntities(
-                    riderCategories, new NoticeContainer()));
+            GtfsFareProductTableContainer.forEntities(fareProducts, new NoticeContainer()),
+            GtfsRiderCategoriesTableContainer.forEntities(riderCategories, new NoticeContainer()));
     NoticeContainer noticeContainer = new NoticeContainer();
     validator.validate(noticeContainer);
     return noticeContainer.getValidationNotices();
