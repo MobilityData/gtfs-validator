@@ -230,7 +230,8 @@ public class NoticeFieldsTest {
             "unknownElement",
             "fareProductId",
             "riderCategoryId1",
-            "riderCategoryId2");
+            "riderCategoryId2",
+            "currencyCode");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
