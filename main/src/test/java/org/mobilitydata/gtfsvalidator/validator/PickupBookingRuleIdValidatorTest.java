@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPickupDropOff;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @RunWith(JUnit4.class)
 public class PickupBookingRuleIdValidatorTest {
@@ -27,6 +28,7 @@ public class PickupBookingRuleIdValidatorTest {
         new GtfsStopTime.Builder()
             .setCsvRowNumber(1)
             .setPickupType(GtfsPickupDropOff.MUST_PHONE)
+            .setStartPickupDropOffWindow(GtfsTime.fromSecondsSinceMidnight(18614))
             .build();
     assertThat(generateNotices(stopTime))
         .containsExactly(
@@ -40,7 +42,8 @@ public class PickupBookingRuleIdValidatorTest {
         new GtfsStopTime.Builder()
             .setCsvRowNumber(2)
             .setPickupType(GtfsPickupDropOff.MUST_PHONE)
-            .setPickupBookingRuleId("bookingRuleId")
+            .setStartPickupDropOffWindow(GtfsTime.fromSecondsSinceMidnight(18614))
+            .setPickupBookingRuleId("booking_rule_id")
             .build();
     assertThat(generateNotices(stopTime)).isEmpty();
   }

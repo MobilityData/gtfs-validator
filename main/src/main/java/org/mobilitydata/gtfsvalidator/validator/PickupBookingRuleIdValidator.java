@@ -25,6 +25,7 @@ public class PickupBookingRuleIdValidator extends FileValidator {
   public void validate(GtfsStopTime entity, NoticeContainer noticeContainer) {
     if (entity.hasPickupType()
         && entity.pickupType() == GtfsPickupDropOff.MUST_PHONE
+        && entity.hasStartPickupDropOffWindow()
         && !entity.hasPickupBookingRuleId()) {
       noticeContainer.addValidationNotice(
           new MissingPickupDropOffBookingRuleIdNotice(
@@ -34,6 +35,7 @@ public class PickupBookingRuleIdValidator extends FileValidator {
     }
     if (entity.hasDropOffType()
         && entity.dropOffType() == GtfsPickupDropOff.MUST_PHONE
+        && entity.hasEndPickupDropOffWindow()
         && !entity.hasDropOffBookingRuleId()) {
       noticeContainer.addValidationNotice(
           new MissingPickupDropOffBookingRuleIdNotice(
@@ -61,8 +63,12 @@ public class PickupBookingRuleIdValidator extends FileValidator {
   }
 
   /**
-   * `pickup_booking_rule_id` is recommended when `pickup_type=2` and `drop_off_booking_rule_id` is
-   * recommended when `drop_off_type=2`
+   * pickup_booking_rule_id is recommended when pickup_type=2 and drop_off_booking_rule_id is
+   * recommended when drop_off_type=2.
+   *
+   * <p>Currently, this notice is only triggered on feeds when either start_pickup_drop_off_window
+   * or end_pickup_drop_off_window is defined, since this recommendation was added to the
+   * specification for feeds with GTFS-Flex.
    */
   @GtfsValidationNotice(
       severity = SeverityLevel.WARNING,
