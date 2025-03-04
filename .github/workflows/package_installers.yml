@@ -140,7 +140,7 @@ jobs:
            --app-image "${{ env.MACOS_TARGET_PATH }}" \
            --dest ${{ env.MACOS_TARGET_DEST_PATH }}
 
-      - name: Package cli app jar with Gradle
+      - name: Package cli and gui app jars with Gradle
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: gradle/actions/setup-gradle@v3
         with:
@@ -152,6 +152,13 @@ jobs:
         with:
           name: "gtfs-validator-cli-${{ env.SHORT_SHA }}.zip"
           path: cli/build/libs/gtfs-validator-*-cli.jar
+
+      - name: Persist gui app jar
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: "gtfs-validator-gui-${{ env.SHORT_SHA }}.zip"
+          path: app/gui/build/libs/gui-*-all.jar
 
       - name: "Upload Installer"
         uses: actions/upload-artifact@v4
