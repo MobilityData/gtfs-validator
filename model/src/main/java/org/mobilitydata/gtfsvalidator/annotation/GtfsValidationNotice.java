@@ -40,10 +40,10 @@ public @interface GtfsValidationNotice {
   String deprecationVersion() default "";
 
   /**
-   * Replacement notice class for the deprecated notice. This field is only used if {@link
-   * #deprecated()} is true and the notice has a replacement.
+   * Replacement notice classes for the deprecated notice. This field is only used if {@link
+   * #deprecated()} is true and the notice has replacements.
    */
-  Class<?> replacementNotice() default Void.class;
+  Class<?>[] replacementNotices() default {};
 
   /**
    * GTFS specification section references. For specific file references, use {@link #files()}
