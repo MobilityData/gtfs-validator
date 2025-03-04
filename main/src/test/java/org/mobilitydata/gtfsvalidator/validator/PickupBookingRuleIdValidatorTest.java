@@ -37,7 +37,7 @@ public class PickupBookingRuleIdValidatorTest {
   }
 
   @Test
-  public void existingStartPickupDropOffWindowShouldNotGenerateNotice() {
+  public void existingBookingRuleIdShouldNotGenerateNotice() {
     GtfsStopTime stopTime =
         new GtfsStopTime.Builder()
             .setCsvRowNumber(2)
