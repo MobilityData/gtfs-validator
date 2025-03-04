@@ -57,7 +57,6 @@ public class NoticeFieldsTest {
             "agencyId",
             "agencyLang",
             "agencyName",
-            "amount",
             "arrivalTime",
             "arrivalTime2",
             "attributionId",
