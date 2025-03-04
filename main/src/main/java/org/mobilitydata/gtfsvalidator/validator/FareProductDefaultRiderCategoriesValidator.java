@@ -37,19 +37,24 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsFareProduct fareProduct : fareProductTable.getEntities()) {
       String fareProductId = fareProduct.fareProductId();
-      String riderCategoryId = fareProduct.riderCategoryId();
-      Optional<GtfsRiderCategories> riderCategory =
-          riderCategoriesTable.byRiderCategoryId(riderCategoryId);
-      if (!riderCategory.isEmpty()) {
-        if (riderCategory.get().isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)) {
-          fareProductDefaultCount.put(
-              fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
-          fareProductRows
-              .computeIfAbsent(fareProductId, k -> new ArrayList<>())
-              .add(fareProduct.csvRowNumber());
-          fareProductRiderCategories
-              .computeIfAbsent(fareProductId, k -> new ArrayList<>())
-              .add(riderCategory.get().riderCategoryId());
+      if (!fareProductDefaultCount.containsKey(fareProductId)) {
+        String riderCategoryId = fareProduct.riderCategoryId();
+        Optional<GtfsRiderCategories> riderCategory =
+            riderCategoriesTable.byRiderCategoryId(riderCategoryId);
+        if (!riderCategory.isEmpty()) {
+          if (riderCategory
+              .get()
+              .isDefaultFareCategory()
+              .equals(GtfsRiderFareCategory.IS_DEFAULT)) {
+            fareProductDefaultCount.put(
+                fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
+            fareProductRows
+                .computeIfAbsent(fareProductId, k -> new ArrayList<>())
+                .add(fareProduct.csvRowNumber());
+            fareProductRiderCategories
+                .computeIfAbsent(fareProductId, k -> new ArrayList<>())
+                .add(riderCategory.get().riderCategoryId());
+          }
         }
       }
     }
