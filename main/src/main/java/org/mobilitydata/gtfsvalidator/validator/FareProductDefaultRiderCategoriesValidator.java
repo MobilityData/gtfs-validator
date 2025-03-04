@@ -30,7 +30,7 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
 
   @Override
   public boolean shouldCallValidate() {
-    return !riderCategoriesTable.isMissingFile();
+    return riderCategoriesTable != null && !riderCategoriesTable.isMissingFile();
   }
 
   @Override
