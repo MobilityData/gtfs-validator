@@ -140,7 +140,7 @@ jobs:
            --app-image "${{ env.MACOS_TARGET_PATH }}" \
            --dest ${{ env.MACOS_TARGET_DEST_PATH }}
 
-      - name: Package cli and gui app jar with Gradle
+      - name: Package cli and gui app jars with Gradle
         if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: gradle/actions/setup-gradle@v3
         with:
