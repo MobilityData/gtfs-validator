@@ -29,12 +29,12 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   }
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
-    if (riderCategoriesTable.isMissingFile()) {
-      // Do not trigger a notice and ignore subsequent checks
-      return;
-    }
+  public boolean shouldCallValidate() {
+    return !riderCategoriesTable.isMissingFile();
+  }
 
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
     for (GtfsFareProduct fareProduct : fareProductTable.getEntities()) {
       String fareProductId = fareProduct.fareProductId();
       String riderCategoryId = fareProduct.riderCategoryId();
