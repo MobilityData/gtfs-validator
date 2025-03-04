@@ -31,39 +31,45 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
         .build();
   }
 
-  static List<GtfsFareProduct> createFareProductTable() {
-    List<GtfsFareProduct> fareProducts = new ArrayList<>();
-    fareProducts.add(createFareProduct(1, "fare1", "rider1"));
-    fareProducts.add(createFareProduct(2, "fare2", "rider2"));
-    return fareProducts;
-  }
-
-  static List<GtfsRiderCategories> createRiderCategoriesTable() {
-    List<GtfsRiderCategories> riderCategories = new ArrayList<>();
-    riderCategories.add(createRiderCategories(1, "rider1", GtfsRiderFareCategory.IS_DEFAULT));
-    riderCategories.add(createRiderCategories(2, "rider1", GtfsRiderFareCategory.NOT_DEFAULT));
-    riderCategories.add(createRiderCategories(3, "rider2", GtfsRiderFareCategory.IS_DEFAULT));
-    return riderCategories;
-  }
-
-  private static List<ValidationNotice> generateNotices() {
+  private static List<ValidationNotice> generateNotices(List<GtfsFareProduct> fareProducts, List<GtfsRiderCategories> riderCategories) {
     FareProductDefaultRiderCategoriesValidator validator =
         new FareProductDefaultRiderCategoriesValidator(
             GtfsFareProductTableContainer.forEntities(
-                createFareProductTable(), new NoticeContainer()),
+                    fareProducts, new NoticeContainer()),
             GtfsRiderCategoriesTableContainer.forEntities(
-                createRiderCategoriesTable(), new NoticeContainer()));
+                    riderCategories, new NoticeContainer()));
     NoticeContainer noticeContainer = new NoticeContainer();
     validator.validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
   @Test
-  public void testMultipleDefaultRiderCategories() {
+  public void testMultipleDefaultRiderCategoriesShouldTriggerNotice() {
+    List<GtfsRiderCategories> riderCategories = new ArrayList<>();
+    riderCategories.add(createRiderCategories(1, "rider1", GtfsRiderFareCategory.IS_DEFAULT));
+    riderCategories.add(createRiderCategories(3, "rider2", GtfsRiderFareCategory.IS_DEFAULT));
+    riderCategories.add(createRiderCategories(2, "rider3", GtfsRiderFareCategory.NOT_DEFAULT));
+
+    List<GtfsFareProduct> fareProducts = new ArrayList<>();
+    fareProducts.add(createFareProduct(1, "fare1", "rider1"));
+    fareProducts.add(createFareProduct(2, "fare1", "rider2"));
     assertThat(
-        generateNotices()
+        generateNotices(fareProducts, riderCategories)
             .contains(
                 FareProductDefaultRiderCategoriesValidator
                     .FareProductWithMultipleDefaultRiderCategoriesNotice.class));
+  }
+
+  @Test
+  public void testOneDefaultRiderCategoryShouldNotTriggerNotice() {
+    List<GtfsRiderCategories> riderCategories = new ArrayList<>();
+    riderCategories.add(createRiderCategories(1, "rider1", GtfsRiderFareCategory.IS_DEFAULT));
+    riderCategories.add(createRiderCategories(3, "rider2", GtfsRiderFareCategory.NOT_DEFAULT));
+    riderCategories.add(createRiderCategories(2, "rider3", GtfsRiderFareCategory.NOT_DEFAULT));
+
+    List<GtfsFareProduct> fareProducts = new ArrayList<>();
+    fareProducts.add(createFareProduct(1, "fare1", "rider1"));
+    fareProducts.add(createFareProduct(2, "fare1", "rider2"));
+    assertThat(generateNotices(fareProducts, riderCategories).isEmpty());
   }
 }
