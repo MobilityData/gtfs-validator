@@ -10,8 +10,8 @@ public class AgencyMetadata {
   public AgencyMetadata(String name, String url, String phone, String email, String timezone) {
     this.name = name;
     this.url = url;
-    this.phone = phone.isEmpty() ? "N/A" : phone;
-    this.email = email.isEmpty() ? "N/A" : email;
-    this.timezone = timezone.isEmpty() ? "N/A" : timezone;
+    this.phone = phone.isEmpty() ? "" : phone;
+    this.email = email.isEmpty() ? "" : email;
+    this.timezone = timezone.isEmpty() ? "" : timezone;
   }
 }

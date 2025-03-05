@@ -269,10 +269,10 @@
                         <div th:with="isNotServiceWindow=${info.key != 'Service Window Start' and info.key != 'Service Window End'}">
                             <dd th:if="${isNotServiceWindow}" th:text="${info.key} + ':'" />
                             <dt th:if="${isNotServiceWindow}">
-                            <span th:if="${info.key.contains('URL') and info.value != 'N/A'}">
+                            <span th:if="${info.key.contains('URL') and not info.value.isEmpty()}">
                                 <a th:href="${info.value}" target="_blank" th:text="${info.value}" />
                             </span>
-                                <span th:if="${info.key.contains('URL') and info.value == 'N/A'}" th:text="${info.value}"></span>
+                                <span th:if="${info.value.isEmpty()}">N/A</span>
                                 <span th:unless="${info.key.contains('URL')}" th:text="${info.value}"/>
                                 <span th:if="${info.key == 'Service Window'}" >
                                      <a href="#" class="tooltip" onclick="event.preventDefault();"><span>(?)</span>

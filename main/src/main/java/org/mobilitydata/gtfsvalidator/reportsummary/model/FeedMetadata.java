@@ -431,16 +431,15 @@ public class FeedMetadata {
     var info = feedTable.getEntities().isEmpty() ? null : feedTable.getEntities().get(0);
 
     feedInfo.put(
-        JsonReportFeedInfo.FEED_INFO_PUBLISHER_NAME,
-        info == null ? "N/A" : info.feedPublisherName());
+        JsonReportFeedInfo.FEED_INFO_PUBLISHER_NAME, info == null ? "" : info.feedPublisherName());
     feedInfo.put(
-        JsonReportFeedInfo.FEED_INFO_PUBLISHER_URL, info == null ? "N/A" : info.feedPublisherUrl());
+        JsonReportFeedInfo.FEED_INFO_PUBLISHER_URL, info == null ? "" : info.feedPublisherUrl());
     feedInfo.put(
         JsonReportFeedInfo.FEED_INFO_FEED_CONTACT_EMAIL,
-        info == null ? "N/A" : info.feedContactEmail());
+        info == null ? "" : info.feedContactEmail());
     feedInfo.put(
         JsonReportFeedInfo.FEED_INFO_FEED_LANGUAGE,
-        info == null ? "N/A" : info.feedLang().getDisplayLanguage());
+        info == null ? "" : info.feedLang().getDisplayLanguage());
     if (feedTable.hasColumn(GtfsFeedInfo.FEED_START_DATE_FIELD_NAME)) {
       if (info != null) {
         LocalDate localDate = info.feedStartDate().getLocalDate();
@@ -458,7 +457,7 @@ public class FeedMetadata {
   private String checkLocalDate(LocalDate localDate) {
     String displayDate;
     if (localDate.toString().equals(LocalDate.EPOCH.toString())) {
-      displayDate = "N/A";
+      displayDate = "";
     } else {
       displayDate = localDate.toString();
     }
@@ -568,12 +567,12 @@ public class FeedMetadata {
     } finally {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
       if ((earliestStartDate == null) && (latestEndDate == null)) {
-        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "N/A");
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "");
       } else if (earliestStartDate == null && latestEndDate != null) {
         feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
       } else if (latestEndDate == null && earliestStartDate != null) {
         if (earliestStartDate.isAfter(latestEndDate)) {
-          feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "N/A");
+          feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "");
         } else {
           feedInfo.put(
               JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
