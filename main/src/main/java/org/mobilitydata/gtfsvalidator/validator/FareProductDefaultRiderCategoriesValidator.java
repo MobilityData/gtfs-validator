@@ -18,7 +18,6 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   HashMap<String, Integer> fareProductDefaultCount = new HashMap<>();
   Map<String, List<Integer>> fareProductRows = new HashMap<>();
   Map<String, List<String>> fareProductRiderCategories = new HashMap<>();
-  Set<String> riderCategoryIdSet = new HashSet<>();
 
   @Inject
   public FareProductDefaultRiderCategoriesValidator(
@@ -37,25 +36,21 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsFareProduct fareProduct : fareProductTable.getEntities()) {
       String fareProductId = fareProduct.fareProductId();
-      if (!fareProductDefaultCount.containsKey(fareProductId)) {
-        String riderCategoryId = fareProduct.riderCategoryId();
-        Optional<GtfsRiderCategories> riderCategory =
-            riderCategoriesTable.byRiderCategoryId(riderCategoryId);
-        if (!riderCategory.isEmpty() && !riderCategoryIdSet.contains(riderCategoryId)) {
-          if (riderCategory
-              .get()
-              .isDefaultFareCategory()
-              .equals(GtfsRiderFareCategory.IS_DEFAULT)) {
-            fareProductDefaultCount.put(
-                fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
-            fareProductRows
-                .computeIfAbsent(fareProductId, k -> new ArrayList<>())
-                .add(fareProduct.csvRowNumber());
-            fareProductRiderCategories
-                .computeIfAbsent(fareProductId, k -> new ArrayList<>())
-                .add(riderCategory.get().riderCategoryId());
-            riderCategoryIdSet.add(riderCategoryId);
-          }
+      String riderCategoryId = fareProduct.riderCategoryId();
+      Optional<GtfsRiderCategories> riderCategory =
+          riderCategoriesTable.byRiderCategoryId(riderCategoryId);
+      if (!riderCategory.isEmpty()) {
+        if (riderCategory.get().isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)) {
+          fareProductDefaultCount.put(
+              fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
+          fareProductRows
+              .computeIfAbsent(fareProductId, k -> new ArrayList<>())
+              .add(fareProduct.csvRowNumber());
+          fareProductRiderCategories
+              .computeIfAbsent(fareProductId, k -> new ArrayList<>())
+              .add(riderCategory.get().riderCategoryId());
+          System.out.println("fareProductDefaultCount of " + fareProductId);
+          System.out.println(fareProductDefaultCount.get(fareProductId));
         }
       }
     }
