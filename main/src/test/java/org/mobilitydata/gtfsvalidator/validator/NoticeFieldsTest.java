@@ -227,6 +227,9 @@ public class NoticeFieldsTest {
             "value",
             "duplicatedElement",
             "unknownElement",
+            "fareProductId",
+            "riderCategoryId1",
+            "riderCategoryId2",
             "currencyCode");
   }
 
