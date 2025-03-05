@@ -77,7 +77,9 @@ public class GtfsZipFileInput extends GtfsInput {
     if (!filenames.contains(filename)) {
       throw new FileNotFoundException(filename);
     }
-    return zipFile.getInputStream(zipFile.getEntry(filename));
+    synchronized (zipFile) {
+      return zipFile.getInputStream(zipFile.getEntry(filename));
+    }
   }
 
   /**
