@@ -19,7 +19,7 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
         .setCsvRowNumber(csvRowNumber)
         .setFareProductId(fareId)
         .setRiderCategoryId(riderCategoryId)
-            .setFareMediaId(fareMediaId)
+        .setFareMediaId(fareMediaId)
         .build();
   }
 
@@ -94,16 +94,19 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
     riderCategories.add(createRiderCategories(3, "rider3", GtfsRiderFareCategory.NOT_DEFAULT));
 
     List<GtfsFareProduct> fareProducts = new ArrayList<>();
-    fareProducts.add(createFareProduct(1, "fare1", "rider1","fareMediaId"));
-    fareProducts.add(createFareProduct(2, "fare2", "rider1","fareMediaId"));
-    fareProducts.add(createFareProduct(3, "fare2", "rider2","fareMediaId"));
-    assertThat(generateNotices(fareProducts, riderCategories).contains(
-            FareProductDefaultRiderCategoriesValidator
+    fareProducts.add(createFareProduct(1, "fare1", "rider1", "fareMediaId"));
+    fareProducts.add(createFareProduct(2, "fare2", "rider1", "fareMediaId"));
+    fareProducts.add(createFareProduct(3, "fare2", "rider2", "fareMediaId"));
+    assertThat(
+        generateNotices(fareProducts, riderCategories)
+            .contains(
+                FareProductDefaultRiderCategoriesValidator
                     .FareProductWithMultipleDefaultRiderCategoriesNotice.class));
   }
 
   @Test
-  public void testDefaultRiderCategoriesWithSameFareProductIdAndDifferentFareMediaIdsShouldNotTriggerNotice() {
+  public void
+      testDefaultRiderCategoriesWithSameFareProductIdAndDifferentFareMediaIdsShouldNotTriggerNotice() {
     List<GtfsRiderCategories> riderCategories = new ArrayList<>();
     riderCategories.add(createRiderCategories(1, "rider1", GtfsRiderFareCategory.IS_DEFAULT));
     riderCategories.add(createRiderCategories(2, "rider2", GtfsRiderFareCategory.NOT_DEFAULT));
