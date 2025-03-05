@@ -116,6 +116,7 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
     List<GtfsFareProduct> fareProducts = new ArrayList<>();
     fareProducts.add(createFareProduct(1, "fare1", "rider1", "fareMediaId1"));
     fareProducts.add(createFareProduct(2, "fare1", "rider1", "fareMediaId2"));
+    fareProducts.add(createFareProduct(3, "fare2", "rider1", "fareMediaId2"));
     assertTrue(generateNotices(fareProducts, riderCategories).isEmpty());
   }
 }
