@@ -41,7 +41,7 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
         String riderCategoryId = fareProduct.riderCategoryId();
         Optional<GtfsRiderCategories> riderCategory =
             riderCategoriesTable.byRiderCategoryId(riderCategoryId);
-        if (!riderCategory.isEmpty()) {
+        if (!riderCategory.isEmpty() && !riderCategoryIdSet.contains(riderCategoryId)) {
           if (riderCategory
               .get()
               .isDefaultFareCategory()
@@ -54,6 +54,7 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
             fareProductRiderCategories
                 .computeIfAbsent(fareProductId, k -> new ArrayList<>())
                 .add(riderCategory.get().riderCategoryId());
+            riderCategoryIdSet.add(riderCategoryId);
           }
         }
       }
