@@ -18,6 +18,7 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
   HashMap<String, Integer> fareProductDefaultCount = new HashMap<>();
   Map<String, List<Integer>> fareProductRows = new HashMap<>();
   Map<String, List<String>> fareProductRiderCategories = new HashMap<>();
+  List<String> riderCategoryIds = new ArrayList<>();
 
   @Inject
   public FareProductDefaultRiderCategoriesValidator(
@@ -40,17 +41,16 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
       Optional<GtfsRiderCategories> riderCategory =
           riderCategoriesTable.byRiderCategoryId(riderCategoryId);
       if (!riderCategory.isEmpty()) {
-        if (riderCategory.get().isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)) {
+        if (riderCategory.get().isDefaultFareCategory().equals(GtfsRiderFareCategory.IS_DEFAULT)
+            && !riderCategoryIds.contains(riderCategoryId)) {
           fareProductDefaultCount.put(
               fareProductId, fareProductDefaultCount.getOrDefault(fareProductId, 0) + 1);
           fareProductRows
               .computeIfAbsent(fareProductId, k -> new ArrayList<>())
               .add(fareProduct.csvRowNumber());
           fareProductRiderCategories
-              .computeIfAbsent(fareProductId, k -> new ArrayList<>())
+              .computeIfAbsent(fareProductId, k -> riderCategoryIds)
               .add(riderCategory.get().riderCategoryId());
-          System.out.println("fareProductDefaultCount of " + fareProductId);
-          System.out.println(fareProductDefaultCount.get(fareProductId));
         }
       }
     }

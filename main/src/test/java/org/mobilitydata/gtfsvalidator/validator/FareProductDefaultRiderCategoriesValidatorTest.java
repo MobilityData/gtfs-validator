@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
     List<GtfsFareProduct> fareProducts = new ArrayList<>();
     fareProducts.add(createFareProduct(1, "fare1", "rider1", "fareMediaId"));
     fareProducts.add(createFareProduct(2, "fare1", "rider2", "fareMediaId"));
-    assertThat(generateNotices(fareProducts, riderCategories).isEmpty());
+    assertTrue(generateNotices(fareProducts, riderCategories).isEmpty());
   }
 
   @Test
@@ -83,7 +84,7 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
     List<GtfsFareProduct> fareProducts = new ArrayList<>();
     fareProducts.add(createFareProduct(1, "fare1", "rider1", "fareMediaId"));
     fareProducts.add(createFareProduct(2, "fare2", "rider1", "fareMediaId"));
-    assertThat(generateNotices(fareProducts, riderCategories).isEmpty());
+    assertTrue(generateNotices(fareProducts, riderCategories).isEmpty());
   }
 
   @Test
@@ -115,6 +116,6 @@ public class FareProductDefaultRiderCategoriesValidatorTest {
     List<GtfsFareProduct> fareProducts = new ArrayList<>();
     fareProducts.add(createFareProduct(1, "fare1", "rider1", "fareMediaId1"));
     fareProducts.add(createFareProduct(2, "fare1", "rider1", "fareMediaId2"));
-    assertThat(generateNotices(fareProducts, riderCategories).isEmpty());
+    assertTrue(generateNotices(fareProducts, riderCategories).isEmpty());
   }
 }
