@@ -101,9 +101,9 @@ public class ValidationReportComparator {
         continue;
       }
 
-      //      As an edge case, when the execution raise a system exception the report will contain
+      // As an edge case, when the execution raise a system exception the report will contain
       // no notices but system notices are found in the system_errors.json file.
-      //      In this case, the system notices are not considered as corrupted sources.
+      // In this case, the system notices are not considered as corrupted sources.
       if (hasSystemErrors(referenceReport, referenceErrorsPath)) {
         corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
         continue;
