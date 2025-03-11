@@ -72,7 +72,9 @@ public class ValidationReportComparator {
       String sourceUrl = sourceUrlContainer.getUrlForSourceId(sourceId);
 
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
+      Path referenceErrorsPath = file.toPath().resolve(args.getReferenceSystemErrorsName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
+      Path latestErrorsPath = file.toPath().resolve(args.getLatestSystemErrorsName());
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
@@ -86,22 +88,31 @@ public class ValidationReportComparator {
       }
       ValidationReport referenceReport;
       ValidationReport latestReport;
-      try {
-        referenceReport = ValidationReport.fromPath(referenceReportPath);
-      } catch (IOException ioException) {
-        logger.atSevere().withCause(ioException).log("Error reading reference validation report");
+      referenceReport = getValidationReport(referenceReportPath);
+      if (referenceReport == null) {
         // in case a file is corrupted, add the sourceId to the list of corrupted sources
         corruptedSources.addCorruptedSource(sourceId, true, false, true, null);
         continue;
       }
-      try {
-        latestReport = ValidationReport.fromPath(latestReportPath);
-      } catch (IOException ioException) {
-        logger.atSevere().withCause(ioException).log("Error reading latest validation report");
+      latestReport = getValidationReport(latestReportPath);
+      if (latestReport == null) {
         // in case a file is corrupted, add the sourceId to the list of corrupted sources
-        corruptedSources.addCorruptedSource(sourceId, true, true, true, false);
+        corruptedSources.addCorruptedSource(sourceId, true, false, true, null);
         continue;
       }
+
+      // As an edge case, when the execution raise a system exception the report will contain
+      // no notices but system notices are found in the system_errors.json file.
+      // In this case, the system notices are not considered as corrupted sources.
+      if (hasSystemErrors(referenceReport, referenceErrorsPath)) {
+        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+        continue;
+      }
+      if (hasSystemErrors(latestReport, latestErrorsPath)) {
+        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+        continue;
+      }
+
       newErrors.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
       newWarnings.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
@@ -138,6 +149,25 @@ public class ValidationReportComparator {
             args);
 
     return Result.create(report, reportSummaryString, failure);
+  }
+
+  private boolean hasSystemErrors(ValidationReport validationReport, Path path) {
+    var systemErrors = getValidationReport(path);
+    return validationReport.getNotices().isEmpty()
+        && systemErrors != null
+        && !systemErrors.getNotices().isEmpty();
+  }
+
+  private static ValidationReport getValidationReport(Path referenceReportPath) {
+    ValidationReport referenceReport;
+    try {
+      referenceReport = ValidationReport.fromPath(referenceReportPath);
+    } catch (IOException ioException) {
+      logger.atSevere().withCause(ioException).log(
+          "Error reading %s validation report", referenceReportPath);
+      return null;
+    }
+    return referenceReport;
   }
 
   @AutoValue
