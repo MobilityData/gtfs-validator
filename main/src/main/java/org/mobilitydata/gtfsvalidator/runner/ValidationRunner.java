@@ -230,7 +230,7 @@ public class ValidationRunner {
     }
 
     if (b.length() > 0) {
-      logger.atSevere().log(b.toString());
+      logger.atInfo().log(b.toString());
     }
 
     logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
