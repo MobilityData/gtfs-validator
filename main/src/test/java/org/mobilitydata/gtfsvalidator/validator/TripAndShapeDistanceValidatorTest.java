@@ -109,6 +109,24 @@ public class TripAndShapeDistanceValidatorTest {
   }
 
   @Test
+  public void testTripDistanceExceedsShapeDistanceNoShapeDistance() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(1, 10.0),
+            createShapeTable(1, 0.0, 10.0),
+            createStopTable(1));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
+    assertThat(found).isFalse();
+  }
+
+  @Test
   public void testTripDistanceExceedsShapeDistanceWarning() {
     List<ValidationNotice> notices =
         generateNotices(
