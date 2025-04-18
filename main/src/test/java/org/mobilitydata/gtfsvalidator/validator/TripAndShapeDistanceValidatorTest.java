@@ -40,7 +40,7 @@ public class TripAndShapeDistanceValidatorTest {
               .setShapePtLat(lonLat)
               .setShapePtLon(lonLat)
               .setShapePtSequence(0)
-              .setShapeDistTraveled(shapeDistTraveled + i)
+              .setShapeDistTraveled(shapeDistTraveled * i)
               .build());
     }
     return shapes;
@@ -55,7 +55,7 @@ public class TripAndShapeDistanceValidatorTest {
               .setTripId("t" + i)
               .setStopSequence(0)
               .setStopId("st" + i)
-              .setShapeDistTraveled(shapeDistTraveled + i)
+              .setShapeDistTraveled(shapeDistTraveled * i)
               .build());
     }
     return stopTimes;
@@ -106,6 +106,24 @@ public class TripAndShapeDistanceValidatorTest {
                         instanceof
                         TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
     assertThat(found).isTrue();
+  }
+
+  @Test
+  public void testTripDistanceExceedsShapeDistanceNoShapeDistance() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(1, 10.0),
+            createShapeTable(1, 0.0, 10.0),
+            createStopTable(1));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
+    assertThat(found).isFalse();
   }
 
   @Test

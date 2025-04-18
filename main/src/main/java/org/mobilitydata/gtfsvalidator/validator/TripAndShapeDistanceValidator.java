@@ -84,6 +84,11 @@ public class TripAndShapeDistanceValidator extends FileValidator {
               }
 
               double maxShapeDist = maxShape.shapeDistTraveled();
+
+              if (maxShapeDist == 0) {
+                return;
+              }
+
               double distanceInMeters =
                   getDistanceMeters(maxShape.shapePtLatLon(), stop.stopLatLon());
               if (maxStopTimeDist > maxShapeDist) {
