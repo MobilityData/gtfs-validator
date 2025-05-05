@@ -171,7 +171,7 @@ public class VersionResolver {
       Gson gson = new GsonBuilder().create();
       VersionResponse response = gson.fromJson(in, VersionResponse.class);
       if (response != null && !Strings.isNullOrEmpty(response.version)) {
-        logger.atInfo().log("resolved release version=%s", response.version);
+        logger.atFinest().log("resolved release version=%s", response.version);
         return Optional.of(response.version);
       }
     }

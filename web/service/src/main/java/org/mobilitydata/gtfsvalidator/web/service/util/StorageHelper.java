@@ -204,10 +204,10 @@ public class StorageHelper {
 
     Path executionResultPath = outputPath.resolve(executionResultFile);
     try {
-      logger.info("Writing executionResult file to " + executionResultFile);
+      logger.debug("Writing executionResult file to " + executionResultFile);
       Files.write(
           executionResultPath, gson.toJson(executionResult).getBytes(StandardCharsets.UTF_8));
-      logger.info(executionResultFile + " file written successfully");
+      logger.debug(executionResultFile + " file written successfully");
     } catch (IOException e) {
       logger.error("Error writing to file " + executionResultFile);
       e.printStackTrace();

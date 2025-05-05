@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.web.service.util.ValidationHandler;
 import org.mobilitydata.gtfsvalidator.web.service.util.ValidationJobMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class ValidationController {
 
+  public static final String JOB_ID = "job_id";
   private final Logger logger = LoggerFactory.getLogger(ValidationController.class);
 
   @Autowired private StorageHelper storageHelper;
@@ -110,6 +112,9 @@ public class ValidationController {
 
       ValidationJobMetaData jobData = getFeedFileMetaData(message);
       jobId = jobData.getJobId();
+      MDC.put(JOB_ID, jobId);
+
+      logger.info("Validation started for job ID: {}", jobId);
 
       var fileName = jobData.getFileName();
 
@@ -142,12 +147,21 @@ public class ValidationController {
       Sentry.captureException(exc);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error", exc);
     } finally {
+      MDC.remove(JOB_ID);
       // delete the temp file and directory
-      if (tempFile != null) {
-        tempFile.delete();
-      }
+      safeDeleteFile(tempFile);
       if (outputPath != null) {
-        outputPath.toFile().delete();
+        safeDeleteFile(outputPath.toFile());
+      }
+    }
+  }
+
+  private void safeDeleteFile(File file) {
+    if (file != null && file.exists()) {
+      try {
+        file.delete();
+      } catch (Exception e) {
+        logger.warn("Error deleting file: {}", file.getAbsolutePath(), e);
       }
     }
   }

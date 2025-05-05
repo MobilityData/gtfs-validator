@@ -82,7 +82,7 @@ public class MemoryUsageRegister {
    */
   public void registerMemoryUsage(MemoryUsage memoryUsage) {
     registry.add(memoryUsage);
-    logger.atInfo().log(memoryUsage.humanReadablePrint());
+    logger.atFinest().log(memoryUsage.humanReadablePrint());
   }
 
   /** Clears the memory usage registry. */
