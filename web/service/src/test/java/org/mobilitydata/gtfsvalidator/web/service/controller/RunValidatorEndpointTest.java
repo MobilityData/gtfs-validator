@@ -83,6 +83,8 @@ public class RunValidatorEndpointTest {
         .when(storageHelper)
         .downloadFeedFileFromStorage(anyString(), anyString());
 
+    doReturn(true).when(mockFeedFile).exists();
+    doReturn(true).when(mockOutputPathToFile).exists();
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/run-validator")
@@ -101,7 +103,9 @@ public class RunValidatorEndpointTest {
     verify(storageHelper, times(1)).uploadFilesToStorage(testJobId, mockOutputPath);
 
     // verify that the temp files and directory are deleted
+    verify(mockFeedFile, times(1)).exists();
     verify(mockFeedFile, times(1)).delete();
+    verify(mockOutputPathToFile, times(1)).exists();
     verify(mockOutputPathToFile, times(1)).delete();
   }
 
