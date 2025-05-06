@@ -35,7 +35,7 @@ public class ValidationHandler {
             .setOutputDirectory(outputPath);
     if (!countryCode.isEmpty()) {
       var country = CountryCode.forStringOrUnknown(countryCode);
-      logger.info("setting country code: " + country.getCountryCode());
+      logger.debug("setting country code: {}", country.getCountryCode());
       configBuilder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
     var config = configBuilder.build();

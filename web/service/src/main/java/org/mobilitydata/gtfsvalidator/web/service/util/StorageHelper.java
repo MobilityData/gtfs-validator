@@ -73,7 +73,7 @@ public class StorageHelper {
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
       var om = new ObjectMapper();
       var json = om.writeValueAsString(metadata);
-      logger.info("Saving job metadata: " + json);
+      logger.debug("Saving job metadata: {}", json);
       storage.create(jobBlobInfo, json.getBytes());
     } catch (Exception exc) {
       logger.error("Error setting country code", exc);
@@ -93,13 +93,13 @@ public class StorageHelper {
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       Blob blob = storage.get(jobBlobId);
       var json = new String(blob.getContent());
-      logger.info("Loading job metadata: " + json);
+      logger.debug("Loading job metadata: {}", json);
 
       var objectMapper = new ObjectMapper();
       JobMetadata jobMetadata = objectMapper.readValue(json, JobMetadata.class);
       return jobMetadata;
     } catch (Exception exc) {
-      logger.error("Error could not load remote file, using default country code", exc);
+      logger.debug("No metadata found using default country code");
       return new JobMetadata(jobId, "");
     }
   }
