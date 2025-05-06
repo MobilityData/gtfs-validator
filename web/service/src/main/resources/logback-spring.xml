@@ -34,7 +34,7 @@
         <logger name="org.apache.catalina" level="WARN" />
         <logger name="org.apache.coyote" level="WARN" />
         <logger name="org.apache.tomcat" level="WARN" />
-        <logger name="org.springframework.web" level="WARN" />
+        <logger name="org.springframework.web" level="WARN" additivity="false" />
         <logger name="com.google.cloud.spring.core" level="WARN" />
         <logger name="com.google.cloud.spring.autoconfigure" level="WARN" />
 
