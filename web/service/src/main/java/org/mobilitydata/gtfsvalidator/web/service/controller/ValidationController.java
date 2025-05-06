@@ -156,6 +156,12 @@ public class ValidationController {
     }
   }
 
+  /**
+   * Deletes the temp file and directory. Exception is logged but not thrown as it's not considered
+   * a validation error.
+   *
+   * @param file to be deleted
+   */
   private void safeDeleteFile(File file) {
     if (file != null && file.exists()) {
       try {
