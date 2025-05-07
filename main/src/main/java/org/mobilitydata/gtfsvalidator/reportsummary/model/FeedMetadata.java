@@ -87,16 +87,28 @@ public class FeedMetadata {
       feedMetadata.loadAgencyData(agencyTableOptional.get());
     }
 
-    if (feedContainer.getTableForFilename(GtfsTrip.FILENAME).isPresent()
-        && (feedContainer.getTableForFilename(GtfsCalendar.FILENAME).isPresent()
-            || feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).isPresent())) {
+    Optional<GtfsTripTableContainer> tripTableContainer =
+        feedContainer
+            .getTableForFilename(GtfsTrip.FILENAME)
+            .filter(GtfsEntityContainer::isParsedSuccessfully)
+            .map(c -> (GtfsTripTableContainer) c);
+
+    Optional<GtfsCalendarTableContainer> calendarTableContainer =
+        feedContainer
+            .getTableForFilename(GtfsCalendar.FILENAME)
+            .filter(GtfsEntityContainer::isParsedSuccessfully)
+            .map(c -> (GtfsCalendarTableContainer) c);
+
+    Optional<GtfsCalendarDateTableContainer> calendarDateTableContainer =
+        feedContainer
+            .getTableForFilename(GtfsCalendarDate.FILENAME)
+            .filter(GtfsEntityContainer::isParsedSuccessfully)
+            .map(c -> (GtfsCalendarDateTableContainer) c);
+
+    if (tripTableContainer.isPresent()
+        && (calendarTableContainer.isPresent() || calendarDateTableContainer.isPresent())) {
       feedMetadata.loadServiceWindow(
-          (GtfsTableContainer<GtfsTrip, ?>)
-              feedContainer.getTableForFilename(GtfsTrip.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendar, ?>)
-              feedContainer.getTableForFilename(GtfsCalendar.FILENAME).get(),
-          (GtfsTableContainer<GtfsCalendarDate, ?>)
-              feedContainer.getTableForFilename(GtfsCalendarDate.FILENAME).get());
+          tripTableContainer.get(), calendarTableContainer, calendarDateTableContainer);
     }
 
     feedMetadata.loadSpecFeatures(feedContainer);
@@ -475,17 +487,17 @@ public class FeedMetadata {
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
   public void loadServiceWindow(
-      GtfsTableContainer<GtfsTrip, ?> tripContainer,
-      GtfsTableContainer<GtfsCalendar, ?> calendarTable,
-      GtfsTableContainer<GtfsCalendarDate, ?> calendarDateTable) {
+      GtfsTripTableContainer tripContainer,
+      Optional<GtfsCalendarTableContainer> calendarTable,
+      Optional<GtfsCalendarDateTableContainer> calendarDateTable) {
     List<GtfsTrip> trips = tripContainer.getEntities();
 
     LocalDate earliestStartDate = null;
     LocalDate latestEndDate = null;
     try {
-      if ((calendarDateTable == null) && (calendarTable != null)) {
+      if (calendarDateTable.isEmpty() && calendarTable.isPresent()) {
         // When only calendars.txt is used
-        List<GtfsCalendar> calendars = calendarTable.getEntities();
+        List<GtfsCalendar> calendars = calendarTable.get().getEntities();
         for (GtfsTrip trip : trips) {
           String serviceId = trip.serviceId();
           for (GtfsCalendar calendar : calendars) {
@@ -507,9 +519,9 @@ public class FeedMetadata {
             }
           }
         }
-      } else if ((calendarDateTable != null) && (calendarTable == null)) {
+      } else if (calendarDateTable.isPresent() && calendarTable.isEmpty()) {
         // When only calendar_dates.txt is used
-        List<GtfsCalendarDate> calendarDates = calendarDateTable.getEntities();
+        List<GtfsCalendarDate> calendarDates = calendarDateTable.get().getEntities();
         for (GtfsTrip trip : trips) {
           String serviceId = trip.serviceId();
           for (GtfsCalendarDate calendarDate : calendarDates) {
@@ -526,12 +538,10 @@ public class FeedMetadata {
             }
           }
         }
-      } else if ((calendarTable != null) && (calendarDateTable != null)) {
+      } else if (calendarTable.isPresent() && calendarDateTable.isPresent()) {
         // When both calendars.txt and calendar_dates.txt are used
         Map<String, ServicePeriod> servicePeriods =
-            CalendarUtil.buildServicePeriodMap(
-                (GtfsCalendarTableContainer) calendarTable,
-                (GtfsCalendarDateTableContainer) calendarDateTable);
+            CalendarUtil.buildServicePeriodMap(calendarTable.get(), calendarDateTable.get());
         List<LocalDate> removedDates = new ArrayList<>();
         for (GtfsTrip trip : trips) {
           String serviceId = trip.serviceId();
