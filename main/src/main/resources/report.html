@@ -364,7 +364,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="notice: ${noticesByCode.value}">
+                                    <tr th:each="notice, iterStat : ${noticesByCode.value}" th:if="${iterStat.index < 50}">
                                         <th:block th:each="field: ${uniqueFieldsByCode[noticesByCode.key]}">
                                             <td th:text="${notice.getFields().contains(field) ? notice.getValueForField(field) : 'N/A'}" />
                                         </th:block>
