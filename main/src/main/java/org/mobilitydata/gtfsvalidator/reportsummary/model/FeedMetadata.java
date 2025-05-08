@@ -14,8 +14,6 @@ import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportCounts;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.*;
-import org.mobilitydata.gtfsvalidator.util.CalendarUtil;
-import org.mobilitydata.gtfsvalidator.util.ServicePeriod;
 
 public class FeedMetadata {
 
@@ -490,88 +488,20 @@ public class FeedMetadata {
       GtfsTripTableContainer tripContainer,
       Optional<GtfsCalendarTableContainer> calendarTable,
       Optional<GtfsCalendarDateTableContainer> calendarDateTable) {
-    List<GtfsTrip> trips = tripContainer.getEntities();
-
     LocalDate earliestStartDate = null;
     LocalDate latestEndDate = null;
     try {
-      if (calendarDateTable.isEmpty() && calendarTable.isPresent()) {
-        // When only calendars.txt is used
-        List<GtfsCalendar> calendars = calendarTable.get().getEntities();
-        for (GtfsTrip trip : trips) {
-          String serviceId = trip.serviceId();
-          for (GtfsCalendar calendar : calendars) {
-            if (calendar.serviceId().equals(serviceId)) {
-              LocalDate startDate = calendar.startDate().getLocalDate();
-              LocalDate endDate = calendar.endDate().getLocalDate();
-              if (startDate != null || endDate != null) {
-                if (startDate.toString().equals(LocalDate.EPOCH.toString())
-                    || endDate.toString().equals(LocalDate.EPOCH.toString())) {
-                  continue;
-                }
-                if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
-                  earliestStartDate = startDate;
-                }
-                if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
-                  latestEndDate = endDate;
-                }
-              }
-            }
-          }
-        }
-      } else if (calendarDateTable.isPresent() && calendarTable.isEmpty()) {
-        // When only calendar_dates.txt is used
-        List<GtfsCalendarDate> calendarDates = calendarDateTable.get().getEntities();
-        for (GtfsTrip trip : trips) {
-          String serviceId = trip.serviceId();
-          for (GtfsCalendarDate calendarDate : calendarDates) {
-            if (calendarDate.serviceId().equals(serviceId)) {
-              LocalDate date = calendarDate.date().getLocalDate();
-              if (date != null && !date.toString().equals(LocalDate.EPOCH.toString())) {
-                if (earliestStartDate == null || date.isBefore(earliestStartDate)) {
-                  earliestStartDate = date;
-                }
-                if (latestEndDate == null || date.isAfter(latestEndDate)) {
-                  latestEndDate = date;
-                }
-              }
-            }
-          }
-        }
-      } else if (calendarTable.isPresent() && calendarDateTable.isPresent()) {
-        // When both calendars.txt and calendar_dates.txt are used
-        Map<String, ServicePeriod> servicePeriods =
-            CalendarUtil.buildServicePeriodMap(calendarTable.get(), calendarDateTable.get());
-        List<LocalDate> removedDates = new ArrayList<>();
-        for (GtfsTrip trip : trips) {
-          String serviceId = trip.serviceId();
-          ServicePeriod servicePeriod = servicePeriods.get(serviceId);
-          LocalDate startDate = servicePeriod.getServiceStart();
-          LocalDate endDate = servicePeriod.getServiceEnd();
-          if (startDate != null && endDate != null) {
-            if (startDate.toString().equals(LocalDate.EPOCH.toString())
-                || endDate.toString().equals(LocalDate.EPOCH.toString())) {
-              continue;
-            }
-            if (earliestStartDate == null || startDate.isBefore(earliestStartDate)) {
-              earliestStartDate = startDate;
-            }
-            if (latestEndDate == null || endDate.isAfter(latestEndDate)) {
-              latestEndDate = endDate;
-            }
-          }
-          removedDates.addAll(servicePeriod.getRemovedDays());
-        }
-
-        for (LocalDate date : removedDates) {
-          if (date.isEqual(earliestStartDate)) {
-            earliestStartDate = date.plusDays(1);
-          }
-          if (date.isEqual(latestEndDate)) {
-            latestEndDate = date.minusDays(1);
-          }
-        }
+      Optional<ServiceWindow> serviceWindow =
+          ServiceWindow.get(
+              tripContainer.getEntities(),
+              calendarTable.map(GtfsCalendarTableContainer::getEntities),
+              calendarDateTable.map(GtfsCalendarDateTableContainer::getEntities));
+      if (serviceWindow.isEmpty()) {
+        logger.atWarning().log(
+            "Could not compute service window. Check that `calendar.txt` and `calendar_dates.txt` contain data if they are present.");
       }
+      earliestStartDate = serviceWindow.map(ServiceWindow::startDate).orElse(null);
+      latestEndDate = serviceWindow.map(ServiceWindow::endDate).orElse(null);
     } catch (Exception e) {
       logger.atSevere().withCause(e).log("Error while loading Service Window");
     } finally {
@@ -588,11 +518,11 @@ public class FeedMetadata {
               JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
         }
       } else {
-        StringBuilder serviceWindow = new StringBuilder();
-        serviceWindow.append(earliestStartDate);
-        serviceWindow.append(" to ");
-        serviceWindow.append(latestEndDate);
-        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, serviceWindow.toString());
+        StringBuilder feedInfoServiceWindow = new StringBuilder();
+        feedInfoServiceWindow.append(earliestStartDate);
+        feedInfoServiceWindow.append(" to ");
+        feedInfoServiceWindow.append(latestEndDate);
+        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, feedInfoServiceWindow.toString());
       }
       feedInfo.put(
           JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_START,
