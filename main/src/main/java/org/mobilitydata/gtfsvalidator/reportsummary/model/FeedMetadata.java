@@ -477,8 +477,8 @@ public class FeedMetadata {
   /**
    * Loads the service date range by determining the earliest start date and the latest end date for
    * all services referenced with a trip\_id in `trips.txt`. It handles three cases: 1. When only
-   * `calendar.txt` is used. 2. When only `calendar\_dates.txt` is used. 3. When both
-   * `calendar.txt` and `calendar\_dates.txt` are used.
+   * `calendar.txt` is used. 2. When only `calendar\_dates.txt` is used. 3. When both `calendar.txt`
+   * and `calendar\_dates.txt` are used.
    *
    * @param tripContainer the container for `trips.txt` data
    * @param calendarTable the container for `calendar.txt` data
@@ -505,21 +505,19 @@ public class FeedMetadata {
     } catch (Exception e) {
       logger.atSevere().withCause(e).log("Error while loading Service Window");
     } finally {
-      String serviceWindowStr = String.join(
-          " to ",
-          Stream
-              .of(earliestStartDate, latestEndDate)
-              .filter(Objects::nonNull)
-              .map(LocalDate::toString)
-              .toList()
-      );
+      String serviceWindowStr =
+          String.join(
+              " to ",
+              Stream.of(earliestStartDate, latestEndDate)
+                  .filter(Objects::nonNull)
+                  .map(LocalDate::toString)
+                  .toList());
       feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, serviceWindowStr);
       feedInfo.put(
           JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_START,
           Objects.toString(earliestStartDate, ""));
       feedInfo.put(
-          JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_END,
-          Objects.toString(latestEndDate, ""));
+          JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_END, Objects.toString(latestEndDate, ""));
     }
   }
 
