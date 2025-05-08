@@ -5,9 +5,9 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.flogger.FluentLogger;
 import com.vladsch.flexmark.util.misc.Pair;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
 import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
@@ -505,31 +505,21 @@ public class FeedMetadata {
     } catch (Exception e) {
       logger.atSevere().withCause(e).log("Error while loading Service Window");
     } finally {
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-      if ((earliestStartDate == null) && (latestEndDate == null)) {
-        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "");
-      } else if (earliestStartDate == null && latestEndDate != null) {
-        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, latestEndDate.format(formatter));
-      } else if (latestEndDate == null && earliestStartDate != null) {
-        if (earliestStartDate.isAfter(latestEndDate)) {
-          feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, "");
-        } else {
-          feedInfo.put(
-              JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, earliestStartDate.format(formatter));
-        }
-      } else {
-        StringBuilder feedInfoServiceWindow = new StringBuilder();
-        feedInfoServiceWindow.append(earliestStartDate);
-        feedInfoServiceWindow.append(" to ");
-        feedInfoServiceWindow.append(latestEndDate);
-        feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, feedInfoServiceWindow.toString());
-      }
+      String serviceWindowStr = String.join(
+          " to ",
+          Stream
+              .of(earliestStartDate, latestEndDate)
+              .filter(Objects::nonNull)
+              .map(LocalDate::toString)
+              .toList()
+      );
+      feedInfo.put(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW, serviceWindowStr);
       feedInfo.put(
           JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_START,
-          earliestStartDate == null ? "" : earliestStartDate.toString());
+          Objects.toString(earliestStartDate, ""));
       feedInfo.put(
           JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW_END,
-          latestEndDate == null ? "" : latestEndDate.toString());
+          Objects.toString(latestEndDate, ""));
     }
   }
 
