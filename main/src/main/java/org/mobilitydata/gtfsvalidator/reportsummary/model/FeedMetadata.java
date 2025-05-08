@@ -477,11 +477,11 @@ public class FeedMetadata {
   /**
    * Loads the service date range by determining the earliest start date and the latest end date for
    * all services referenced with a trip\_id in `trips.txt`. It handles three cases: 1. When only
-   * `calendars.txt` is used. 2. When only `calendar\_dates.txt` is used. 3. When both
-   * `calendars.txt` and `calendar\_dates.txt` are used.
+   * `calendar.txt` is used. 2. When only `calendar\_dates.txt` is used. 3. When both
+   * `calendar.txt` and `calendar\_dates.txt` are used.
    *
    * @param tripContainer the container for `trips.txt` data
-   * @param calendarTable the container for `calendars.txt` data
+   * @param calendarTable the container for `calendar.txt` data
    * @param calendarDateTable the container for `calendar\_dates.txt` data
    */
   public void loadServiceWindow(
