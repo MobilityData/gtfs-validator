@@ -26,4 +26,9 @@ COPY ${JAR_FILES} /
 
 ADD ./newrelic/newrelic.jar /newrelic/newrelic.jar
 
+ENV SPRING_PROFILES_ACTIVE=cloud
+ENV SPRING_MAIN_BANNER-MODE=off
+ENV SENTRY_LOGGING_MINIMUM_EVENT_LEVEL=error
+ENV SENTRY_LOGGING_MINIMUM_BREADCRUMB_LEVEL=info
+
 ENTRYPOINT exec java -Xmx12g  -javaagent:/newrelic/newrelic.jar -jar /service-${CURRENT_VERSION}.jar

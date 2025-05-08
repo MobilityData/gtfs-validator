@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-
     <springProfile name="local">
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
@@ -26,6 +24,20 @@
                 </layout>
             </encoder>
         </appender>
+
+        <!-- Suppress INFO logs from the GTFS validator tables to reduce noise -->
+        <logger name="org.mobilitydata.gtfsvalidator.table" level="WARN" additivity="false" />
+        <!-- Suppress Spring Boot startup noise -->
+        <logger name="org.springframework.boot" level="WARN" />
+        <logger name="org.springframework.context" level="WARN" />
+        <logger name="org.springframework.beans.factory" level="WARN" />
+        <logger name="org.apache.catalina" level="WARN" />
+        <logger name="org.apache.coyote" level="WARN" />
+        <logger name="org.apache.tomcat" level="WARN" />
+        <logger name="org.springframework.web" level="WARN" additivity="false" />
+        <logger name="com.google.cloud.spring.core" level="WARN" />
+        <logger name="com.google.cloud.spring.autoconfigure" level="WARN" />
+
         <root level="INFO">
             <appender-ref ref="CONSOLE_JSON" />
         </root>
