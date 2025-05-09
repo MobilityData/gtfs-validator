@@ -1,15 +1,14 @@
 package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
-import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.*;
 
-import com.google.common.collect.Sets;
 import java.time.LocalDate;
 import java.util.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.util.FuncUtil;
 
 record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   static Optional<ServiceWindow> fromCalendars(
@@ -58,21 +57,19 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
 
     Set<String> serviceIds = new HashSet<>(trips.stream().map(GtfsTrip::serviceId).toList());
 
-    // We compute the set of days that are removed across all services in
-    // order to shift the start and end dates.
-    Set<LocalDate> removedDays =
+    Map<String, Set<LocalDate>> removedDaysByServiceId =
         calendarDates.stream()
             .filter(
                 d ->
-                    serviceIds.contains(d.serviceId())
-                        && d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED)
+                    d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED
+                        && serviceIds.contains(d.serviceId()))
             .collect(
                 groupingBy(
-                    GtfsCalendarDate::serviceId, mapping(d -> d.date().getLocalDate(), toSet())))
-            .values()
-            .stream()
-            .reduce(Sets::intersection)
-            .orElse(emptySet());
+                    GtfsCalendarDate::serviceId, mapping(d -> d.date().getLocalDate(), toSet())));
+
+    // We compute the set of days that are removed across all services in
+    // order to shift the start and end dates.
+    Set<LocalDate> removedDays = FuncUtil.intersectAll(removedDaysByServiceId.values());
 
     LocalDate startDate = serviceWindowFromCalendars.get().startDate();
     LocalDate endDate = serviceWindowFromCalendars.get().endDate();
