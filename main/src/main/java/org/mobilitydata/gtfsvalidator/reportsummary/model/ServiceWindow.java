@@ -7,17 +7,17 @@ import java.util.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
-import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.util.SetUtil;
 
 record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   static Optional<ServiceWindow> fromCalendars(
-      List<GtfsTrip> trips, List<GtfsCalendar> allCalendars) {
-    Set<String> serviceIds = new HashSet<>(trips.stream().map(GtfsTrip::serviceId).toList());
-
+      GtfsTripTableContainer tripTable, List<GtfsCalendar> allCalendars) {
     List<GtfsCalendar> calendars =
         allCalendars.stream()
-            .filter(calendar -> serviceIds.contains(calendar.serviceId()))
+            .filter(calendar -> !tripTable.byServiceId(calendar.serviceId()).isEmpty())
             .toList();
 
     // Only empty if there are no calendars.
@@ -29,15 +29,13 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   static Optional<ServiceWindow> fromCalendarDates(
-      List<GtfsTrip> trips, List<GtfsCalendarDate> allCalendarDates) {
-    Set<String> serviceIds = new HashSet<>(trips.stream().map(GtfsTrip::serviceId).toList());
-
+      GtfsTripTableContainer tripTable, List<GtfsCalendarDate> allCalendarDates) {
     List<LocalDate> calendarDates =
         allCalendarDates.stream()
             .filter(
                 d ->
-                    serviceIds.contains(d.serviceId())
-                        && d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED)
+                    d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
+                        && !tripTable.byServiceId(d.serviceId()).isEmpty())
             .map(d -> d.date().getLocalDate())
             .toList();
 
@@ -48,21 +46,21 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
-      List<GtfsTrip> trips, List<GtfsCalendar> calendars, List<GtfsCalendarDate> calendarDates) {
+      GtfsTripTableContainer tripTable,
+      List<GtfsCalendar> calendars,
+      List<GtfsCalendarDate> calendarDates) {
     Optional<ServiceWindow> serviceWindowFromCalendars =
-        ServiceWindow.fromCalendars(trips, calendars);
+        ServiceWindow.fromCalendars(tripTable, calendars);
     if (serviceWindowFromCalendars.isEmpty()) {
       return Optional.empty();
     }
-
-    Set<String> serviceIds = new HashSet<>(trips.stream().map(GtfsTrip::serviceId).toList());
 
     Map<String, Set<LocalDate>> removedDaysByServiceId =
         calendarDates.stream()
             .filter(
                 d ->
                     d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED
-                        && serviceIds.contains(d.serviceId()))
+                        && !tripTable.byServiceId(d.serviceId()).isEmpty())
             .collect(
                 groupingBy(
                     GtfsCalendarDate::serviceId, mapping(d -> d.date().getLocalDate(), toSet())));
@@ -84,20 +82,26 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   static Optional<ServiceWindow> get(
-      List<GtfsTrip> trips,
-      Optional<List<GtfsCalendar>> calendars,
-      Optional<List<GtfsCalendarDate>> calendarDates) {
+      GtfsTripTableContainer tripTable,
+      Optional<GtfsCalendarTableContainer> calendarTable,
+      Optional<GtfsCalendarDateTableContainer> calendarDateTable) {
+
+    Optional<List<GtfsCalendar>> calendars =
+        calendarTable.map(GtfsCalendarTableContainer::getEntities);
+    Optional<List<GtfsCalendarDate>> calendarDates =
+        calendarDateTable.map(GtfsCalendarDateTableContainer::getEntities);
+
     if (calendarDates.isEmpty() && calendars.isPresent()) {
-      return ServiceWindow.fromCalendars(trips, calendars.get());
+      return ServiceWindow.fromCalendars(tripTable, calendars.get());
     }
 
     if (calendarDates.isPresent() && calendars.isEmpty()) {
-      return ServiceWindow.fromCalendarDates(trips, calendarDates.get());
+      return ServiceWindow.fromCalendarDates(tripTable, calendarDates.get());
     }
 
     if (calendars.isPresent() && calendarDates.isPresent()) {
       return ServiceWindow.fromCalendarsAndCalendarDates(
-          trips, calendars.get(), calendarDates.get());
+          tripTable, calendars.get(), calendarDates.get());
     }
 
     return Optional.empty();

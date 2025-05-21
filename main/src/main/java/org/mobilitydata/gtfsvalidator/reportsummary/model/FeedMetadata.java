@@ -492,10 +492,7 @@ public class FeedMetadata {
     LocalDate latestEndDate = null;
     try {
       Optional<ServiceWindow> serviceWindow =
-          ServiceWindow.get(
-              tripContainer.getEntities(),
-              calendarTable.map(GtfsCalendarTableContainer::getEntities),
-              calendarDateTable.map(GtfsCalendarDateTableContainer::getEntities));
+          ServiceWindow.get(tripContainer, calendarTable, calendarDateTable);
       if (serviceWindow.isEmpty()) {
         logger.atWarning().log(
             "Could not compute service window. Check that `calendar.txt` and `calendar_dates.txt` contain data if they are present.");
