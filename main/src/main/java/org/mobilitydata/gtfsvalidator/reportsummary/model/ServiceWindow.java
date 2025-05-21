@@ -13,6 +13,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.util.SetUtil;
 
 record ServiceWindow(LocalDate startDate, LocalDate endDate) {
+  /**
+   * Given a list of calendars, get the earliest start date and latest end date for calendars
+   * associated with at least one trip.
+   *
+   * @return The service window if there's at least one calendar, and empty otherwise.
+   */
   static Optional<ServiceWindow> fromCalendars(
       GtfsTripTableContainer tripTable, List<GtfsCalendar> allCalendars) {
     List<GtfsCalendar> calendars =
@@ -28,6 +34,13 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     return startDate.map(d -> new ServiceWindow(d, endDate.get()));
   }
 
+  /**
+   * Given a list of calendar dates, get the earliest and latest dates on which service is available
+   * for at least one route.
+   *
+   * @return The service window if there's at least one date on which service is available, and
+   *     empty otherwise.
+   */
   static Optional<ServiceWindow> fromCalendarDates(
       GtfsTripTableContainer tripTable, List<GtfsCalendarDate> allCalendarDates) {
     List<LocalDate> calendarDates =
@@ -45,6 +58,13 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     return startDate.map(d -> new ServiceWindow(d, endDate.get()));
   }
 
+  /**
+   * Given a list of calendars and a list of calendar dates, get the earliest start date and latest
+   * end date for calendars associated with at least one trip. Exceptions are only taken into
+   * account if they apply to _all_ services.
+   *
+   * @return The service window if there's at least one calendar, and empty otherwise.
+   */
   static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
       GtfsTripTableContainer tripTable,
       List<GtfsCalendar> calendars,
@@ -81,6 +101,13 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     return Optional.of(new ServiceWindow(startDate, endDate));
   }
 
+  /**
+   * Given a list of calendars and/or a list of calendar dates, get the earliest and latest dates
+   * where service is available for at least one route.
+   *
+   * @return The service window if there's at least one date on which service is available, and
+   *     empty otherwise.
+   */
   static Optional<ServiceWindow> get(
       GtfsTripTableContainer tripTable,
       Optional<GtfsCalendarTableContainer> calendarTable,
