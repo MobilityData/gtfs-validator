@@ -11,17 +11,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class FuncUtilTest {
+public class SetUtilTest {
   @Test
   public void testIntersectAll() {
     assertThat(
-            FuncUtil.intersectAll(
+            SetUtil.intersectAll(
                 List.of(
                     Set.of(1, 2, 3, 4, 5, 6),
                     Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
                     Set.of(2, 4, 6, 8, 10))))
         .isEqualTo(Set.of(2, 4, 6));
 
-    assertThat(FuncUtil.intersectAll(emptyList())).isEqualTo(emptySet());
+    assertThat(SetUtil.intersectAll(emptyList())).isEqualTo(emptySet());
   }
 }

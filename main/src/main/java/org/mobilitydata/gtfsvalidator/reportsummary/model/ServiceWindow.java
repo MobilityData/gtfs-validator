@@ -8,7 +8,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
 import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
-import org.mobilitydata.gtfsvalidator.util.FuncUtil;
+import org.mobilitydata.gtfsvalidator.util.SetUtil;
 
 record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   static Optional<ServiceWindow> fromCalendars(
@@ -69,7 +69,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
 
     // We compute the set of days that are removed across all services in
     // order to shift the start and end dates.
-    Set<LocalDate> removedDays = FuncUtil.intersectAll(removedDaysByServiceId.values());
+    Set<LocalDate> removedDays = SetUtil.intersectAll(removedDaysByServiceId.values());
 
     LocalDate startDate = serviceWindowFromCalendars.get().startDate();
     LocalDate endDate = serviceWindowFromCalendars.get().endDate();
