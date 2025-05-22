@@ -28,6 +28,7 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
+    id 'distribution'
     id 'test-report-aggregation'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.15.3"
@@ -36,11 +37,11 @@ plugins {
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
-    group 'org.mobilitydata.gtfs-validator'
+    group 'io.github.jcpitre.gtfs-validator-trial'
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version scmVersion.version
+    version 1.3
 
     repositories {
         mavenCentral()
@@ -125,11 +126,12 @@ subprojects {
                     // Once successfully closed, the repo is available for testing.
                     // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
                     maven {
-                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-                        credentials {
-                            username System.getenv("SONATYPE_TOKEN_USERNAME")
-                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
-                        }
+                        url = "${buildDir}/local-repo"
+//                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+//                        credentials {
+//                            username System.getenv("SONATYPE_TOKEN_USERNAME")
+//                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
+//                        }
                     }
                 }
 
@@ -173,7 +175,14 @@ subprojects {
                 sign publishing.publications.mavenJava
             }
         }
-
+        task customPublish {
+            dependsOn publish
+            doLast {
+                exec {
+                    commandLine 'bash', "../scripts/custom_publish.sh", project.name, project.version
+                }
+            }
+        }
     }
     compileJava {
         options.compilerArgs << '-parameters'
