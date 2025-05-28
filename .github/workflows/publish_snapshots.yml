@@ -1,4 +1,4 @@
-name: Upload Release Assets
+name: Publish Jars Snapshots
 
 on:
   push:
@@ -56,5 +56,5 @@ jobs:
 
       - name: Build and Publish to Sonatype
         run: |
-          ./gradlew publish --rerun-tasks
+          ./gradlew publish --rerun-tasks --info
 
