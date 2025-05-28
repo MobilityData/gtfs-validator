@@ -17,8 +17,6 @@
  * A note about publishing and signing.
  * Maven central requires that artifacts be signed. And upload is done to Sonatype.
  * To publish you will need these environment variables defined:
- *       SONATYPE_TOKEN_USERNAME
- *       SONATYPE_TOKEN_PASSWORD
  *       MAVEN_GPG_PRIVATE_KEY
  *       MAVEN_GPG_PASSPHRASE
  * Suggestion is to put these in a shell script with restricted read permissions, then source it before calling
@@ -37,11 +35,11 @@ plugins {
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
-    group 'io.github.jcpitre.gtfs-validator-trial'
+    group 'org.mobilitydata.gtfs-validator'
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version 1.3
+    version "0.3"
 
     repositories {
         mavenCentral()
@@ -59,6 +57,7 @@ allprojects {
 
     tasks.withType(Javadoc) {
         options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     // All projects that include the 'java` plugin will have a Test task by default.
@@ -82,16 +81,6 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: libs.plugins.spotless.get().pluginId
-
-    // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
-    tasks.withType(PublishToMavenRepository).all { task ->
-        task.onlyIf {
-            if (project.version.toString().contains('SNAPSHOT')) {
-                throw new GradleException("Publishing is not allowed for SNAPSHOT versions. Currently " + project.version)
-            }
-            true
-        }
-    }
 
     task javadocJar(type: Jar) {
         archiveClassifier.set('javadoc')
@@ -126,12 +115,15 @@ subprojects {
                     // Once successfully closed, the repo is available for testing.
                     // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
                     maven {
-                        url = "${buildDir}/local-repo"
-//                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-//                        credentials {
-//                            username System.getenv("SONATYPE_TOKEN_USERNAME")
-//                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
-//                        }
+                        if (version.endsWith('SNAPSHOT')) {
+                            url = 'https://central.sonatype.com/repository/maven-snapshots/'
+                            credentials {
+                                username = System.getenv("MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME")
+                                password = System.getenv("MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD")
+                            }
+                        } else {
+                            url = "${buildDir}/local-repo"
+                        }
                     }
                 }
 
@@ -174,16 +166,33 @@ subprojects {
                 useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
                 sign publishing.publications.mavenJava
             }
+
+
+//            tasks.named('publish') {
+//                finalizedBy customPublish
+//            }
         }
         task customPublish {
-            dependsOn publish
+//                dependsOn publishMavenJavaPublicationToMavenRepository
+//                mustRunAfter publish
+            onlyIf {
+                if (project.version.toString().contains('SNAPSHOT')) {
+                    throw new GradleException("Publishing to Maven Central Portal is not allowed for SNAPSHOT versions. Currently " + project.version)
+                }
+                return true
+            }
+
             doLast {
                 exec {
+                    println "Current working directory: ${project.file('.').absolutePath}"
                     commandLine 'bash', "../scripts/custom_publish.sh", project.name, project.version
                 }
             }
         }
+
+
     }
+
     compileJava {
         options.compilerArgs << '-parameters'
     }

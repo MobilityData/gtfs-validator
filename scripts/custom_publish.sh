@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 
 subproject=$1
 version=$2
@@ -11,9 +11,12 @@ echo "subproject = $subproject"
 zipfile=${subproject}.${version}.zip
 
 pushd build/local-repo
-zip -r ${zipfile} io
+zip -qr ${zipfile} *
 
 bearer_token=$(echo "$MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:$MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD" | base64)
+
+#echo "Time to call curl ~~~~~~~~~~~~~~~~~"
+#exit 0
 
 answer=$(curl --request POST \
   --verbose \
