@@ -99,7 +99,7 @@ jobs:
           VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY, MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME, MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD'
           ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
 
-      - name: Build and Publish to Sonatype
+      - name: Build and Publish to Maven Central
         run: |
           # Publishing to Maven Central will fail if the version is a snapshot, i.e. there is no version tag
           # directly on the current commit.

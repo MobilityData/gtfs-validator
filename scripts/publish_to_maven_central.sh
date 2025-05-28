@@ -22,7 +22,7 @@ bearer_token=$(echo "$MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:$MAVEN_CENTRAL_PORTAL_
 # publishingType=USER_MANAGED means that the artefacts will be uploaded and verified, but not yet published.
 # See https://central.sonatype.com/publishing/deployments (you need to login as mobilitydata)
 # From this page you can examine the list of artefacts, and either drop them or release them.
-# If you want to remove that step, use publishingType=AUTOMATIC, that will publish directly.
+# If you want to remove that step, use publishingType=AUTOMATIC below, that will publish directly.
 # Note that once published you cannot remove or alter the artifacts.
 answer=$(curl --request POST \
   --verbose \

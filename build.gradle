@@ -15,12 +15,15 @@
  */
 /*
  * A note about publishing and signing.
- * Maven central requires that artifacts be signed. And upload is done to Sonatype.
+ * Maven central requires that artifacts be signed. And upload is done via Maven Central Portal.
  * To publish you will need these environment variables defined:
+ *       MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME
+ *       MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD
  *       MAVEN_GPG_PRIVATE_KEY
  *       MAVEN_GPG_PASSPHRASE
- * Suggestion is to put these in a shell script with restricted read permissions, then source it before calling
- * ./gradlew publish.
+ * If run manually, the suggestion is to put these in a shell script with restricted read permissions,
+ * then source it before calling ./gradlew
+ * If run from a Github action, make sure these environment variables are defined.
  */
 plugins {
     id 'java'
@@ -38,7 +41,7 @@ allprojects {
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version "1.2"
+    version scmVersion.version
 
     repositories {
         mavenCentral()
