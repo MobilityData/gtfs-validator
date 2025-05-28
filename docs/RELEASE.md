@@ -63,25 +63,20 @@ Uploaded artefacts have versions.
 
 * Typically when doing a release the publish_assets.yml Github action is automatically run. 
 This will upload some assets
-to be available on the release page itself (see for example [Release 4.1.0 assets](https://github.com/MobilityData/gtfs-validator/releases/tag/v4.1.0#:~:text=7%20other%20contributors-,Assets,-6))
+to be available on the release page itself (see for example [Release 7.1.0 assets](https://github.com/MobilityData/gtfs-validator/releases/tag/v7.1.0))
 
 
-* This Github action also publishes to Sonatype. This is used as a staging area before making the arftefacts available via Maven Central. 
-* See [Sonatype Staging Repositories](https://s01.oss.sonatype.org/#stagingRepositories) (login required)
-* There should be a repository in the list with name orgmobilitydata-####. This is automatically created by Sonatype when files are uploaded.
+* This Github action also publishes to Maven Central. 
+* See [Maven Sentral Repository Deployments](https://central.sonatype.com/publishing/deployments) (login required)
+* If the Github action was successful, there should be components in this page:
 
-![image](https://github.com/MobilityData/gtfs-validator/assets/106176106/f08a24ec-addb-4d63-840d-24297c505822)
+![image](images/Maven-central-deployments.png)
 
-
-* You can browse the repo content to make sure everything is there. In particular there should be the jars for the code, jars for javadoc, for sources, and files for the maven pom. 
+* You can browse the different components, look at the components files, make sure the version is correct, etc.
 * Everything should be signed, as evidenced by the presence of files with extension .sha1, .sha256, .sha512 etc.
-* Also make sure the version is correct.
-* You then need to manually close the repo. Doing this will trigger acceptance tests for Maven Central.
+* If for some reason you think the components should not be published, you can press the `Drop` button for each component.
+* If you are satisfied, you can press the `Publish` button for each of the components. 
+* The result should be that the components are made available in Maven Central. See [Maven Central Repository](https://repo1.maven.org/maven2/org/mobilitydata/gtfs-validator/) for the published components.
+* They will disappear from the page as you publish or drop them.
 
-![image](https://github.com/MobilityData/gtfs-validator/assets/106176106/1d8916c6-a640-43cf-9658-82193d127b1d)
-
-* Once the repository is closed it becomes available for inclusion in projects for testing. The URL to use as repository in your gradle or maven configuration files can be found in the summary for the repo.
-![image](https://github.com/MobilityData/gtfs-validator/assets/106176106/c809c1ca-67d7-4c45-bfa5-47441e163d2f)
-
-* Once satisfied with the testing, the repo can be released to Maven Central.
-* Note that once a release is deployed on Maven Central, it cannot be removed or modified. If problems are detected after this stage, a new release with a different version has to be created.
+* Note that once a release is published on Maven Central, it cannot be removed or modified. If problems are detected after this stage, a new release with a different version has to be created.
