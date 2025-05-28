@@ -9,7 +9,7 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 - The action will modify the file and create a pull request with this title: `docs: Automated update of NOTICE_MIGRATION.md`
 - Examine the pull request and if satisfactory merge it.
 
-### 2. Do a pre relase
+### 3. Do a pre relase
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
 
 1. Start a draft release ![step 2](https://user-images.githubusercontent.com/35747326/99822107-ce003500-2b20-11eb-9364-6dc8356e1276.png)
@@ -19,11 +19,11 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 1. Publish the prerelease
 ![publish](https://user-images.githubusercontent.com/35747326/99821598-3ef31d00-2b20-11eb-9f5e-26f6583ad6c9.png)
 
-### 3. Run analytics comparing the pre-release with the last release. 
+### 4. Run analytics comparing the pre-release with the last release. 
 1. Generate analytics based on the acceptance tests to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
 2. Identify if any critical issues should be resolved before release. 
 
-### 4. Do the release
+### 5. Do the release
 1. While CI is running to create the artifacts, you can work on the release description. ![edit](https://user-images.githubusercontent.com/35747326/99821184-ba080380-2b1f-11eb-8efe-57be80a0bd29.png)
 
 
@@ -43,19 +43,19 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
 
-### 4. Remove all `sha` Docker images added since last release
+### 6. Remove all `sha` Docker images added since last release
 1. Find the [list of Docker images for this project.](https://github.com/orgs/MobilityData/packages/container/gtfs-validator/versions)
 1. Delete all `sha`tagged Docker images added since last release.
 ![grhc preview](https://user-images.githubusercontent.com/35747326/100006687-e1b5d080-2d98-11eb-846d-af12fbd7ca9f.png)
 **⚠️ Note: this manipulation can only be done by someone whose GitHub account has `Admin` access rights over the `gtfs-validator` package.** 
 
-### 5. Update the release number in the wiki and on gtfs.org
+### 7. Update the release number in the wiki and on gtfs.org
 The version number in the project's wiki is used to inform users of the Desktop app that a new version is available, and will prompt them to upgrade if their local version does not match.
 Update [this page](https://github.com/MobilityData/gtfs-validator/wiki/Current-Version) with the new version.
 
 The version number on [gtfs.org/schedule/validate/](https://gtfs.org/schedule/validate/) is used to inform validator users of which version is currently running on [gtfs-validator.mobilitydata.org/](https://gtfs-validator.mobilitydata.org/). Update by opening a Pull Request on [github.com/MobilityData/gtfs.org](https://github.com/MobilityData/gtfs.org).
 
-### 6. Publishing to Maven Central
+### 8. Publishing to Maven Central
 * Maven central is a repository used by developers to download libraries that can be used in their own development.
 * We upload some jars (currently gtfs-validator-main, gtfs-validator-core and gtfs-validator-model) there to make them available.
 Uploaded artefacts have versions.
