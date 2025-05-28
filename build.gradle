@@ -107,6 +107,11 @@ subprojects {
         def fullProjectName = 'gtfs-validator-' + project.name
 
         afterEvaluate {
+            tasks.named('publish') {
+                doFirst {
+                    println "Project version: ${scmVersion.version}"
+                }
+            }
             publishing {
                 repositories {
                     // This is the sonatype staging repo for maven.
