@@ -113,6 +113,8 @@ subprojects {
             publishing {
                 repositories {
                     maven {
+                        // Snapshot uses a different repository than release.
+                        // The publish in that case will upload to Maven Central snapshot repository.
                         if (version.endsWith('SNAPSHOT')) {
                             url = 'https://central.sonatype.com/repository/maven-snapshots/'
                             credentials {
@@ -120,6 +122,9 @@ subprojects {
                                 password = System.getenv("MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD")
                             }
                         } else {
+                            // For releases, the publish task does not upload to MavenCentral.
+                            // It just the artifacts directory hierarchy on the local disk,
+                            // The actual zipping and uploading is done in the publishToMavenCentral task.
                             url = "${buildDir}/local-repo"
                         }
                     }
@@ -167,6 +172,10 @@ subprojects {
 
 
             tasks.register('publishToMavenCentral') {
+                // We want to do call the publish task only if the version is a release (ie not a snapshot).
+                // Without this conditional, with a snapshot it would do the publish first, then throw the Exception below.
+                // But since the dependsOn is within the conditional, the dependency is not created for snapshot versions
+                // so the publish in that case is never executed.
                 if (!version.toString().endsWith('SNAPSHOT')) {
                     dependsOn tasks.publish
                 }
@@ -186,6 +195,10 @@ subprojects {
             }
 
             tasks.register('publishToSnapshotRepository') {
+                // We want to do call the publish task only if the version is a snapshot.
+                // Without this conditional, with a release it would do the publish first, then throw the Exception below.
+                // But since the dependsOn is within the conditional, the dependency is not created for release versions
+                // so the publish in that case is never executed.
                 if (version.toString().endsWith('SNAPSHOT')) {
                     dependsOn tasks.publish
                 }
