@@ -14,7 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          # We need to download all tags so that the axion-release-plugin can resolve the most recent version tag.
+          # This is useful only for the manual trigger.
+          # For the release trigger, the tag is available on the current commit.
+          fetch-depth: 0
+
       # Get the version from the commit. This will depend on the trigger of the workflow
       # If the trigger is release, the version will be the tag on the commit.
       # If the trigger is a workflow_dispatch, the version will be the branch name, which is
