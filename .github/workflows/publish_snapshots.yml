@@ -3,18 +3,12 @@ name: Publish Jars Snapshots
 on:
   push:
     branches: [ 146-Migrate-maven-repository ]
-    paths-ignore:
-      - '**.md'
-      - '**.py'
-      - 'Dockerfile'
-      - '.gitignore'
-      - 'LICENSE'
-      - 'docker.yml'
-      - 'formatting.yml'
-      - 'test_pack_dock.yml'
-      - 'triage.yml'
-      - 'acceptance_test.yml'
-      - 'web/**'
+    paths:
+      - 'core/src/main/**'
+      - 'main/src/main/**'
+      - 'model/src/main/**'
+      - 'build.gradle'
+      - '.github/workflows/publish_snapshots.yml'
   workflow_dispatch:
 
 env:
@@ -38,17 +32,6 @@ jobs:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
 
-      # The following steps will publish artifacts to a sonatype staging repo with the aim of promoting them to maven central
-      # Pretty much everything is done through gradle.
-      # The version used will be according to the axion-release-plugin, meaning it will take a tag if present.
-      # The tag should follow semantic versioning, e.g. v1.2.3. There could be a suffix, e.g. v1.2.3-TEST
-      # gradle will build, sign then upload artifacts to a Sonatype staging repo.
-      # See https://s01.oss.sonatype.org for accessing these repos.
-      # At this point it should manually be closed, which will trigger acceptance tests for maven central (but not transfer yet)
-      # Once closed, the repo is available for testing.
-      # After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
-      # Note than once in maven central a release cannot be removed or altered.
-
       - name: Load secrets from 1Password
         id: onepw_secrets
         uses: ./.github/actions/extract-1password-secret
@@ -57,7 +40,11 @@ jobs:
           VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY, MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME, MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD'
           ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
 
-      - name: Build and Publish to Sonatype
+      - name: Build and Publish to the snapshot repository
         run: |
-          ./gradlew publish --rerun-tasks --info
+          # Publishing to the snapshot repository will fail if the current commit has a version tag.
+          # Which in effect makes it a release.
+          # See https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/org/mobilitydata/gtfs-validator/
+          # for the snapshot repository.
+          ./gradlew publishToSnapshotRepository
 

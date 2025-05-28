@@ -26,7 +26,6 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
-    id 'distribution'
     id 'test-report-aggregation'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
     id "pl.allegro.tech.build.axion-release" version "1.15.3"
@@ -39,7 +38,7 @@ allprojects {
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version scmVersion.version
+    version "1.2-SNAPSHOT"
 
     repositories {
         mavenCentral()
@@ -101,24 +100,15 @@ subprojects {
 
     // These modules require the same publishing configuration, apart from the name of the module
     // Also we want to limit artefact publishing to these modules.
-    if (project.name == 'main' ||
-            project.name == 'core' ||
-            project.name == 'model') {
+    if (project.name == 'main'
+            || project.name == 'core'
+            || project.name == 'model'
+         ) {
         def fullProjectName = 'gtfs-validator-' + project.name
 
         afterEvaluate {
-            tasks.named('publish') {
-                doFirst {
-                    println "Project version: ${scmVersion.version}"
-                }
-            }
             publishing {
                 repositories {
-                    // This is the sonatype staging repo for maven.
-                    // Once uploaded, the repo needs to be manually closed, which will trigger acceptance tests for
-                    // maven central (but not transfer yet).
-                    // Once successfully closed, the repo is available for testing.
-                    // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
                     maven {
                         if (version.endsWith('SNAPSHOT')) {
                             url = 'https://central.sonatype.com/repository/maven-snapshots/'
@@ -173,24 +163,34 @@ subprojects {
             }
 
 
-//            tasks.named('publish') {
-//                finalizedBy customPublish
-//            }
-        }
-        task customPublish {
-//                dependsOn publishMavenJavaPublicationToMavenRepository
-//                mustRunAfter publish
-            onlyIf {
-                if (project.version.toString().contains('SNAPSHOT')) {
-                    throw new GradleException("Publishing to Maven Central Portal is not allowed for SNAPSHOT versions. Currently " + project.version)
+            tasks.register('publishToMavenCentral') {
+                if (!version.toString().endsWith('SNAPSHOT')) {
+                    dependsOn tasks.publish
                 }
-                return true
+                doFirst {
+                    if (version.toString().endsWith('SNAPSHOT')) {
+                        throw new GradleException("Version \"" + version +
+                                "\" is a snapshot. Cannot publish to Maven Central")
+                    }
+                }
+
+                doLast {
+                    exec {
+                        workingDir project.projectDir
+                        commandLine 'bash', "${project.rootDir}/scripts/publish_to_maven_central.sh", project.name, project.version
+                    }
+                }
             }
 
-            doLast {
-                exec {
-                    println "Current working directory: ${project.file('.').absolutePath}"
-                    commandLine 'bash', "../scripts/custom_publish.sh", project.name, project.version
+            tasks.register('publishToSnapshotRepository') {
+                if (version.toString().endsWith('SNAPSHOT')) {
+                    dependsOn tasks.publish
+                }
+                doFirst {
+                    if (!version.toString().endsWith('SNAPSHOT')) {
+                        throw new GradleException("Version \"" + version +
+                                "\" is a NOT a snapshot. Cannot publish to the snapshot repository")
+                    }
                 }
             }
         }

@@ -91,17 +91,6 @@ jobs:
           asset_name: javadocs.zip
           asset_content_type: application/zip
 
-      # The following steps will publish artifacts to a sonatype staging repo with the aim of promoting them to maven central
-      # Pretty much everything is done through gradle.
-      # The version used will be according to the axion-release-plugin, meaning it will take a tag if present.
-      # The tag should follow semantic versioning, e.g. v1.2.3. There could be a suffix, e.g. v1.2.3-TEST
-      # gradle will build, sign then upload artifacts to a Sonatype staging repo.
-      # See https://s01.oss.sonatype.org for accessing these repos.
-      # At this point it should manually be closed, which will trigger acceptance tests for maven central (but not transfer yet)
-      # Once closed, the repo is available for testing.
-      # After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
-      # Note than once in maven central a release cannot be removed or altered.
-
       - name: Load secrets from 1Password
         id: onepw_secrets
         uses: ./.github/actions/extract-1password-secret
@@ -112,7 +101,12 @@ jobs:
 
       - name: Build and Publish to Sonatype
         run: |
-          # Don't verify since it has already been done when the PR was created.
-          ./gradlew publish --rerun-tasks -x spotlessCheck
-          ./gradlew customPublish
+          # Publishing to Maven Central will fail if the version is a snapshot, i.e. there is no version tag
+          # directly on the current commit.
+          # See https://repo1.maven.org/maven2/org/mobilitydata/gtfs-validator/ for the maven central repository.
+          # One this step is done, the artefacts will be validated but not yet published.
+          # See https://central.sonatype.com/publishing/deployments (you need to login as mobilitydata)
+          # From this page you can examine the list of artefacts, and either drop them or release them.
+          # Note that once released, the artefacts cannot be removed or altered.
+          ./gradlew publishToMavenCentral
 
