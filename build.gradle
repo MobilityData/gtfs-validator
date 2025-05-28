@@ -39,7 +39,7 @@ allprojects {
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version "0.3"
+    version scmVersion.version
 
     repositories {
         mavenCentral()
