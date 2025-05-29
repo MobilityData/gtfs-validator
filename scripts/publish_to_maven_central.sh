@@ -1,6 +1,6 @@
 #!/bin/bash
 # This script uploads a zip file to Maven Central.
-# It expects the current working directory to be the one where the build folder is located (e.h. core)
+# It expects the current working directory to be the one where the build folder is located (e.g. core)
 # This build folder should contain the local-repo folder with the artefacts to be zipped and uploaded.
 set -e
 

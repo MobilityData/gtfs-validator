@@ -9,7 +9,7 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 - The action will modify the file and create a pull request with this title: `docs: Automated update of NOTICE_MIGRATION.md`
 - Examine the pull request and if satisfactory merge it.
 
-### 3. Do a pre relase
+### 3. Do a pre release
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
 
 1. Start a draft release ![step 2](https://user-images.githubusercontent.com/35747326/99822107-ce003500-2b20-11eb-9364-6dc8356e1276.png)
@@ -67,7 +67,7 @@ to be available on the release page itself (see for example [Release 7.1.0 asset
 
 
 * This Github action also publishes to Maven Central. 
-* See [Maven Sentral Repository Deployments](https://central.sonatype.com/publishing/deployments) (login required)
+* See [Maven Central Repository Deployments](https://central.sonatype.com/publishing/deployments) (login required)
 * If the Github action was successful, there should be components in this page:
 
 ![image](images/Maven-central-deployments.png)

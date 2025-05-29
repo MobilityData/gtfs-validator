@@ -110,7 +110,7 @@ jobs:
           # Publishing to Maven Central will fail if the version is a snapshot, i.e. there is no version tag
           # directly on the current commit.
           # See https://repo1.maven.org/maven2/org/mobilitydata/gtfs-validator/ for the maven central repository.
-          # One this step is done, the artefacts will be validated but not yet published.
+          # Once this step is done, the artefacts will be validated but not yet published.
           # See https://central.sonatype.com/publishing/deployments (you need to login as mobilitydata)
           # From this page you can examine the list of artefacts, and either drop them or release them.
           # Note that once released, the artefacts cannot be removed or altered.
