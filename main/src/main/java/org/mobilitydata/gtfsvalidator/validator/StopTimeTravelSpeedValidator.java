@@ -50,6 +50,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
+import org.mobilitydata.gtfsvalidator.util.StopUtil;
 
 /**
  * Validates that transit vehicles do not travel too fast between consecutive and between far stops.
@@ -100,7 +101,8 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         continue;
       }
       final double maxSpeedKph = getMaxVehicleSpeedKph(route.get().routeType());
-      final double[] distancesKm = findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes());
+      final double[] distancesKm =
+          findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes(), stopTable);
       validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
       validateFarStops(trips, distancesKm, maxSpeedKph, noticeContainer);
     }
@@ -154,13 +156,21 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * <p>{@code distancesKm[i]} equals to distance between stops corresponding to stop times i, i +
    * 1.
    */
-  private double[] findDistancesKmBetweenStops(List<GtfsStopTime> stopTimes) {
+  @VisibleForTesting
+  static double[] findDistancesKmBetweenStops(
+      List<GtfsStopTime> stopTimes, GtfsStopTableContainer stopTable) {
     double[] distancesKm = new double[stopTimes.size() - 1];
     S2LatLng currLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(0).stopId());
     for (int i = 0; i < distancesKm.length; ++i) {
-      S2LatLng nextLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(i + 1).stopId());
-      distancesKm[i] = S2Earth.getDistanceKm(currLatLng, nextLatLng);
-      currLatLng = nextLatLng;
+      Optional<S2LatLng> maybeNextLatLng =
+          StopUtil.getOptionalStopOrParentLatLng(stopTable, stopTimes.get(i + 1).stopId());
+      if (maybeNextLatLng.isPresent()) {
+        S2LatLng nextLatLng = maybeNextLatLng.get();
+        distancesKm[i] = S2Earth.getDistanceKm(currLatLng, nextLatLng);
+        currLatLng = nextLatLng;
+      } else {
+        distancesKm[i] = 0;
+      }
     }
     return distancesKm;
   }
