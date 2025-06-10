@@ -63,7 +63,7 @@ To facilitate easier debugging and logging, we have made our user agent header e
 ### Run it
 Once installed, run the application and you will see the following screen:
 
-![Application-Windows](/docs/Application-Windows.png)
+![Application-Windows](/docs/images/Application-Windows.png)
 
 There are two primary options to set:
 
