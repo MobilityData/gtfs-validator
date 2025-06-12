@@ -69,7 +69,7 @@ public class FeedExpirationDateValidator extends SingleEntityValidator<GtfsFeedI
                 currentDatePlusSevenDays));
         return;
       }
-      if (entity.feedEndDate().compareTo(currentDatePlusThirtyDays) <= 0) {
+      if (entity.feedEndDate().compareTo(currentDatePlusThirtyDays) < 0) {
         noticeContainer.addValidationNotice(
             new FeedExpirationDate30DaysNotice(
                 entity.csvRowNumber(),
