@@ -16,7 +16,7 @@
   - A maintenance is created if some bug has to be corrected before the next scheduled release.
     - As an example see [#1663](https://github.com/MobilityData/gtfs-validator/pull/1653) in the gtfs-validator repository.
   
-![](BranchingDiagram.png)
+![](images/BranchingDiagram.png)
 
 ## Feature/fix branches
 
