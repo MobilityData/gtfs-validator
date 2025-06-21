@@ -26,8 +26,7 @@ import com.google.common.geometry.S2LatLng;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -103,7 +102,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       final double maxSpeedKph = getMaxVehicleSpeedKph(route.get().routeType());
       final double[] distancesKm =
           findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes(), stopTable);
-      validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
+      validateConsecutiveStops(trips, maxSpeedKph, noticeContainer);
       validateFarStops(trips, distancesKm, maxSpeedKph, noticeContainer);
     }
   }
@@ -175,6 +174,24 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     return distancesKm;
   }
 
+  private Optional<Double> getDistanceKm(GtfsStopTime start, GtfsStopTime end) {
+    if (!start.hasDepartureTime() || !end.hasArrivalTime()) {
+      return Optional.empty();
+    }
+
+    Optional<S2LatLng> maybeFirstLatLng =
+        StopUtil.getOptionalStopOrParentLatLng(stopTable, start.stopId());
+    Optional<S2LatLng> maybeSecondLatLng =
+        StopUtil.getOptionalStopOrParentLatLng(stopTable, end.stopId());
+
+    if (maybeFirstLatLng.isEmpty() || maybeSecondLatLng.isEmpty()) {
+      return Optional.empty();
+    }
+
+    double distanceKm = S2Earth.getDistanceKm(maybeFirstLatLng.get(), maybeSecondLatLng.get());
+    return Optional.of(distanceKm);
+  }
+
   /**
    * Validates travel speed between far stops for all trips that belong to the same route and visit
    * the same stops at the same times.
@@ -244,40 +261,39 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * <p>If there is a fast travel detected, then a separate notice is issued for each trip.
    */
   private void validateConsecutiveStops(
-      List<TripAndStopTimes> trips,
-      double[] distancesKm,
-      double maxSpeedKph,
-      NoticeContainer noticeContainer) {
+      List<TripAndStopTimes> trips, double maxSpeedKph, NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0).getStopTimes();
-    for (int i = 0; i < distancesKm.length; ++i) {
-      final GtfsStopTime stopTime1 = stopTimes.get(i);
-      final GtfsStopTime stopTime2 = stopTimes.get(i + 1);
-      if (!(stopTime1.hasDepartureTime() && stopTime2.hasArrivalTime())) {
+    GtfsStopTime start = stopTimes.get(0);
+    for (int i = 0; i < stopTimes.size(); ++i) {
+      GtfsStopTime end = stopTimes.get(i + 1);
+
+      Optional<Double> maybeDistanceKm = getDistanceKm(start, end);
+      // We couldn't calculate the distance, for instance because one of the stops is
+      // actually a GeoJSON location and doesn't have a specific latitude and longitude.
+      // We try comparing with the next stop instead.
+      if (maybeDistanceKm.isEmpty()) {
         continue;
       }
-      final double distanceKm = distancesKm[i];
-      final double speedKph = getSpeedKphBetweenStops(distanceKm, stopTime1, stopTime2);
-      if (speedKph <= maxSpeedKph) {
-        continue;
+
+      double distanceKm = maybeDistanceKm.get();
+      double speedKph = getSpeedKphBetweenStops(distanceKm, start, end);
+
+      if (speedKph > maxSpeedKph) {
+        final Optional<GtfsStop> stop1 = stopTable.byStopId(start.stopId());
+        final Optional<GtfsStop> stop2 = stopTable.byStopId(end.stopId());
+        // This should always evaluate to true since we check whether both stops exist
+        // in `getDistanceAndSpeed`; this is just here as a precaution.
+        if (stop1.isPresent() && stop2.isPresent()) {
+          // Issue one notice for each trip.
+          for (TripAndStopTimes trip : trips) {
+            noticeContainer.addValidationNotice(
+                new FastTravelBetweenConsecutiveStopsNotice(
+                    trip.getTrip(), start, stop1.get(), end, stop2.get(), speedKph, distanceKm));
+          }
+        }
       }
-      final Optional<GtfsStop> stop1 = stopTable.byStopId(stopTime1.stopId());
-      final Optional<GtfsStop> stop2 = stopTable.byStopId(stopTime2.stopId());
-      if (stop1.isEmpty() || stop2.isEmpty()) {
-        // Broken reference is reported in another rule.
-        return;
-      }
-      // Issue one notice per each trip.
-      for (TripAndStopTimes trip : trips) {
-        noticeContainer.addValidationNotice(
-            new FastTravelBetweenConsecutiveStopsNotice(
-                trip.getTrip(),
-                trip.getStopTimes().get(i),
-                stop1.get(),
-                trip.getStopTimes().get(i + 1),
-                stop2.get(),
-                speedKph,
-                distanceKm));
-      }
+
+      start = end;
     }
   }
 
