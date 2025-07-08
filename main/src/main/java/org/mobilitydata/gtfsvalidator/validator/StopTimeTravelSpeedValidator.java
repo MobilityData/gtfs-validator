@@ -264,7 +264,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       List<TripAndStopTimes> trips, double maxSpeedKph, NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0).getStopTimes();
     GtfsStopTime start = stopTimes.get(0);
-    for (int i = 0; i < stopTimes.size(); ++i) {
+    for (int i = 0; i < stopTimes.size() - 1; ++i) {
       GtfsStopTime end = stopTimes.get(i + 1);
 
       Optional<Double> maybeDistanceKm = getDistanceKm(start, end);
