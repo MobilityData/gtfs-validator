@@ -301,6 +301,8 @@ public final class StopTimeTravelSpeedValidatorTest {
                 GtfsTime.fromString("08:02:30")));
     assertThat(generateNotices(ImmutableList.of(route), ImmutableList.of(trip), stopTimes, stops))
         .containsExactly(
+            createFastTravelBetweenConsecutiveStopsNotice(
+                trip, stopTimes.get(0), stops.get(0), stopTimes.get(2), stops.get(2)),
             createFastTravelBetweenFarStopsNotice(
                 trip,
                 stopTimes.get(0),
