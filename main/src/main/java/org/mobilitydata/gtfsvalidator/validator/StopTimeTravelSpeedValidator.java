@@ -175,10 +175,6 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   }
 
   private Optional<Double> getDistanceKm(GtfsStopTime start, GtfsStopTime end) {
-    if (!start.hasDepartureTime() || !end.hasArrivalTime()) {
-      return Optional.empty();
-    }
-
     Optional<S2LatLng> maybeFirstLatLng =
         StopUtil.getOptionalStopOrParentLatLng(stopTable, start.stopId());
     Optional<S2LatLng> maybeSecondLatLng =
@@ -274,8 +270,13 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
       if (maybeDistanceKm.isEmpty()) {
         continue;
       }
-
       double distanceKm = maybeDistanceKm.get();
+
+      // We can't calculate the speed if we're missing a departure time or
+      // arrival time.
+      if (!start.hasDepartureTime() || !end.hasArrivalTime()) {
+        continue;
+      }
       double speedKph = getSpeedKphBetweenStops(distanceKm, start, end);
 
       if (speedKph > maxSpeedKph) {
