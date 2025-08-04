@@ -333,12 +333,6 @@ public class ValidationRunner {
         logger.atSevere().withCause(ex).log("Error creating JSON report");
       }
 
-      // System errors to stderr
-      try {
-        System.err.println(gson.toJson(noticeContainer.exportSystemErrors()));
-      } catch (Exception ex) {
-        logger.atSevere().withCause(ex).log("Error creating system errors report");
-      }
       return;
     }
 

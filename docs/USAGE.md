@@ -88,6 +88,8 @@ java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip --stdout
 
 ⚠️ Note that `--stdout` cannot be used with `-o` or `--output_base`. Use one or the other.
 
+⚠️ When using `--stdout`, all system errors and logging output are suppressed to ensure clean JSON output. Only severe-level log messages (hard crashes) will appear on stderr.
+
 ## via GitHub Actions - Run the validator on any gtfs archive available on a public url
 
 1. [Fork this repository](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo)
