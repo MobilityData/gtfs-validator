@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/actions/wrapper-validation@v4
   pack-snapshot:
     needs: validate_gradle_wrapper
     runs-on: ubuntu-latest
@@ -61,9 +61,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
+        uses: gradle/gradle-build-action@v4
+        
+      - name: Builds ShadowJar
+        run: ./gradlew shadowJar
+
       - name: Persist gtfs-validator snapshot jar
         uses: actions/upload-artifact@v4
         with:
