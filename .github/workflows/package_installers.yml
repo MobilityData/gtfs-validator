@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/actions/wrapper-validation@v4
 
   build_push:
     needs: [ validate_gradle_wrapper ]
@@ -81,11 +81,9 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${MACOS_CI_KEYCHAIN_PWD}" build.keychain
 
       - name: "Package GUI app installer with Gradle"
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: |
-            jpackage
-            -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
+        uses: gradle/actions/setup-gradle@v4
+      - name: Run Gradle GUI packaging command on push or release
+        run: ./gradlew jpackage -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
 
       # On MacOS, we now submit the app for "notarization", where Apple will scan the app for
       # malware and other issues.  This step can take a few minutes or more; the action will wait
@@ -142,9 +140,10 @@ jobs:
 
       - name: Package cli and gui app jars with Gradle
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: shadowJar
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Produce shadowJar
+        run: ./gradlew shadowJar
 
       - name: Persist cli app jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
