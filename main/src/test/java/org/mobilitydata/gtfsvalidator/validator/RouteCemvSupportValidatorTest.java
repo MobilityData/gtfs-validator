@@ -9,46 +9,45 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCemvSupport;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 @RunWith(JUnit4.class)
-public class AgencyCemvSupportValidatorTest {
+public class RouteCemvSupportValidatorTest {
   private NoticeContainer noticeContainer;
-  private AgencyCemvSupportValidator validator;
+  private RouteCemvSupportValidator validator;
 
   @Before
   public void setUp() {
     noticeContainer = new NoticeContainer();
-    validator = new AgencyCemvSupportValidator();
+    validator = new RouteCemvSupportValidator();
   }
 
   @Test
   public void validate_validCemvSupport_noNoticeAdded() {
-    GtfsAgency agency =
-        new GtfsAgency.Builder()
-            .setCsvRowNumber(1)
-            .setCemvSupport(GtfsCemvSupport.SUPPORTED)
-            .build();
+    GtfsRoute route =
+            new GtfsRoute.Builder()
+                    .setCsvRowNumber(1)
+                    .setCemvSupport(GtfsCemvSupport.SUPPORTED)
+                    .build();
 
-    validator.validate(agency, noticeContainer);
+    validator.validate(route, noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 
   @Test
   public void validate_invalidCemvSupport_noticeAdded() {
-    GtfsAgency agency =
-        new GtfsAgency.Builder()
-            .setCsvRowNumber(5)
-            .setCemvSupport(GtfsCemvSupport.UNRECOGNIZED)
-            .build();
+    GtfsRoute route =
+            new GtfsRoute.Builder()
+                    .setCsvRowNumber(5)
+                    .setCemvSupport(GtfsCemvSupport.UNRECOGNIZED)
+                    .build();
 
-    validator.validate(agency, noticeContainer);
+    validator.validate(route, noticeContainer);
 
     UnexpectedEnumValueNotice notice =
-        new UnexpectedEnumValueNotice(
-            "agency.txt", 5, "UNRECOGNIZED", GtfsCemvSupport.UNRECOGNIZED.getNumber());
+            new UnexpectedEnumValueNotice(
+                    "routes.txt", 5, "UNRECOGNIZED", GtfsCemvSupport.UNRECOGNIZED.getNumber());
     assertThat(noticeContainer.getValidationNotices()).contains(notice);
   }
 }

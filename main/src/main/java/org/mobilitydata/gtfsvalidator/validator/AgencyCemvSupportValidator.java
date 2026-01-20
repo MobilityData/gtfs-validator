@@ -8,20 +8,24 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCemvSupport;
 
+/**
+ * Validates the `cemv_support` field in the `agency.txt` file.
+ *
+ * <p>This validator ensures that the `cemv_support` field contains only valid enum values:
+ * `NO_INFORMATION`, `SUPPORTED`, or `NOT_SUPPORTED`. If an invalid value is encountered, an
+ * `UnexpectedEnumValueNotice` is added to the `NoticeContainer`.
+ *
+ * <p>Generated notices:
+ * <ul>
+ *   <li>{@link UnexpectedEnumValueNotice} - if the `cemv_support` field contains an invalid value.
+ * </ul>
+ */
 @GtfsValidator
 public class AgencyCemvSupportValidator extends SingleEntityValidator<GtfsAgency> {
-  private final GtfsAgencyTableContainer agencyTable;
-
-  @Inject
-  AgencyCemvSupportValidator(GtfsAgencyTableContainer agencyTable) {
-    this.agencyTable = agencyTable;
-  }
-
+  final String AGENCY_FILE_NAME = "agency.txt";
   @Override
   public boolean shouldCallValidate(ColumnInspector header) {
-    return agencyTable != null
-        && !agencyTable.isMissingFile()
-        && header.hasColumn(GtfsAgency.CEMV_SUPPORT_FIELD_NAME);
+    return header.hasColumn(GtfsAgency.CEMV_SUPPORT_FIELD_NAME);
   }
 
   @Override
@@ -32,7 +36,7 @@ public class AgencyCemvSupportValidator extends SingleEntityValidator<GtfsAgency
         && cemvSupport != GtfsCemvSupport.NOT_SUPPORTED) {
       noticeContainer.addValidationNotice(
           new UnexpectedEnumValueNotice(
-              agencyTable.gtfsFilename(),
+                  AGENCY_FILE_NAME,
               agency.csvRowNumber(),
               cemvSupport.name(),
               cemvSupport.getNumber()));

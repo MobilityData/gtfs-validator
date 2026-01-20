@@ -8,20 +8,25 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCemvSupport;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
+/**
+ * Validates the `cemv_support` field in the `routes.txt` file.
+ *
+ * <p>This validator ensures that the `cemv_support` field contains only valid enum values:
+ * `NO_INFORMATION`, `SUPPORTED`, or `NOT_SUPPORTED`. If an invalid value is encountered, an
+ * `UnexpectedEnumValueNotice` is added to the `NoticeContainer`.
+ *
+ * <p>Generated notices:
+ * <ul>
+ *   <li>{@link UnexpectedEnumValueNotice} - if the `cemv_support` field contains an invalid value.
+ * </ul>
+ */
 @GtfsValidator
 public class RouteCemvSupportValidator extends SingleEntityValidator<GtfsRoute> {
-  private final GtfsRouteTableContainer routeTable;
-
-  @Inject
-  RouteCemvSupportValidator(GtfsRouteTableContainer routeTable) {
-    this.routeTable = routeTable;
-  }
+  final String ROUTE_FILE_NAME = "routes.txt";
 
   @Override
   public boolean shouldCallValidate(ColumnInspector header) {
-    return routeTable != null
-        && !routeTable.isMissingFile()
-        && header.hasColumn(GtfsRoute.CEMV_SUPPORT_FIELD_NAME);
+    return header.hasColumn(GtfsRoute.CEMV_SUPPORT_FIELD_NAME);
   }
 
   @Override
@@ -32,7 +37,7 @@ public class RouteCemvSupportValidator extends SingleEntityValidator<GtfsRoute> 
         && cemvSupport != GtfsCemvSupport.NOT_SUPPORTED) {
       noticeContainer.addValidationNotice(
           new UnexpectedEnumValueNotice(
-              routeTable.gtfsFilename(),
+                  ROUTE_FILE_NAME,
               route.csvRowNumber(),
               cemvSupport.name(),
               cemvSupport.getNumber()));
