@@ -28,7 +28,8 @@ public class AgencyCemvSupportValidatorTest {
 
   @Test
   public void validate_validCemvSupport_noNoticeAdded() {
-    GtfsAgency agency = new GtfsAgency.Builder()
+    GtfsAgency agency =
+        new GtfsAgency.Builder()
             .setCsvRowNumber(1)
             .setCemvSupport(GtfsCemvSupport.SUPPORTED)
             .build();
@@ -39,14 +40,17 @@ public class AgencyCemvSupportValidatorTest {
 
   @Test
   public void validate_invalidCemvSupport_noticeAdded() {
-    GtfsAgency agency = new GtfsAgency.Builder()
+    GtfsAgency agency =
+        new GtfsAgency.Builder()
             .setCsvRowNumber(5)
             .setCemvSupport(GtfsCemvSupport.UNRECOGNIZED)
             .build();
 
     validator.validate(agency, noticeContainer);
 
-    UnexpectedEnumValueNotice notice = new UnexpectedEnumValueNotice("agency.txt", 5, "UNRECOGNIZED", GtfsCemvSupport.UNRECOGNIZED.getNumber());
+    UnexpectedEnumValueNotice notice =
+        new UnexpectedEnumValueNotice(
+            "agency.txt", 5, "UNRECOGNIZED", GtfsCemvSupport.UNRECOGNIZED.getNumber());
     assertThat(noticeContainer.getValidationNotices()).contains(notice);
   }
 }
