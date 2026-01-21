@@ -69,4 +69,6 @@ public interface GtfsRouteSchema extends GtfsEntity {
   @Index
   @ConditionallyRequired
   String networkId();
+
+  GtfsCemvSupport cemvSupport();
 }
