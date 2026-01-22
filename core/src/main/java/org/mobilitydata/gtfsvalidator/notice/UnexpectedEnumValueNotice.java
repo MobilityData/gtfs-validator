@@ -16,13 +16,13 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FIELD_DEFINITIONS;
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /** An enum has an unexpected value. */
-@GtfsValidationNotice(severity = WARNING, sections = @SectionRefs(FIELD_DEFINITIONS))
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FIELD_DEFINITIONS))
 public class UnexpectedEnumValueNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
