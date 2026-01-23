@@ -78,7 +78,7 @@ public class TimeframeOverlapValidator extends FileValidator {
    * overlapping time intervals.
    *
    * <p>Timeframes with the same group and service dates must not overlap in time. Two entries X and
-   * Y are considered to directly overlap if {@code X.start_time <= Y.start_time} and {@code
+   * Y are considered to directly overlap if {@literal X.start_time <= Y.start_time} and {@literal
    * Y.start_time < X.end_time}.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFrequencySchema.class))

@@ -68,7 +68,7 @@ public class OverlappingFrequencyValidator extends FileValidator {
    * Trip frequencies overlap.
    *
    * <p>Trip frequencies must not overlap in time. Two entries X and Y are considered to directly
-   * overlap if {@code X.start_time <= Y.start_time} and {@code Y.start_time < X.end_time}.
+   * overlap if {@literal X.start_time <= Y.start_time} and {@literal Y.start_time < X.end_time}.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFrequencySchema.class))
   static class OverlappingFrequencyNotice extends ValidationNotice {
