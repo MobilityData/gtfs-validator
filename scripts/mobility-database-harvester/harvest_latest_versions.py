@@ -23,23 +23,23 @@ from os import path
 #####################################################################################
 
 # Mobility Database Catalogs constants
-CATALOGS_CSV = "https://storage.googleapis.com/mobilitydata-datasets-dev/a_sources_first11.csv"
+CATALOGS_CSV = "scripts/mobility-database-harvester/acceptance_test_feed_list.csv"
 LATEST_URL = "urls.latest"
-DATA_TYPE = "data_type"
-GTFS = "gtfs"
-AUTHENTICATION_TYPE = "urls.authentication_type"
-MDB_SOURCE_ID = "mdb_source_id"
+# DATA_TYPE = "data_type"
+# GTFS = "gtfs"
+# AUTHENTICATION_TYPE = "urls.authentication_type"
+# MDB_SOURCE_ID = "mdb_source_id"
 
 # Sources to exclude because they are too big for the workflow.
-SOURCES_TO_EXCLUDE = [
-    "de-unknown-rursee-schifffahrt-kg-gtfs-784",
-    "de-unknown-ulmer-eisenbahnfreunde-gtfs-1081",
-    "no-unknown-agder-kollektivtrafikk-as-gtfs-1078"
-]
+# SOURCES_TO_EXCLUDE = [
+#     "de-unknown-rursee-schifffahrt-kg-gtfs-784",
+#     "de-unknown-ulmer-eisenbahnfreunde-gtfs-1081",
+#     "no-unknown-agder-kollektivtrafikk-as-gtfs-1078"
+# ]
 
 # Google Cloud constants
-URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
-URL_SUFFIX = ".zip?alt=media"
+# URL_PREFIX = "https://storage.googleapis.com/storage/v1/b/mdb-latest/o/"
+# URL_SUFFIX = ".zip?alt=media"
 
 # Github constants
 # As per https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
@@ -53,60 +53,60 @@ ID = "id"
 
 # Sampling constants
 
-SAMPLES = set(
-    [
-        6,     # Buenos Aires, AR
-        8,     # São Paulo, BR
-        13,    # San Diego, US - Fares V1, Fares V2, Pathways
-        28,    # LA Go Bus, Los Angeles, US - Fares V1
-        23,    # Newport, US - Fares V1, Flex V1
-        53,    # BART, San Francisco, US - Fares V1
-        77,    # Sacramento, US - Fares V1, Fares V2
-        144,   # SunTran, Tuscon, US
-        147,   # Phoenix, US
-        150,   # Austin, US
-        154,   # Houston, US
-        163,   # Aspen, US - Flex V1
-        268,   # Sound Transit, Seattle, US
-        314,   # Compton, US - Fares V2
-        325,   # HART, Tampa, US
-        389,   # CTA, Chicago, US
-        437,   # MBTA, Boston, US - Pathways
-        510,   # NYC Bus, MTA, New York City, US
-        516,   # NYC Subway, MTA, New York City, US
-        558,   # Huntington Park, US - Fares V1, Fares V2
-        727,   # GO Transit, Toronto, CA - Fares V1
-        782,   # Berlin, DE - Pathways
-        791,   # Madrid, ES
-        817,   # Sacramento, US - Fares V1, Fares V2
-        863,   # Warsaw, PL
-        865,   # Helsinki, FI
-        892,   # Barcelona (aggregated feed), ES
-        913,   # Abidjan, CI
-        987,   # Santiago, CL
-        990,   # Budapest, HU - Pathways
-        1026,  # Paris, FR - Pathways
-        1073,  # Taichung, TW
-        1075,  # Baden-Württemberg (aggregated feed), DE
-        1078,  # Norway (aggregated feed), NO
-        1090,  # Germany Urban Transport (aggregated feed), DE
-        1132,  # Wellington, NZ
-        1141,  # Dolores County, US - Flex V2
-        1155,  # Lisboa, PT
-        1221,  # STM, Montreal, CA - Fares V1
-        1222,  # TransLink, Vancouver, CA
-        1228,  # Athens, GR
-        1244,  # AC Transit, Oakland, US
-        1250,  # Unobus, JP - Fares V1
-        1294,  # Rome, IT
-        1322,  # New South Wales, AU
-        1329,  # Abu Dhabi, AE
-        1788,  # Wasco, US - Flex V2
-        1791,  # Rio de Janeiro, BR
-        1807,  # Bamako, ML
-        1815,  # Nairobi, KE
-    ]
-)
+# SAMPLES = set(
+#     [
+#         6,     # Buenos Aires, AR
+#         8,     # São Paulo, BR
+#         13,    # San Diego, US - Fares V1, Fares V2, Pathways
+#         28,    # LA Go Bus, Los Angeles, US - Fares V1
+#         23,    # Newport, US - Fares V1, Flex V1
+#         53,    # BART, San Francisco, US - Fares V1
+#         77,    # Sacramento, US - Fares V1, Fares V2
+#         144,   # SunTran, Tuscon, US
+#         147,   # Phoenix, US
+#         150,   # Austin, US
+#         154,   # Houston, US
+#         163,   # Aspen, US - Flex V1
+#         268,   # Sound Transit, Seattle, US
+#         314,   # Compton, US - Fares V2
+#         325,   # HART, Tampa, US
+#         389,   # CTA, Chicago, US
+#         437,   # MBTA, Boston, US - Pathways
+#         510,   # NYC Bus, MTA, New York City, US
+#         516,   # NYC Subway, MTA, New York City, US
+#         558,   # Huntington Park, US - Fares V1, Fares V2
+#         727,   # GO Transit, Toronto, CA - Fares V1
+#         782,   # Berlin, DE - Pathways
+#         791,   # Madrid, ES
+#         817,   # Sacramento, US - Fares V1, Fares V2
+#         863,   # Warsaw, PL
+#         865,   # Helsinki, FI
+#         892,   # Barcelona (aggregated feed), ES
+#         913,   # Abidjan, CI
+#         987,   # Santiago, CL
+#         990,   # Budapest, HU - Pathways
+#         1026,  # Paris, FR - Pathways
+#         1073,  # Taichung, TW
+#         1075,  # Baden-Württemberg (aggregated feed), DE
+#         1078,  # Norway (aggregated feed), NO
+#         1090,  # Germany Urban Transport (aggregated feed), DE
+#         1132,  # Wellington, NZ
+#         1141,  # Dolores County, US - Flex V2
+#         1155,  # Lisboa, PT
+#         1221,  # STM, Montreal, CA - Fares V1
+#         1222,  # TransLink, Vancouver, CA
+#         1228,  # Athens, GR
+#         1244,  # AC Transit, Oakland, US
+#         1250,  # Unobus, JP - Fares V1
+#         1294,  # Rome, IT
+#         1322,  # New South Wales, AU
+#         1329,  # Abu Dhabi, AE
+#         1788,  # Wasco, US - Flex V2
+#         1791,  # Rio de Janeiro, BR
+#         1807,  # Bamako, ML
+#         1815,  # Nairobi, KE
+#     ]
+# )
 
 
 def save_content_to_file(content, data_path, filename):
@@ -125,22 +125,24 @@ def harvest_latest_versions(to_sample):
     :param to_sample: Boolean flag. Sample the sources in the CSV if True.
     :return: The dictionary of the latest URLs with the format {Name: Url}.
     """
-    catalogs = pd.read_csv(CATALOGS_CSV)
+    catalogs_gtfs = pd.read_csv(CATALOGS_CSV)
+    catalogs_gtfs = catalogs_gtfs.head(10)
     latest_versions = {}
 
-    catalogs_gtfs = catalogs[catalogs[DATA_TYPE] == GTFS]
+    # catalogs_gtfs = catalogs[catalogs[DATA_TYPE] == GTFS]
 
-    if to_sample:
-        catalogs_gtfs = catalogs_gtfs[catalogs_gtfs[MDB_SOURCE_ID].isin(SAMPLES)]
+    # if to_sample:
+    #     catalogs_gtfs = catalogs_gtfs[catalogs_gtfs[MDB_SOURCE_ID].isin(SAMPLES)]
 
-    for index, latest_url in catalogs_gtfs[LATEST_URL].items():
-        source_file_name = latest_url.replace(URL_PREFIX, "").replace(URL_SUFFIX, "")
-        latest_versions[source_file_name] = latest_url
+    for _, row in catalogs_gtfs.iterrows():
+        stable_id = row['stable_id']
+        latest_url = row[LATEST_URL]
+        latest_versions[stable_id] = latest_url
 
     # Some sources/datasets are too big for the workflow so we are excluding them.
-    for source in SOURCES_TO_EXCLUDE:
-        if source in latest_versions:
-            del latest_versions[source]
+    # for source in SOURCES_TO_EXCLUDE:
+    #     if source in latest_versions:
+    #         del latest_versions[source]
 
     return latest_versions
 
