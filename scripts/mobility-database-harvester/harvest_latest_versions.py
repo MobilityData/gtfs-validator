@@ -23,7 +23,7 @@ from os import path
 #####################################################################################
 
 # Mobility Database Catalogs constants
-CATALOGS_CSV = "https://storage.googleapis.com/storage/v1/b/mdb-csv/o/sources.csv?alt=media"
+CATALOGS_CSV = "https://storage.googleapis.com/mobilitydata-datasets-dev/a_sources_first11.csv"
 LATEST_URL = "urls.latest"
 DATA_TYPE = "data_type"
 GTFS = "gtfs"
