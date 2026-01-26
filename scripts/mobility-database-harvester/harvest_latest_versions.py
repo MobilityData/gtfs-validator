@@ -126,7 +126,7 @@ def harvest_latest_versions(to_sample):
     :return: The dictionary of the latest URLs with the format {Name: Url}.
     """
     catalogs_gtfs = pd.read_csv(CATALOGS_CSV)
-    catalogs_gtfs = catalogs_gtfs.head(10)
+    catalogs_gtfs = catalogs_gtfs.head(200)
     latest_versions = {}
 
     # catalogs_gtfs = catalogs[catalogs[DATA_TYPE] == GTFS]
