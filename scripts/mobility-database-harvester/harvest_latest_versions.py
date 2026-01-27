@@ -27,6 +27,7 @@ from os import path
 # See scripts/mobility-database-harvester/README.md for more information.
 FEEDS_CSV = "scripts/mobility-database-harvester/acceptance_test_feed_list.csv"
 LATEST_URL = "urls.latest"
+STABLE_ID = "stable_id"
 
 # Github constants
 # As per https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
@@ -37,6 +38,63 @@ ROOT = "include"
 URL_KEY = "url"
 DATA = "data"
 ID = "id"
+
+# Sampling constants
+
+SAMPLES = set(
+    [
+        6,     # Buenos Aires, AR
+        8,     # São Paulo, BR
+        13,    # San Diego, US - Fares V1, Fares V2, Pathways
+        28,    # LA Go Bus, Los Angeles, US - Fares V1
+        23,    # Newport, US - Fares V1, Flex V1
+        53,    # BART, San Francisco, US - Fares V1
+        77,    # Sacramento, US - Fares V1, Fares V2
+        144,   # SunTran, Tuscon, US
+        147,   # Phoenix, US
+        150,   # Austin, US
+        154,   # Houston, US
+        163,   # Aspen, US - Flex V1
+        268,   # Sound Transit, Seattle, US
+        314,   # Compton, US - Fares V2
+        325,   # HART, Tampa, US
+        389,   # CTA, Chicago, US
+        437,   # MBTA, Boston, US - Pathways
+        510,   # NYC Bus, MTA, New York City, US
+        516,   # NYC Subway, MTA, New York City, US
+        558,   # Huntington Park, US - Fares V1, Fares V2
+        727,   # GO Transit, Toronto, CA - Fares V1
+        782,   # Berlin, DE - Pathways
+        791,   # Madrid, ES
+        817,   # Sacramento, US - Fares V1, Fares V2
+        863,   # Warsaw, PL
+        865,   # Helsinki, FI
+        892,   # Barcelona (aggregated feed), ES
+        913,   # Abidjan, CI
+        987,   # Santiago, CL
+        990,   # Budapest, HU - Pathways
+        1026,  # Paris, FR - Pathways
+        1073,  # Taichung, TW
+        1075,  # Baden-Württemberg (aggregated feed), DE
+        1078,  # Norway (aggregated feed), NO
+        1090,  # Germany Urban Transport (aggregated feed), DE
+        1132,  # Wellington, NZ
+        1141,  # Dolores County, US - Flex V2
+        1155,  # Lisboa, PT
+        1221,  # STM, Montreal, CA - Fares V1
+        1222,  # TransLink, Vancouver, CA
+        1228,  # Athens, GR
+        1244,  # AC Transit, Oakland, US
+        1250,  # Unobus, JP - Fares V1
+        1294,  # Rome, IT
+        1322,  # New South Wales, AU
+        1329,  # Abu Dhabi, AE
+        1788,  # Wasco, US - Flex V2
+        1791,  # Rio de Janeiro, BR
+        1807,  # Bamako, ML
+        1815,  # Nairobi, KE
+    ]
+)
 
 
 def save_content_to_file(content, data_path, filename):
@@ -50,17 +108,21 @@ def save_content_to_file(content, data_path, filename):
         json.dump(content, f)
 
 
-def harvest_latest_versions():
+def harvest_latest_versions(to_sample):
     """Harvests the latest URLs from the provided csv.
     The only columns of interest are 'stable_id' and 'urls.latest'.
     The files may contain other columns, but they are ignored.
+    :param to_sample: Boolean flag. Sample the sources in the CSV if True.
     :return: The dictionary of the latest URLs with the format {Name: Url}.
     """
     catalogs_gtfs = pd.read_csv(FEEDS_CSV)
     latest_versions = {}
 
+    if to_sample:
+        catalogs_gtfs = catalogs_gtfs[catalogs_gtfs[STABLE_ID].isin(SAMPLES)]
+
     for _, row in catalogs_gtfs.iterrows():
-        stable_id = row['stable_id']
+        stable_id = row[STABLE_ID]
         latest_url = row[LATEST_URL]
         latest_versions[stable_id] = latest_url
 
@@ -106,17 +168,24 @@ if __name__ == "__main__":
         default=".",
         help="Data path.",
     )
+    parser.add_argument(
+        "-s",
+        "--sample",
+        action="store_true",
+        help="Boolean flag to sample or not the data.",
+    )
     args = parser.parse_args()
     
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
+    to_sample = args.sample
 
     if not path.isdir(data_path) and path.exists(data_path):
         raise Exception("Data path must be a directory if existing.")
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    latest_versions = harvest_latest_versions()
+    latest_versions = harvest_latest_versions(to_sample)
     # We save the latest versions as a JSON file because it is used later in the "compare-outputs" job of the workflow.
     save_content_to_file(
         latest_versions,
