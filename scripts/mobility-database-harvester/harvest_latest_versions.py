@@ -50,7 +50,7 @@ def save_content_to_file(content, data_path, filename):
         json.dump(content, f)
 
 
-def harvest_latest_versions(to_sample):
+def harvest_latest_versions():
     """Harvests the latest URLs from the provided csv.
     The only columns of interest are 'stable_id' and 'urls.latest'.
     The files may contain other columns, but they are ignored.
@@ -110,14 +110,13 @@ if __name__ == "__main__":
     
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
-    to_sample = args.sample
 
     if not path.isdir(data_path) and path.exists(data_path):
         raise Exception("Data path must be a directory if existing.")
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    latest_versions = harvest_latest_versions(to_sample)
+    latest_versions = harvest_latest_versions()
     # We save the latest versions as a JSON file because it is used later in the "compare-outputs" job of the workflow.
     save_content_to_file(
         latest_versions,
