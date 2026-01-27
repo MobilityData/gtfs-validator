@@ -16,7 +16,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FIELD_DEFINITIONS;
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
