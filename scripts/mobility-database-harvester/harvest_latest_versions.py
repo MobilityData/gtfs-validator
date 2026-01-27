@@ -47,47 +47,21 @@ SAMPLES = set(
         "mdb-8",     # São Paulo, BR
         "mdb-13",    # San Diego, US - Fares V1, Fares V2, Pathways
         "mdb-28",    # LA Go Bus, Los Angeles, US - Fares V1
-        "mdb-23",    # Newport, US - Fares V1, Flex V1
         "mdb-53",    # BART, San Francisco, US - Fares V1
         "mdb-77",    # Sacramento, US - Fares V1, Fares V2
-        "mdb-144",   # SunTran, Tuscon, US
-        "mdb-147",   # Phoenix, US
-        "mdb-150",   # Austin, US
-        "mdb-154",   # Houston, US
-        "mdb-163",   # Aspen, US - Flex V1
-        "mdb-268",   # Sound Transit, Seattle, US
         "mdb-314",   # Compton, US - Fares V2
-        "mdb-325",   # HART, Tampa, US
         "mdb-389",   # CTA, Chicago, US
-        "mdb-437",   # MBTA, Boston, US - Pathways
         "mdb-510",   # NYC Bus, MTA, New York City, US
         "mdb-516",   # NYC Subway, MTA, New York City, US
-        "mdb-558",   # Huntington Park, US - Fares V1, Fares V2
-        "mdb-727",   # GO Transit, Toronto, CA - Fares V1
         "mdb-782",   # Berlin, DE - Pathways
         "mdb-791",   # Madrid, ES
-        "mdb-817",   # Sacramento, US - Fares V1, Fares V2
-        "mdb-863",   # Warsaw, PL
         "mdb-865",   # Helsinki, FI
         "mdb-892",   # Barcelona (aggregated feed), ES
-        "mdb-913",   # Abidjan, CI
-        "mdb-987",   # Santiago, CL
         "mdb-990",   # Budapest, HU - Pathways
-        "mdb-1026",  # Paris, FR - Pathways
         "mdb-1073",  # Taichung, TW
-        "mdb-1075",  # Baden-Württemberg (aggregated feed), DE
-        "mdb-1078",  # Norway (aggregated feed), NO
         "mdb-1090",  # Germany Urban Transport (aggregated feed), DE
         "mdb-1132",  # Wellington, NZ
-        "mdb-1141",  # Dolores County, US - Flex V2
-        "mdb-1155",  # Lisboa, PT
-        "mdb-1221",  # STM, Montreal, CA - Fares V1
-        "mdb-1222",  # TransLink, Vancouver, CA
-        "mdb-1228",  # Athens, GR
-        "mdb-1244",  # AC Transit, Oakland, US
-        "mdb-1250",  # Unobus, JP - Fares V1
         "mdb-1294",  # Rome, IT
-        "mdb-1322",  # New South Wales, AU
         "mdb-1329",  # Abu Dhabi, AE
         "mdb-1788",  # Wasco, US - Flex V2
         "mdb-1791",  # Rio de Janeiro, BR
