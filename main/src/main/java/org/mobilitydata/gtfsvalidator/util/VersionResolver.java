@@ -43,7 +43,10 @@ public class VersionResolver {
 
   private boolean resolutionStarted = false;
 
-   /** Keep a reference to the shared in-progress VersionInfo so concurrent callers don't get an empty instance. */
+  /**
+   * Keep a reference to the shared in-progress VersionInfo so concurrent callers don't get an empty
+   * instance.
+   */
   private volatile VersionInfo inProgressVersionInfo;
 
   public VersionResolver(ApplicationType applicationType) {
@@ -95,7 +98,8 @@ public class VersionResolver {
   /** Starts release version resolution on a background thread. */
   public synchronized VersionInfo resolve(boolean skipValidatorUpdate) {
     if (resolutionStarted) {
-      // Return the shared instance (may already have currentVersion set), instead of a brand-new empty one.
+      // Return the shared instance (may already have currentVersion set), instead of a brand-new
+      // empty one.
       return inProgressVersionInfo != null ? inProgressVersionInfo : VersionInfo.empty();
     }
     resolutionStarted = true;
@@ -107,7 +111,7 @@ public class VersionResolver {
       logger.atSevere().withCause(ex).log("Error resolving version info");
     }
     inProgressVersionInfo = versionInfo;
-    
+
     executor.submit(
         () -> {
           if (!skipValidatorUpdate) {
