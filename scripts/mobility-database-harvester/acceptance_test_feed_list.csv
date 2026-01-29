@@ -1,0 +1,996 @@
+stable_id,provider,country_code,subdivision_name,municipality,urls.latest
+mdb-100,Anaheim Resort Transportation (ART),US,California,Orange,https://files.mobilitydatabase.org/mdb-100/latest.zip
+mdb-1000,Komunikacja Miejska Przemyśl,PL,Subcarpathian Voivodeship,Przemyśl,https://files.mobilitydatabase.org/mdb-1000/latest.zip
+mdb-1002,Komunikacja Miejska - Krosno,PL,Subcarpathian Voivodeship,Jasło County,https://files.mobilitydatabase.org/mdb-1002/latest.zip
+mdb-1003,TRAM Barcelona (Tranvía Metropolitano Barcelona),ES,Catalonia,Barcelona,https://files.mobilitydatabase.org/mdb-1003/latest.zip
+mdb-1004,TRAM Barcelona Besós (Tranvía Metropolitano Barcelona),ES,Catalonia,Badalona,https://files.mobilitydatabase.org/mdb-1004/latest.zip
+mdb-1009,ZDMiKP w Bydgoszczy,PL,Kuyavian-Pomeranian Voivodeship,Bydgoszcz,https://files.mobilitydatabase.org/mdb-1009/latest.zip
+mdb-101,Foothill Transit,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-101/latest.zip
+mdb-1010,Gmina Zaklad Komunalny (GZK Bystry),PL,Warmian-Masurian Voivodeship,Giżycko County,https://files.mobilitydatabase.org/mdb-1010/latest.zip
+mdb-1011,Koleje Mazowieckie (KM),PL,Łódź Voivodeship,Kutno County,https://files.mobilitydatabase.org/mdb-1011/latest.zip
+mdb-1012,Miejskie Przedsiębiorstwo Komunikacyjne w Lomzy (MPK ZB w Łomży),PL,Podlaskie Voivodeship,Łomża,https://files.mobilitydatabase.org/mdb-1012/latest.zip
+mdb-1013,Zarząd Transportu Miejskiego Lublin (ZTM Lublin),PL,Lublin Voivodeship,Łęczna County,https://files.mobilitydatabase.org/mdb-1013/latest.zip
+mdb-1016,UABS-Banlieue Sahel,TN,Al Kaf,أبة,https://files.mobilitydatabase.org/mdb-1016/latest.zip
+mdb-1017,Metro de Málaga,ES,Andalusia,Málaga,https://files.mobilitydatabase.org/mdb-1017/latest.zip
+mdb-1018,Monkey Forest Ubud Shuttle,ID,Bali,Bali,https://files.mobilitydatabase.org/mdb-1018/latest.zip
+mdb-1021,Instituto Regulador del Transporte del Municipio de Managua,NI,Departamento de Managua,Ciudad Sandino (Municipio),https://files.mobilitydatabase.org/mdb-1021/latest.zip
+mdb-1022,Nicaragua,NI,Departamento de Managua,Managua (Municipio),https://files.mobilitydatabase.org/mdb-1022/latest.zip
+mdb-1023,MapaNica Estelí,NI,Estelí,Estelí (Municipio),https://files.mobilitydatabase.org/mdb-1023/latest.zip
+mdb-1027,Republic of Serbia,RS,City of Belgrade,Barajevo Urban Municipality,https://files.mobilitydatabase.org/mdb-1027/latest.zip
+mdb-1028,Câmara Municipal de Águeda,PT,Aveiro,Águeda,https://files.mobilitydatabase.org/mdb-1028/latest.zip
+mdb-1029,Auckland Transport,NZ,Auckland,Auckland,https://files.mobilitydatabase.org/mdb-1029/latest.zip
+mdb-103,El Monte Transit,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-103/latest.zip
+mdb-1031,Trentino Trasporti Esercizio (TTE),IT,Lombardy,Anfo,https://files.mobilitydatabase.org/mdb-1031/latest.zip
+mdb-1038,Transtejo,PT,Lisbon,Misericórdia,https://files.mobilitydatabase.org/mdb-1038/latest.zip
+mdb-1039,TRAM Alicante,ES,Valencian Community,Alacant / Alicante,https://files.mobilitydatabase.org/mdb-1039/latest.zip
+mdb-104,Corona Cruiser,US,California,Corona,https://files.mobilitydatabase.org/mdb-104/latest.zip
+mdb-1040,Kautra,LT,Alytus County,Druskininkų savivaldybė,https://files.mobilitydatabase.org/mdb-1040/latest.zip
+mdb-1041,Kauno viešasis transportas (KVT),LT,Kaunas County,Akademijos seniūnija,https://files.mobilitydatabase.org/mdb-1041/latest.zip
+mdb-1042,Klaipėda Transport,LT,Klaipeda County,Agluonėnų seniūnija,https://files.mobilitydatabase.org/mdb-1042/latest.zip
+mdb-1043,Panevezio Autobusu Parkas,LT,Panevezys County,Panevėžio miesto savivaldybė,https://files.mobilitydatabase.org/mdb-1043/latest.zip
+mdb-1044,Vilnius Transport,LT,Vilnius County,Avižienių seniūnija,https://files.mobilitydatabase.org/mdb-1044/latest.zip
+mdb-1047,Delcomar,IT,Sardinia,Câdesédda/Calasetta,https://files.mobilitydatabase.org/mdb-1047/latest.zip
+mdb-1049,ASARA GIUSEPPE EREDI AUTOSERVIZI S.R.L.,IT,Sardinia,Abbasanta,https://files.mobilitydatabase.org/mdb-1049/latest.zip
+mdb-1050,Collegamenti marittimi Sardinia Ferries,FR,Corsica,Ajaccio,https://files.mobilitydatabase.org/mdb-1050/latest.zip
+mdb-1052,TRENITALIA,IT,Sardinia,Abbasanta,https://files.mobilitydatabase.org/mdb-1052/latest.zip
+mdb-1054,MetroValencia,ES,Valencian Community,Albalat dels Sorells,https://files.mobilitydatabase.org/mdb-1054/latest.zip
+mdb-1058,Ferrotramviaria,IT,Apulia,Andria,https://files.mobilitydatabase.org/mdb-1058/latest.zip
+mdb-1059,Autolinee Varesine,IT,Lombardy,Agra,https://files.mobilitydatabase.org/mdb-1059/latest.zip
+mdb-106,Beaumont Transit,US,California,Beaumont,https://files.mobilitydatabase.org/mdb-106/latest.zip
+mdb-1062,Automobilistico,IT,Veneto,Adria,https://files.mobilitydatabase.org/mdb-1062/latest.zip
+mdb-1063,Navigazione,IT,Veneto,Cavallino-Treporti,https://files.mobilitydatabase.org/mdb-1063/latest.zip
+mdb-1066,Società Gestione Multipla (SGM),IT,Apulia,Cavallino,https://files.mobilitydatabase.org/mdb-1066/latest.zip
+mdb-1067,Roseville Transit,US,California,Rocklin,https://files.mobilitydatabase.org/mdb-1067/latest.zip
+mdb-1068,Toremar Toscana Regionale Marittima,IT,Tuscany,Campo nell'Elba,https://files.mobilitydatabase.org/mdb-1068/latest.zip
+mdb-1069,Transilien SNCF,FR,Centre-Loire Valley,Broué,https://files.mobilitydatabase.org/mdb-1069/latest.zip
+mdb-107,Mountain Transit,US,California,Big Bear Lake,https://files.mobilitydatabase.org/mdb-107/latest.zip
+mdb-1070,Miskolc Városi Közlekedési (MVK),HU,Borsod-Abaúj-Zemplén,Felsőzsolca,https://files.mobilitydatabase.org/mdb-1070/latest.zip
+mdb-1071,BayBus,NZ,Bay of Plenty,Kawerau District,https://files.mobilitydatabase.org/mdb-1071/latest.zip
+mdb-1072,Wielicka Komunikacja Wewnątrzgminna,PL,Lesser Poland Voivodeship,Kraków County,https://files.mobilitydatabase.org/mdb-1072/latest.zip
+mdb-1076,"SMRT, SBS Transit (SBST), Land Transport Authority (LTA), Go Ahead Singapore (GAS), Tower Transit (TTS)",MY,Johor,Johor Bahru,https://files.mobilitydatabase.org/mdb-1076/latest.zip
+mdb-1077,OVapi,AT,Lower Austria,Bezirk Amstetten,https://files.mobilitydatabase.org/mdb-1077/latest.zip
+mdb-108,SunLine Transit Agency,US,California,Riverside County,https://files.mobilitydatabase.org/mdb-108/latest.zip
+mdb-1082,Hofmann Omnibusverkehr GmbH,CZ,Hlavní město Praha,Prague,https://files.mobilitydatabase.org/mdb-1082/latest.zip
+mdb-1085,Verkehrsverbund Pforzheim-Enzkreis (VPE),CH,Ticino,Lugano,https://files.mobilitydatabase.org/mdb-1085/latest.zip
+mdb-1086,Transperth,AU,Western Australia,City Of Albany,https://files.mobilitydatabase.org/mdb-1086/latest.zip
+mdb-1088,Société des Transports Intercommunaux de Bruxelles/Maatschappij voor het Intercommunaal Vervoer te Brussel (STIB / MIVB),BE,Brussels-Capital,Anderlecht,https://files.mobilitydatabase.org/mdb-1088/latest.zip
+mdb-1089,Regional Rail Transport Germany,AT,Carinthia,Bezirk Spittal an der Drau,https://files.mobilitydatabase.org/mdb-1089/latest.zip
+mdb-1090,Public Transport Germany,FI,,,https://files.mobilitydatabase.org/mdb-1090/latest.zip
+mdb-1091,"DPN, AVL, CFL, CFLBus, RGTR, TICE, TRAM",BE,Wallonia,Arlon,https://files.mobilitydatabase.org/mdb-1091/latest.zip
+mdb-1094,"Rurtalbahn GmbH, ABELLIO Rail, VIAS GmbH, Aachener Straßenbahn und Energieversorgungs-AG, Rurtalbus GmbH, WestVerkehr GmbH, Staatsbahnen, National Express, ASEAG Netliner",BE,Wallonia,Bütgenbach,https://files.mobilitydatabase.org/mdb-1094/latest.zip
+mdb-1095,"ABuss OÜ, Aktsiaselts Hansa Bussiliinid, Aktsiaselts MK Autobuss, Alukvik OÜ, Arilix OÜ, AS Lux Express Estonia, Asunduse osaühing, ATG Bussiliinid OÜ, Atko Bussiliinid AS, ATKO Liinid OÜ, ATKO Transport OÜ, Ekspress-Auto L Osaühing, Ekspressbussiliinid osaühing, Elmar Purga FIE, ELRON, Estonian Lines OÜ, GoBus AS, HANSABUSS AS, Kalle Bussid OÜ, MEELIS HEEK, MK Reis-X OÜ, NAJA OÜ, Osaühing Bristol Takso, OSAÜHING FREMANTI, osaühing Tulisilm, OV Ida-Bus OÜ, OÜ Baltic Shuttle, PRESTO osaühing, Radix Transport OÜ, Rannu Rukkilill E.S.T. OÜ, Saaremaa vald, SEBE Aktsiaselts, Sirel Reisid OÜ, Taisto Express OÜ, Tallinna Linnatranspordi AS, TS Laevad OÜ, Tõnu Tours OÜ, Valgis osaühing",AT,Carinthia,Klagenfurt am Wörthersee,https://files.mobilitydatabase.org/mdb-1095/latest.zip
+mdb-1098,Waltti - Hämeenlinna,FI,Kanta-Häme,Hämeenlinna,https://files.mobilitydatabase.org/mdb-1098/latest.zip
+mdb-11,Amtrak,CA,British Columbia,Vancouver,https://files.mobilitydatabase.org/mdb-11/latest.zip
+mdb-1103,"Transport for Greater Manchester Arriva in the North West, Atlantic Travel, Bestway Travel, Belle Vue Coaches, Blackburn Private Hire, The Burnley Bus Company, Bullocks Coaches, Cumfy Bus, D&G Bus, Don Fraser Coaches Ltd, Finch Coaches, First Halifax, Calder Valley & Huddersfield, First in Greater Manchester, Little Gem, Go North West, Diamond Bus North West, Harris Travel, Hattons Transport, Hiltons Travel, High Peak, Huyton Travel, Holmeswood Coaches, Link Network, The Blackburn Bus Company, Maghull Coaches, Metrolink, Olympia Travel UK Ltd, Preston Bus, Nexus Move, Rosso, Tyrers, Stagecoach Merseyside and South Lancashire, Stagecoach in Greater Manchester, Selwyn's Travel, South Pennine C.T., Stotts, Travel Assist, Team Pennine, Viking Coaches, Vision Bus, Warrington's Own Buses",GB,England,Blackburn with Darwen,https://files.mobilitydatabase.org/mdb-1103/latest.zip
+mdb-1104,"CFR Călători, Astra Trans Carpatic, Calea Ferată din Moldova, Interregional Calatori, Regio Călători, Softrans, Transferoviar Calatori",RO,,,https://files.mobilitydatabase.org/mdb-1104/latest.zip
+mdb-1105,"HM Transport Inc. and Robinsons Malls, Froehlich Tours,RRCG Transport, Lingkod Pinoy Bus Liner, Inc., MetroExpress, Tas Trans",PH,,,https://files.mobilitydatabase.org/mdb-1105/latest.zip
+mdb-1106,"Manila Light Rail Transit Authority, LTFRB, Manila Metro Rail Transit Corporation, MARINA, Philippine National Railways, The Fort Bus",PH,Pambansang Punong Rehiyon,Manila,https://files.mobilitydatabase.org/mdb-1106/latest.zip
+mdb-1108,"Régime Général des Transports Routiers, Ville de Luxembourg - Service Autobus, Chemins de Fer Luxembourgeois, Syndicat des Tramways Intercommunaux dans le Canton d'Esch, Luxtram, Société Nationale des Chemins de Fer Luxembourgeois",BE,Wallonia,Arlon,https://files.mobilitydatabase.org/mdb-1108/latest.zip
+mdb-1111,Codiac Transport,CA,New Brunswick,Dieppe,https://files.mobilitydatabase.org/mdb-1111/latest.zip
+mdb-1114,"Finferries, Alandstrafiken, Rosita Oy, JS Ferryway Ltd Oy, Kuljetus-Savolainen Oy, Archipelago Lines Oy, Sundqvist Investments Oy Ab, Pörtö Line, Nordic Coast Line, Yksityinen, HSL, Vitharun, Espoon kaupunki, Suomen saaristokuljetus, Norsöline, JT-Line Oy, A&S Ravintolat, Merisataman lauttaliikenne, NJK Blekholmen, Ferra Oy, City Cruisers, Aava Lines Oy, Helsingin Risteilypalvelut/TMSJ Group Oy",FI,,,https://files.mobilitydatabase.org/mdb-1114/latest.zip
+mdb-1115,"Freiburger Verkehrs AG (VAG), R.A.S.T. Reisen (RAST), Tuniberg Express",DE,Baden-Württemberg,Freiburg im Breisgau,https://files.mobilitydatabase.org/mdb-1115/latest.zip
+mdb-1117,Réseau STAN,FR,Grand Est,Art-sur-Meurthe,https://files.mobilitydatabase.org/mdb-1117/latest.zip
+mdb-1119,"Horários do Funchal - Transportes Públicos, S.A",PT,Madeira,Camacha,https://files.mobilitydatabase.org/mdb-1119/latest.zip
+mdb-1120,"Niš-ekspres, Lasta a.d. Beograd, Strela-Obrenovac",RS,Nisava Administrative District,Градска општина Медијана,https://files.mobilitydatabase.org/mdb-1120/latest.zip
+mdb-1123,Komunikacja Miejska Łomianki,PL,Mazowieckie,Łomianki,https://files.mobilitydatabase.org/mdb-1123/latest.zip
+mdb-1125,POS-ELY Joensuu,FI,,,https://files.mobilitydatabase.org/mdb-1125/latest.zip
+mdb-1127,Waltti - Kotka,FI,Kymenlaakso,Hamina,https://files.mobilitydatabase.org/mdb-1127/latest.zip
+mdb-1128,Waltti - Kouvola,FI,Kymenlaakso,Kouvola,https://files.mobilitydatabase.org/mdb-1128/latest.zip
+mdb-1129,"Haarasilta Toivo Samuli, Järvisen Liikenne Oy, Koiviston Auto Oy, Lehtimäen Liikenne Oy, Bus Travel Oy Reissu Ruoti, Tilausliikenne Kuisma Ky",FI,Päijät-Häme,Asikkala,https://files.mobilitydatabase.org/mdb-1129/latest.zip
+mdb-113,Sage Stage,US,California,Alturas,https://files.mobilitydatabase.org/mdb-113/latest.zip
+mdb-1130,Mikkeli,FI,South Savo,Hirvensalmi,https://files.mobilitydatabase.org/mdb-1130/latest.zip
+mdb-1131,Waltti - Vaasa,FI,Ostrobothnia,Korsholm,https://files.mobilitydatabase.org/mdb-1131/latest.zip
+mdb-1132,Metlink,NZ,Manawatu-Whanganui,Horowhenua District,https://files.mobilitydatabase.org/mdb-1132/latest.zip
+mdb-1135,Bizkaibus,ES,Autonomous Community of the Basque Country,Abadiño,https://files.mobilitydatabase.org/mdb-1135/latest.zip
+mdb-1139,"DB, SBB, EC, ÖBB, NS, DSB, MAV, CD, PKP, RE, DPN, RZD, SWX, CFL",AT,Carinthia,Bezirk Klagenfurt-Land,https://files.mobilitydatabase.org/mdb-1139/latest.zip
+mdb-1144,InterCity Group,NZ,Auckland,Auckland,https://files.mobilitydatabase.org/mdb-1144/latest.zip
+mdb-1146,Mar Chiquita SRL,AR,Córdoba,Córdoba,https://files.mobilitydatabase.org/mdb-1146/latest.zip
+mdb-1150,Komunikacja Miejska Płock,PL,Masovian Voivodeship,Płock,https://files.mobilitydatabase.org/mdb-1150/latest.zip
+mdb-1151,Komunikacja Miejska Bielawa Dzierżoniów,PL,Lower Silesian Voivodeship,Dzierżoniów County,https://files.mobilitydatabase.org/mdb-1151/latest.zip
+mdb-1152,Bürgerbus Leupoldsgrün (Landkreis Hof),DE,Bavaria,Landkreis Hof,https://files.mobilitydatabase.org/mdb-1152/latest.zip
+mdb-1154,Regione Piemonte,IT,Piedmont,,https://files.mobilitydatabase.org/mdb-1154/latest.zip
+mdb-1158,SRTMedenine,TN,,,https://files.mobilitydatabase.org/mdb-1158/latest.zip
+mdb-116,"Tehama Rural Area Express (TRAX), Susanville Indian Rancheria Public Transportation Program",US,California,Anderson,https://files.mobilitydatabase.org/mdb-116/latest.zip
+mdb-1161,TRAINOSE,BG,Blagoevgrad,Blagoevgrad,https://files.mobilitydatabase.org/mdb-1161/latest.zip
+mdb-1162,El Transbordador de Vizcaya,ES,Autonomous Community of the Basque Country,Getxo,https://files.mobilitydatabase.org/mdb-1162/latest.zip
+mdb-117,Siskiyou County,US,California,Fort Jones,https://files.mobilitydatabase.org/mdb-117/latest.zip
+mdb-1170,Trenitalia Piemonte,FR,Auvergne-Rhône-Alpes,Modane,https://files.mobilitydatabase.org/mdb-1170/latest.zip
+mdb-1172,Verkehrsverbund Mittelthüringen (VMT),DE,Bavaria,Bamberg,https://files.mobilitydatabase.org/mdb-1172/latest.zip
+mdb-1173,Verkehrsverbund Rhein-Neckar,DE,Baden-Württemberg,Heidelberg,https://files.mobilitydatabase.org/mdb-1173/latest.zip
+mdb-1175,ZDZiT Olsztyn,PL,Warmian-Masurian Voivodeship,Olsztyn,https://files.mobilitydatabase.org/mdb-1175/latest.zip
+mdb-1176,ZTZ Rybnik,PL,Silesian Voivodeship,Racibórz County,https://files.mobilitydatabase.org/mdb-1176/latest.zip
+mdb-1178,Blue & Gold Fleet,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-1178/latest.zip
+mdb-1179,Agence métropolitaine de transport,CA,Quebec,Brossard,https://files.mobilitydatabase.org/mdb-1179/latest.zip
+mdb-118,Lassen Rural Bus (LRB),US,California,Lassen County,https://files.mobilitydatabase.org/mdb-118/latest.zip
+mdb-1180,MRC les Moulins,CA,Quebec,Bois-des-Filion,https://files.mobilitydatabase.org/mdb-1180/latest.zip
+mdb-1182,MRC de Deux-Montagnes,CA,Quebec,Deux-Montagnes,https://files.mobilitydatabase.org/mdb-1182/latest.zip
+mdb-1183,Filsland Verkehrsverbund,DE,Baden-Württemberg,Alb-Donau-Kreis,https://files.mobilitydatabase.org/mdb-1183/latest.zip
+mdb-1186,Петербургский метрополитен - Petersburg Metro,RU,Leningrad oblast,Pavlovo,https://files.mobilitydatabase.org/mdb-1186/latest.zip
+mdb-119,Plumas Transit,US,California,Lassen County,https://files.mobilitydatabase.org/mdb-119/latest.zip
+mdb-1192,Collegamenti marittimi Grimaldi,ES,Catalonia,Barcelona,https://files.mobilitydatabase.org/mdb-1192/latest.zip
+mdb-1194,"Bus Company S.r.l., Gunetto Autolinee S.r.l., Bus Company S.r.l., GelosoBus S.r.l., RT Piemonte S.r.l., Autolinee Nuova Benese S.r.l., Autolinee Allasia S.r.l., Nuova S.A.A.R. S.r.l., SAV Autolinee S.r.l., S.A.C. S.r.l., Autolinee Valle Pesio S.r.l., ACTP S.r.l., Nuova Beccaria S.r.l., Giors S.n.c., Consorzio Trasporti GRANDA BUS",IT,Liguria,Cairo Montenotte,https://files.mobilitydatabase.org/mdb-1194/latest.zip
+mdb-1198,Long Beach Transit (LBT),US,California,Artesia,https://files.mobilitydatabase.org/mdb-1198/latest.zip
+mdb-1199,Société Nationale des Transports Ferroviaires (SNTF Algeria),DZ,Aïn Defla,Ain Defla District,https://files.mobilitydatabase.org/mdb-1199/latest.zip
+mdb-12,Avalon Transit,US,California,Avalon,https://files.mobilitydatabase.org/mdb-12/latest.zip
+mdb-1202,OstalbMobil – Verkehrsverbund,DE,Baden-Württemberg,Landkreis Göppingen,https://files.mobilitydatabase.org/mdb-1202/latest.zip
+mdb-1205,SNCF,BE,Flanders,Kortrijk,https://files.mobilitydatabase.org/mdb-1205/latest.zip
+mdb-1210,"Los Angeles Department of Transportation (LADOT, DASH, Commuter Express)",US,California,Los Angeles,https://files.mobilitydatabase.org/mdb-1210/latest.zip
+mdb-1212,Société Régionale Wallonne du Transport,BE,Brussels-Capital,Auderghem - Oudergem,https://files.mobilitydatabase.org/mdb-1212/latest.zip
+mdb-1220,Colectivos Buenos Aires,AR,Autonomous City of Buenos Aires,Autonomous City of Buenos Aires,https://files.mobilitydatabase.org/mdb-1220/latest.zip
+mdb-1224,Rurtalbahn GmbH | ABELLIO Rail | VIAS GmbH| Aachener Straßenbahn und Energieversorgungs-AG | Rurtalbus GmbH | WestVerkehr GmbH | Staatsbahnen | National Express | ASEAG Netliner,BE,Wallonia,Bütgenbach,https://files.mobilitydatabase.org/mdb-1224/latest.zip
+mdb-1227,Waltti - Joensuu,FI,North Karelia,Ilomantsi,https://files.mobilitydatabase.org/mdb-1227/latest.zip
+mdb-1229,Bogor Angkots,ID,West Java,West Java,https://files.mobilitydatabase.org/mdb-1229/latest.zip
+mdb-1246,Santa Barbara Metropolitan Transit District (MTD),US,California,Carpinteria,https://files.mobilitydatabase.org/mdb-1246/latest.zip
+mdb-1251,MerseyLink,AU,Tasmania,,https://files.mobilitydatabase.org/mdb-1251/latest.zip
+mdb-1252,HofBus,DE,Bavaria,Hof,https://files.mobilitydatabase.org/mdb-1252/latest.zip
+mdb-1255,Komia Liikenne,FI,Etelä-Pohjanmaa,Seinäjoki,https://files.mobilitydatabase.org/mdb-1255/latest.zip
+mdb-1258,Pays de la Loire,AT,Lower Austria,St. Pölten,https://files.mobilitydatabase.org/mdb-1258/latest.zip
+mdb-1259,TER Pays de la Loire,BE,Brussels-Capital,Saint-Gilles - Sint-Gillis,https://files.mobilitydatabase.org/mdb-1259/latest.zip
+mdb-1260,Tram Train,FR,Pays-de-la-Loire,Nantes,https://files.mobilitydatabase.org/mdb-1260/latest.zip
+mdb-1262,Delhi Transport Corporation,IN,Delhi,Alipur Tehsil,https://files.mobilitydatabase.org/mdb-1262/latest.zip
+mdb-1264,Azienda Varesina Trasporti (AVT),IT,Lombardy,Varese,https://files.mobilitydatabase.org/mdb-1264/latest.zip
+mdb-1265,Collegamenti marittimi Grandi Navi Veloci,ES,Catalonia,Barcelona,https://files.mobilitydatabase.org/mdb-1265/latest.zip
+mdb-1270,Zarząd Transportu Publicznego w Krakowie (ZTP Kraków),PL,Lesser Poland Voivodeship,Krakow,https://files.mobilitydatabase.org/mdb-1270/latest.zip
+mdb-1271,Komunikacja Miejska - Bolesławiec,PL,Lower Silesian Voivodeship,Bolesławiec County,https://files.mobilitydatabase.org/mdb-1271/latest.zip
+mdb-1272,"Cascais Próxima, E.M., S.A.",PT,Lisbon,Alcabideche,https://files.mobilitydatabase.org/mdb-1272/latest.zip
+mdb-1273,Kragujevac,RS,Sumadija Administrative District,Batocina Municipality,https://files.mobilitydatabase.org/mdb-1273/latest.zip
+mdb-1281,Mornington Railway,AU,Victoria,Shire of Mornington Peninsula,https://files.mobilitydatabase.org/mdb-1281/latest.zip
+mdb-1288,VINE Transit,US,California,American Canyon,https://files.mobilitydatabase.org/mdb-1288/latest.zip
+mdb-1290,PKP Szybka Kolej Miejska (SKM),PL,Pomeranian Voivodeship,Gdańsk,https://files.mobilitydatabase.org/mdb-1290/latest.zip
+mdb-1291,Régie Autonome des Transports Parisiens,FR,Ile-de-France,Essonne,https://files.mobilitydatabase.org/mdb-1291/latest.zip
+mdb-1292,Rejseplanen,DE,Hamburg,Hamburg,https://files.mobilitydatabase.org/mdb-1292/latest.zip
+mdb-1294,Roma Servizi per la Mobilità,IT,Lazio,Anguillara Sabazia,https://files.mobilitydatabase.org/mdb-1294/latest.zip
+mdb-1295,Yolo County Transportation District (Yolobus),US,California,Davis,https://files.mobilitydatabase.org/mdb-1295/latest.zip
+mdb-13,"San Diego International Airport, Metropolitan Transit System (MTS)",US,California,Chula Vista,https://files.mobilitydatabase.org/mdb-13/latest.zip
+mdb-1309,Massachusetts Ferry Service,US,New York,New York County,https://files.mobilitydatabase.org/mdb-1309/latest.zip
+mdb-1311,Chiltern Railways,GB,England,Barnsley,https://files.mobilitydatabase.org/mdb-1311/latest.zip
+mdb-1313,Metro Christchurch,NZ,Canterbury,Christchurch City,https://files.mobilitydatabase.org/mdb-1313/latest.zip
+mdb-1316,La Burundesa S.A.,ES,Autonomous Community of the Basque Country,Irun,https://files.mobilitydatabase.org/mdb-1316/latest.zip
+mdb-1317,POSELY,FI,,,https://files.mobilitydatabase.org/mdb-1317/latest.zip
+mdb-1319,Trenitalia | Contram Mobilita s.c.p.a. | Trasfer Soc. Cons. a.r.l. | Adriabus spa | Soc. Consortile A.T.M.A. | Start Spa,IT,Emilia-Romagna,Alto Reno Terme,https://files.mobilitydatabase.org/mdb-1319/latest.zip
+mdb-1320,Trafiklab,SE,Gävleborg County,Gävleborg County,https://files.mobilitydatabase.org/mdb-1320/latest.zip
+mdb-1326,Zarząd Transportu Publicznego w Krakowie (ZTP Kraków),PL,Lesser Poland Voivodeship,Krakow,https://files.mobilitydatabase.org/mdb-1326/latest.zip
+mdb-1332,Stanislaus Regional Transit Authority (StanRTA),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-1332/latest.zip
+mdb-14,North County Transit District (NCTD),US,California,Carlsbad,https://files.mobilitydatabase.org/mdb-14/latest.zip
+mdb-15,Orange County Transportation Authority (OCTA),US,California,Aliso Viejo,https://files.mobilitydatabase.org/mdb-15/latest.zip
+mdb-159,Verde Lynx,US,California,Sacramento County,https://files.mobilitydatabase.org/mdb-159/latest.zip
+mdb-16,Laguna Beach Transit (LBT),US,California,Dana Point,https://files.mobilitydatabase.org/mdb-16/latest.zip
+mdb-17,Yuma County Intergovernmental Public Transportation Authority (YCIPTA),US,California,El Centro,https://files.mobilitydatabase.org/mdb-17/latest.zip
+mdb-1782,SNCF,BE,Brussels-Capital,Saint-Gilles - Sint-Gillis,https://files.mobilitydatabase.org/mdb-1782/latest.zip
+mdb-1783,SNCF,BE,Brussels-Capital,Saint-Gilles - Sint-Gillis,https://files.mobilitydatabase.org/mdb-1783/latest.zip
+mdb-1788,City of Wasco,US,California,Wasco,https://files.mobilitydatabase.org/mdb-1788/latest.zip
+mdb-1791,City Transport Secretary of Rio de Janeiro,BR,Rio de Janeiro,Região Metropolitana do Rio de Janeiro,https://files.mobilitydatabase.org/mdb-1791/latest.zip
+mdb-1806,Miramichi Transit,CA,New Brunswick,Miramichi,https://files.mobilitydatabase.org/mdb-1806/latest.zip
+mdb-1807,SOMATRA,ML,Bamako,Bamako,https://files.mobilitydatabase.org/mdb-1807/latest.zip
+mdb-1808,Anbessa City Bus Service Enterprise,ET,Addis Ababa,Addis Ababa,https://files.mobilitydatabase.org/mdb-1808/latest.zip
+mdb-1810,Socatur,CM,Littoral,Wouri,https://files.mobilitydatabase.org/mdb-1810/latest.zip
+mdb-1811,Douala Yellow Taxis,CM,Littoral,Wouri,https://files.mobilitydatabase.org/mdb-1811/latest.zip
+mdb-1812,"Freetown Poda-Poda, Sierra Leone Road Transport Corporation, Tagrin Ferry, Freetown Taxi Cab",SL,North Western Province,Port Loko District,https://files.mobilitydatabase.org/mdb-1812/latest.zip
+mdb-1813,"14-Seater Paratransit Taxi, Buses operated by Pioneer or Awakula Enumme",UG,Central Region,Kampala Capital City,https://files.mobilitydatabase.org/mdb-1813/latest.zip
+mdb-1814,INGEROP,GH,Ashanti,Kumasi,https://files.mobilitydatabase.org/mdb-1814/latest.zip
+mdb-1815,DigitalMatatus,KE,Kajiado County,Kajiado County,https://files.mobilitydatabase.org/mdb-1815/latest.zip
+mdb-1816,Vitalis Transport,MA,Tangier-Tetouan-Al Hoceima,caïdat d'Allyene عليين,https://files.mobilitydatabase.org/mdb-1816/latest.zip
+mdb-1817,GoMonrovia,US,California,Monrovia,https://files.mobilitydatabase.org/mdb-1817/latest.zip
+mdb-1818,City of Dixon,US,California,Dixon,https://files.mobilitydatabase.org/mdb-1818/latest.zip
+mdb-1819,Anaheim Regional Transportation,US,California,Anaheim,https://files.mobilitydatabase.org/mdb-1819/latest.zip
+mdb-1823,Eshot,TR,Izmir,Aliağa,https://files.mobilitydatabase.org/mdb-1823/latest.zip
+mdb-1824,METRO İZMİR,TR,Kocaeli,Izmit,https://files.mobilitydatabase.org/mdb-1824/latest.zip
+mdb-1825,"Agyad, Box Paratransit, Cooperative paratransit 29 Seater (Grey Licenseplates), Cairo Transport Authority, Minibus licensed by CTA, Green Bus, El Masreya, Paratransit 8 Seater Suzuki Chevrolet or DMF (Blue Licenseplates), Paratransit 14 Seater Microbus (Orange Licenseplates)",EG,Al Sharqia Governorate,Al Sharqia Governorate,https://files.mobilitydatabase.org/mdb-1825/latest.zip
+mdb-1827,Ljubljanski Potniški Promet,SI,Brezovica,Brezovica,https://files.mobilitydatabase.org/mdb-1827/latest.zip
+mdb-1828,IZBAN,TR,Izmir,Aliağa,https://files.mobilitydatabase.org/mdb-1828/latest.zip
+mdb-1829,TRAM İZMİR,TR,Izmir,Çiğli,https://files.mobilitydatabase.org/mdb-1829/latest.zip
+mdb-1830,"Pumabús, Corredores Concesionados, Sistema de Transporte Colectivo Metro, Metrobús, Servicio de Tren Ligero, Ferrocarriles Suburbanos, Trolebús, Red de Transporte de Pasajeros, Cablebus",MX,Mexico City,Álvaro Obregón,https://files.mobilitydatabase.org/mdb-1830/latest.zip
+mdb-1831,Office of Transport and Traffic Policy and Planning,LA,Vientiane Prefecture,Sikhottabong District,https://files.mobilitydatabase.org/mdb-1831/latest.zip
+mdb-1832,"Železničná spoločnosť Slovensko, a.s.",AT,Burgenland,Baumgarten/Pajngrt,https://files.mobilitydatabase.org/mdb-1832/latest.zip
+mdb-1833,Kautra,LT,Alytus County,Alovės seniūnija,https://files.mobilitydatabase.org/mdb-1833/latest.zip
+mdb-1834,Busturas,LT,Kaunas County,Babtų seniūnija,https://files.mobilitydatabase.org/mdb-1834/latest.zip
+mdb-1835,Kochi buses and boats,IN,Kerala,Aluva,https://files.mobilitydatabase.org/mdb-1835/latest.zip
+mdb-1837,BreizhGo,FR,Brittany,Côtes-d'Armor,https://files.mobilitydatabase.org/mdb-1837/latest.zip
+mdb-1842,UCSC Transportation and Parking Services,US,California,Santa Cruz,https://files.mobilitydatabase.org/mdb-1842/latest.zip
+mdb-1856,Railways of the Generalitat of Catalonia (Ferrocarrils de la Generalitat de Catalunya),ES,Catalonia,Abrera,https://files.mobilitydatabase.org/mdb-1856/latest.zip
+mdb-1858,Belleville Transit,CA,Ontario,Belleville,https://files.mobilitydatabase.org/mdb-1858/latest.zip
+mdb-1859,Société nationale des chemins de fer belges (NMBS-SNCB),AT,Lower Austria,St. Pölten,https://files.mobilitydatabase.org/mdb-1859/latest.zip
+mdb-1860,DeWaterbus,BE,Flanders,Antwerp,https://files.mobilitydatabase.org/mdb-1860/latest.zip
+mdb-1868,TEC,BE,Brussels-Capital,Auderghem - Oudergem,https://files.mobilitydatabase.org/mdb-1868/latest.zip
+mdb-1870,Generalitat Valenciana (Intercity bus),ES,Aragon,Abejuela,https://files.mobilitydatabase.org/mdb-1870/latest.zip
+mdb-1871,Rider Express,CA,Alberta,Alberta,https://files.mobilitydatabase.org/mdb-1871/latest.zip
+mdb-1872,Clean Air Express,US,California,Goleta,https://files.mobilitydatabase.org/mdb-1872/latest.zip
+mdb-1883,TAC,CH,Geneva,Geneva,https://files.mobilitydatabase.org/mdb-1883/latest.zip
+mdb-1886,Bmob,FR,Normandy,Bernay,https://files.mobilitydatabase.org/mdb-1886/latest.zip
+mdb-1889,Ales'Y,FR,Occitania,Alès,https://files.mobilitydatabase.org/mdb-1889/latest.zip
+mdb-1898,Agglobus,FR,Centre-Loire Valley,Bourges,https://files.mobilitydatabase.org/mdb-1898/latest.zip
+mdb-1899,Les Saisies,FR,Auvergne-Rhône-Alpes,Albertville,https://files.mobilitydatabase.org/mdb-1899/latest.zip
+mdb-19,Humboldt Transit Authority,US,California,Arcata,https://files.mobilitydatabase.org/mdb-19/latest.zip
+mdb-1901,"Dopravní podnik města Olomouce, a. s.",CZ,Olomouc Region,Bukovany,https://files.mobilitydatabase.org/mdb-1901/latest.zip
+mdb-1902,"Dopravní podnik měst Liberce a Jablonce nad Nisou, a. s.",CZ,Liberecký kraj,Bedřichov,https://files.mobilitydatabase.org/mdb-1902/latest.zip
+mdb-1903,V-BUSZ KFT,HU,Veszprém,Veszprém,https://files.mobilitydatabase.org/mdb-1903/latest.zip
+mdb-1907,Białostocka Komunikacja Miejska,PL,Podlaskie Voivodeship,Białystok,https://files.mobilitydatabase.org/mdb-1907/latest.zip
+mdb-1908,Koleje Małopolskie,PL,Lesser Poland Voivodeship,Bochnia County,https://files.mobilitydatabase.org/mdb-1908/latest.zip
+mdb-1909,Transjakarta,ID,Banten,Benda,https://files.mobilitydatabase.org/mdb-1909/latest.zip
+mdb-1914,"Ayuntamiento del Municipio de Santiago, Oficina Metropolitana de Servicios de Autobuses, Instituto Nacional de Tránsito y Transporte Terrestre",DO,Dajabón,Dajabón,https://files.mobilitydatabase.org/mdb-1914/latest.zip
+mdb-1915,OSYPA,CY,Limassol District,Limassol District,https://files.mobilitydatabase.org/mdb-1915/latest.zip
+mdb-1916,OSEA,CY,Famagusta District,Famagusta District,https://files.mobilitydatabase.org/mdb-1916/latest.zip
+mdb-1917,Intercity buses,CY,Famagusta District,Famagusta District,https://files.mobilitydatabase.org/mdb-1917/latest.zip
+mdb-1918,NPT,CY,Larnaca District,Larnaca District,https://files.mobilitydatabase.org/mdb-1918/latest.zip
+mdb-1919,LPT,CY,Larnaca District,Larnaca District,https://files.mobilitydatabase.org/mdb-1919/latest.zip
+mdb-1924,Hong Kong Government Transport Department,CN,Guangdong Province,Futian District,https://files.mobilitydatabase.org/mdb-1924/latest.zip
+mdb-1927,Transportes Urbanos de Braga (TUB),PT,Braga,Adaúfe,https://files.mobilitydatabase.org/mdb-1927/latest.zip
+mdb-1928,Brighton & Hove Bus,GB,England,Brighton and Hove,https://files.mobilitydatabase.org/mdb-1928/latest.zip
+mdb-1929,Borders Buses,GB,England,Cumbria,https://files.mobilitydatabase.org/mdb-1929/latest.zip
+mdb-1930,Blackpool Transport,GB,England,Blackpool,https://files.mobilitydatabase.org/mdb-1930/latest.zip
+mdb-1931,Cardiff Bus,GB,Wales,Cardiff,https://files.mobilitydatabase.org/mdb-1931/latest.zip
+mdb-1932,Carousel Buses,GB,England,England,https://files.mobilitydatabase.org/mdb-1932/latest.zip
+mdb-1933,East Yorkshire,GB,England,Calderdale,https://files.mobilitydatabase.org/mdb-1933/latest.zip
+mdb-1934,Go Cornwall Bus,GB,England,Cornwall,https://files.mobilitydatabase.org/mdb-1934/latest.zip
+mdb-1935,Go North East,GB,England,County Durham,https://files.mobilitydatabase.org/mdb-1935/latest.zip
+mdb-1936,Go North West,GB,Manchester,,https://files.mobilitydatabase.org/mdb-1936/latest.zip
+mdb-1937,Green Line 702,GB,England,Bracknell Forest,https://files.mobilitydatabase.org/mdb-1937/latest.zip
+mdb-1938,Hedingham and Chambers,GB,England,Essex,https://files.mobilitydatabase.org/mdb-1938/latest.zip
+mdb-1939,Intalink,GB,England,Bedford,https://files.mobilitydatabase.org/mdb-1939/latest.zip
+mdb-1940,konectbus,GB,England,Norfolk,https://files.mobilitydatabase.org/mdb-1940/latest.zip
+mdb-1941,McGill's Buses,GB,Scotland,East Dunbartonshire,https://files.mobilitydatabase.org/mdb-1941/latest.zip
+mdb-1942,Metrobus,GB,England,Brighton and Hove,https://files.mobilitydatabase.org/mdb-1942/latest.zip
+mdb-1943,Morebus,GB,England,Dorset,https://files.mobilitydatabase.org/mdb-1943/latest.zip
+mdb-1944,Newbury & District,GB,England,Hampshire,https://files.mobilitydatabase.org/mdb-1944/latest.zip
+mdb-1945,Newport Bus,GB,England,City of Bristol,https://files.mobilitydatabase.org/mdb-1945/latest.zip
+mdb-1946,Nottingham City Transport,GB,England,City of Nottingham,https://files.mobilitydatabase.org/mdb-1946/latest.zip
+mdb-1947,Oxford Bus,GB,England,City of Westminster,https://files.mobilitydatabase.org/mdb-1947/latest.zip
+mdb-1948,Plymouth Citybus,GB,England,Cornwall,https://files.mobilitydatabase.org/mdb-1948/latest.zip
+mdb-1949,Reading Buses,GB,England,Bracknell Forest,https://files.mobilitydatabase.org/mdb-1949/latest.zip
+mdb-1950,Salisbury Reds,GB,England,Dorset,https://files.mobilitydatabase.org/mdb-1950/latest.zip
+mdb-1951,Southern Vectis,GB,England,Isle of Wight,https://files.mobilitydatabase.org/mdb-1951/latest.zip
+mdb-1952,Swindon's Bus Company,GB,England,Bath and North East Somerset,https://files.mobilitydatabase.org/mdb-1952/latest.zip
+mdb-1953,Transdev Blazefield,GB,England,Blackburn with Darwen,https://files.mobilitydatabase.org/mdb-1953/latest.zip
+mdb-1954,Unibus,GB,England,Dorset,https://files.mobilitydatabase.org/mdb-1954/latest.zip
+mdb-1955,Unilink,GB,England,Hampshire,https://files.mobilitydatabase.org/mdb-1955/latest.zip
+mdb-1956,Warrington's Own Buses,GB,England,Cheshire East,https://files.mobilitydatabase.org/mdb-1956/latest.zip
+mdb-1957,West Coast Motors,GB,Scotland,Argyll and Bute,https://files.mobilitydatabase.org/mdb-1957/latest.zip
+mdb-1960,"Harare Kombis, City Shuttle",ZW,Harare,,https://files.mobilitydatabase.org/mdb-1960/latest.zip
+mdb-1961,"Kigali Bus Services, Rwanda Federation of Transport Cooperatives (RFTC), Royal Express",RW,Kigali City,Gasabo District,https://files.mobilitydatabase.org/mdb-1961/latest.zip
+mdb-1962,"Kigali Bus Services, Rwanda Federation of Transport Cooperatives (RFTC), Royal Express",RW,Kigali City,Gasabo District,https://files.mobilitydatabase.org/mdb-1962/latest.zip
+mdb-1963,"Esprit de Mort, Esprit de Vie, Transco, Taxi Jaune, Moto",CD,Kinshasa,Kinshasa,https://files.mobilitydatabase.org/mdb-1963/latest.zip
+mdb-1964,"Esprit de Mort, Esprit de Vie, Transco, Taxi Jaune",CD,Kinshasa,Kinshasa,https://files.mobilitydatabase.org/mdb-1964/latest.zip
+mdb-1965,"Esprit de Mort, Esprit de Vie, Transco, Taxi Jaune",ZA,Western Cape,Cape Winelands District Municipality,https://files.mobilitydatabase.org/mdb-1965/latest.zip
+mdb-1970,Shuttler,CH,Bern,Interlaken-Oberhasli administrative district,https://files.mobilitydatabase.org/mdb-1970/latest.zip
+mdb-1974,Tri Delta Transit,US,California,Contra Costa County,https://files.mobilitydatabase.org/mdb-1974/latest.zip
+mdb-1984,Consiliul Judetean Vrancea,RO,Galați,Galați,https://files.mobilitydatabase.org/mdb-1984/latest.zip
+mdb-1985,Aeroexpreso,BO,La Paz,Provincia Manco Kapac,https://files.mobilitydatabase.org/mdb-1985/latest.zip
+mdb-1988,Communauté dʼAgglomération Amiens Métropole,FR,Hauts-de-France,Allonville,https://files.mobilitydatabase.org/mdb-1988/latest.zip
+mdb-1991,BC Transit (Central Fraser Valley | Chilliwack | Agassiz-Harrison | Hope),CA,British Columbia,Abbotsford,https://files.mobilitydatabase.org/mdb-1991/latest.zip
+mdb-1992,Red Deer Transit,CA,Alberta,City of Red Deer,https://files.mobilitydatabase.org/mdb-1992/latest.zip
+mdb-1993,Go Transit,CA,Ontario,Ajax,https://files.mobilitydatabase.org/mdb-1993/latest.zip
+mdb-1994,Brampton Transit,CA,Ontario,Brampton,https://files.mobilitydatabase.org/mdb-1994/latest.zip
+mdb-1995,Union Pearson Express (UP Express),CA,Ontario,Mississauga,https://files.mobilitydatabase.org/mdb-1995/latest.zip
+mdb-1996,Société de Transport de Sherbrooke,CA,Quebec,Sherbrooke,https://files.mobilitydatabase.org/mdb-1996/latest.zip
+mdb-1997,Lethbridge Transit,CA,Alberta,Lethbridge,https://files.mobilitydatabase.org/mdb-1997/latest.zip
+mdb-1999,Beach Cities Transit,US,California,El Segundo,https://files.mobilitydatabase.org/mdb-1999/latest.zip
+mdb-2,London Transit Commission,CA,Ontario,London,https://files.mobilitydatabase.org/mdb-2/latest.zip
+mdb-20,Redwood Coast Transit (RCT),US,California,Del Norte County,https://files.mobilitydatabase.org/mdb-20/latest.zip
+mdb-2002,STGA - réseau Möbius,FR,New Aquitaine,Angoulême,https://files.mobilitydatabase.org/mdb-2002/latest.zip
+mdb-2008,ASPO Olbia,IT,Sardinia,Loiri-Poltu Santu Paolu/Loiri Porto San Paolo,https://files.mobilitydatabase.org/mdb-2008/latest.zip
+mdb-2009,Azienda Trasporti Pubblici (ATP Sassari),IT,Sardinia,Posthudorra/Porto Torres,https://files.mobilitydatabase.org/mdb-2009/latest.zip
+mdb-2012,SIMUR Bogota,CO,Distrito Capital de Bogotá,,https://files.mobilitydatabase.org/mdb-2012/latest.zip
+mdb-2014,UK aggregate feed,GB,,,https://files.mobilitydatabase.org/mdb-2014/latest.zip
+mdb-2015,Pasažieru Vilciens,EE,Valga maakond,Valga vald,https://files.mobilitydatabase.org/mdb-2015/latest.zip
+mdb-2016,Liepājas sabiedriskais transports,LV,Courland,Liepaja,https://files.mobilitydatabase.org/mdb-2016/latest.zip
+mdb-2017,Rēzeknes satiksme,LV,,,https://files.mobilitydatabase.org/mdb-2017/latest.zip
+mdb-2018,Jūrmalas autobusu satiksme,LV,Vidzeme,Jūrmala,https://files.mobilitydatabase.org/mdb-2018/latest.zip
+mdb-2020,STP Brindisi,IT,Apulia,Ostuni,https://files.mobilitydatabase.org/mdb-2020/latest.zip
+mdb-2021,STP Brindisi,IT,Apulia,Brindisi,https://files.mobilitydatabase.org/mdb-2021/latest.zip
+mdb-2022,STP Brindisi,IT,Apulia,Brindisi,https://files.mobilitydatabase.org/mdb-2022/latest.zip
+mdb-2023,STP Brindisi,IT,Apulia,Francavilla Fontana,https://files.mobilitydatabase.org/mdb-2023/latest.zip
+mdb-2027,Carris Metropolitana,PT,Évora,Landeira,https://files.mobilitydatabase.org/mdb-2027/latest.zip
+mdb-2030,reLAXsan,US,California,Los Angeles,https://files.mobilitydatabase.org/mdb-2030/latest.zip
+mdb-2031,Aquabus Ferries,CA,British Columbia,Vancouver,https://files.mobilitydatabase.org/mdb-2031/latest.zip
+mdb-2033,Secretaría de Movilidad Oaxaca,MX,Oaxaca,Ánimas Trujano,https://files.mobilitydatabase.org/mdb-2033/latest.zip
+mdb-2034,Direccion General de Transporte Publico de Puerto Vallarta,MX,Jalisco,Puerto Vallarta,https://files.mobilitydatabase.org/mdb-2034/latest.zip
+mdb-2036,Bean Shuttle,AT,Lower Austria,Bezirk Bruck an der Leitha,https://files.mobilitydatabase.org/mdb-2036/latest.zip
+mdb-2053,Systemaufgaben Kundeninformation SKI+,CH,Appenzell Ausserrhoden,Vorderland,https://files.mobilitydatabase.org/mdb-2053/latest.zip
+mdb-2055,Daytrip Shuttle,IT,Campania,Naples,https://files.mobilitydatabase.org/mdb-2055/latest.zip
+mdb-2056,Daytrip Shuttle,PT,Coimbra,"Sé Nova, Santa Cruz, Almedina e São Bartolomeu",https://files.mobilitydatabase.org/mdb-2056/latest.zip
+mdb-2057,CP - Comboios de Portugal,PT,Aveiro,Águeda e Borralha,https://files.mobilitydatabase.org/mdb-2057/latest.zip
+mdb-2059,Morro Bay Transit,US,California,Morro Bay,https://files.mobilitydatabase.org/mdb-2059/latest.zip
+mdb-2077,Socatur,CM,Littoral,Wouri,https://files.mobilitydatabase.org/mdb-2077/latest.zip
+mdb-2078,Divers opérateurs,CI,Abidjan,,https://files.mobilitydatabase.org/mdb-2078/latest.zip
+mdb-2079,Broome County Transit (B.C. Transit),US,New York,Binghamton,https://files.mobilitydatabase.org/mdb-2079/latest.zip
+mdb-2084,Miejski Zakład Komunikacji w Wejherowie (MZK Wejherowo),PL,Pomeranian Voivodeship,Wejherowo County,https://files.mobilitydatabase.org/mdb-2084/latest.zip
+mdb-2085,Komunikacja Autobusowa Świnoujście (KA Świnoujście),PL,West Pomeranian Voivodeship,Kamień County,https://files.mobilitydatabase.org/mdb-2085/latest.zip
+mdb-2086,Miejski Zakład Komunikacji w Ełku (MZK Ełk),PL,Warmian-Masurian Voivodeship,Ełk County,https://files.mobilitydatabase.org/mdb-2086/latest.zip
+mdb-2087,Polregio,DE,Berlin,Berlin,https://files.mobilitydatabase.org/mdb-2087/latest.zip
+mdb-2088,Polskie Koleje Państwowe Intercity (PKP Intercity),CZ,Moravskoslezský kraj,Bohumín,https://files.mobilitydatabase.org/mdb-2088/latest.zip
+mdb-2089,Urząd Miasta Torunia (MZK Toruń),PL,Kuyavian-Pomeranian Voivodeship,Toruń,https://files.mobilitydatabase.org/mdb-2089/latest.zip
+mdb-209,Academy Bus,US,New York,New York County,https://files.mobilitydatabase.org/mdb-209/latest.zip
+mdb-2090,MZDiK Radom,PL,Masovian Voivodeship,Radom,https://files.mobilitydatabase.org/mdb-2090/latest.zip
+mdb-2091,Warszawska Kolej Dojazdowa (WKD),PL,Masovian Voivodeship,Grodzisk Mazowiecki County,https://files.mobilitydatabase.org/mdb-2091/latest.zip
+mdb-2092,Warszawski Transport Publiczny (ZTM Warszawa),PL,Masovian Voivodeship,Grójec County,https://files.mobilitydatabase.org/mdb-2092/latest.zip
+mdb-2093,Zarząd Transportu Miejskiego Gdańsk (ZTM Gdańsk),PL,Pomeranian Voivodeship,Gdańsk,https://files.mobilitydatabase.org/mdb-2093/latest.zip
+mdb-2094,Zarząd Dróg i Zieleni Gdynia (ZKM Gdynia),PL,Pomeranian Voivodeship,Gdańsk,https://files.mobilitydatabase.org/mdb-2094/latest.zip
+mdb-2098,Asociația de Dezvoltare Intercomunitară pentru Transport Public București – Ilfov (TPBI),RO,Bucharest,Bucharest,https://files.mobilitydatabase.org/mdb-2098/latest.zip
+mdb-2099,Tursib Sibiu,RO,Sibiu,Sibiu,https://files.mobilitydatabase.org/mdb-2099/latest.zip
+mdb-2100,CT BUS Constanța,RO,Constanța,Constanța,https://files.mobilitydatabase.org/mdb-2100/latest.zip
+mdb-2101,Oradea Transport Local,HU,Hajdú-Bihar,Ártánd,https://files.mobilitydatabase.org/mdb-2101/latest.zip
+mdb-2102,Transurbis Zalău,RO,Sălaj,Sălaj,https://files.mobilitydatabase.org/mdb-2102/latest.zip
+mdb-2106,Transbus Buzău,RO,Buzău,Buzău,https://files.mobilitydatabase.org/mdb-2106/latest.zip
+mdb-2107,Servicii Publice Municipale Târgoviște,RO,Dâmbovița,Dâmbovița,https://files.mobilitydatabase.org/mdb-2107/latest.zip
+mdb-2108,Transport Călători Express Ploiești,RO,Prahova,Prahova,https://files.mobilitydatabase.org/mdb-2108/latest.zip
+mdb-211,Alhambra Community Transit,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-211/latest.zip
+mdb-2114,Transport Urban Sinaia,RO,Prahova,Prahova,https://files.mobilitydatabase.org/mdb-2114/latest.zip
+mdb-2115,RAT Craiova,RO,Dolj,Dolj,https://files.mobilitydatabase.org/mdb-2115/latest.zip
+mdb-2116,Compania de Transport Public Iași,RO,Iași,Iași,https://files.mobilitydatabase.org/mdb-2116/latest.zip
+mdb-2119,Trolleybus Transport Pleven,BG,Pleven,Pleven,https://files.mobilitydatabase.org/mdb-2119/latest.zip
+mdb-2121,Compania de Transport Public Cluj-Napoca,RO,Cluj,Cluj,https://files.mobilitydatabase.org/mdb-2121/latest.zip
+mdb-2126,Société de transport de Montréal (STM),CA,Quebec,Baie-D'Urfé,https://files.mobilitydatabase.org/mdb-2126/latest.zip
+mdb-2131,Saint John Transit,CA,New Brunswick,Grand Bay-Westfield,https://files.mobilitydatabase.org/mdb-2131/latest.zip
+mdb-2132,T3 Transit,CA,Prince Edward Island,Brackley,https://files.mobilitydatabase.org/mdb-2132/latest.zip
+mdb-2134,Daytrip Shuttle,MX,Quintana Roo,Benito Juárez,https://files.mobilitydatabase.org/mdb-2134/latest.zip
+mdb-2135,El Dorado Transit Agency,US,California,El Dorado County,https://files.mobilitydatabase.org/mdb-2135/latest.zip
+mdb-2136,Elk Grove Transit,US,California,Sacramento,https://files.mobilitydatabase.org/mdb-2136/latest.zip
+mdb-2137,Sacramento Regional Transit (SacRT),US,California,Placer County,https://files.mobilitydatabase.org/mdb-2137/latest.zip
+mdb-2138,OBB Personenverkehr AG Kundenservice,AT,Burgenland,Baumgarten/Pajngrt,https://files.mobilitydatabase.org/mdb-2138/latest.zip
+mdb-214,Antelope Valley Transit Authority (AVTA),US,California,Beverly Hills,https://files.mobilitydatabase.org/mdb-214/latest.zip
+mdb-2141,Consorcio de Transportes de Mallorca,ES,Balearic Islands,Alaró,https://files.mobilitydatabase.org/mdb-2141/latest.zip
+mdb-2142,Exo Le Richelain / Roussillon,CA,Quebec,Brossard,https://files.mobilitydatabase.org/mdb-2142/latest.zip
+mdb-2143,Regia Autonomă De Transport Brașov,RO,Brașov,Brașov,https://files.mobilitydatabase.org/mdb-2143/latest.zip
+mdb-2148,Sociedade de Transportes Colectivos do Porto,PT,Porto,Águas Santas,https://files.mobilitydatabase.org/mdb-2148/latest.zip
+mdb-2149,BurbankBus,US,California,Burbank,https://files.mobilitydatabase.org/mdb-2149/latest.zip
+mdb-2150,Gobierno de Navarra (Navarra intercity bus),ES,Aragon,Mallén,https://files.mobilitydatabase.org/mdb-2150/latest.zip
+mdb-2151,Daytrip Shuttle,CR,Alajuela Province,Cantón Alajuela,https://files.mobilitydatabase.org/mdb-2151/latest.zip
+mdb-2154,Ottawa-Carleton Regional Transit Commission (OC Transpo),CA,Ontario,Cumberland,https://files.mobilitydatabase.org/mdb-2154/latest.zip
+mdb-2155,Integrated Transit System of the South Moravian Region (IDS JMK),AT,Lower Austria,Bezirk Hollabrunn,https://files.mobilitydatabase.org/mdb-2155/latest.zip
+mdb-2172,Manteca Transit,US,California,Lathrop,https://files.mobilitydatabase.org/mdb-2172/latest.zip
+mdb-2174,MOVE Stanislaus,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2174/latest.zip
+mdb-2180,San Joaquin Regional Transit District,US,California,San Joaquin County,https://files.mobilitydatabase.org/mdb-2180/latest.zip
+mdb-2186,Stanislaus Regional Transit Authority,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2186/latest.zip
+mdb-2187,City of Tracy,US,California,,https://files.mobilitydatabase.org/mdb-2187/latest.zip
+mdb-2190,Palo Verde Valley Transit Agency,US,California,Blythe,https://files.mobilitydatabase.org/mdb-2190/latest.zip
+mdb-22,Curry Public Transit,US,California,Del Norte County,https://files.mobilitydatabase.org/mdb-22/latest.zip
+mdb-220,City of Banning Transit,US,California,Banning,https://files.mobilitydatabase.org/mdb-220/latest.zip
+mdb-2200,TMT Trujillo - Gerencia de Transporte,PE,La Libertad,El Porvenir,https://files.mobilitydatabase.org/mdb-2200/latest.zip
+mdb-2201,Montebello Bus Lines,US,California,Alhambra,https://files.mobilitydatabase.org/mdb-2201/latest.zip
+mdb-2202,Spirit Bus,US,California,Alhambra,https://files.mobilitydatabase.org/mdb-2202/latest.zip
+mdb-2203,South County Transit Link,US,California,Sacramento County,https://files.mobilitydatabase.org/mdb-2203/latest.zip
+mdb-2204,Kings Area Rural Transit,US,California,Fresno County,https://files.mobilitydatabase.org/mdb-2204/latest.zip
+mdb-2207,Glenn Transit Service,US,California,Butte County,https://files.mobilitydatabase.org/mdb-2207/latest.zip
+mdb-2210,El Segundo Transportation,US,California,El Segundo,https://files.mobilitydatabase.org/mdb-2210/latest.zip
+mdb-2212,Empresa Malagueña de Transportes (EMT),ES,Andalusia,Málaga,https://files.mobilitydatabase.org/mdb-2212/latest.zip
+mdb-2224,Emery Go-Round,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2224/latest.zip
+mdb-2231,Karlsruher Verkehrsverbund,DE,Baden-Württemberg,Baden-Baden,https://files.mobilitydatabase.org/mdb-2231/latest.zip
+mdb-2233,Arvin Transit,US,California,Arvin,https://files.mobilitydatabase.org/mdb-2233/latest.zip
+mdb-2234,Camarillo Area Transit,US,California,Camarillo,https://files.mobilitydatabase.org/mdb-2234/latest.zip
+mdb-2235,San Juan Capistrano Free Weekend Trolley,US,California,San Juan Capistrano,https://files.mobilitydatabase.org/mdb-2235/latest.zip
+mdb-2236,Taft Area Transit,US,California,Taft,https://files.mobilitydatabase.org/mdb-2236/latest.zip
+mdb-2237,Thousand Oaks Transit,US,California,Thousand Oaks,https://files.mobilitydatabase.org/mdb-2237/latest.zip
+mdb-2238,West Berkeley Shuttle,US,California,Berkeley,https://files.mobilitydatabase.org/mdb-2238/latest.zip
+mdb-2243,Arcadia Transit,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-2243/latest.zip
+mdb-2247,Baldwin Park Transit,US,California,Irwindale,https://files.mobilitydatabase.org/mdb-2247/latest.zip
+mdb-2248,Cudahy Area Rapid Transit,US,California,Bell,https://files.mobilitydatabase.org/mdb-2248/latest.zip
+mdb-2249,City of Bell (La Campana),US,California,Bell,https://files.mobilitydatabase.org/mdb-2249/latest.zip
+mdb-2250,La Puente LINK,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-2250/latest.zip
+mdb-2251,Sierra Madre Gateway Coach,US,California,Pasadena,https://files.mobilitydatabase.org/mdb-2251/latest.zip
+mdb-2253,Toronto Transit Commission (TTC),CA,Ontario,East York,https://files.mobilitydatabase.org/mdb-2253/latest.zip
+mdb-226,University of California Berkeley Shuttle (Bear Transit),US,California,Albany,https://files.mobilitydatabase.org/mdb-226/latest.zip
+mdb-227,Bellflower Bus,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-227/latest.zip
+mdb-2270,GTrans,US,California,Carson,https://files.mobilitydatabase.org/mdb-2270/latest.zip
+mdb-2272,Santa Maria Area Transit,US,California,San Luis Obispo County,https://files.mobilitydatabase.org/mdb-2272/latest.zip
+mdb-2273,Stanislaus Regional Transit (StaRT),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2273/latest.zip
+mdb-2275,Auburn Transit,US,California,Auburn,https://files.mobilitydatabase.org/mdb-2275/latest.zip
+mdb-2276,Société des transports de Rimouski,CA,Quebec,Rimouski,https://files.mobilitydatabase.org/mdb-2276/latest.zip
+mdb-2279,Ridgecrest Transit,US,California,Kern County,https://files.mobilitydatabase.org/mdb-2279/latest.zip
+mdb-228,Bell Gardens Trolley,US,California,Bell Gardens,https://files.mobilitydatabase.org/mdb-228/latest.zip
+mdb-2295,Amtrak San Joaquins,US,California,Antioch,https://files.mobilitydatabase.org/mdb-2295/latest.zip
+mdb-2297,Amtrak Vermonter,US,New York,City of Saratoga Springs,https://files.mobilitydatabase.org/mdb-2297/latest.zip
+mdb-2312,Hudson Link,US,New York,Airmont,https://files.mobilitydatabase.org/mdb-2312/latest.zip
+mdb-2315,Thousand Oaks Transit - Kanan Shuttle,US,California,Agoura Hills,https://files.mobilitydatabase.org/mdb-2315/latest.zip
+mdb-2317,Kiryas Joel Area Transit,US,New York,Kiryas Joel,https://files.mobilitydatabase.org/mdb-2317/latest.zip
+mdb-2321,Megabus,CA,Ontario,Brockville,https://files.mobilitydatabase.org/mdb-2321/latest.zip
+mdb-2324,Middletown Area Transit,US,New York,Middletown,https://files.mobilitydatabase.org/mdb-2324/latest.zip
+mdb-2328,North Lake Tahoe Express,US,California,Nevada County,https://files.mobilitydatabase.org/mdb-2328/latest.zip
+mdb-2329,eBus,NZ,Nelson,Nelson,https://files.mobilitydatabase.org/mdb-2329/latest.zip
+mdb-233,Birnie Bus,US,New York,Delaware County,https://files.mobilitydatabase.org/mdb-233/latest.zip
+mdb-2333,Münchner Verkehrsgesellschaft (MVG),DE,Bavaria,Landkreis Dachau,https://files.mobilitydatabase.org/mdb-2333/latest.zip
+mdb-2336,MSRTC Transit,IN,Maharashtra,Ratnagiri,https://files.mobilitydatabase.org/mdb-2336/latest.zip
+mdb-2337,Latvia by Gustavs Svalbe gsvalbe.id.lv,EE,Valga maakond,Valga vald,https://files.mobilitydatabase.org/mdb-2337/latest.zip
+mdb-2341,"Regia Transport Electric Chișinău, Î.M. Parcul Urban de Autobuze",MD,Chișinău Municipality,Chișinău Municipality,https://files.mobilitydatabase.org/mdb-2341/latest.zip
+mdb-2345,Municipality of Tirana,AL,Tirana County,Dajt,https://files.mobilitydatabase.org/mdb-2345/latest.zip
+mdb-2353,Westchester County Bee-Line System (WCDOT),US,New York,Ardsley,https://files.mobilitydatabase.org/mdb-2353/latest.zip
+mdb-2357,Metro do Porto,PT,Porto,Árvore,https://files.mobilitydatabase.org/mdb-2357/latest.zip
+mdb-2359,Transports Metropolitans de Barcelona (TMB),ES,Catalonia,Badalona,https://files.mobilitydatabase.org/mdb-2359/latest.zip
+mdb-236,Blossom Express,US,California,San Joaquin County,https://files.mobilitydatabase.org/mdb-236/latest.zip
+mdb-2360,Mitteldeutscher Verkehrsverbund GmbH (MDV),DE,Brandenburg,Elbe-Elster,https://files.mobilitydatabase.org/mdb-2360/latest.zip
+mdb-2361,Dana Point Trolley,US,California,Dana Point,https://files.mobilitydatabase.org/mdb-2361/latest.zip
+mdb-2362,San Clemente Trolley,US,California,Dana Point,https://files.mobilitydatabase.org/mdb-2362/latest.zip
+mdb-2364,Transport for Ireland (TFI),GB,Northern Ireland,Northern Ireland,https://files.mobilitydatabase.org/mdb-2364/latest.zip
+mdb-2366,"Mi Transporte, Mi Transporte Eléctrico, Mi Macro, Mi Tren, SiTren",MX,Jalisco,El Salto,https://files.mobilitydatabase.org/mdb-2366/latest.zip
+mdb-2367,METROFOR,BR,Ceará,Região Geográfica Intermediária de Fortaleza,https://files.mobilitydatabase.org/mdb-2367/latest.zip
+mdb-2370,Trasporto Passeggeri Emilia-Romagna,IT,Emilia-Romagna,Bologna,https://files.mobilitydatabase.org/mdb-2370/latest.zip
+mdb-2371,Trasporto Passeggeri Emilia-Romagna,IT,Emilia-Romagna,Alfonsine,https://files.mobilitydatabase.org/mdb-2371/latest.zip
+mdb-2372,Trasporto Passeggeri Emilia-Romagna,IT,Emilia-Romagna,Alto Reno Terme,https://files.mobilitydatabase.org/mdb-2372/latest.zip
+mdb-2373,AMAT Palermo S.P.A.,IT,Sicily,Altofonte,https://files.mobilitydatabase.org/mdb-2373/latest.zip
+mdb-2374,Lvivavtodor,UA,Lviv Oblast,Lviv Raion,https://files.mobilitydatabase.org/mdb-2374/latest.zip
+mdb-2377,Željeznički prevoz Crne Gore,ME,Bar Municipality,Limljani,https://files.mobilitydatabase.org/mdb-2377/latest.zip
+mdb-2379,Société de transport collectif de Pierre-De Saurel,CA,Quebec,Longueuil,https://files.mobilitydatabase.org/mdb-2379/latest.zip
+mdb-2381,Isparta Özel Halk Otobüsleri,TR,Gaziantep,Şahinbey,https://files.mobilitydatabase.org/mdb-2381/latest.zip
+mdb-2385,B-Bus,LT,Kaunas County,Balbieriškio seniūnija,https://files.mobilitydatabase.org/mdb-2385/latest.zip
+mdb-2386,Nouvelle-Aquitaine Mobilités,ES,Aragon,Canfranc,https://files.mobilitydatabase.org/mdb-2386/latest.zip
+mdb-2387,Zarząd Transportu Miejskiego Rzeszów (ZTM Rzeszów),PL,Subcarpathian Voivodeship,Łańcut County,https://files.mobilitydatabase.org/mdb-2387/latest.zip
+mdb-2389,Hullo Ferries,CA,British Columbia,Nanaimo,https://files.mobilitydatabase.org/mdb-2389/latest.zip
+mdb-2393,NVBW - Nahverkehrsgesellschaft Baden-Württemberg mbH,AT,Carinthia,Bezirk Spittal an der Drau,https://files.mobilitydatabase.org/mdb-2393/latest.zip
+mdb-2394,Yosemite Area Regional Transportation System (YARTS),US,California,Fresno,https://files.mobilitydatabase.org/mdb-2394/latest.zip
+mdb-2399,ZTM Katowice,PL,Lesser Poland Voivodeship,Oświęcim County,https://files.mobilitydatabase.org/mdb-2399/latest.zip
+mdb-2400,Empresa Municipal de Transportes de Fuenlabrada (EMTF),ES,Community of Madrid,Fuenlabrada,https://files.mobilitydatabase.org/mdb-2400/latest.zip
+mdb-2407,Metro Sabanas,CO,Sucre,Sucre,https://files.mobilitydatabase.org/mdb-2407/latest.zip
+mdb-2408,"Metro Transportes do Sul, Metro Sul do Tejo",PT,Setúbal,"Almada, Cova da Piedade, Pragal e Cacilhas",https://files.mobilitydatabase.org/mdb-2408/latest.zip
+mdb-2417,Maritime Bus,CA,New Brunswick,Burton Parish,https://files.mobilitydatabase.org/mdb-2417/latest.zip
+mdb-2421,County Connection (CCCTA),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2421/latest.zip
+mdb-2425,Santa Cruz Metro (SCMTD),US,California,Santa Clara County,https://files.mobilitydatabase.org/mdb-2425/latest.zip
+mdb-2449,Transport for New South Wales,AU,Australian Capital Territory,Australian Capital Territory,https://files.mobilitydatabase.org/mdb-2449/latest.zip
+mdb-2450,"Red Metropolitana de Movilida, EFE Trenes de Chile, Bus de Acercamiento Aeropuerto, Metro de Santiago",CL,Región del Libertador General Bernardo O'Higgins,Provincia de Cachapoal,https://files.mobilitydatabase.org/mdb-2450/latest.zip
+mdb-2455,Alameda-Contra Costa Transit District (AC Transit),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2455/latest.zip
+mdb-2457,Hyderabad Metro Rail Ltd.,IN,Telangana,Amberpet mandal,https://files.mobilitydatabase.org/mdb-2457/latest.zip
+mdb-2460,Fredericton Transit,CA,New Brunswick,Douglas Parish,https://files.mobilitydatabase.org/mdb-2460/latest.zip
+mdb-2461,PKS Kalisz,PL,Greater Poland Voivodeship,Kalisz,https://files.mobilitydatabase.org/mdb-2461/latest.zip
+mdb-2462,BC Transit (Hazelton | Kitimat | Terrace),CA,British Columbia,Area B (Suskwa/Kitwanga/Kispiox),https://files.mobilitydatabase.org/mdb-2462/latest.zip
+mdb-2463,BC Transit (Quesnel),CA,British Columbia,Area A (Red Bluff/Quesnel South),https://files.mobilitydatabase.org/mdb-2463/latest.zip
+mdb-2464,BC Transit (Revelstoke),CA,British Columbia,Revelstoke,https://files.mobilitydatabase.org/mdb-2464/latest.zip
+mdb-2466,BC Transit (Salt Spring Island),CA,British Columbia,Salt Spring Island Electoral Area,https://files.mobilitydatabase.org/mdb-2466/latest.zip
+mdb-2467,BC Transit (Mount Waddington),CA,British Columbia,Area B (Quatsino Sound/Cape Scott),https://files.mobilitydatabase.org/mdb-2467/latest.zip
+mdb-2468,BC Transit (Ashcroft-Cache Creek-Clinton Transit System),CA,British Columbia,Ashcroft,https://files.mobilitydatabase.org/mdb-2468/latest.zip
+mdb-2469,BC Transit (100 Mile House),CA,British Columbia,100 Mile House,https://files.mobilitydatabase.org/mdb-2469/latest.zip
+mdb-2470,BC Transit (Pemberton Valley),CA,British Columbia,Area C (Pemberton Valley/Mount Currie/D'Arcy),https://files.mobilitydatabase.org/mdb-2470/latest.zip
+mdb-2471,BC Transit (Merritt),CA,British Columbia,Area M (Beautiful Nicola Valley - North),https://files.mobilitydatabase.org/mdb-2471/latest.zip
+mdb-2472,BC Transit (Smithers),CA,British Columbia,Area A (Hudson Bay Mountain),https://files.mobilitydatabase.org/mdb-2472/latest.zip
+mdb-2473,BC Transit (Nanaimo),CA,British Columbia,Area A (Cassidy/Cedar),https://files.mobilitydatabase.org/mdb-2473/latest.zip
+mdb-25,Eastern Sierra Transit,US,California,Inyo County,https://files.mobilitydatabase.org/mdb-25/latest.zip
+mdb-2508,BC Transit (Shuswap | Vernon),CA,British Columbia,Area B (Westside/Swan Lake/Kalamalka Lake),https://files.mobilitydatabase.org/mdb-2508/latest.zip
+mdb-2510,BC Transit (Bulkley-Nechako | Prince George),CA,British Columbia,Area A (Hudson Bay Mountain),https://files.mobilitydatabase.org/mdb-2510/latest.zip
+mdb-2514,BC Transit (Campbell River Transit),CA,British Columbia,Area D (Oyster Bay/Buttle Lake),https://files.mobilitydatabase.org/mdb-2514/latest.zip
+mdb-2515,BC Transit (Clearwater),CA,British Columbia,Area A (Wells Gray Country),https://files.mobilitydatabase.org/mdb-2515/latest.zip
+mdb-2519,Ministry of Transport and Road Safety,IL,Center District,haSharon Subdistrict,https://files.mobilitydatabase.org/mdb-2519/latest.zip
+mdb-2520,BC Transit (Columbia Valley | Cranbrook | Elk Valley | Kimberley),CA,British Columbia,Area A (Upper Flathead/Elk Valley),https://files.mobilitydatabase.org/mdb-2520/latest.zip
+mdb-2524,BC Transit (Comox Valley Transit System),CA,British Columbia,Area A (Baynes Sound),https://files.mobilitydatabase.org/mdb-2524/latest.zip
+mdb-2528,BC Transit (Cowichan Valley Regional Transit System),CA,British Columbia,Area A (Mill Bay / Malahat),https://files.mobilitydatabase.org/mdb-2528/latest.zip
+mdb-2529,BC Transit (Powell River Regional Transit System),CA,British Columbia,Area A (Malaspina/Toba),https://files.mobilitydatabase.org/mdb-2529/latest.zip
+mdb-2532,BC Transit (South Okanagan-Similkameen),CA,British Columbia,Area A (Osoyoos Lake),https://files.mobilitydatabase.org/mdb-2532/latest.zip
+mdb-2536,BC Transit (Creston Valley),CA,British Columbia,Area A,https://files.mobilitydatabase.org/mdb-2536/latest.zip
+mdb-2543,BC Transit (Port Edward | Prince Rupert),CA,British Columbia,Port Edward,https://files.mobilitydatabase.org/mdb-2543/latest.zip
+mdb-2547,BC Transit (Fort St John Transit System),CA,British Columbia,Fort St. John,https://files.mobilitydatabase.org/mdb-2547/latest.zip
+mdb-2551,BC Transit (Kamloops Transit System),CA,British Columbia,British Columbia,https://files.mobilitydatabase.org/mdb-2551/latest.zip
+mdb-2555,BC Transit (Kelowna Regional Transit System),CA,British Columbia,British Columbia,https://files.mobilitydatabase.org/mdb-2555/latest.zip
+mdb-2563,BC Transit (Squamish),CA,British Columbia,British Columbia,https://files.mobilitydatabase.org/mdb-2563/latest.zip
+mdb-2567,BC Transit (Sunshine Coast Transit System),CA,British Columbia,Area B (Halfmoon Bay),https://files.mobilitydatabase.org/mdb-2567/latest.zip
+mdb-2571,BC Transit (Victoria Regional Transit System),CA,British Columbia,British Columbia,https://files.mobilitydatabase.org/mdb-2571/latest.zip
+mdb-2575,BC Transit (West Coast),CA,British Columbia,Area C (Long Beach),https://files.mobilitydatabase.org/mdb-2575/latest.zip
+mdb-2579,BC Transit (West Kootenay Transit System),CA,British Columbia,Area A (Pend Oreille/Bear Creek),https://files.mobilitydatabase.org/mdb-2579/latest.zip
+mdb-2583,BC Transit (Whistler Transit System),CA,British Columbia,Whistler Resort Municipality,https://files.mobilitydatabase.org/mdb-2583/latest.zip
+mdb-2587,BC Transit (Williams Lake),CA,British Columbia,British Columbia,https://files.mobilitydatabase.org/mdb-2587/latest.zip
+mdb-2591,Medicine Hat Transit,CA,Alberta,Medicine Hat,https://files.mobilitydatabase.org/mdb-2591/latest.zip
+mdb-2595,Bangalore Metropolitan Transport Corporation (BMTC),IN,Karnataka,Anekal,https://files.mobilitydatabase.org/mdb-2595/latest.zip
+mdb-2596,Nuup Bussii A/S,GL,Sermersooq,Sermersooq,https://files.mobilitydatabase.org/mdb-2596/latest.zip
+mdb-2597,Zarząd Komunikacji Miejskiej w Elblągu (ZKM Elbląg),PL,Warmian-Masurian Voivodeship,Elbląg,https://files.mobilitydatabase.org/mdb-2597/latest.zip
+mdb-2598,Zarząd Transportu Publicznego w Krakowie (ZTP Kraków),PL,Lesser Poland Voivodeship,Krakow,https://files.mobilitydatabase.org/mdb-2598/latest.zip
+mdb-2602,Moose Jaw Transit,CA,Saskatchewan,Moose Jaw,https://files.mobilitydatabase.org/mdb-2602/latest.zip
+mdb-2603,Rouyn-Noranda,CA,Quebec,Rouyn-Noranda,https://files.mobilitydatabase.org/mdb-2603/latest.zip
+mdb-2610,AMT Genova,IT,Liguria,Casella,https://files.mobilitydatabase.org/mdb-2610/latest.zip
+mdb-2611,St Lawrence County Public Transit,US,New York,Franklin County,https://files.mobilitydatabase.org/mdb-2611/latest.zip
+mdb-2615,Sark Shipping,GG,,,https://files.mobilitydatabase.org/mdb-2615/latest.zip
+mdb-2618,Hamilton Street Railway,CA,Ontario,Burlington,https://files.mobilitydatabase.org/mdb-2618/latest.zip
+mdb-2632,Viação Senhor do Bonfim,BR,Rio de Janeiro,Angra dos Reis,https://files.mobilitydatabase.org/mdb-2632/latest.zip
+mdb-2635,Dublin Bus,IE,Leinster,County Dublin,https://files.mobilitydatabase.org/mdb-2635/latest.zip
+mdb-2636,Bus Éireann,GB,Northern Ireland,Northern Ireland,https://files.mobilitydatabase.org/mdb-2636/latest.zip
+mdb-2637,Irish Rail,GB,Northern Ireland,Northern Ireland,https://files.mobilitydatabase.org/mdb-2637/latest.zip
+mdb-2638,LUAS,IE,Leinster,County Dublin,https://files.mobilitydatabase.org/mdb-2638/latest.zip
+mdb-2639,GoAhead Ireland,IE,Leinster,County Dublin,https://files.mobilitydatabase.org/mdb-2639/latest.zip
+mdb-2640,Aircoach,GB,Northern Ireland,Northern Ireland,https://files.mobilitydatabase.org/mdb-2640/latest.zip
+mdb-2648,Huntington Park Express,US,California,Bell,https://files.mobilitydatabase.org/mdb-2648/latest.zip
+mdb-2650,Gloversville Transit System,US,New York,City of Johnstown,https://files.mobilitydatabase.org/mdb-2650/latest.zip
+mdb-2651,Verkehrsverbund Rhein-Ruhr,DE,North Rhine-Westphalia,,https://files.mobilitydatabase.org/mdb-2651/latest.zip
+mdb-2653,Renfe commuter trains (Cercanias),ES,Andalusia,Álora,https://files.mobilitydatabase.org/mdb-2653/latest.zip
+mdb-2661,TrafikLab,AT,Carinthia,Villach,https://files.mobilitydatabase.org/mdb-2661/latest.zip
+mdb-2666,Azienda Trasporti MIlanesi (ATM),IT,Lombardy,Arese,https://files.mobilitydatabase.org/mdb-2666/latest.zip
+mdb-2667,The Santa Cruzer,US,California,Santa Cruz,https://files.mobilitydatabase.org/mdb-2667/latest.zip
+mdb-2668,Centrale Operativa REgionale (CORE) Calabria,IT,Basilicata,Castelluccio Inferiore,https://files.mobilitydatabase.org/mdb-2668/latest.zip
+mdb-2680,Funicular de Artxanda,ES,Autonomous Community of the Basque Country,Bilbao,https://files.mobilitydatabase.org/mdb-2680/latest.zip
+mdb-2681,Bilbobus,ES,Autonomous Community of the Basque Country,Arrigorriaga,https://files.mobilitydatabase.org/mdb-2681/latest.zip
+mdb-2682,dBus (Donostiabus),ES,Autonomous Community of the Basque Country,Astigarraga,https://files.mobilitydatabase.org/mdb-2682/latest.zip
+mdb-2683,Metro Bilbao,ES,Autonomous Community of the Basque Country,Barakaldo,https://files.mobilitydatabase.org/mdb-2683/latest.zip
+mdb-2684,Altamont Corridor Express,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-2684/latest.zip
+mdb-2687,Gruppo Torinese Trasporti,IT,Piemont,Agliè,https://files.mobilitydatabase.org/mdb-2687/latest.zip
+mdb-2688,Essex County Council,GB,England,Cambridgeshire,https://files.mobilitydatabase.org/mdb-2688/latest.zip
+mdb-2689,Kombus,PL,Greater Poland Voivodeship,Poznań,https://files.mobilitydatabase.org/mdb-2689/latest.zip
+mdb-2690,Junta de Extremadura (Extremadura Regional Government Buses),ES,Castile and León,Béjar,https://files.mobilitydatabase.org/mdb-2690/latest.zip
+mdb-2691,La Regional Vallisoletana S.A,ES,Castile and León,Arroyo de la Encomienda,https://files.mobilitydatabase.org/mdb-2691/latest.zip
+mdb-27,Airport Valet Express,US,California,Kern County,https://files.mobilitydatabase.org/mdb-27/latest.zip
+mdb-2709,Trinity Transit,US,California,Humboldt County,https://files.mobilitydatabase.org/mdb-2709/latest.zip
+mdb-2711,Urban Buses Dos Hermanas,ES,Andalusia,Dos Hermanas,https://files.mobilitydatabase.org/mdb-2711/latest.zip
+mdb-2712,Samar Buses,ES,Andalusia,Alcaudete,https://files.mobilitydatabase.org/mdb-2712/latest.zip
+mdb-2713,AUCORSA (Autobuses de Córdoba S.A.),ES,Andalusia,Cordova,https://files.mobilitydatabase.org/mdb-2713/latest.zip
+mdb-2714,Vectalia Movilidad (Cáceres city bus),ES,Extremadura,Cáceres,https://files.mobilitydatabase.org/mdb-2714/latest.zip
+mdb-2715,Euskotren,ES,Autonomous Community of the Basque Country,Abadiño,https://files.mobilitydatabase.org/mdb-2715/latest.zip
+mdb-2716,Transports Municipals D’Egara (TMESA) Terrassa city bus,ES,Catalonia,Rubí,https://files.mobilitydatabase.org/mdb-2716/latest.zip
+mdb-2717,Renfe Feve,ES,Castile and León,Boñar,https://files.mobilitydatabase.org/mdb-2717/latest.zip
+mdb-2718,Autobuses La Unión (ALU),ES,Autonomous Community of the Basque Country,Abanto y Ciérvana-Abanto Zierbena,https://files.mobilitydatabase.org/mdb-2718/latest.zip
+mdb-2719,Pamplona Region Bus (TCC Pamplona),ES,Navarre,Ansoáin/Antsoain,https://files.mobilitydatabase.org/mdb-2719/latest.zip
+mdb-2720,Consorcio Regional de Transportes de Madrid CRTM Commuter Network (Red de Cercanías),ES,Castile and León,Real Sitio de San Ildefonso,https://files.mobilitydatabase.org/mdb-2720/latest.zip
+mdb-2721,Network of Metropolitan Transport Consortiums of Andalusia,ES,Andalusia,Adra,https://files.mobilitydatabase.org/mdb-2721/latest.zip
+mdb-2722,Ferry Fred. Olsen (Fred Olsen Express),ES,Tenerife,,https://files.mobilitydatabase.org/mdb-2722/latest.zip
+mdb-2723,Unauto (Ruiz Group),ES,Castile-La Mancha,Toledo,https://files.mobilitydatabase.org/mdb-2723/latest.zip
+mdb-2724,Auif Irunbus (Lurraldebus),ES,Autonomous Community of the Basque Country,Hondarribia/Fontarrabie,https://files.mobilitydatabase.org/mdb-2724/latest.zip
+mdb-2725,Lurraldebus Oiartzun (Xorrola),ES,Autonomous Community of the Basque Country,Oiartzun,https://files.mobilitydatabase.org/mdb-2725/latest.zip
+mdb-2726,Lurraldebus Tolosaldea,ES,Autonomous Community of the Basque Country,Abaltzisketa,https://files.mobilitydatabase.org/mdb-2726/latest.zip
+mdb-2727,AECFA (Spanish Association for the Coordination and Facilitation of Time Strips),ES,Andalusia,Almeria,https://files.mobilitydatabase.org/mdb-2727/latest.zip
+mdb-2728,Lurraldebus Zarautz,ES,Autonomous Community of the Basque Country,Zarautz,https://files.mobilitydatabase.org/mdb-2728/latest.zip
+mdb-2729,Tranvía de Murcia (TDM),ES,Region of Murcia,Murcia,https://files.mobilitydatabase.org/mdb-2729/latest.zip
+mdb-2730,AUVASA (Valladolid city bus),ES,Castile and León,Arroyo de la Encomienda,https://files.mobilitydatabase.org/mdb-2730/latest.zip
+mdb-2731,Lurraldebus Ekialdebus,ES,Autonomous Community of the Basque Country,Astigarraga,https://files.mobilitydatabase.org/mdb-2731/latest.zip
+mdb-2732,Lurraldebus Goierrialdea,ES,Autonomous Community of the Basque Country,Altzaga,https://files.mobilitydatabase.org/mdb-2732/latest.zip
+mdb-2733,Lurraldebus Arrasate,ES,Autonomous Community of the Basque Country,Arrasate / Mondragón,https://files.mobilitydatabase.org/mdb-2733/latest.zip
+mdb-2734,Lurraldebus - Hernani Urban (Hernani city bus),ES,Autonomous Community of the Basque Country,Hernani,https://files.mobilitydatabase.org/mdb-2734/latest.zip
+mdb-2735,Lurraldebus Eibar,ES,Autonomous Community of the Basque Country,Eibar,https://files.mobilitydatabase.org/mdb-2735/latest.zip
+mdb-2736,Lurraldebus Guipuzcoana (La Guipuzcoana),ES,Autonomous Community of the Basque Country,Aizarnazabal,https://files.mobilitydatabase.org/mdb-2736/latest.zip
+mdb-2737,Oñati urban (Oñatiko herribusa),ES,Autonomous Community of the Basque Country,Oñati,https://files.mobilitydatabase.org/mdb-2737/latest.zip
+mdb-2748,Gobierno de Cantabria (Buses in Cantabria),ES,Aragon,Teruel,https://files.mobilitydatabase.org/mdb-2748/latest.zip
+mdb-2749,TCC Barcelona Buses,ES,Catalonia,Barcelona,https://files.mobilitydatabase.org/mdb-2749/latest.zip
+mdb-2750,Pujol,ES,Catalonia,Blanes,https://files.mobilitydatabase.org/mdb-2750/latest.zip
+mdb-2751,Transports Municipals del Gironés SAU (TMG) Girona city bus,ES,Catalonia,Aiguaviva,https://files.mobilitydatabase.org/mdb-2751/latest.zip
+mdb-2752,Autocares Rías Baixas (Rías Baixas Coaches),ES,Galicia,A Estrada,https://files.mobilitydatabase.org/mdb-2752/latest.zip
+mdb-2753,Autobusos de Lleida (Lleida buses),ES,Catalonia,Lleida,https://files.mobilitydatabase.org/mdb-2753/latest.zip
+mdb-2754,Moventis Empresa Casas (Casas Company Buses),ES,Catalonia,Alella,https://files.mobilitydatabase.org/mdb-2754/latest.zip
+mdb-2755,Moventis Sarbus (Buses Sarbus – La Vallesana),ES,Catalonia,Albatàrrec,https://files.mobilitydatabase.org/mdb-2755/latest.zip
+mdb-2756,Lurraldebus Euskotren bus,ES,Autonomous Community of the Basque Country,Abadiño,https://files.mobilitydatabase.org/mdb-2756/latest.zip
+mdb-2757,Lurraldebus TBH (Interurban Tolosa Buruntzaldea),ES,Autonomous Community of the Basque Country,Andoain,https://files.mobilitydatabase.org/mdb-2757/latest.zip
+mdb-2758,Tolosa City Council (Urbano de Tolosa),ES,Autonomous Community of the Basque Country,Tolosa,https://files.mobilitydatabase.org/mdb-2758/latest.zip
+mdb-2759,Lurraldebus Urbano de Errentería (Errenteria Urbanoa),ES,Autonomous Community of the Basque Country,Astigarraga,https://files.mobilitydatabase.org/mdb-2759/latest.zip
+mdb-2760,Lurraldebus Lasarte,ES,Autonomous Community of the Basque Country,Lasarte-Oria,https://files.mobilitydatabase.org/mdb-2760/latest.zip
+mdb-2761,Direxis Masats,ES,Catalonia,Castellfollit del Boix,https://files.mobilitydatabase.org/mdb-2761/latest.zip
+mdb-2762,TUS (Transportes Urbanos de Santander),ES,Cantabria,Santander,https://files.mobilitydatabase.org/mdb-2762/latest.zip
+mdb-2763,TIB Transports of the Balearic Islands - CIME Consell Insular de Menorca (Menorca Island Bus),ES,Balearic Islands,Alaior,https://files.mobilitydatabase.org/mdb-2763/latest.zip
+mdb-2764,Moventis Sarfa (Sarfa buses),ES,Catalonia,Albanyà,https://files.mobilitydatabase.org/mdb-2764/latest.zip
+mdb-2765,Urban Buses of Ciudad Real (AISA),ES,Castile-La Mancha,Ciudad Real,https://files.mobilitydatabase.org/mdb-2765/latest.zip
+mdb-2766,TIB Transports de les Illes Balears - CTM Transport Consortium of Mallorcam (Public transport on the island of Mallorca),ES,Balearic Islands,Alaró,https://files.mobilitydatabase.org/mdb-2766/latest.zip
+mdb-2767,La Coruña Tram Company SA,ES,Galicia,A Coruña,https://files.mobilitydatabase.org/mdb-2767/latest.zip
+mdb-2768,Avanza Grupo (Mataró city bus),ES,Catalonia,Mataró,https://files.mobilitydatabase.org/mdb-2768/latest.zip
+mdb-2769,Granada City Council (Granada city bus),ES,Andalusia,Cenes de la Vega,https://files.mobilitydatabase.org/mdb-2769/latest.zip
+mdb-2770,TUSSAM (Seville bus and tram),ES,Andalusia,Alcalá de Guadaíra,https://files.mobilitydatabase.org/mdb-2770/latest.zip
+mdb-2771,Castelló de la Plana Town Hall (city bus),ES,Valencian Community,Borriol,https://files.mobilitydatabase.org/mdb-2771/latest.zip
+mdb-2772,Avanza Grupo (Ávila city bus),ES,Castile and León,Ávila,https://files.mobilitydatabase.org/mdb-2772/latest.zip
+mdb-2773,Avanza Grupo (Zaragoza urban transport),ES,Aragon,Zaragoza,https://files.mobilitydatabase.org/mdb-2773/latest.zip
+mdb-2774,Autocares Baraza (Baraza Coaches),ES,Andalusia,Antas,https://files.mobilitydatabase.org/mdb-2774/latest.zip
+mdb-2775,Direxis TGO (Transportes Generales de Olesa),ES,Catalonia,Abrera,https://files.mobilitydatabase.org/mdb-2775/latest.zip
+mdb-2776,Lurraldebus Pesa,ES,Autonomous Community of the Basque Country,Abadiño,https://files.mobilitydatabase.org/mdb-2776/latest.zip
+mdb-2777,EMT Tarragona,ES,Catalonia,Altafulla,https://files.mobilitydatabase.org/mdb-2777/latest.zip
+mdb-2778,Rodil,ES,Galicia,A Fonsagrada,https://files.mobilitydatabase.org/mdb-2778/latest.zip
+mdb-2779,Autocorb Coaches,ES,Catalonia,Barcelona,https://files.mobilitydatabase.org/mdb-2779/latest.zip
+mdb-2780,Costa Coaches,ES,Galicia,A Baña,https://files.mobilitydatabase.org/mdb-2780/latest.zip
+mdb-2781,Metro de Sevilla,ES,Andalusia,Dos Hermanas,https://files.mobilitydatabase.org/mdb-2781/latest.zip
+mdb-2782,Palma City Council (Palma de Mallorca city bus),ES,Balearic Islands,Calvià,https://files.mobilitydatabase.org/mdb-2782/latest.zip
+mdb-2783,City Council of Las Palmas de Gran Canaria (city bus),ES,Canary Islands,Las Palmas de Gran Canaria,https://files.mobilitydatabase.org/mdb-2783/latest.zip
+mdb-2784,Public Works Agency of the Andalusian Regional Government (Metro de Grenada),ES,Andalusia,Albolote,https://files.mobilitydatabase.org/mdb-2784/latest.zip
+mdb-2785,Ouigo,ES,Andalusia,Cordova,https://files.mobilitydatabase.org/mdb-2785/latest.zip
+mdb-2786,Viagón Coaches,ES,Castile and León,Alba de Yeltes,https://files.mobilitydatabase.org/mdb-2786/latest.zip
+mdb-2787,Alvarez Travelers Coaches,ES,Castile and León,Asturianos,https://files.mobilitydatabase.org/mdb-2787/latest.zip
+mdb-2788,Kbus (Barakaldo urban),ES,Autonomous Community of the Basque Country,Barakaldo,https://files.mobilitydatabase.org/mdb-2788/latest.zip
+mdb-2789,El Transbordador de Vizcaya (Bizkaia Bridge Ferry),ES,Autonomous Community of the Basque Country,Getxo,https://files.mobilitydatabase.org/mdb-2789/latest.zip
+mdb-2790,Sopela Town Hall,ES,Autonomous Community of the Basque Country,Sopelana,https://files.mobilitydatabase.org/mdb-2790/latest.zip
+mdb-2791,Leioa City Council (Lejoan Busa),ES,Autonomous Community of the Basque Country,Leioa,https://files.mobilitydatabase.org/mdb-2791/latest.zip
+mdb-2792,Etxebarri Town Hall,ES,Autonomous Community of the Basque Country,Basauri,https://files.mobilitydatabase.org/mdb-2792/latest.zip
+mdb-2793,Erandio City Council (Erandio! Busa),ES,Autonomous Community of the Basque Country,Erandio,https://files.mobilitydatabase.org/mdb-2793/latest.zip
+mdb-2794,Lázara Coaches,ES,Galicia,A Estrada,https://files.mobilitydatabase.org/mdb-2794/latest.zip
+mdb-2795,Ancebus,ES,Castile and León,Ahigal de los Aceiteros,https://files.mobilitydatabase.org/mdb-2795/latest.zip
+mdb-2796,Generalitat of Catalonia (Intercity bus),ES,Catalonia,,https://files.mobilitydatabase.org/mdb-2796/latest.zip
+mdb-2797,TIB Transports of the Balearic Islands - CIE Consell Insular d'Eivissa (Ibiza Island Bus),ES,Balearic Islands,Eivissa,https://files.mobilitydatabase.org/mdb-2797/latest.zip
+mdb-2798,Fuengirola city bus,ES,Andalusia,Benalmádena,https://files.mobilitydatabase.org/mdb-2798/latest.zip
+mdb-2799,Bermibusa,ES,Autonomous Community of the Basque Country,Bermeo,https://files.mobilitydatabase.org/mdb-2799/latest.zip
+mdb-28,Los Angeles County Department of Public Works (the LINK and shuttles),US,California,Los Angeles,https://files.mobilitydatabase.org/mdb-28/latest.zip
+mdb-2800,Rafael Nadal Coaches,ES,Balearic Islands,Bunyola,https://files.mobilitydatabase.org/mdb-2800/latest.zip
+mdb-2801,Tranvías Urbanos de Zaragoza (Zaragoza Tram),ES,Aragon,Zaragoza,https://files.mobilitydatabase.org/mdb-2801/latest.zip
+mdb-2802,Consorcio Regional de Transportes de Madrid CRTM Light Rail Network (Red de Metro Ligero),ES,Community of Madrid,Alcorcón,https://files.mobilitydatabase.org/mdb-2802/latest.zip
+mdb-2803,Reus Transport,ES,Catalonia,Reus,https://files.mobilitydatabase.org/mdb-2803/latest.zip
+mdb-2804,Avanza Grupo (Ourense city bus),ES,Galicia,Amoeiro,https://files.mobilitydatabase.org/mdb-2804/latest.zip
+mdb-2805,Cots Alsina,ES,Catalonia,Biosca,https://files.mobilitydatabase.org/mdb-2805/latest.zip
+mdb-2806,Eixbus S.At,ES,Catalonia,Cervera,https://files.mobilitydatabase.org/mdb-2806/latest.zip
+mdb-2808,La Veloz SA (Buses from the Belchite countryside area to Zaragoza (C12)),ES,Aragon,Almonacid de la Cuba,https://files.mobilitydatabase.org/mdb-2808/latest.zip
+mdb-2809,Avanza Grupo (VAC-124. Huesca-Lleida with branches),ES,Aragon,Almunia de San Juan,https://files.mobilitydatabase.org/mdb-2809/latest.zip
+mdb-2810,Avanza Grupo (VAC-245. Huesca-Barcelona),ES,Aragon,Barbastro,https://files.mobilitydatabase.org/mdb-2810/latest.zip
+mdb-2811,"Interbus (VAC-231. Madrid, Piedrabuena (Ciudad Real) and Agudo (Ciudad Real))",ES,Castile-La Mancha,Agudo,https://files.mobilitydatabase.org/mdb-2811/latest.zip
+mdb-2812,Pinto City Council,ES,Community of Madrid,Pinto,https://files.mobilitydatabase.org/mdb-2812/latest.zip
+mdb-2813,AISA (Bus Madrid-Aranda de Duero-Burgo de Osma),ES,Castile and León,Aranda de Duero,https://files.mobilitydatabase.org/mdb-2813/latest.zip
+mdb-2814,Baleària Ferry,ES,Andalusia,Algeciras,https://files.mobilitydatabase.org/mdb-2814/latest.zip
+mdb-2815,Vectalia Movilidad (Urban buses in San Vicente del Raspeig),ES,Valencian Community,Sant Vicent del Raspeig / San Vicente del Raspeig,https://files.mobilitydatabase.org/mdb-2815/latest.zip
+mdb-2816,Avanza Grupo (Segovia city bus),ES,Castile and León,Segovia,https://files.mobilitydatabase.org/mdb-2816/latest.zip
+mdb-2817,DAIBUS (VAC-232. Madrid Malaga and Algeciras (Cadiz)),ES,Andalusia,Aguilar de la Frontera,https://files.mobilitydatabase.org/mdb-2817/latest.zip
+mdb-2818,Avanza Grupo (Soria city bus),ES,Castile and León,Soria,https://files.mobilitydatabase.org/mdb-2818/latest.zip
+mdb-2819,Avanza Grupo (Huesca city bus),ES,Aragon,Huesca,https://files.mobilitydatabase.org/mdb-2819/latest.zip
+mdb-282,The Victoria Clipper,CA,British Columbia,Victoria,https://files.mobilitydatabase.org/mdb-282/latest.zip
+mdb-2820,Consorcio Regional de Transportes de Madrid CRTM Madrid City Bus (Autobús urbano de Madrid),ES,Castile and León,Casillas,https://files.mobilitydatabase.org/mdb-2820/latest.zip
+mdb-2821,Xunta de Galicia Buses,ES,Asturias,San Tirso de Abres,https://files.mobilitydatabase.org/mdb-2821/latest.zip
+mdb-2822,Vectalia Movilidad (Alicante city buses),ES,Valencian Community,Alacant / Alicante,https://files.mobilitydatabase.org/mdb-2822/latest.zip
+mdb-2823,Salamanca de Transportes S.A. (Grupo Ruiz),ES,Castile and León,Carbajosa de la Sagrada,https://files.mobilitydatabase.org/mdb-2823/latest.zip
+mdb-2824,Alavabus,ES,Autonomous Community of the Basque Country,Abadiño,https://files.mobilitydatabase.org/mdb-2824/latest.zip
+mdb-2825,ALSA buses,AD,Andorra la Vella,Andorra la Vella,https://files.mobilitydatabase.org/mdb-2825/latest.zip
+mdb-2826,Autoridad de Transporte Metropolitano del Área de Barcelona (ATM) Buses and trains in Catalonia (full version),AD,Andorra la Vella,Andorra la Vella,https://files.mobilitydatabase.org/mdb-2826/latest.zip
+mdb-2827,Consorcio Transportes Asturias,ES,Asturias,Allande,https://files.mobilitydatabase.org/mdb-2827/latest.zip
+mdb-2828,Transportes de Murcia (Grupo Ruiz),ES,Region of Murcia,Murcia,https://files.mobilitydatabase.org/mdb-2828/latest.zip
+mdb-2829,FGV - Generalitat Valenciana Trains and trams in Alicante and the Costa Blanca,ES,Valencian Community,Alacant / Alicante,https://files.mobilitydatabase.org/mdb-2829/latest.zip
+mdb-2830,FGV - Generalitat Valenciana Metro de Valencia,ES,Valencian Community,Albalat dels Sorells,https://files.mobilitydatabase.org/mdb-2830/latest.zip
+mdb-2832,Autoridad de Transporte Metropolitano del Área de Barcelona (ATM) Buses and trains in Catalonia (simplified version),AD,Andorra la Vella,Andorra la Vella,https://files.mobilitydatabase.org/mdb-2832/latest.zip
+mdb-2836,Mobiave,PT,Braga,Antas e Abade de Vermoim,https://files.mobilitydatabase.org/mdb-2836/latest.zip
+mdb-2837,TUBA - Transportes Urbanos de Barcelos,PT,Braga,Abade de Neiva,https://files.mobilitydatabase.org/mdb-2837/latest.zip
+mdb-2838,Guimabus - Transportes de Guimarães,PT,Braga,Abação e Gémeos,https://files.mobilitydatabase.org/mdb-2838/latest.zip
+mdb-2839,Waltti - Pori,FI,Satakunta,Pori,https://files.mobilitydatabase.org/mdb-2839/latest.zip
+mdb-2841,Trentino Trasporti Esercizio (TTE),IT,Trentino-Alto Adige/Südtirol,Besenello,https://files.mobilitydatabase.org/mdb-2841/latest.zip
+mdb-2846,MZK Kutno,PL,Łódź Voivodeship,Kutno County,https://files.mobilitydatabase.org/mdb-2846/latest.zip
+mdb-2848,Urban Mobility Center - Sofia Traffic,BG,Sofia,Elin Pelin,https://files.mobilitydatabase.org/mdb-2848/latest.zip
+mdb-2851,SMTUC,PT,Aveiro,Barcouço,https://files.mobilitydatabase.org/mdb-2851/latest.zip
+mdb-2852,Redding Area Bus Authority,US,California,Butte County,https://files.mobilitydatabase.org/mdb-2852/latest.zip
+mdb-2853,Redding Area Bus Authority,US,California,Anderson,https://files.mobilitydatabase.org/mdb-2853/latest.zip
+mdb-286,Black Ball Ferry Line,CA,British Columbia,Victoria,https://files.mobilitydatabase.org/mdb-286/latest.zip
+mdb-2867,Indian Railways,IN,,,https://files.mobilitydatabase.org/mdb-2867/latest.zip
+mdb-2868,Societatea Metropolitană de Transport Timișoara,RO,Timiș,Foeni,https://files.mobilitydatabase.org/mdb-2868/latest.zip
+mdb-2871,Donan Bus,JP,Hokkaido Prefecture,Atsuma,https://files.mobilitydatabase.org/mdb-2871/latest.zip
+mdb-2875,West Cork Connect,IE,Munster,County Cork,https://files.mobilitydatabase.org/mdb-2875/latest.zip
+mdb-2880,Mountain View Transportation Management Association (MVgo),US,California,Los Altos,https://files.mobilitydatabase.org/mdb-2880/latest.zip
+mdb-2881,Watertown Citibus,US,New York,Jefferson County,https://files.mobilitydatabase.org/mdb-2881/latest.zip
+mdb-2883,Mountain View Community Shuttle,US,California,Mountain View,https://files.mobilitydatabase.org/mdb-2883/latest.zip
+mdb-2886,San Francisco Municipal Transportation Agency (SFMTA - Muni),US,California,Daly City,https://files.mobilitydatabase.org/mdb-2886/latest.zip
+mdb-2894,Clovis Transit,US,California,Clovis,https://files.mobilitydatabase.org/mdb-2894/latest.zip
+mdb-2898,Systemaufgaben Kundeninformation SKI+,CH,,,https://files.mobilitydatabase.org/mdb-2898/latest.zip
+mdb-2899,Hamburger Verkehrsverbund GmbH (HVV),DE,Hamburg,,https://files.mobilitydatabase.org/mdb-2899/latest.zip
+mdb-29,Los Angeles County Metropolitan Transportation Authority (LA Metro),US,California,Beverly Hills,https://files.mobilitydatabase.org/mdb-29/latest.zip
+mdb-2900,Flixbus GB,BE,Brussels-Capital,Schaerbeek - Schaarbeek,https://files.mobilitydatabase.org/mdb-2900/latest.zip
+mdb-2901,PAME EXPRESS,CY,Nicosia,Nicosia,https://files.mobilitydatabase.org/mdb-2901/latest.zip
+mdb-2902,CROSS Solution,DE,Hesse,Main-Kinzig-Kreis,https://files.mobilitydatabase.org/mdb-2902/latest.zip
+mdb-2904,Czech national bus feed JDF,CZ,,,https://files.mobilitydatabase.org/mdb-2904/latest.zip
+mdb-2905,Mäntylän Alueen Liikenne,FI,Uusimaa,Espoo,https://files.mobilitydatabase.org/mdb-2905/latest.zip
+mdb-2906,Xplore Dundee,GB,Scotland,Aberdeen City,https://files.mobilitydatabase.org/mdb-2906/latest.zip
+mdb-2907,Bluestar Bus,GB,England,Hampshire,https://files.mobilitydatabase.org/mdb-2907/latest.zip
+mdb-2908,Go Devon Bus,GB,England,Cornwall,https://files.mobilitydatabase.org/mdb-2908/latest.zip
+mdb-2909,Coach Services,GB,England,Norfolk,https://files.mobilitydatabase.org/mdb-2909/latest.zip
+mdb-2910,Gradski parking d.o.o.,HR,Šibenik-Knin County,Bilice,https://files.mobilitydatabase.org/mdb-2910/latest.zip
+mdb-2911,Midland Bluebird,GB,Scotland,City of Edinburgh,https://files.mobilitydatabase.org/mdb-2911/latest.zip
+mdb-2912,Sanders Coaches,GB,England,Norfolk,https://files.mobilitydatabase.org/mdb-2912/latest.zip
+mdb-2913,Thames Valley Buses,GB,England,Bracknell Forest,https://files.mobilitydatabase.org/mdb-2913/latest.zip
+mdb-2918,Lasta,RS,City of Belgrade,Savski Venac Urban Municipality,https://files.mobilitydatabase.org/mdb-2918/latest.zip
+mdb-2919,IDS BK Regional Buses,AT,Lower Austria,Bezirk Bruck an der Leitha,https://files.mobilitydatabase.org/mdb-2919/latest.zip
+mdb-2920,HŽ Passenger Transport,HR,Bjelovar-Bilogora County,Grad Bjelovar,https://files.mobilitydatabase.org/mdb-2920/latest.zip
+mdb-2921,Transtejo Soflusa (TTSL),PT,Lisbon,Belém,https://files.mobilitydatabase.org/mdb-2921/latest.zip
+mdb-2922,Flixbus Türkiye,BG,Burgas,Burgas,https://files.mobilitydatabase.org/mdb-2922/latest.zip
+mdb-2923,Santa Eulalia Ferry,ES,Balearic Islands,Santa Eulària des Riu,https://files.mobilitydatabase.org/mdb-2923/latest.zip
+mdb-2925,Beograd Prigrad,RS,City of Belgrade,Barajevo Urban Municipality,https://files.mobilitydatabase.org/mdb-2925/latest.zip
+mdb-2926,Autobusos Interurbans,ES,Catalonia,,https://files.mobilitydatabase.org/mdb-2926/latest.zip
+mdb-2927,Srbijavoz,BA,Republika Srpska,Republika Srpska,https://files.mobilitydatabase.org/mdb-2927/latest.zip
+mdb-2928,Direkcija za javni prevoz Niš,RS,Nisava Administrative District,Merosina Municipality,https://files.mobilitydatabase.org/mdb-2928/latest.zip
+mdb-2929,Carris,PT,Lisbon,Águas Livres,https://files.mobilitydatabase.org/mdb-2929/latest.zip
+mdb-2931,Ужгородська міська рада,UA,Zakarpattia Oblast,Uzhhorod Raion,https://files.mobilitydatabase.org/mdb-2931/latest.zip
+mdb-2932,Стрийська міська рада,UA,Lviv Oblast,Drohobych Raion,https://files.mobilitydatabase.org/mdb-2932/latest.zip
+mdb-2933,Just Use Wheels,CN,Guangdong Province,Nanshan District,https://files.mobilitydatabase.org/mdb-2933/latest.zip
+mdb-2934,Fortaleza,BR,Ceará,Região Geográfica Intermediária de Fortaleza,https://files.mobilitydatabase.org/mdb-2934/latest.zip
+mdb-2935,ARCE - Agência Reguladora do Estado do Ceará,BR,Ceará,Região Geográfica Intermediária de Fortaleza,https://files.mobilitydatabase.org/mdb-2935/latest.zip
+mdb-2937,Marin Transit,US,California,Belvedere,https://files.mobilitydatabase.org/mdb-2937/latest.zip
+mdb-2938,Mandai Wildlife Reserve,SG,Central,Central,https://files.mobilitydatabase.org/mdb-2938/latest.zip
+mdb-2940,"Družbe za upravljanje javnega potniškega prometa, d.o.o.",AT,Carinthia,Bezirk Völkermarkt,https://files.mobilitydatabase.org/mdb-2940/latest.zip
+mdb-2941,"NOMAGO, storitve mobilnosti in potovanj, d.o.o.",SI,Brežice,Brežice,https://files.mobilitydatabase.org/mdb-2941/latest.zip
+mdb-2942,Ariva,SI,Jesenice,Jesenice,https://files.mobilitydatabase.org/mdb-2942/latest.zip
+mdb-2943,TURIZEM KRANJSKA GORA,SI,Kranjska Gora,Kranjska Gora,https://files.mobilitydatabase.org/mdb-2943/latest.zip
+mdb-2944,"NOMAGO, storitve mobilnosti in potovanj, d.o.o.",SI,Nova Gorica,Nova Gorica,https://files.mobilitydatabase.org/mdb-2944/latest.zip
+mdb-2945,КП Бучатранссервіс,UA,Kyiv Oblast,Бучанський район,https://files.mobilitydatabase.org/mdb-2945/latest.zip
+mdb-2946,Odesa,UA,Odesa Oblast,Одеський район,https://files.mobilitydatabase.org/mdb-2946/latest.zip
+mdb-2947,Petaluma Transit,US,California,Petaluma,https://files.mobilitydatabase.org/mdb-2947/latest.zip
+mdb-2948,Santa Rosa CityBus,US,California,Santa Rosa,https://files.mobilitydatabase.org/mdb-2948/latest.zip
+mdb-296,Calabasas Transit System,US,California,Calabasas,https://files.mobilitydatabase.org/mdb-296/latest.zip
+mdb-298,Carson Circuit,US,California,Carson,https://files.mobilitydatabase.org/mdb-298/latest.zip
+mdb-299,Catalina Express,US,California,Long Beach,https://files.mobilitydatabase.org/mdb-299/latest.zip
+mdb-3,Barrie Transit,CA,Ontario,Barrie,https://files.mobilitydatabase.org/mdb-3/latest.zip
+mdb-30,Los Angeles County Metropolitan Transportation Authority (LA Metro),US,California,Arcadia,https://files.mobilitydatabase.org/mdb-30/latest.zip
+mdb-300,Catalina Flyer,US,California,Avalon,https://files.mobilitydatabase.org/mdb-300/latest.zip
+mdb-302,Corning Erwin Area Transit System (CEATS),US,New York,Corning,https://files.mobilitydatabase.org/mdb-302/latest.zip
+mdb-304,Chautauqua Area Regional Transit System (CARTS),US,New York,Brocton,https://files.mobilitydatabase.org/mdb-304/latest.zip
+mdb-305,C TRAN,US,New York,Big Flats,https://files.mobilitydatabase.org/mdb-305/latest.zip
+mdb-31,Ventura County Transportation Commission,US,California,Camarillo,https://files.mobilitydatabase.org/mdb-31/latest.zip
+mdb-314,Compton Renaissance,US,California,Carson,https://files.mobilitydatabase.org/mdb-314/latest.zip
+mdb-32,"Gold Coast Transit, South Coast Area Transit",US,California,Ojai,https://files.mobilitydatabase.org/mdb-32/latest.zip
+mdb-320,Delano Area Rapid Transit,US,California,Delano,https://files.mobilitydatabase.org/mdb-320/latest.zip
+mdb-331,Miami-Dade Transit,US,Florida,Broward County,https://files.mobilitydatabase.org/mdb-331/latest.zip
+mdb-35,Palos Verdes Peninsula Transit Authority (PVPTA),US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-35/latest.zip
+mdb-36,Lawndale Beat,US,California,Hawthorne,https://files.mobilitydatabase.org/mdb-36/latest.zip
+mdb-37,Big Blue Bus,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-37/latest.zip
+mdb-38,Culver City Bus,US,California,Culver City,https://files.mobilitydatabase.org/mdb-38/latest.zip
+mdb-383,DowneyLINK,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-383/latest.zip
+mdb-389,Chicago Transit Authority (CTA),US,Illinois,Chicago,https://files.mobilitydatabase.org/mdb-389/latest.zip
+mdb-40,Simi Valley Transit,US,California,Los Angeles,https://files.mobilitydatabase.org/mdb-40/latest.zip
+mdb-41,Pasadena Transit,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-41/latest.zip
+mdb-43,San Luis Obispo Regional Transit Authority (SLORTA),US,California,Arroyo Grande,https://files.mobilitydatabase.org/mdb-43/latest.zip
+mdb-436,Coach Company,US,New York,New York County,https://files.mobilitydatabase.org/mdb-436/latest.zip
+mdb-44,City of San Luis Obispo Transit,US,California,San Luis Obispo,https://files.mobilitydatabase.org/mdb-44/latest.zip
+mdb-450,Vermont Translines,US,New York,Albany County,https://files.mobilitydatabase.org/mdb-450/latest.zip
+mdb-457,Dutchess County,US,New York,Arlington,https://files.mobilitydatabase.org/mdb-457/latest.zip
+mdb-46,Golden Empire Transit District (GET),US,California,Kern County,https://files.mobilitydatabase.org/mdb-46/latest.zip
+mdb-47,Kern Transit,US,California,Arvin,https://files.mobilitydatabase.org/mdb-47/latest.zip
+mdb-48,Porterville Transit,US,California,Delano,https://files.mobilitydatabase.org/mdb-48/latest.zip
+mdb-496,Peter Pan,US,New York,Albany County,https://files.mobilitydatabase.org/mdb-496/latest.zip
+mdb-507,Metropolitan Transit Authority (MTA),US,New York,Kings County,https://files.mobilitydatabase.org/mdb-507/latest.zip
+mdb-508,New Jersey Transit (NJ Transit),US,New York,New York County,https://files.mobilitydatabase.org/mdb-508/latest.zip
+mdb-509,New Jersey Transit (NJ Transit),US,New York,New York County,https://files.mobilitydatabase.org/mdb-509/latest.zip
+mdb-51,Mission Bay Transportation Management Association (TMA),US,California,San Francisco,https://files.mobilitydatabase.org/mdb-51/latest.zip
+mdb-510,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-510/latest.zip
+mdb-511,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-511/latest.zip
+mdb-512,Metropolitan Transit Authority (MTA),US,New York,Kings County,https://files.mobilitydatabase.org/mdb-512/latest.zip
+mdb-513,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-513/latest.zip
+mdb-514,Metropolitan Transit Authority (MTA),US,New York,Kings County,https://files.mobilitydatabase.org/mdb-514/latest.zip
+mdb-515,NYC Ferry,US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-515/latest.zip
+mdb-516,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-516/latest.zip
+mdb-517,Port Authority Trans-Hudson (PATH),US,New York,New York County,https://files.mobilitydatabase.org/mdb-517/latest.zip
+mdb-518,Staten Island Ferry,US,New York,New York County,https://files.mobilitydatabase.org/mdb-518/latest.zip
+mdb-519,Downtown Alliance,US,New York,New York County,https://files.mobilitydatabase.org/mdb-519/latest.zip
+mdb-52,Tideline Water Taxi,US,California,Berkeley,https://files.mobilitydatabase.org/mdb-52/latest.zip
+mdb-520,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-520/latest.zip
+mdb-521,Nassau Inter-County Express (NICE Bus),US,New York,Flower Hill,https://files.mobilitydatabase.org/mdb-521/latest.zip
+mdb-522,JFK Airtrain,US,New York,Queens County,https://files.mobilitydatabase.org/mdb-522/latest.zip
+mdb-524,"NY Waterway, Shore Line East, Metro-North Railroad, MNR Hudson Rail Link",US,New York,Beacon,https://files.mobilitydatabase.org/mdb-524/latest.zip
+mdb-525,NY Waterway,US,New York,Beacon,https://files.mobilitydatabase.org/mdb-525/latest.zip
+mdb-526,Ulster County Area Transit,US,New York,Dutchess County,https://files.mobilitydatabase.org/mdb-526/latest.zip
+mdb-528,Metropolitan Transit Authority (MTA),US,New York,Bronx County,https://files.mobilitydatabase.org/mdb-528/latest.zip
+mdb-53,Bay Area Rapid Transit (BART),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-53/latest.zip
+mdb-531,Access Allegany,US,New York,Allegany County,https://files.mobilitydatabase.org/mdb-531/latest.zip
+mdb-532,Hornell Area Transit,US,New York,Alfred,https://files.mobilitydatabase.org/mdb-532/latest.zip
+mdb-533,Rochester-Genesee Regional Transportation Authority (RGRTA),US,New York,Monroe County,https://files.mobilitydatabase.org/mdb-533/latest.zip
+mdb-534,Centro,US,New York,Auburn,https://files.mobilitydatabase.org/mdb-534/latest.zip
+mdb-535,Tompkins Consolidated Area Transit Inc,US,New York,East Ithaca,https://files.mobilitydatabase.org/mdb-535/latest.zip
+mdb-536,Chenango First Transit,US,New York,Afton,https://files.mobilitydatabase.org/mdb-536/latest.zip
+mdb-538,Capital District Transportation Authority (CDTA),US,New York,Albany County,https://files.mobilitydatabase.org/mdb-538/latest.zip
+mdb-54,Caltrain,US,California,Belmont,https://files.mobilitydatabase.org/mdb-54/latest.zip
+mdb-541,City of Mechanicville Public Transit,US,New York,City of Mechanicville,https://files.mobilitydatabase.org/mdb-541/latest.zip
+mdb-544,Clinton County Public Transit (CCPT),US,New York,Clinton County,https://files.mobilitydatabase.org/mdb-544/latest.zip
+mdb-545,Franklin County Public Transportation,US,New York,Brushton,https://files.mobilitydatabase.org/mdb-545/latest.zip
+mdb-546,North Country Express Transit,US,New York,Brushton,https://files.mobilitydatabase.org/mdb-546/latest.zip
+mdb-547,Lake Champlain Ferries,US,New York,Clinton County,https://files.mobilitydatabase.org/mdb-547/latest.zip
+mdb-548,Suffolk County Transit,US,New York,Amityville,https://files.mobilitydatabase.org/mdb-548/latest.zip
+mdb-549,Seastreak Ferry,US,New York,New York County,https://files.mobilitydatabase.org/mdb-549/latest.zip
+mdb-55,Modesto Area Express,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-55/latest.zip
+mdb-550,Shore Line East,US,New York,New York County,https://files.mobilitydatabase.org/mdb-550/latest.zip
+mdb-553,Connecticut Transit,US,New York,Westchester County,https://files.mobilitydatabase.org/mdb-553/latest.zip
+mdb-56,Monterey-Salinas Transit (MST),US,California,Carmel-by-the-Sea,https://files.mobilitydatabase.org/mdb-56/latest.zip
+mdb-566,Lewis County Public Transportation,US,New York,Herkimer County,https://files.mobilitydatabase.org/mdb-566/latest.zip
+mdb-57,Santa Clara Valley Transportation Authority (VTA),US,California,Cupertino,https://files.mobilitydatabase.org/mdb-57/latest.zip
+mdb-570,Lynwood Trolley / Breeze,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-570/latest.zip
+mdb-572,Madera County Transit,US,California,Madera County,https://files.mobilitydatabase.org/mdb-572/latest.zip
+mdb-573,Madison County Transit,US,New York,Chenango County,https://files.mobilitydatabase.org/mdb-573/latest.zip
+mdb-578,Moorpark City Transit,US,California,Ventura County,https://files.mobilitydatabase.org/mdb-578/latest.zip
+mdb-579,Morongo Basin Transit Authority,US,California,Riverside County,https://files.mobilitydatabase.org/mdb-579/latest.zip
+mdb-58,San Benito County Express (SBCE),US,California,Gilroy,https://files.mobilitydatabase.org/mdb-58/latest.zip
+mdb-583,Needles Area Transit,US,California,Needles,https://files.mobilitydatabase.org/mdb-583/latest.zip
+mdb-584,Newburgh Beacon Shuttle (Leprechaun Lines),US,New York,Beacon,https://files.mobilitydatabase.org/mdb-584/latest.zip
+mdb-586,Olean Area Transit System,US,New York,Allegany,https://files.mobilitydatabase.org/mdb-586/latest.zip
+mdb-588,Herkimer-Oneida Counties Transportation Study (HOCTS),US,New York,Barneveld,https://files.mobilitydatabase.org/mdb-588/latest.zip
+mdb-589,Otsego Express Public Transportation,US,New York,Chenango County,https://files.mobilitydatabase.org/mdb-589/latest.zip
+mdb-59,Stanford Marguerite Shuttle (SMS),US,California,Fremont,https://files.mobilitydatabase.org/mdb-59/latest.zip
+mdb-593,Flixbus,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-593/latest.zip
+mdb-595,"Alcatraz Cruises - Hornblower, Angel Island Tiburon Ferry, Blue & Gold Fleet",US,California,San Francisco,https://files.mobilitydatabase.org/mdb-595/latest.zip
+mdb-599,City Coach,US,California,Vacaville,https://files.mobilitydatabase.org/mdb-599/latest.zip
+mdb-6,Subterráneos de Buenos Aires (SUBTE),AR,Buenos Aires,,https://files.mobilitydatabase.org/mdb-6/latest.zip
+mdb-606,Get Around Town Express,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-606/latest.zip
+mdb-609,Glendora Transportation Division,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-609/latest.zip
+mdb-61,Commute.org San Mateo County Shuttles,US,California,Atherton,https://files.mobilitydatabase.org/mdb-61/latest.zip
+mdb-613,Greene County Transit,US,New York,Athens,https://files.mobilitydatabase.org/mdb-613/latest.zip
+mdb-617,Guadalupe Flyer,US,California,Guadalupe,https://files.mobilitydatabase.org/mdb-617/latest.zip
+mdb-619,Turlock Transit,US,California,Stanislaus County,https://files.mobilitydatabase.org/mdb-619/latest.zip
+mdb-62,San Francisco Bay Area Water Emergency Transportation Authority (WETA),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-62/latest.zip
+mdb-623,Go West Shuttle,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-623/latest.zip
+mdb-628,Union City Transit,US,California,Hayward,https://files.mobilitydatabase.org/mdb-628/latest.zip
+mdb-637,SouthWest POINT,US,California,Crescent City,https://files.mobilitydatabase.org/mdb-637/latest.zip
+mdb-64,Livermore Amador Valley Transit Authority,US,California,Alameda County,https://files.mobilitydatabase.org/mdb-64/latest.zip
+mdb-643,ATP Esercizio Srl,IT,Emilia-Romagna,Ottone,https://files.mobilitydatabase.org/mdb-643/latest.zip
+mdb-646,Tulare County Area Transit (TCAT),US,California,Delano,https://files.mobilitydatabase.org/mdb-646/latest.zip
+mdb-647,Trenes Argentinos,AR,Autonomous City of Buenos Aires,Autonomous City of Buenos Aires,https://files.mobilitydatabase.org/mdb-647/latest.zip
+mdb-648,"Wiener Lokalbahnen (WLB), Wiener Linien",AT,Lower Austria,Bezirk Baden,https://files.mobilitydatabase.org/mdb-648/latest.zip
+mdb-649,Port Phillip Ferries,AU,Victoria,City of Greater Geelong,https://files.mobilitydatabase.org/mdb-649/latest.zip
+mdb-65,eTrans,US,California,San Joaquin County,https://files.mobilitydatabase.org/mdb-65/latest.zip
+mdb-650,Translink Magnetic Island,AU,Queensland,Townsville City,https://files.mobilitydatabase.org/mdb-650/latest.zip
+mdb-651,TransLink Maryborough-Hervey Bay,AU,Queensland,Fraser Coast Regional,https://files.mobilitydatabase.org/mdb-651/latest.zip
+mdb-652,TransLink North Stradbroke Island,AU,Queensland,Redland City,https://files.mobilitydatabase.org/mdb-652/latest.zip
+mdb-653,Bus Queensland Toowoomba (Bus Qld Toowoomba),AU,Queensland,Toowoomba Regional,https://files.mobilitydatabase.org/mdb-653/latest.zip
+mdb-654,Haidleys Panoramic Coaches,AU,Queensland,Southern Downs Regional,https://files.mobilitydatabase.org/mdb-654/latest.zip
+mdb-655,Youngs Bus Service,AU,Queensland,Livingstone Shire,https://files.mobilitydatabase.org/mdb-655/latest.zip
+mdb-657,Public Transport Victoria (PTV),AU,Victoria,Melbourne,https://files.mobilitydatabase.org/mdb-657/latest.zip
+mdb-659,Région Bourgogne-Franche-Comté,FR,Bourgogne – Franche-Comté,Dijon,https://files.mobilitydatabase.org/mdb-659/latest.zip
+mdb-66,Sonoma County Airport Express,US,California,Oakland,https://files.mobilitydatabase.org/mdb-66/latest.zip
+mdb-660,Adelaide Metro,AU,South Australia,Adelaide City Council,https://files.mobilitydatabase.org/mdb-660/latest.zip
+mdb-665,MetroTas Hobart,AU,Tasmania,Brighton,https://files.mobilitydatabase.org/mdb-665/latest.zip
+mdb-666,Byron Easybus,AU,New South Wales,Ballina Shire Council,https://files.mobilitydatabase.org/mdb-666/latest.zip
+mdb-667,Buslink Gladstone,AU,Queensland,Gladstone Regional,https://files.mobilitydatabase.org/mdb-667/latest.zip
+mdb-668,Translink South East Queensland (Translink SEQ),AU,New South Wales,Tweed Shire Council,https://files.mobilitydatabase.org/mdb-668/latest.zip
+mdb-669,Christensens Bus and Coach,AU,Queensland,Moreton Bay Regional,https://files.mobilitydatabase.org/mdb-669/latest.zip
+mdb-67,Golden Gate Transit,US,California,Contra Costa County,https://files.mobilitydatabase.org/mdb-67/latest.zip
+mdb-670,Glass House Country Coaches,AU,Queensland,Sunshine Coast Regional,https://files.mobilitydatabase.org/mdb-670/latest.zip
+mdb-671,Polleys Coaches,AU,Queensland,Gympie Regional,https://files.mobilitydatabase.org/mdb-671/latest.zip
+mdb-672,Duffy's Buses and Stewarts & Sons Coaches,AU,Queensland,Bundaberg Region,https://files.mobilitydatabase.org/mdb-672/latest.zip
+mdb-673,TransLink Innisfail,AU,Queensland,Cassowary Coast Regional,https://files.mobilitydatabase.org/mdb-673/latest.zip
+mdb-674,TransLink Sunbus Cairns,AU,Queensland,Cairns Regional,https://files.mobilitydatabase.org/mdb-674/latest.zip
+mdb-675,TransLink Bowen,AU,Queensland,Whitsunday Regional,https://files.mobilitydatabase.org/mdb-675/latest.zip
+mdb-676,Whitsunday Transit,AU,Queensland,Whitsunday Regional,https://files.mobilitydatabase.org/mdb-676/latest.zip
+mdb-677,Sunbus Townsville,AU,Queensland,Townsville City,https://files.mobilitydatabase.org/mdb-677/latest.zip
+mdb-678,Mackay Transit Coaches,AU,Queensland,Mackay Regional,https://files.mobilitydatabase.org/mdb-678/latest.zip
+mdb-679,Translink Magnetic Island Ferry,AU,Queensland,Townsville City,https://files.mobilitydatabase.org/mdb-679/latest.zip
+mdb-68,Lake Transit Authority (LTA),US,California,Clearlake,https://files.mobilitydatabase.org/mdb-68/latest.zip
+mdb-680,"Department of Transport, Public Transport",AU,Northern Territory,City of Darwin,https://files.mobilitydatabase.org/mdb-680/latest.zip
+mdb-681,MetroTas Burnie,AU,Tasmania,Central Coast,https://files.mobilitydatabase.org/mdb-681/latest.zip
+mdb-682,MetroTas Launceston,AU,Tasmania,Break O'Day,https://files.mobilitydatabase.org/mdb-682/latest.zip
+mdb-683,Department of Transport - Public Transport,AU,Northern Territory,Town of Alice Springs,https://files.mobilitydatabase.org/mdb-683/latest.zip
+mdb-684,De Lijn,BE,Brussels-Capital,Anderlecht,https://files.mobilitydatabase.org/mdb-684/latest.zip
+mdb-685,De Waterbus,BE,Flanders,Antwerp,https://files.mobilitydatabase.org/mdb-685/latest.zip
+mdb-686,Société nationale des chemins de fer belges (NMBS-SNCB),AT,Lower Austria,St. Pölten,https://files.mobilitydatabase.org/mdb-686/latest.zip
+mdb-689,Whitehorse Transit,CA,Yukon,Whitehorse,https://files.mobilitydatabase.org/mdb-689/latest.zip
+mdb-69,Mendocino Transit Authority,US,California,Mendocino County,https://files.mobilitydatabase.org/mdb-69/latest.zip
+mdb-690,BC Ferries,CA,British Columbia,Alert Bay,https://files.mobilitydatabase.org/mdb-690/latest.zip
+mdb-696,TransLink Vancouver,CA,British Columbia,Anmore,https://files.mobilitydatabase.org/mdb-696/latest.zip
+mdb-7,Empresa Publica de Transportes e Circulação (EPTC),BR,Rio Grande do Sul,Metropolitan Region of Porto Alegre,https://files.mobilitydatabase.org/mdb-7/latest.zip
+mdb-70,Sonoma County Transit (SCT),US,California,Bodega Bay,https://files.mobilitydatabase.org/mdb-70/latest.zip
+mdb-710,BC Transit (Dawson Creek Transit System),CA,British Columbia,Dawson Creek,https://files.mobilitydatabase.org/mdb-710/latest.zip
+mdb-711,Roam Transit,CA,Alberta,Banff,https://files.mobilitydatabase.org/mdb-711/latest.zip
+mdb-712,Calgary Transit,CA,Alberta,Calgary,https://files.mobilitydatabase.org/mdb-712/latest.zip
+mdb-714,Edmonton Transit System,CA,Alberta,Avenue District,https://files.mobilitydatabase.org/mdb-714/latest.zip
+mdb-715,City of Regina,CA,Saskatchewan,Regina,https://files.mobilitydatabase.org/mdb-715/latest.zip
+mdb-716,Saskatoon Transit,CA,Saskatchewan,Saskatoon,https://files.mobilitydatabase.org/mdb-716/latest.zip
+mdb-717,Winnipeg Transit,CA,Manitoba,Winnipeg,https://files.mobilitydatabase.org/mdb-717/latest.zip
+mdb-718,Cornwall Transit,CA,Ontario,Cornwall,https://files.mobilitydatabase.org/mdb-718/latest.zip
+mdb-720,Transit Windsor,CA,Ontario,Amherstburg,https://files.mobilitydatabase.org/mdb-720/latest.zip
+mdb-721,Grand River Transit,CA,Ontario,Cambridge,https://files.mobilitydatabase.org/mdb-721/latest.zip
+mdb-722,Niagara Region Transit,CA,Ontario,Fort Erie,https://files.mobilitydatabase.org/mdb-722/latest.zip
+mdb-724,Burlington Transit,CA,Ontario,Burlington,https://files.mobilitydatabase.org/mdb-724/latest.zip
+mdb-725,Oakville Transit,CA,Ontario,Burlington,https://files.mobilitydatabase.org/mdb-725/latest.zip
+mdb-726,Durham Region Transit,CA,Ontario,Ajax,https://files.mobilitydatabase.org/mdb-726/latest.zip
+mdb-728,York Region Transit,CA,Ontario,Aurora,https://files.mobilitydatabase.org/mdb-728/latest.zip
+mdb-730,MiWay,CA,Ontario,Brampton,https://files.mobilitydatabase.org/mdb-730/latest.zip
+mdb-732,Toronto Transit Commission (TTC),CA,Ontario,East York,https://files.mobilitydatabase.org/mdb-732/latest.zip
+mdb-733,Kingston Transit,CA,Ontario,Kingston,https://files.mobilitydatabase.org/mdb-733/latest.zip
+mdb-734,Halifax Transit,CA,Nova Scotia,Beaver Bank,https://files.mobilitydatabase.org/mdb-734/latest.zip
+mdb-735,VIA Rail Canada,CA,Alberta,Edmonton,https://files.mobilitydatabase.org/mdb-735/latest.zip
+mdb-736,Thunder Bay Transit,CA,Ontario,Thunder Bay,https://files.mobilitydatabase.org/mdb-736/latest.zip
+mdb-737,Greater Sudbury Transit,CA,Ontario,Greater Sudbury,https://files.mobilitydatabase.org/mdb-737/latest.zip
+mdb-739,Régie intermunicipale de transport des Collines (Transcollines),CA,Quebec,Bristol,https://files.mobilitydatabase.org/mdb-739/latest.zip
+mdb-74,Capitol Corridor Joint Powers Authority (Capitol Corridor),US,California,Auburn,https://files.mobilitydatabase.org/mdb-74/latest.zip
+mdb-740,Société de transport de l'Outaouais,CA,Ontario,(Old) Ottawa,https://files.mobilitydatabase.org/mdb-740/latest.zip
+mdb-741,Exo Sorel-Varennes,CA,Quebec,Boucherville,https://files.mobilitydatabase.org/mdb-741/latest.zip
+mdb-742,Exo Sud-ouest,CA,Quebec,Beauharnois,https://files.mobilitydatabase.org/mdb-742/latest.zip
+mdb-743,Exo La Presqu'île,CA,Quebec,Dollard-Des-Ormeaux,https://files.mobilitydatabase.org/mdb-743/latest.zip
+mdb-744,Exo Laurentides,CA,Quebec,Blainville,https://files.mobilitydatabase.org/mdb-744/latest.zip
+mdb-745,Exo Haut-Saint-Laurent,CA,Quebec,Châteauguay,https://files.mobilitydatabase.org/mdb-745/latest.zip
+mdb-747,Exo Roussillon,CA,Quebec,Brossard,https://files.mobilitydatabase.org/mdb-747/latest.zip
+mdb-748,Exo,CA,Quebec,Baie-D'Urfé,https://files.mobilitydatabase.org/mdb-748/latest.zip
+mdb-749,Société de transport de Laval,CA,Quebec,Laval,https://files.mobilitydatabase.org/mdb-749/latest.zip
+mdb-75,El Dorado Transit,US,California,El Dorado County,https://files.mobilitydatabase.org/mdb-75/latest.zip
+mdb-750,Exo Chambly-Richelieu-Carignan,CA,Quebec,Brossard,https://files.mobilitydatabase.org/mdb-750/latest.zip
+mdb-751,Réseau de transport de Longueuil,CA,Quebec,Boucherville,https://files.mobilitydatabase.org/mdb-751/latest.zip
+mdb-752,Exo Vallée du Richelieu,CA,Quebec,Beloeil,https://files.mobilitydatabase.org/mdb-752/latest.zip
+mdb-753,Exo Ville de Sainte-Julie,CA,Quebec,Beloeil,https://files.mobilitydatabase.org/mdb-753/latest.zip
+mdb-754,Terrebonne-Mascouche,CA,Quebec,Blainville,https://files.mobilitydatabase.org/mdb-754/latest.zip
+mdb-755,Exo L'Assomption,CA,Quebec,Charlemagne,https://files.mobilitydatabase.org/mdb-755/latest.zip
+mdb-757,Réseau de transport de la Capitale,CA,Quebec,L'Ancienne-Lorette,https://files.mobilitydatabase.org/mdb-757/latest.zip
+mdb-758,Metrobus Transit,CA,Newfoundland and Labrador,Mount Pearl,https://files.mobilitydatabase.org/mdb-758/latest.zip
+mdb-759,Milton Transit,CA,Ontario,Halton Hills,https://files.mobilitydatabase.org/mdb-759/latest.zip
+mdb-76,Fairfield and Suisun Transit (FAST Transit),US,California,Benicia,https://files.mobilitydatabase.org/mdb-76/latest.zip
+mdb-761,Port Alberni,CA,British Columbia,Alberni-Clayoquot Regional District,https://files.mobilitydatabase.org/mdb-761/latest.zip
+mdb-763,Société de transport de Lévis,CA,Quebec,Lévis,https://files.mobilitydatabase.org/mdb-763/latest.zip
+mdb-767,Prazska integrovana doprava (PID),CZ,Hlavní město Praha,Prague,https://files.mobilitydatabase.org/mdb-767/latest.zip
+mdb-768,Long-distance rail transport in Germany,AT,Carinthia,Bezirk Klagenfurt-Land,https://files.mobilitydatabase.org/mdb-768/latest.zip
+mdb-769,bodo Verkehrsverbund,AT,Lower Austria,Bezirk Amstetten,https://files.mobilitydatabase.org/mdb-769/latest.zip
+mdb-77,Placer County Transit,US,California,Auburn,https://files.mobilitydatabase.org/mdb-77/latest.zip
+mdb-770,BBS Schapfl,AT,Carinthia,Bezirk Spittal an der Drau,https://files.mobilitydatabase.org/mdb-770/latest.zip
+mdb-771,naldo Verkehrsverbund,CH,Schaffhausen,Schaffhausen,https://files.mobilitydatabase.org/mdb-771/latest.zip
+mdb-772,"OVA-Aalen, OVA-Bopfingen, Beck+Schubert",DE,Baden-Württemberg,Alb-Donau-Kreis,https://files.mobilitydatabase.org/mdb-772/latest.zip
+mdb-774,Schweizer Reisen,DE,Baden-Württemberg,Baden-Baden,https://files.mobilitydatabase.org/mdb-774/latest.zip
+mdb-776,SWU Verkehr GmbH (SWU),DE,Baden-Württemberg,Alb-Donau-Kreis,https://files.mobilitydatabase.org/mdb-776/latest.zip
+mdb-777,Rhein-Neckar-Verkehr,DE,Baden-Württemberg,Heidelberg,https://files.mobilitydatabase.org/mdb-777/latest.zip
+mdb-778,Verkehrsverbund Rhein-Sieg (VRS),DE,Hesse,Landkreis Limburg-Weilburg,https://files.mobilitydatabase.org/mdb-778/latest.zip
+mdb-779,Münchner Verkehrs- und Tarifverbund GmbH (MVV),AT,Tyrol,Bezirk Kufstein,https://files.mobilitydatabase.org/mdb-779/latest.zip
+mdb-78,WestCAT,US,California,Contra Costa County,https://files.mobilitydatabase.org/mdb-78/latest.zip
+mdb-780,Erfurter Verkehrsbetriebe AG,DE,Bavaria,Coburg,https://files.mobilitydatabase.org/mdb-780/latest.zip
+mdb-781,Leipziger Verkehrsbetriebe (LVB),DE,Brandenburg,Elbe-Elster,https://files.mobilitydatabase.org/mdb-781/latest.zip
+mdb-782,Verkehrsverbund Berlin-Brandenburg (VBB),DE,Berlin,Berlin,https://files.mobilitydatabase.org/mdb-782/latest.zip
+mdb-783,Stadtwerke Heilbronn (SWHN),AT,Salzburg,Salzburg,https://files.mobilitydatabase.org/mdb-783/latest.zip
+mdb-786,Cairo Metro,EG,Cairo Governorate,Cairo Governorate,https://files.mobilitydatabase.org/mdb-786/latest.zip
+mdb-787,Transportes interurbanos de Tenerife (TITSA),ES,Canary Islands,Adeje,https://files.mobilitydatabase.org/mdb-787/latest.zip
+mdb-788,Metropolitano de Tenerife (Metrotenerife),ES,Canary Islands,San Cristóbal de La Laguna,https://files.mobilitydatabase.org/mdb-788/latest.zip
+mdb-789,Région Hauts-de-France,FR,Hauts-de-France,Aisne,https://files.mobilitydatabase.org/mdb-789/latest.zip
+mdb-79,Yuba-Sutter Transit,US,California,Live Oak,https://files.mobilitydatabase.org/mdb-79/latest.zip
+mdb-791,Consorcio Regional de Transportes de Madrid CRTM Intercity Buses (Madrid Intercity Buses),ES,Castile and León,Casillas,https://files.mobilitydatabase.org/mdb-791/latest.zip
+mdb-792,Consorcio Regional de Transportes de Madrid,ES,Community of Madrid,Alcorcón,https://files.mobilitydatabase.org/mdb-792/latest.zip
+mdb-793,Empresa Municipal de Transportes de Madrid (EMT Madrid),ES,Community of Madrid,Madrid,https://files.mobilitydatabase.org/mdb-793/latest.zip
+mdb-794,Metro de Madrid,ES,Community of Madrid,Alcobendas,https://files.mobilitydatabase.org/mdb-794/latest.zip
+mdb-795,Empresa Municipal de Transportes de Valencia (EMT Valencia),ES,Valencian Community,Alboraia / Alboraya,https://files.mobilitydatabase.org/mdb-795/latest.zip
+mdb-797,TUVISA (Transportes Urbanos de Vitoria),ES,Autonomous Community of the Basque Country,Arratzua-Ubarrundia,https://files.mobilitydatabase.org/mdb-797/latest.zip
+mdb-799,Playa Vista Shuttle,US,California,Culver City,https://files.mobilitydatabase.org/mdb-799/latest.zip
+mdb-8,São Paulo Transporte (SPTrans),BR,São Paulo,Região Geográfica Intermediária de Campinas,https://files.mobilitydatabase.org/mdb-8/latest.zip
+mdb-80,SolTrans,US,California,Contra Costa County,https://files.mobilitydatabase.org/mdb-80/latest.zip
+mdb-800,Oregon Department of Transportation,US,California,Del Norte County,https://files.mobilitydatabase.org/mdb-800/latest.zip
+mdb-804,Rensselaer County (Yankee Trails),US,New York,Albany County,https://files.mobilitydatabase.org/mdb-804/latest.zip
+mdb-806,Rosemead Explorer,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-806/latest.zip
+mdb-808,Regional Transit Service Seneca (RTS Seneca),US,New York,Geneva,https://files.mobilitydatabase.org/mdb-808/latest.zip
+mdb-809,Regional Transit Service,US,New York,Alexander,https://files.mobilitydatabase.org/mdb-809/latest.zip
+mdb-81,Rio Vista Delta Breeze,US,California,Antioch,https://files.mobilitydatabase.org/mdb-81/latest.zip
+mdb-810,San Leandro Links,US,California,San Leandro,https://files.mobilitydatabase.org/mdb-810/latest.zip
+mdb-812,Santa Clarita Transit,US,California,Santa Clarita,https://files.mobilitydatabase.org/mdb-812/latest.zip
+mdb-813,Santa Ynez Valley Transit,US,California,Santa Barbara County,https://files.mobilitydatabase.org/mdb-813/latest.zip
+mdb-814,Schuyler County Transit,US,New York,Big Flats Airport,https://files.mobilitydatabase.org/mdb-814/latest.zip
+mdb-815,Sonoma-Marin Area Rail Transit (SMART),US,California,Cotati,https://files.mobilitydatabase.org/mdb-815/latest.zip
+mdb-82,Unitrans,US,California,Sacramento County,https://files.mobilitydatabase.org/mdb-82/latest.zip
+mdb-823,Adirondack Trailways ADP,US,New York,Albany County,https://files.mobilitydatabase.org/mdb-823/latest.zip
+mdb-824,Adirondack Trailways NYP,US,New York,Binghamton,https://files.mobilitydatabase.org/mdb-824/latest.zip
+mdb-825,New York Trailways,US,New York,Bath,https://files.mobilitydatabase.org/mdb-825/latest.zip
+mdb-826,Adirondack Trailways Pine Hill Trailways,US,New York,City of Oneonta,https://files.mobilitydatabase.org/mdb-826/latest.zip
+mdb-83,GrapeLine,US,California,Lodi,https://files.mobilitydatabase.org/mdb-83/latest.zip
+mdb-84,Nevada County Connects (Gold Country Stage),US,California,Alta Sierra,https://files.mobilitydatabase.org/mdb-84/latest.zip
+mdb-841,Régie des Transports Métropolitains (RTM),FR,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,https://files.mobilitydatabase.org/mdb-841/latest.zip
+mdb-842,Marcoulines,FR,Provence-Alpes-Côte d'Azur,Carnoux-en-Provence,https://files.mobilitydatabase.org/mdb-842/latest.zip
+mdb-85,Fresno County Rural Transit Agency (FCRTA),US,California,Fresno County,https://files.mobilitydatabase.org/mdb-85/latest.zip
+mdb-850,Steuben Area Rides,US,New York,Addison,https://files.mobilitydatabase.org/mdb-850/latest.zip
+mdb-851,Steuben County Transit,US,New York,Bath,https://files.mobilitydatabase.org/mdb-851/latest.zip
+mdb-854,Azienda Trasporti Automobilistici Pubblici delle Province di Biella e Vercelli (ATAP),IT,Lombardy,Milan,https://files.mobilitydatabase.org/mdb-854/latest.zip
+mdb-855,Trenord,CH,Ticino,Bellinzona,https://files.mobilitydatabase.org/mdb-855/latest.zip
+mdb-856,Compagnie des Transports Strasbourgeois (CTS),DE,Baden-Württemberg,Ortenaukreis,https://files.mobilitydatabase.org/mdb-856/latest.zip
+mdb-857,Augsburger Verkehrs- und Tarifverbund (AVV),DE,Bavaria,Augsburg,https://files.mobilitydatabase.org/mdb-857/latest.zip
+mdb-858,Ver­kehrs­ver­bund Groß­raum Nürn­berg (VGN),DE,Baden-Württemberg,Landkreis Schwäbisch Hall,https://files.mobilitydatabase.org/mdb-858/latest.zip
+mdb-86,Merced County Transit (The Bus),US,California,Atwater,https://files.mobilitydatabase.org/mdb-86/latest.zip
+mdb-861,BIOKOM,HU,Baranya,Cserkút,https://files.mobilitydatabase.org/mdb-861/latest.zip
+mdb-862,Weekendbus,HU,Budapest,Budapest,https://files.mobilitydatabase.org/mdb-862/latest.zip
+mdb-864,Turku,FI,Southwest Finland,Aura,https://files.mobilitydatabase.org/mdb-864/latest.zip
+mdb-865,Helsingin seudun liikenne (HSL),FI,Kanta-Häme,Riihimäki,https://files.mobilitydatabase.org/mdb-865/latest.zip
+mdb-866,Tampereen joukkoliikenne (JOLI),FI,Pirkanmaa,Hämeenkyrö,https://files.mobilitydatabase.org/mdb-866/latest.zip
+mdb-867,Waltti - Jyväskylä,FI,Central Finland,Äänekoski,https://files.mobilitydatabase.org/mdb-867/latest.zip
+mdb-868,Kuopio,FI,North Savo,Kaavi,https://files.mobilitydatabase.org/mdb-868/latest.zip
+mdb-869,Waltti - Oulu,FI,North Ostrobothnia,Hailuoto,https://files.mobilitydatabase.org/mdb-869/latest.zip
+mdb-870,Village of Cooperstown Trolly System,US,New York,Cooperstown,https://files.mobilitydatabase.org/mdb-870/latest.zip
+mdb-871,Watertown Citibus,US,New York,Jefferson County,https://files.mobilitydatabase.org/mdb-871/latest.zip
+mdb-875,Yates Transit Service,US,New York,Ontario County,https://files.mobilitydatabase.org/mdb-875/latest.zip
+mdb-877,City of Tracy (TRACER),US,California,San Joaquin County,https://files.mobilitydatabase.org/mdb-877/latest.zip
+mdb-881,AMA Department of Transport,GH,Central Region,Awutu Senya East Municipal District,https://files.mobilitydatabase.org/mdb-881/latest.zip
+mdb-884,Rīgas Satiksme,LV,Rīga,,https://files.mobilitydatabase.org/mdb-884/latest.zip
+mdb-886,San Joaquin Regional Transit District (RTD),US,California,Alameda County,https://files.mobilitydatabase.org/mdb-886/latest.zip
+mdb-887,Szegedi Közlekedési Társaság,HU,Csongrád-Csanád County,Szeged,https://files.mobilitydatabase.org/mdb-887/latest.zip
+mdb-890,Ulysse,FR,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,https://files.mobilitydatabase.org/mdb-890/latest.zip
+mdb-891,Alilaguna,IT,Veneto,Venice,https://files.mobilitydatabase.org/mdb-891/latest.zip
+mdb-892,Àrea Metropolitana de Barcelona (AMB),ES,Catalonia,Badalona,https://files.mobilitydatabase.org/mdb-892/latest.zip
+mdb-893,Azienda Napoletana Mobilità,IT,Campania,Acerra,https://files.mobilitydatabase.org/mdb-893/latest.zip
+mdb-895,ARST SpA - Trasporti Regionali Della Sardegna,IT,Sardinia,Abas/Ales,https://files.mobilitydatabase.org/mdb-895/latest.zip
+mdb-896,Azienda Trasporti di Messina (ATM),IT,Sicily,Messina,https://files.mobilitydatabase.org/mdb-896/latest.zip
+mdb-897,Tahoe Transportation District,US,California,South Lake Tahoe,https://files.mobilitydatabase.org/mdb-897/latest.zip
+mdb-898,Transdev — Pays de la Loire,FR,Pays de la Loire,Loire-Atlantique,https://files.mobilitydatabase.org/mdb-898/latest.zip
+mdb-899,Cortland County Public Transportation,US,New York,Cortland,https://files.mobilitydatabase.org/mdb-899/latest.zip
+mdb-9,Empresa de Transportes e Transito de Belo Horizonte (BHTRANS),BR,Minas Gerais,Belo Horizonte,https://files.mobilitydatabase.org/mdb-9/latest.zip
+mdb-90,Fresno Area Express (FAX),US,California,Fresno,https://files.mobilitydatabase.org/mdb-90/latest.zip
+mdb-900,TBO Offenburg,AT,Upper Austria,Linz,https://files.mobilitydatabase.org/mdb-900/latest.zip
+mdb-904,Road and Transport Authority (RTA),AE,Ajman Emirate,Ajman Emirate,https://files.mobilitydatabase.org/mdb-904/latest.zip
+mdb-905,Huntington Area Rapid Transit (HART),US,New York,Centerport,https://files.mobilitydatabase.org/mdb-905/latest.zip
+mdb-906,VOLZ,DE,Baden-Württemberg,Baden-Baden,https://files.mobilitydatabase.org/mdb-906/latest.zip
+mdb-907,Sunbus Rockhampton,AU,Queensland,Rockhampton Regional,https://files.mobilitydatabase.org/mdb-907/latest.zip
+mdb-91,City of Madera,US,California,Madera,https://files.mobilitydatabase.org/mdb-91/latest.zip
+mdb-910,Leprechaun Lines,US,New York,Dutchess County,https://files.mobilitydatabase.org/mdb-910/latest.zip
+mdb-911,Clarkstown MiniTrans,US,New York,Bardonia,https://files.mobilitydatabase.org/mdb-911/latest.zip
+mdb-912,Miccolis S.p.A.,IT,Apulia,,https://files.mobilitydatabase.org/mdb-912/latest.zip
+mdb-915,Lower Hudson Valley Transit,US,New York,Airmont,https://files.mobilitydatabase.org/mdb-915/latest.zip
+mdb-916,City of Long Beach Transportation,US,New York,East Atlantic Beach,https://files.mobilitydatabase.org/mdb-916/latest.zip
+mdb-92,Amador Transit,US,California,Amador County,https://files.mobilitydatabase.org/mdb-92/latest.zip
+mdb-921,Hyderabad Multi-Modal Transport System,IN,Telangana,Alair mandal,https://files.mobilitydatabase.org/mdb-921/latest.zip
+mdb-924,Transit Orange / Newburgh Local Transit,US,New York,Balmville,https://files.mobilitydatabase.org/mdb-924/latest.zip
+mdb-927,Sullivan County Transit,US,New York,Bloomingburg,https://files.mobilitydatabase.org/mdb-927/latest.zip
+mdb-928,PART Putnam Area Rapid Transit,US,New York,Beacon,https://files.mobilitydatabase.org/mdb-928/latest.zip
+mdb-929,Lappeenranta,FI,South Karelia,Imatra,https://files.mobilitydatabase.org/mdb-929/latest.zip
+mdb-93,Calaveras Transit,US,California,Angels Camp,https://files.mobilitydatabase.org/mdb-93/latest.zip
+mdb-930,Prefeitura de Bage,BR,Rio Grande do Sul,Região Geográfica Intermediária de Pelotas,https://files.mobilitydatabase.org/mdb-930/latest.zip
+mdb-935,Canberra Metro Operations,AU,Australian Capital Territory,Australian Capital Territory,https://files.mobilitydatabase.org/mdb-935/latest.zip
+mdb-936,Transport Canberra,AU,Australian Capital Territory,Australian Capital Territory,https://files.mobilitydatabase.org/mdb-936/latest.zip
+mdb-94,"Tahoe Area Regional Transit (TART), North Lake Tahoe Express",US,California,El Dorado County,https://files.mobilitydatabase.org/mdb-94/latest.zip
+mdb-96,Metrolink,US,California,Los Angeles County,https://files.mobilitydatabase.org/mdb-96/latest.zip
+mdb-97,OmniTrans,US,California,Colton,https://files.mobilitydatabase.org/mdb-97/latest.zip
+mdb-978,Trentino Trasporti SpA (TT),IT,Trentino-Alto Adige/Südtirol,Besenello,https://files.mobilitydatabase.org/mdb-978/latest.zip
+mdb-979,Sevibus/DLA Długołęka,PL,Lower Silesian Voivodeship,Środa Śląska County,https://files.mobilitydatabase.org/mdb-979/latest.zip
+mdb-98,Riverside Transit Agency,US,California,Hemet,https://files.mobilitydatabase.org/mdb-98/latest.zip
+mdb-980,MPK Wrocław,PL,Lower Silesian Voivodeship,Środa Śląska County,https://files.mobilitydatabase.org/mdb-980/latest.zip
+mdb-981,Zarząd Dróg i Transportu Miejskiego (ZDiTM),PL,West Pomeranian Voivodeship,Goleniów County,https://files.mobilitydatabase.org/mdb-981/latest.zip
+mdb-982,Zarząd Transportu Miejskiego Poznań (ZTM Poznań),PL,Greater Poland Voivodeship,Poznań,https://files.mobilitydatabase.org/mdb-982/latest.zip
+mdb-983,Otago Regional Council (ORC),NZ,Otago,Dunedin City,https://files.mobilitydatabase.org/mdb-983/latest.zip
+mdb-986,French Brothers Ltd,GB,England,Surrey,https://files.mobilitydatabase.org/mdb-986/latest.zip
+mdb-99,Victor Valley Transit Authority (VVTA),US,California,Adelanto,https://files.mobilitydatabase.org/mdb-99/latest.zip
+mdb-990,Budapesti Közlekedési Központ (BKK),HU,Budapest,Budapest,https://files.mobilitydatabase.org/mdb-990/latest.zip
+mdb-991,ATP Nuoro,IT,Sardinia,Nùgoro/Nuoro,https://files.mobilitydatabase.org/mdb-991/latest.zip
+mdb-992,Valsts SIA Autotransporta Direkcija (ATD),LV,,,https://files.mobilitydatabase.org/mdb-992/latest.zip
+mdb-994,Commerce Municipal Bus Lines,US,California,Bell,https://files.mobilitydatabase.org/mdb-994/latest.zip
