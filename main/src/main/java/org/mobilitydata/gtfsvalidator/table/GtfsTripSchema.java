@@ -58,4 +58,6 @@ public interface GtfsTripSchema extends GtfsEntity {
   GtfsWheelchairBoarding wheelchairAccessible();
 
   GtfsBikesAllowed bikesAllowed();
+
+  GtfsCarsAllowed carsAllowed();
 }
