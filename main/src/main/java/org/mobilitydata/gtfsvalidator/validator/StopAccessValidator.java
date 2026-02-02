@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
@@ -10,6 +11,17 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopAccess;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 
+/**
+ * Validates {@code stops.stop_access} for a single {@code GtfsStop}.
+ *
+ * <p>Generated notices:
+ *
+ * <ul>
+ *   <li>{@link StopAccessSpecifiedForStopWithNoParentStation}
+ *   <li>{@link StopAccessSpecifiedForIncorrectLocation}
+ * </ul>
+ */
+@GtfsValidator
 public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   @Override
   public void validate(GtfsStop entity, NoticeContainer noticeContainer) {
@@ -41,7 +53,11 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
     return header.hasColumn(GtfsStop.STOP_ACCESS_FIELD_NAME);
   }
 
-  /** stops.stop_access is forbidden for stops that are not associated with a parent station. */
+  /**
+   * A stop without a value for parent station has stop_access specified.
+   *
+   * <p>stops.stop_access is forbidden for stops that are not associated with a parent station.
+   */
   @GtfsValidationNotice(
       severity = ERROR,
       files = @GtfsValidationNotice.FileRefs(GtfsStopSchema.class))
@@ -75,9 +91,10 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   }
 
   /**
-   * stops.stop_id, stops.stop_access stops.stop_access is forbidden for locations that are
-   * stations, entrances, generic nodes or boarding areas. It can only be specific when a stop is
-   * associated with a parent station.
+   * A location that is not a stop has stop_access specified.
+   *
+   * <p>Stops.stop_access is forbidden for locations that are stations, entrances, generic nodes or
+   * boarding areas. It can only be specific when a stop is associated with a parent station.
    */
   @GtfsValidationNotice(
       severity = ERROR,
