@@ -42,9 +42,7 @@ public class StopAccessValidatorTest {
             .setStopId("S1")
             .setLocationType(GtfsLocationType.STOP)
             .setStopName("Stop 1")
-            // specify a non-empty stop_access to trigger validation
             .setStopAccess(GtfsStopAccess.NON_EMPTY)
-            // do not set parent station -> hasParentStation() should be false
             .build();
 
     assertThat(generateNotices(stop))
@@ -61,7 +59,6 @@ public class StopAccessValidatorTest {
             .setStopId("S2")
             .setLocationType(GtfsLocationType.STATION)
             .setStopName("Stop 2")
-            // specify a non-empty stop_access to trigger validation
             .setStopAccess(GtfsStopAccess.NON_EMPTY)
             .build();
 
