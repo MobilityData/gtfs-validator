@@ -71,6 +71,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
     /** The 'stops.stop_name' of the faulty record. */
     private final String stopName;
 
+    /** The `stops.stop_access` of the faulty record. */
     private final GtfsStopAccess stopAccess;
 
     /** `stops.location_type` of the faulty record. */
@@ -109,6 +110,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
     /** The 'stops.stop_name' of the faulty record. */
     private final String stopName;
 
+    /** The `stops.stop_access` of the faulty record. */
     private final GtfsStopAccess stopAccess;
 
     /** `stops.location_type` of the faulty record. */
