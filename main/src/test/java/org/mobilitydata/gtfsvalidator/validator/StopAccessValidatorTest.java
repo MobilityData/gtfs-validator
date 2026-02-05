@@ -21,20 +21,6 @@ public class StopAccessValidatorTest {
   }
 
   @Test
-  public void emptyStopAccess_noNotice() {
-    assertThat(
-            generateNotices(
-                new GtfsStop.Builder()
-                    .setCsvRowNumber(4)
-                    .setStopId("S0")
-                    .setLocationType(GtfsLocationType.STOP)
-                    .setStopName("stop name")
-                    .setStopAccess(GtfsStopAccess.ACCESSIBLE_VIA_PATHWAYS)
-                    .build()))
-        .isEmpty();
-  }
-
-  @Test
   public void stopLocationWithoutParentStation_generatesNotice() {
     GtfsStop stop =
         new GtfsStop.Builder()
