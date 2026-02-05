@@ -45,7 +45,7 @@ jobs:
       # Adding fail-fast: false so at least some artifacts gets uploaded if others fail
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        os: [ macos-latest, windows-2022, ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -177,7 +177,7 @@ jobs:
           filename=${{ matrix.os }}.zip
           pushd app/pkg/build/jpackage
           # The windows runner does not have zip, but has 7zip.
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          if [ "${{ matrix.os }}" == "windows-2022" ]; then
             7z a -tzip $filename *.msi
           else
             # Normally there should be either .deb or (.pkg and .dmg) Just capture all.

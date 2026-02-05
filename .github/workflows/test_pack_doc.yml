@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         java_version: [ '17' ]
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest, windows-2022 ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.java_version }}
@@ -52,7 +52,7 @@ jobs:
     strategy:
       matrix:
         java_version: [ '17' ]
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest, windows-2022 ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.java_version }}
@@ -83,7 +83,7 @@ jobs:
     strategy:
       matrix:
         java_version: [ '17' ]
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest, windows-2022 ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.java_version }}
