@@ -29,7 +29,7 @@ public class StopAccessValidatorTest {
                     .setStopId("S0")
                     .setLocationType(GtfsLocationType.STOP)
                     .setStopName("stop name")
-                    .setStopAccess(GtfsStopAccess.EMPTY)
+                    .setStopAccess(GtfsStopAccess.ACCESSIBLE_VIA_PATHWAYS)
                     .build()))
         .isEmpty();
   }
@@ -42,13 +42,17 @@ public class StopAccessValidatorTest {
             .setStopId("S1")
             .setLocationType(GtfsLocationType.STOP)
             .setStopName("Stop 1")
-            .setStopAccess(GtfsStopAccess.NON_EMPTY)
+            .setStopAccess(GtfsStopAccess.NOT_ACCESSIBLE_VIA_PATHWAYS)
             .build();
 
     assertThat(generateNotices(stop))
         .containsExactly(
-            new StopAccessValidator.StopAccessSpecifiedForStopWithNoParentStation(
-                7, "S1", "Stop 1", GtfsStopAccess.NON_EMPTY, GtfsLocationType.STOP));
+            new StopAccessValidator.StopAccessSpecifiedForStopWithNoParentStationNotice(
+                7,
+                "S1",
+                "Stop 1",
+                GtfsStopAccess.NOT_ACCESSIBLE_VIA_PATHWAYS,
+                GtfsLocationType.STOP));
   }
 
   @Test
@@ -59,12 +63,16 @@ public class StopAccessValidatorTest {
             .setStopId("S2")
             .setLocationType(GtfsLocationType.STATION)
             .setStopName("Stop 2")
-            .setStopAccess(GtfsStopAccess.NON_EMPTY)
+            .setStopAccess(GtfsStopAccess.NOT_ACCESSIBLE_VIA_PATHWAYS)
             .build();
 
     assertThat(generateNotices(stop))
         .containsExactly(
-            new StopAccessValidator.StopAccessSpecifiedForIncorrectLocation(
-                9, "S2", "Stop 2", GtfsStopAccess.NON_EMPTY, GtfsLocationType.STATION));
+            new StopAccessValidator.StopAccessSpecifiedForIncorrectLocationNotice(
+                9,
+                "S2",
+                "Stop 2",
+                GtfsStopAccess.NOT_ACCESSIBLE_VIA_PATHWAYS,
+                GtfsLocationType.STATION));
   }
 }

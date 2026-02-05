@@ -17,20 +17,20 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
  * <p>Generated notices:
  *
  * <ul>
- *   <li>{@link StopAccessSpecifiedForStopWithNoParentStation}
- *   <li>{@link StopAccessSpecifiedForIncorrectLocation}
+ *   <li>{@link StopAccessSpecifiedForStopWithNoParentStationNotice}
+ *   <li>{@link StopAccessSpecifiedForIncorrectLocationNotice}
  * </ul>
  */
 @GtfsValidator
 public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   @Override
   public void validate(GtfsStop entity, NoticeContainer noticeContainer) {
-    if (entity.stopAccess() == GtfsStopAccess.EMPTY) return;
+    if (entity.stopAccess() == GtfsStopAccess.ACCESSIBLE_VIA_PATHWAYS) return;
 
     if (entity.locationType() == GtfsLocationType.STOP) {
       if (!entity.hasParentStation()) {
         noticeContainer.addValidationNotice(
-            new StopAccessSpecifiedForStopWithNoParentStation(
+            new StopAccessSpecifiedForStopWithNoParentStationNotice(
                 entity.csvRowNumber(),
                 entity.stopId(),
                 entity.stopName(),
@@ -39,7 +39,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
       }
     } else {
       noticeContainer.addValidationNotice(
-          new StopAccessSpecifiedForIncorrectLocation(
+          new StopAccessSpecifiedForIncorrectLocationNotice(
               entity.csvRowNumber(),
               entity.stopId(),
               entity.stopName(),
@@ -61,7 +61,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   @GtfsValidationNotice(
       severity = ERROR,
       files = @GtfsValidationNotice.FileRefs(GtfsStopSchema.class))
-  static class StopAccessSpecifiedForStopWithNoParentStation extends ValidationNotice {
+  static class StopAccessSpecifiedForStopWithNoParentStationNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final long csvRowNumber;
 
@@ -77,7 +77,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
     /** `stops.location_type` of the faulty record. */
     private final GtfsLocationType locationType;
 
-    public StopAccessSpecifiedForStopWithNoParentStation(
+    public StopAccessSpecifiedForStopWithNoParentStationNotice(
         long csvRowNumber,
         String stopId,
         String stopName,
@@ -100,7 +100,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   @GtfsValidationNotice(
       severity = ERROR,
       files = @GtfsValidationNotice.FileRefs(GtfsStopSchema.class))
-  static class StopAccessSpecifiedForIncorrectLocation extends ValidationNotice {
+  static class StopAccessSpecifiedForIncorrectLocationNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final long csvRowNumber;
 
@@ -116,7 +116,7 @@ public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
     /** `stops.location_type` of the faulty record. */
     private final GtfsLocationType locationType;
 
-    public StopAccessSpecifiedForIncorrectLocation(
+    public StopAccessSpecifiedForIncorrectLocationNotice(
         long csvRowNumber,
         String stopId,
         String stopName,
