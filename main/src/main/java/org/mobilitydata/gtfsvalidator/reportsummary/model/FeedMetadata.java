@@ -198,6 +198,16 @@ public class FeedMetadata {
     loadContinuousStopsFeature(feedContainer);
     loadZoneBasedDemandResponsiveTransitFeature(feedContainer);
     loadDeviatedFixedRouteFeature(feedContainer);
+    loadCarsAllowedFeature(feedContainer);
+  }
+
+  private void loadCarsAllowedFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Cars Allowed", "Base"),
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasCarsAllowed)));
   }
 
   private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {
