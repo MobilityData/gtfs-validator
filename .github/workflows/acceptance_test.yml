@@ -149,9 +149,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   get-reports:
     needs: [ fetch-urls, pack-master, pack-snapshot ]
-    # We use machines with more memory to run validation, as large feeds
-    # can consume too much heap for default machine instances (see #1304).
-    runs-on: ubuntu-latest-4-cores
+    runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
