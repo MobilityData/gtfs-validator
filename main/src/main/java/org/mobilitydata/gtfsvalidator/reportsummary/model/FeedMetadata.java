@@ -50,7 +50,6 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Translations", null), GtfsTranslation.FILENAME),
           new Pair<>(new FeatureMetadata("Fares V1", "Fares"), GtfsFareAttribute.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
-          new Pair<>(new FeatureMetadata("Fare Media", "Fares"), GtfsFareMedia.FILENAME),
           new Pair<>(new FeatureMetadata("Zone-Based Fares", "Fares"), GtfsArea.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(new FeatureMetadata("Time-Based Fares", "Fares"), GtfsTimeframe.FILENAME),
@@ -198,6 +197,33 @@ public class FeedMetadata {
     loadContinuousStopsFeature(feedContainer);
     loadZoneBasedDemandResponsiveTransitFeature(feedContainer);
     loadDeviatedFixedRouteFeature(feedContainer);
+    loadFareMediaFeature(feedContainer);
+  }
+
+  /**
+   * Determines the presence of the "Fare Media" feature, which requires a record in
+   * `fare_media.txt` and a reference to `fare_media_id` in at least one record of
+   * `fare_product.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required files and fields
+   *     for the "Fare Media" feature.
+   */
+  private void loadFareMediaFeature(GtfsFeedContainer feedContainer) {
+    if (!hasAtLeastOneRecordInFile(feedContainer, GtfsFareMedia.FILENAME)
+        || !hasAtLeastOneRecordInFile(feedContainer, GtfsFareProduct.FILENAME)) {
+      specFeatures.put(new FeatureMetadata("Fare Media", "Fares"), false);
+      return;
+    }
+    specFeatures.put(
+        new FeatureMetadata("Fare Media", "Fares"),
+        feedContainer
+            .getTableForFilename(GtfsFareProduct.FILENAME)
+            .map(table -> (GtfsFareProductTableContainer) table)
+            .map(
+                gtfsFareProductTableContainer ->
+                    gtfsFareProductTableContainer.getEntities().stream()
+                        .anyMatch(GtfsFareProduct::hasFareMediaId))
+            .orElse(false));
   }
 
   private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {

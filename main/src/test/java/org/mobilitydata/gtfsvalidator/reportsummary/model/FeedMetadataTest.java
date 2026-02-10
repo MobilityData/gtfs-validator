@@ -459,22 +459,52 @@ public class FeedMetadataTest {
 
   @Test
   public void containsFareMediaFeatureTest() throws IOException, InterruptedException {
-    String content = "fare_media_id, fare_media_type\n" + "dummyFareId, 0\n";
-    createDataFile(GtfsFareMedia.FILENAME, content);
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
     validateSpecFeature(
         "Fare Media",
         true,
-        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
   }
 
   @Test
-  public void omitsFareMediaFeatureTest() throws IOException, InterruptedException {
-    String content = "fare_media_id, fare_media_type\n";
-    createDataFile(GtfsFareMedia.FILENAME, content);
+  public void omitsFareMediaFeatureNoFareMediaTest() throws IOException, InterruptedException {
+    createDataFile(GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n");
+    validateSpecFeature("Fare Media", false, ImmutableList.of(GtfsFareMediaTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaFeatureNoFareProductsTest() throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n");
+
     validateSpecFeature(
         "Fare Media",
         false,
-        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaFeatureFareProductsNoFareMediaTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+
+    validateSpecFeature(
+        "Fare Media",
+        false,
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
   }
 
   // Zone-Based Fares
