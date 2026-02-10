@@ -229,14 +229,10 @@ public class FeedMetadata {
     }
     specFeatures.put(
         new FeatureMetadata("Fare Media", "Fares"),
-        feedContainer
-            .getTableForFilename(GtfsFareProduct.FILENAME)
-            .map(table -> (GtfsFareProductTableContainer) table)
-            .map(
-                gtfsFareProductTableContainer ->
-                    gtfsFareProductTableContainer.getEntities().stream()
-                        .anyMatch(GtfsFareProduct::hasFareMediaId))
-            .orElse(false));
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsFareProduct.FILENAME,
+            List.of((Function<GtfsFareProduct, Boolean>) GtfsFareProduct::hasFareMediaId)));
   }
 
   private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {
@@ -325,14 +321,28 @@ public class FeedMetadata {
                 List.of((Function<GtfsStopTime, Boolean>) GtfsStopTime::hasContinuousPickup)));
   }
 
+  /**
+   * Determines the presence of the "Route-Based Fares" feature, which requires at least one record
+   * in `routes.txt` with a reference to `network_id` or at least one record in `networks.txt`, and
+   * at least one record in `fare_products.txt` and `fare_leg_rules.txt`, and at least one record in
+   * `fare_leg_rules.txt` with a reference to `network_id`.
+   *
+   * @param feedContainer
+   */
   private void loadRouteBasedFaresFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Route-Based Fares", "Fares"),
-        hasAtLeastOneRecordForFields(
+        (hasAtLeastOneRecordForFields(
+                    feedContainer,
+                    GtfsRoute.FILENAME,
+                    List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
+                || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME))
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareProduct.FILENAME)
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareLegRule.FILENAME)
+            && hasAtLeastOneRecordForFields(
                 feedContainer,
-                GtfsRoute.FILENAME,
-                List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasNetworkId))
-            || hasAtLeastOneRecordInFile(feedContainer, GtfsNetwork.FILENAME));
+                GtfsFareLegRule.FILENAME,
+                List.of((Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasNetworkId)));
   }
 
   private void loadPathwaySignsFeature(GtfsFeedContainer feedContainer) {

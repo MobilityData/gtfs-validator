@@ -475,6 +475,52 @@ public class FeedMetadataTest {
   }
 
   @Test
+  public void containsRouteBasedFaresFeatureWithNetworkFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsNetwork.FILENAME, "network_id,network_name\n" + "id,name\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "leg,network,,,,,product,2\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsFareLegRuleTableDescriptor.class,
+            GtfsNetworkTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void containsRouteBasedFaresFeatureWithRouteNetworkIdFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRoute.FILENAME,
+        "route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color,route_text_color,network_id\n"
+            + "101,130,101,CAMPESTRE ET LUC - LE VIGAN,3,,74CFE2,000000,network\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "leg,network,,,,,product,2\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsRouteTableDescriptor.class,
+            GtfsNetworkTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
   public void omitsRiderCategoriesFeatureNoRiderCategoriesTest()
       throws IOException, InterruptedException {
     createDataFile(
