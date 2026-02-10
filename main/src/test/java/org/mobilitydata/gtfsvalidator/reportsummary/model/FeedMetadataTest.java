@@ -458,6 +458,51 @@ public class FeedMetadataTest {
   }
 
   @Test
+  public void containsRiderCategoriesFeatureTest() throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n"
+            + "rider::GP,General Public,1,https://www.example.com\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    validateSpecFeature(
+        "Rider Categories",
+        true,
+        ImmutableList.of(
+            GtfsRiderCategoriesTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRiderCategoriesFeatureNoRiderCategoriesTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n");
+    validateSpecFeature(
+        "Rider Categories", false, ImmutableList.of(GtfsRiderCategoriesTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRiderCategoriesFeatureNoFareProductsTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n"
+            + "rider::GP,General Public,1,https://www.example.com\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n");
+
+    validateSpecFeature(
+        "Rider Categories",
+        false,
+        ImmutableList.of(
+            GtfsRiderCategoriesTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
   public void containsFareMediaFeatureTest() throws IOException, InterruptedException {
     createDataFile(
         GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
