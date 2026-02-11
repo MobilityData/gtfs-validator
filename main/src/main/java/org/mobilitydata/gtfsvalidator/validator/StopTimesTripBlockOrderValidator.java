@@ -1,19 +1,17 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.*;
-
-import javax.inject.Inject;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
+import javax.inject.Inject;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.*;
 
 @GtfsValidator
 public class StopTimesTripBlockOrderValidator extends FileValidator {
@@ -62,12 +60,12 @@ public class StopTimesTripBlockOrderValidator extends FileValidator {
       // Track stop_sequence ordering (file order)
       Integer last = lastStopSequence.get(tripId);
       if (last != null && stopSeq <= last) {
-        unsortedNotified.add(tripId);  // mark only, emit later
+        unsortedNotified.add(tripId); // mark only, emit later
       }
       lastStopSequence.put(tripId, stopSeq);
     }
 
-     // PASS 2 — Validate + Emit Notices
+    // PASS 2 — Validate + Emit Notices
     for (String tripId : tripRowCount.keySet()) {
 
       int count = tripRowCount.get(tripId);
@@ -79,28 +77,27 @@ public class StopTimesTripBlockOrderValidator extends FileValidator {
       boolean unsortedSequence = unsortedNotified.contains(tripId);
 
       if (nonContiguous || unsortedSequence) {
-        noticeContainer.addValidationNotice(
-                new UnsortedStopTimesNotice(tripId, minRow, maxRow));
+        noticeContainer.addValidationNotice(new UnsortedStopTimesNotice(tripId, minRow, maxRow));
       }
     }
   }
 
   /**
    * Stop times are not sorted by trip_id and stop_sequence.
-   * <p>'stop_times.txt' entries for a given trip are not sorted by stop_sequence, or are not contiguous
-   * in the file.
+   *
+   * <p>'stop_times.txt' entries for a given trip are not sorted by stop_sequence, or are not
+   * contiguous in the file.
    */
   @GtfsValidationNotice(
-          severity = INFO,
-          files =
-          @GtfsValidationNotice.FileRefs({
-                  GtfsStopTimeSchema.class
-          }))
+      severity = INFO,
+      files = @GtfsValidationNotice.FileRefs({GtfsStopTimeSchema.class}))
   static class UnsortedStopTimesNotice extends ValidationNotice {
     /** The faulty record's trip_id. */
     private final String tripId;
+
     /** CSV row number of the first stop_times entry for this trip. */
     private final int startCsvRowNumber;
+
     /** CSV row number of the last stop_times entry for this trip. */
     private final int endCsvRowNumber;
 
