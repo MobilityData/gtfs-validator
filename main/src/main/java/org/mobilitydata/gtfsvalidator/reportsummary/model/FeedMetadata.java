@@ -52,7 +52,6 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
           new Pair<>(new FeatureMetadata("Zone-Based Fares", "Fares"), GtfsArea.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
-          new Pair<>(new FeatureMetadata("Time-Based Fares", "Fares"), GtfsTimeframe.FILENAME),
           new Pair<>(
               new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
           new Pair<>(
@@ -197,6 +196,27 @@ public class FeedMetadata {
     loadDeviatedFixedRouteFeature(feedContainer);
     loadFareMediaFeature(feedContainer);
     loadRiderCategoriesFeature(feedContainer);
+    loadTimeBasedFaresFeature(feedContainer);
+  }
+
+  private void loadTimeBasedFaresFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Time-Based Fares", "Fares"),
+        hasAtLeastOneRecordInFile(feedContainer, GtfsTimeframe.FILENAME)
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareProduct.FILENAME)
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareLegRule.FILENAME)
+            && (hasAtLeastOneRecordForFields(
+                    feedContainer,
+                    GtfsFareLegRule.FILENAME,
+                    List.of(
+                        (Function<GtfsFareLegRule, Boolean>)
+                            GtfsFareLegRule::hasFromTimeframeGroupId))
+                || hasAtLeastOneRecordForFields(
+                    feedContainer,
+                    GtfsFareLegRule.FILENAME,
+                    List.of(
+                        (Function<GtfsFareLegRule, Boolean>)
+                            GtfsFareLegRule::hasToTimeframeGroupId))));
   }
 
   private void loadRiderCategoriesFeature(GtfsFeedContainer feedContainer) {
