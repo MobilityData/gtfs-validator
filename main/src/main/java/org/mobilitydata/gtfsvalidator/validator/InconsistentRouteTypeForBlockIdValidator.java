@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class InconsistentRouteTypeForBlockIdValidator extends FileValidator {
 
   /** A block should have the same route mode. */
   @GtfsValidationNotice(
-      severity = ERROR,
+      severity = WARNING,
       files = @GtfsValidationNotice.FileRefs({GtfsTripSchema.class, GtfsRouteSchema.class}))
   static class InconsistentRouteTypeForBlockIdNotice extends ValidationNotice {
     /** The block_id value of the faulty trip. */
