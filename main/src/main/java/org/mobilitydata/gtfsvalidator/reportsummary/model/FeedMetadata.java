@@ -52,10 +52,8 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(
-              new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
-          new Pair<>(
-              new FeatureMetadata("Fixed-Stops Demand Responsive Transit", "Flexible Services"),
-              GtfsLocationGroups.FILENAME));
+              new FeatureMetadata("Booking Rules", "Flexible Services"),
+              GtfsBookingRules.FILENAME));
 
   protected FeedMetadata() {}
 
@@ -197,6 +195,14 @@ public class FeedMetadata {
     loadRiderCategoriesFeature(feedContainer);
     loadTimeBasedFaresFeature(feedContainer);
     loadZoneBasedFaresFeature(feedContainer);
+    loadFixedStopsDemandResponseTransit(feedContainer);
+  }
+
+  private void loadFixedStopsDemandResponseTransit(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Fixed-Stops Demand Responsive Transit", "Flexible Services"),
+        hasAtLeastOneRecordInFile(feedContainer, GtfsLocationGroups.FILENAME)
+            && hasAtLeastOneTripWithOnlyLocationGroupId(feedContainer));
   }
 
   private void loadZoneBasedFaresFeature(GtfsFeedContainer feedContainer) {
@@ -328,6 +334,21 @@ public class FeedMetadata {
         if (entity instanceof GtfsStopTime) {
           GtfsStopTime stopTime = (GtfsStopTime) entity;
           if (stopTime.hasTripId() && stopTime.hasLocationId() && (!stopTime.hasStopId())) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  private boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
+    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.hasTripId() && stopTime.hasLocationGroupId() && !stopTime.hasStopId()) {
             return true;
           }
         }

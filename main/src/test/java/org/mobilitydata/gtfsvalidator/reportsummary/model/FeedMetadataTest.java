@@ -962,4 +962,73 @@ public class FeedMetadataTest {
             GtfsStopTimeTableDescriptor.class,
             GtfsTripTableDescriptor.class));
   }
+
+  @Test
+  public void containsFixedStopsDemandResponseTransitFeatureWithDemandResponseStopsAndStopTimes()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        true,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenNoLocationGroups()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsLocationGroups.FILENAME, "location_group_id,location_group_name\n");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenNoStopTimes()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenStopTimesWithNoLocationGroupId()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
 }
