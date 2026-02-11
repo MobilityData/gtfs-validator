@@ -770,19 +770,108 @@ public class FeedMetadataTest {
 
   // Zone-Based Fares
   @Test
-  public void containsZoneBasedFaresFeatureTest() throws IOException, InterruptedException {
-    String content = "area_id, stop_id\n" + "dummyArea, dummyStop\n";
-    createDataFile(GtfsArea.FILENAME, content);
+  public void containsZoneBasedFaresFeatureWithAreaFromTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "area_from,weekday_timeframe,leg,network,,,product,2\n");
     validateSpecFeature(
         "Zone-Based Fares",
         true,
-        ImmutableList.of(GtfsAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(
+            GtfsAreaTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
   }
 
   @Test
-  public void omitsZoneBasedFaresFeatureTest() throws IOException, InterruptedException {
-    String content = "area_id, stop_id\n";
-    createDataFile(GtfsStopArea.FILENAME, content);
+  public void containsZoneBasedFaresFeatureWithAreaToTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsAreaTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoAreaTest() throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoFareProductTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoFareLegTest() throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoAreaFromtoTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",,weekday_timeframe,leg,network,,product,2\n");
     validateSpecFeature(
         "Zone-Based Fares",
         false,

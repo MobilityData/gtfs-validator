@@ -50,7 +50,6 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Translations", null), GtfsTranslation.FILENAME),
           new Pair<>(new FeatureMetadata("Fares V1", "Fares"), GtfsFareAttribute.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
-          new Pair<>(new FeatureMetadata("Zone-Based Fares", "Fares"), GtfsArea.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
           new Pair<>(
               new FeatureMetadata("Booking Rules", "Flexible Services"), GtfsBookingRules.FILENAME),
@@ -197,6 +196,23 @@ public class FeedMetadata {
     loadFareMediaFeature(feedContainer);
     loadRiderCategoriesFeature(feedContainer);
     loadTimeBasedFaresFeature(feedContainer);
+    loadZoneBasedFaresFeature(feedContainer);
+  }
+
+  private void loadZoneBasedFaresFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Zone-Based Fares", "Fares"),
+        hasAtLeastOneRecordInFile(feedContainer, GtfsArea.FILENAME)
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareProduct.FILENAME)
+            && hasAtLeastOneRecordInFile(feedContainer, GtfsFareLegRule.FILENAME)
+            && (hasAtLeastOneRecordForFields(
+                    feedContainer,
+                    GtfsFareLegRule.FILENAME,
+                    List.of((Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasFromAreaId))
+                || hasAtLeastOneRecordForFields(
+                    feedContainer,
+                    GtfsFareLegRule.FILENAME,
+                    List.of((Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))));
   }
 
   private void loadTimeBasedFaresFeature(GtfsFeedContainer feedContainer) {
