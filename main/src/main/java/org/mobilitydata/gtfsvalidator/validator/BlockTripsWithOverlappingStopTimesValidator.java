@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import com.google.common.collect.Multimaps;
 import java.time.LocalDate;
@@ -261,7 +262,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
 
   /** Trips with the same block id have overlapping stop times. */
   @GtfsValidationNotice(
-      severity = ERROR,
+      severity = WARNING,
       files = @FileRefs({GtfsTripSchema.class}),
       urls =
           @UrlRef(
