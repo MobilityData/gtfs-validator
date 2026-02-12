@@ -165,17 +165,84 @@ public class FeedMetadata {
     return uniqueIds.size();
   }
 
+  /**
+   * Returns true if a record within least one trip in `trips.txt` with defined values for `trip_id`
+   * and `location_id` fields and no value for `stop_id` field in `stop_times.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Zone-Based Demand Responsive Transit" feature.
+   * @return true if at least one trip with only location_id is found, false otherwise.
+   */
+  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
+    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.hasTripId() && stopTime.hasLocationId() && (!stopTime.hasStopId())) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if least one trip in `trips.txt` with defined values for `trip_id` and
+   * `location_group_id` fields and no value for `stop_id` field in `stop_times.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Fixed-Stops Demand Responsive Transit" feature.
+   * @return true if at least one trip with only location_group_id is found, false otherwise.
+   */
+  private boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
+    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+    if (optionalStopTimeTable.isPresent()) {
+      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
+        if (entity instanceof GtfsStopTime) {
+          GtfsStopTime stopTime = (GtfsStopTime) entity;
+          if (stopTime.hasTripId() && stopTime.hasLocationGroupId() && !stopTime.hasStopId()) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Loads the presence of GTFS features based on the GTFS specification. For each feature, it
+   * checks the presence of required files and fields in the feed container to determine if the
+   * feature is present in the feed.
+   *
+   * @param feedContainer the container for the GTFS feed data
+   */
   private void loadSpecFeatures(GtfsFeedContainer feedContainer) {
     loadSpecFeaturesBasedOnFilePresence(feedContainer);
     loadSpecFeaturesBasedOnFieldPresence(feedContainer);
   }
 
+  /**
+   * Loads features that can be determined based solely on the presence of at least one record in a
+   * specific file. For each feature in the FILE_BASED_FEATURES list, it checks if there is at least
+   * one record in the corresponding file and updates the specFeatures map accordingly.
+   *
+   * @param feedContainer the container for the GTFS feed data
+   */
   private void loadSpecFeaturesBasedOnFilePresence(GtfsFeedContainer feedContainer) {
     for (Pair<FeatureMetadata, String> entry : FILE_BASED_FEATURES) {
       specFeatures.put(entry.getKey(), hasAtLeastOneRecordInFile(feedContainer, entry.getValue()));
     }
   }
 
+  /**
+   * Loads features that require checking the presence of specific fields in the GTFS feed. For each
+   * feature, it checks if there is at least one record with the required fields and updates the
+   * specFeatures map accordingly.
+   *
+   * @param feedContainer the container for the GTFS feed data
+   */
   private void loadSpecFeaturesBasedOnFieldPresence(GtfsFeedContainer feedContainer) {
     loadRouteColorsFeature(feedContainer);
     loadHeadsignsFeature(feedContainer);
@@ -198,6 +265,14 @@ public class FeedMetadata {
     loadFixedStopsDemandResponseTransit(feedContainer);
   }
 
+  /**
+   * Determines the presence of the "Fixed-Stops Demand Responsive Transit" feature, which requires
+   * one record in location_groups.txt AND at least one trip in stop_times.txt references only
+   * location_group_id
+   *
+   * @param feedContainer Feed container to check for the presence of the required files and fields
+   *     for the "Fixed-Stops Demand Responsive Transit" feature.
+   */
   private void loadFixedStopsDemandResponseTransit(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Fixed-Stops Demand Responsive Transit", "Flexible Services"),
@@ -205,6 +280,15 @@ public class FeedMetadata {
             && hasAtLeastOneTripWithOnlyLocationGroupId(feedContainer));
   }
 
+  /**
+   * Determines the presence of the "Zone-Based Fares" feature, which requires one line of data in
+   * areas.txt AND One line of data in fare_products.txt AND One line of data in fare_leg_rules.txt
+   * AND (One from_area_id value in fare_leg_rules.txt OR One to_area_id value in
+   * fare_leg_rules.txt)
+   *
+   * @param feedContainer Feed container to check for the presence of the required files and fields
+   *     for the "Zone-Based Fares" feature.
+   */
   private void loadZoneBasedFaresFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Zone-Based Fares", "Fares"),
@@ -221,6 +305,15 @@ public class FeedMetadata {
                     List.of((Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasToAreaId))));
   }
 
+  /**
+   * Determines the presence of the "Time-Based Fares" feature, which requires one line of data in
+   * timeframes.txt AND One line of data in fare_products.txt AND One line of data in
+   * fare_leg_rules.txt AND (One from_timeframe_id value in fare_leg_rules.txt OR One
+   * to_timeframe_id value in fare_leg_rules.txt)
+   *
+   * @param feedContainer Feed container to check for the presence of the required files and fields
+   *     for the "Time-Based Fares" feature.
+   */
   private void loadTimeBasedFaresFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Time-Based Fares", "Fares"),
@@ -241,6 +334,14 @@ public class FeedMetadata {
                             GtfsFareLegRule::hasToTimeframeGroupId))));
   }
 
+  /**
+   * Determines the presence of the "Rider Categories" feature, which requires one line of data in
+   * rider_categories.txt AND One line of data in fare_products.txt AND One rider_category_id value
+   * in fare_products.txt
+   *
+   * @param feedContainer Feed container to check for the presence of the required files and fields
+   *     for the "Rider Categories" feature.
+   */
   private void loadRiderCategoriesFeature(GtfsFeedContainer feedContainer) {
     if (!hasAtLeastOneRecordInFile(feedContainer, GtfsRiderCategories.FILENAME)
         || !hasAtLeastOneRecordInFile(feedContainer, GtfsFareProduct.FILENAME)) {
@@ -256,9 +357,9 @@ public class FeedMetadata {
   }
 
   /**
-   * Determines the presence of the "Fare Media" feature, which requires a record in
-   * `fare_media.txt` and a reference to `fare_media_id` in at least one record of
-   * `fare_product.txt`.
+   * Determines the presence of the "Fare Media" feature, which requires one line of data in
+   * fare_media.txt AND One line of data in fare_products.txt AND One fare_media_id value in
+   * fare_products.txt
    *
    * @param feedContainer Feed container to check for the presence of the required files and fields
    *     for the "Fare Media" feature.
@@ -277,12 +378,28 @@ public class FeedMetadata {
             List.of((Function<GtfsFareProduct, Boolean>) GtfsFareProduct::hasFareMediaId)));
   }
 
+  /**
+   * Determines the presence of the "Predefined Routes with Deviation" feature, which requires at
+   * least one trip in `trips.txt` with defined values for `trip_id`, `location_id`, `stop_id`,
+   * `arrival_time`, and `departure_time` fields in `stop_times.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Predefined Routes with Deviation" feature.
+   */
   private void loadDeviatedFixedRouteFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Predefined Routes with Deviation", "Flexible Services"),
         hasAtLeastOneTripWithAllFields(feedContainer));
   }
 
+  /**
+   * Returns true if least one trip in `trips.txt` with defined values for `trip_id`, `location_id`,
+   * `stop_id`, `arrival_time`, and `departure_time` fields in `stop_times.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Predefined Routes with Deviation" feature.
+   * @return true if at least one trip with all required fields is found, false otherwise.
+   */
   private boolean hasAtLeastOneTripWithAllFields(GtfsFeedContainer feedContainer) {
     return feedContainer
         .getTableForFilename(GtfsStopTime.FILENAME)
@@ -321,40 +438,18 @@ public class FeedMetadata {
         .orElse(false);
   }
 
+  /**
+   * Determines the presence of the "Zone-Based Demand Responsive Transit" feature, which requires
+   * at least one trip in `trips.txt` with defined values for `trip_id` and `location_id` fields and
+   * no value for `stop_id` field in `stop_times.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Zone-Based Demand Responsive Transit" feature.
+   */
   private void loadZoneBasedDemandResponsiveTransitFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Zone-Based Demand Responsive Services", "Flexible Services"),
         hasAtLeastOneTripWithOnlyLocationId(feedContainer));
-  }
-
-  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
-    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
-    if (optionalStopTimeTable.isPresent()) {
-      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
-        if (entity instanceof GtfsStopTime) {
-          GtfsStopTime stopTime = (GtfsStopTime) entity;
-          if (stopTime.hasTripId() && stopTime.hasLocationId() && (!stopTime.hasStopId())) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  private boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
-    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
-    if (optionalStopTimeTable.isPresent()) {
-      for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
-        if (entity instanceof GtfsStopTime) {
-          GtfsStopTime stopTime = (GtfsStopTime) entity;
-          if (stopTime.hasTripId() && stopTime.hasLocationGroupId() && !stopTime.hasStopId()) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
   }
 
   private void loadContinuousStopsFeature(GtfsFeedContainer feedContainer) {
@@ -402,6 +497,14 @@ public class FeedMetadata {
                 List.of((Function<GtfsFareLegRule, Boolean>) GtfsFareLegRule::hasNetworkId)));
   }
 
+  /**
+   * Determines the presence of the "Pathway Signs" feature, which requires at least one record in
+   * `pathways.txt` with a defined value for `signposted_as` field or at least one record in
+   * `pathways.txt` with a defined value for `reversed_signposted_as` field.
+   *
+   * @param feedContainer Feed container to check for the presence of the required file and field
+   *     for the "Levels" feature.
+   */
   private void loadPathwaySignsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Pathway Signs", "Pathways"),
@@ -415,6 +518,16 @@ public class FeedMetadata {
                 List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasReversedSignpostedAs)));
   }
 
+  /**
+   * Determines the presence of the "Pathway Details" feature, which requires at least one record in
+   * `pathways.txt` with a defined value for `max_slope` field or at least one record in
+   * `pathways.txt` with a defined value for `min_width` field or at least one record in
+   * `pathways.txt` with a defined value for `length` field or at least one record in `pathways.txt`
+   * with a defined value for `stair_count` field.
+   *
+   * @param feedContainer Feed container to check for the presence of the required file and fields
+   *     for the "Pathway Details" feature.
+   */
   private void loadPathwayDetailsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Pathway Details", "Pathways"),
@@ -436,12 +549,25 @@ public class FeedMetadata {
                 List.of((Function<GtfsPathway, Boolean>) GtfsPathway::hasStairCount)));
   }
 
+  /**
+   * Determines the presence of the "Pathway Connections" feature, which requires at least one
+   * record in `pathways.txt`.
+   *
+   * @param feedContainer Feed container to check for the presence of the required file for the
+   *     "Pathway Connections" feature.
+   */
   private void loadPathwayConnectionsFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("Pathway Connections", "Pathways"),
         hasAtLeastOneRecordInFile(feedContainer, GtfsPathway.FILENAME));
   }
 
+  /**
+   * Determines the presence of the "In-station Traversal Time" feature, which requires at least one
+   * record in `pathways.txt` with a defined value for `traversal_time` field.
+   *
+   * @param feedContainer
+   */
   private void loadTraversalTimeFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
         new FeatureMetadata("In-station Traversal Time", "Pathways"),
