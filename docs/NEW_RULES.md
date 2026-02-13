@@ -143,10 +143,6 @@ Values for `csvRowNumber` and `tripId` will be different for each generated noti
 
 ### c. Implement the validation rule logic (`FileValidator`)
 
-<!--suppress ALL -->
-
-<a name="examples"/>
-
 Here's the fun part - writing the rule. Because this rule `...extends FileValidator`, we need to define what GTFS files we want - in this case the `trips.txt` and `stop_times.txt` tables.
 
 We do that by declaring the two variables at the top of the class `GtfsTripTableContainer tripTable` and `GtfsStopTimeTableContainer stopTimeTable` (similar `...TableContainer` classes exist for all GTFS files).

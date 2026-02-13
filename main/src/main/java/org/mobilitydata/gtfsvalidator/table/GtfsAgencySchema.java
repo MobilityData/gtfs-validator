@@ -49,4 +49,6 @@ public interface GtfsAgencySchema extends GtfsEntity {
 
   @FieldType(FieldTypeEnum.EMAIL)
   String agencyEmail();
+
+  GtfsCemvSupport cemvSupport();
 }

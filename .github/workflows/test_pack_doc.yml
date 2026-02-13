@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/actions/wrapper-validation@v4
   test:
     needs: [ validate_gradle_wrapper ]
     runs-on: ${{ matrix.os }}
@@ -35,9 +35,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Run tests on Java ${{ matrix.java_version }} and ${{ matrix.os }}
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: testAggregateTestReport --continue
+        uses: gradle/actions/setup-gradle@v4
+      - name: Continue on test report
+        run: ./gradlew testAggregateTestReport --continue
+
       - name: Persist aggregated test reports on failure - Java ${{ matrix.java_version }} on ${{ matrix.os }}
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -66,9 +67,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
+        uses: gradle/actions/setup-gradle@v4
+      - name: Produce shadowJar
+        run: ./gradlew shadowJar
+
       - name: Persist cli app jar
         uses: actions/upload-artifact@v4
         with:
@@ -95,10 +97,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Setup Javadoc build
+        uses: gradle/actions/setup-gradle@v4
       - name: Build Javadoc
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: aggregateJavadoc
+        run: ./gradlew aggregateJavadoc
       - name: Persist javadoc
         uses: actions/upload-artifact@v4
         with:
