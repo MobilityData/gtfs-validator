@@ -33,7 +33,7 @@ public class InconsistentRouteTypeForBlockIdValidator extends FileValidator {
         .asMap()
         .forEach(
             (blockId, trips) -> {
-              if (blockId != null) {
+              if (blockId != null && !blockId.isEmpty()) {
                 List<GtfsRouteType> routeTypes =
                     trips.stream()
                         .map(trip -> routeTable.byRouteId(trip.routeId()))
