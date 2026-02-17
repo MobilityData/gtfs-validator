@@ -1,5 +1,5 @@
 # Canonical GTFS Schedule Validator
-[![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://share.mobilitydata.org/slack)
+[![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg)  [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://share.mobilitydata.org/slack)
 
 
 A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) (static) feed validator, maintained by [MobilityData](https://mobilitydata.org). 
@@ -17,7 +17,7 @@ A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata
 
 
 <p align="center">
-<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ List of rules implemented</a>
+<a href="https://gtfs-validator.mobilitydata.org/rules.html">☑️ List of rules implemented</a>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ This README contains information for the latest version of the project, which is
 This is a cross-platform application written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk.
 2. Checks file integrity, numeric type parsing and ranges.
-3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
+3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 <video src="https://user-images.githubusercontent.com/63653518/234697111-59cbc5de-5bf2-4c49-8474-fd41ac51a745.mp4" controls="controls" style="max-width: 730px;">
@@ -168,18 +168,18 @@ where:
 
 `... c:/myDirectory:/work ...`
 
-The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#using-the-command-line).
 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
 # Validation rules
-* See the list of all the noticed emitted by this validator in [RULES.md](/RULES.md).
+* See the list of all the noticed emitted by this validator [here](https://gtfs-validator.mobilitydata.org/rules.html).
 * If you'd like to map notice names between two validator versions, see [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
 * Possible future rules for:
-  * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Reference)
-  * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Best%20Practices)
-  * [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Community%20rules)
+  * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/GTFS%20Reference)
+  * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/GTFS%20Best%20Practices)
+  * [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Community%20rules)
 
 Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
 
@@ -200,10 +200,10 @@ Instructions to build the project from the command-line using [Gradle](https://g
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md). 
 
 # Acceptance tests
-In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
+In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](https://mobilitydatabase.org). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
 
 # Projects based on this validator
-[CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/gtfs-validator-api) - A thin wrapper around MobilityData/gtfs-validator.
+[CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/data-infra/tree/main/jobs/gtfs-schedule-validator) - A thin wrapper around MobilityData/gtfs-validator.
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
