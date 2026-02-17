@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -38,8 +39,7 @@ public class Arguments {
 
   @Parameter(
       names = {"-o", "--output_base"},
-      description = "Base directory to store the outputs",
-      required = true)
+      description = "Base directory to store the outputs (required if not using --stdout)")
   private String outputBase;
 
   @Parameter(
@@ -110,6 +110,11 @@ public class Arguments {
       description = "Skips check for new validator version")
   private boolean skipValidatorUpdate = false;
 
+  @Parameter(
+      names = {"--stdout"},
+      description = "Output JSON report to stdout instead of writing to files (conflicts with -o)")
+  private boolean stdoutOutput = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -121,7 +126,10 @@ public class Arguments {
       }
     }
     if (outputBase != null) {
-      builder.setOutputDirectory(Path.of(outputBase));
+      builder.setOutputDirectory(Optional.of(Path.of(outputBase)));
+    } else if (stdoutOutput) {
+      // When using stdout, no output directory is needed
+      builder.setOutputDirectory(Optional.empty());
     }
     if (countryCode != null) {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
@@ -141,6 +149,7 @@ public class Arguments {
     builder.setNumThreads(numThreads);
     builder.setPrettyJson(pretty);
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
+    builder.setStdoutOutput(stdoutOutput);
     return builder.build();
   }
 
@@ -158,6 +167,10 @@ public class Arguments {
 
   public boolean getExportNoticeSchema() {
     return exportNoticeSchema;
+  }
+
+  public boolean getStdoutOutput() {
+    return stdoutOutput;
   }
 
   /**
@@ -182,6 +195,16 @@ public class Arguments {
     if (storageDirectory != null && url == null) {
       logger.atSevere().log(
           "CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
+      return false;
+    }
+
+    if (stdoutOutput && outputBase != null) {
+      logger.atSevere().log("Cannot use --stdout with --output_base. Use one or the other.");
+      return false;
+    }
+
+    if (outputBase == null && !stdoutOutput) {
+      logger.atSevere().log("Must provide either --output_base or --stdout");
       return false;
     }
 

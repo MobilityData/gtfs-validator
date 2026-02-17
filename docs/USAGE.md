@@ -26,6 +26,7 @@
 | `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                               |
 | `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                          |
 | `-p`       | `--pretty`                    | Optional               | Pretty JSON validation report. If specified, the JSON validation report will be printed using JSON Pretty print. This does not impact data parsing.                                                                                                           |
+| `--stdout` | `--stdout`                    | Optional               | Output JSON report to stdout instead of writing to files. Use with `-i` or `-u` but not with `-o`. Enables piping to tools like `jq`.                                                                                                                          |
 | `-d`       | `--date`                      | Optional               | The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used.                                                                                       |
 | `-svu`     | `--skip_validator_update`     | Optional               | Skip GTFS version validation update check. If specified, the GTFS version validation will be skipped. By default, the GTFS version validation will be performed.                                                                                              |                                              
 
@@ -60,6 +61,34 @@ java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/outp
  1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
 Please note that since downloading will take time, we recommend validating repeatedly on a local file.
+
+## via stdout output (for scripting and piping)
+
+The `--stdout` option outputs JSON directly to stdout instead of writing files, making it ideal for scripting and piping to other tools.
+
+### Basic stdout usage
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout
+```
+
+### Pipe to jq for processing
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout | jq '.summary.validationTimeSeconds'
+```
+
+### Pretty JSON output to stdout
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout --pretty
+```
+
+### URL-based input with stdout
+``` 
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip --stdout
+```
+
+⚠️ Note that `--stdout` cannot be used with `-o` or `--output_base`. Use one or the other.
+
+⚠️ When using `--stdout`, all system errors and logging output are suppressed to ensure clean JSON output. Only severe-level log messages (hard crashes) will appear on stderr.
 
 ## via GitHub Actions - Run the validator on any gtfs archive available on a public url
 

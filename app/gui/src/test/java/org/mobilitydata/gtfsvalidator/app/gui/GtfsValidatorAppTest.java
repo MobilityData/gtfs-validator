@@ -66,7 +66,7 @@ public class GtfsValidatorAppTest {
 
     ValidationRunnerConfig config = configCaptor.getValue();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://transit/gtfs.zip"));
-    assertThat(config.outputDirectory()).isEqualTo(Path.of("/path/to/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/path/to/output"));
     assertThat(config.numThreads()).isEqualTo(1);
     assertThat(config.countryCode().isUnknown()).isTrue();
   }
@@ -84,7 +84,7 @@ public class GtfsValidatorAppTest {
 
     ValidationRunnerConfig config = configCaptor.getValue();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://transit/gtfs.zip"));
-    assertThat(config.outputDirectory()).isEqualTo(Path.of("/path/to/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/path/to/output"));
     assertThat(config.numThreads()).isEqualTo(5);
     assertThat(config.countryCode().getCountryCode()).isEqualTo("US");
   }

@@ -38,6 +38,9 @@ shadowJar {
         // from minimization.
         exclude(project(':main'))
         exclude(dependency(libs.httpclient5.get().toString()))
+        // Keep SLF4J implementation to avoid warnings
+        // Note that SLF4J comes from some transitive dependencies
+        exclude(dependency('org.slf4j:slf4j-jdk14'))
     }
     // Change the JAR name from 'main' to 'gtfs-validator'
     archiveBaseName = rootProject.name
@@ -55,6 +58,7 @@ dependencies {
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation libs.guava
+    implementation libs.slf4j.jul
 
     testImplementation libs.junit
     testImplementation libs.truth

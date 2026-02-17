@@ -71,3 +71,4 @@ aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspectjrt" }
 aspectjrt-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspectjrtweaver" }
 findbugs = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
+slf4j-jul = { module = "org.slf4j:slf4j-jdk14", version = "1.7.25" }

@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -40,7 +41,9 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assert config.outputDirectory().equals(mockOutputPath);
+    assertTrue(
+        config.outputDirectory().isPresent()
+            && mockOutputPath.equals(config.outputDirectory().get()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -60,7 +63,9 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assert config.outputDirectory().equals(mockOutputPath);
+    assertTrue(
+        config.outputDirectory().isPresent()
+            && mockOutputPath.equals(config.outputDirectory().get()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -85,7 +90,9 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assert config.outputDirectory().equals(mockOutputPath);
+    assertTrue(
+        config.outputDirectory().isPresent()
+            && mockOutputPath.equals(config.outputDirectory().get()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -112,7 +119,9 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assert config.outputDirectory().equals(mockOutputPath);
+    assertTrue(
+        config.outputDirectory().isPresent()
+            && mockOutputPath.equals(config.outputDirectory().get()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 }
