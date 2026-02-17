@@ -231,7 +231,9 @@ public class NoticeFieldsTest {
             "riderCategoryId1",
             "riderCategoryId2",
             "currencyCode",
-            "stopAccess");
+            "stopAccess",
+            "startCsvRowNumber",
+            "endCsvRowNumber");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
