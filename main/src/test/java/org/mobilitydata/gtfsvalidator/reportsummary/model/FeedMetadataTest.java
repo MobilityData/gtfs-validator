@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -126,7 +127,10 @@ public class FeedMetadataTest {
             List.of(calendarDate1, calendarDate2), noticeContainer);
 
     // Call the method
-    feedMetadata.loadServiceWindow(tripContainer, calendarTable, calendarDateTable);
+    feedMetadata.loadServiceWindow(
+        (GtfsTripTableContainer) tripContainer,
+        Optional.of((GtfsCalendarTableContainer) calendarTable),
+        Optional.of((GtfsCalendarDateTableContainer) calendarDateTable));
 
     // Verify the result
     String expectedServiceWindow = "2024-01-02 to 2024-12-31";
