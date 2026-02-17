@@ -15,14 +15,15 @@
  */
 /*
  * A note about publishing and signing.
- * Maven central requires that artifacts be signed. And upload is done to Sonatype.
+ * Maven central requires that artifacts be signed. And upload is done via Maven Central Portal.
  * To publish you will need these environment variables defined:
- *       SONATYPE_TOKEN_USERNAME
- *       SONATYPE_TOKEN_PASSWORD
+ *       MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME
+ *       MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD
  *       MAVEN_GPG_PRIVATE_KEY
  *       MAVEN_GPG_PASSPHRASE
- * Suggestion is to put these in a shell script with restricted read permissions, then source it before calling
- * ./gradlew publish.
+ * If run manually, the suggestion is to put these in a shell script with restricted read permissions,
+ * then source it before calling ./gradlew
+ * If run from a Github action, make sure these environment variables are defined.
  */
 plugins {
     id 'java'
@@ -58,6 +59,7 @@ allprojects {
 
     tasks.withType(Javadoc) {
         options.encoding = 'UTF-8'
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     // All projects that include the 'java` plugin will have a Test task by default.
@@ -82,16 +84,6 @@ subprojects {
     apply plugin: 'java'
     apply plugin: libs.plugins.spotless.get().pluginId
 
-    // Cannot publish a SNAPSHOT. The provided sonatype url will not accept it.
-    tasks.withType(PublishToMavenRepository).all { task ->
-        task.onlyIf {
-            if (project.version.toString().contains('SNAPSHOT')) {
-                throw new GradleException("Publishing is not allowed for SNAPSHOT versions. Currently " + project.version)
-            }
-            true
-        }
-    }
-
     task javadocJar(type: Jar) {
         archiveClassifier.set('javadoc')
         from javadoc
@@ -111,24 +103,29 @@ subprojects {
 
     // These modules require the same publishing configuration, apart from the name of the module
     // Also we want to limit artefact publishing to these modules.
-    if (project.name == 'main' ||
-            project.name == 'core' ||
-            project.name == 'model') {
+    if (project.name == 'main'
+            || project.name == 'core'
+            || project.name == 'model'
+         ) {
         def fullProjectName = 'gtfs-validator-' + project.name
 
         afterEvaluate {
             publishing {
                 repositories {
-                    // This is the sonatype staging repo for maven.
-                    // Once uploaded, the repo needs to be manually closed, which will trigger acceptance tests for
-                    // maven central (but not transfer yet).
-                    // Once successfully closed, the repo is available for testing.
-                    // After testing, it can be manually promoted on the sonatype site, which will then publish to maven central.
                     maven {
-                        url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
-                        credentials {
-                            username System.getenv("SONATYPE_TOKEN_USERNAME")
-                            password System.getenv("SONATYPE_TOKEN_PASSWORD")
+                        // Snapshot uses a different repository than release.
+                        // The publish in that case will upload to Maven Central snapshot repository.
+                        if (version.endsWith('SNAPSHOT')) {
+                            url = 'https://central.sonatype.com/repository/maven-snapshots/'
+                            credentials {
+                                username = System.getenv("MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME")
+                                password = System.getenv("MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD")
+                            }
+                        } else {
+                            // For releases, the publish task does not upload to MavenCentral.
+                            // It just creates the artifacts directory hierarchy on the local disk,
+                            // The actual zipping and uploading is done in the publishToMavenCentral task.
+                            url = "${buildDir}/local-repo"
                         }
                     }
                 }
@@ -172,9 +169,51 @@ subprojects {
                 useInMemoryPgpKeys(System.getenv('MAVEN_GPG_PRIVATE_KEY'), System.getenv('MAVEN_GPG_PASSPHRASE'))
                 sign publishing.publications.mavenJava
             }
+
+
+            tasks.register('publishToMavenCentral') {
+                // We want to do call the publish task only if the version is a release (ie not a snapshot).
+                // Without this conditional, with a snapshot it would do the publish first, then throw the Exception below.
+                // But since the dependsOn is within the conditional, the dependency is not created for snapshot versions
+                // so the publish in that case is never executed.
+                if (!version.toString().endsWith('SNAPSHOT')) {
+                    dependsOn tasks.publish
+                }
+                doFirst {
+                    if (version.toString().endsWith('SNAPSHOT')) {
+                        throw new GradleException("Version \"" + version +
+                                "\" is a snapshot. Cannot publish to Maven Central")
+                    }
+                }
+
+                doLast {
+                    exec {
+                        workingDir project.projectDir
+                        commandLine 'bash', "${project.rootDir}/scripts/publish_to_maven_central.sh", project.name, project.version
+                    }
+                }
+            }
+
+            tasks.register('publishToSnapshotRepository') {
+                // We want to call the publish task only if the version is a snapshot.
+                // Without this conditional, with a release it would do the publish first, then throw the Exception below.
+                // But since the dependsOn is within the conditional, the dependency is not created for release versions
+                // so the publish in that case is never executed.
+                if (version.toString().endsWith('SNAPSHOT')) {
+                    dependsOn tasks.publish
+                }
+                doFirst {
+                    if (!version.toString().endsWith('SNAPSHOT')) {
+                        throw new GradleException("Version \"" + version +
+                                "\" is a NOT a snapshot. Cannot publish to the snapshot repository")
+                    }
+                }
+            }
         }
 
+
     }
+
     compileJava {
         options.compilerArgs << '-parameters'
     }

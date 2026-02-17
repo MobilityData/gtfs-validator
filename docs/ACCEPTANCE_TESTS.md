@@ -102,7 +102,7 @@ The source id can be used to find all datasets versions of a source on the [Mobi
 ## What do we do with the results?
 We follow this process:
 
-<img src="/docs/Acceptance-test-process.jpg" width="750">
+<img src="/docs/images/Acceptance-test-process.jpg" width="750">
 
 ## Performance metrics within the acceptance reports
 
