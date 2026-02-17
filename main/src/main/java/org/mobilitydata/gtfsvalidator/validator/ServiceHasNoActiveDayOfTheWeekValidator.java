@@ -8,6 +8,7 @@ import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarService;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 
 @GtfsValidator
@@ -20,13 +21,13 @@ public class ServiceHasNoActiveDayOfTheWeekValidator extends FileValidator {
   }
 
   private boolean hasNoActiveDayOfTheWeek(GtfsCalendar calendar) {
-    return !calendar.hasMonday()
-        && !calendar.hasTuesday()
-        && !calendar.hasWednesday()
-        && !calendar.hasThursday()
-        && !calendar.hasFriday()
-        && !calendar.hasSaturday()
-        && !calendar.hasSunday();
+    return calendar.monday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.tuesday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.wednesday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.thursday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.friday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.saturday() == GtfsCalendarService.NOT_AVAILABLE
+        && calendar.sunday() == GtfsCalendarService.NOT_AVAILABLE;
   }
 
   @Override
