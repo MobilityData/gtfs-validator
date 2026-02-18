@@ -23,7 +23,7 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
   @Override
   public void validate(GtfsStopTime entity, NoticeContainer noticeContainer) {
     if ((entity.hasStartPickupDropOffWindow() || entity.hasEndPickupDropOffWindow())
-        && (entity.pickupType().equals(GtfsPickupDropOff.ALLOWED)
+        && (entity.pickupType().equals(GtfsPickupDropOff.REGULAR)
             || entity.pickupType().equals(GtfsPickupDropOff.ON_REQUEST_TO_DRIVER))) {
       noticeContainer.addValidationNotice(
           new ForbiddenPickupTypeNotice(
@@ -33,7 +33,7 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
     }
 
     if ((entity.hasStartPickupDropOffWindow() || entity.hasEndPickupDropOffWindow())
-        && entity.dropOffType().equals(GtfsPickupDropOff.ALLOWED)) {
+        && entity.dropOffType().equals(GtfsPickupDropOff.REGULAR)) {
       noticeContainer.addValidationNotice(
           new ForbiddenDropOffTypeNotice(
               entity.csvRowNumber(),
