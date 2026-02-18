@@ -98,7 +98,14 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have
    * decreasing values for `shape_dist_traveled`.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs(GtfsShapeSchema.class),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+      })
   static class DecreasingShapeDistanceNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
