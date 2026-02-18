@@ -19,7 +19,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -65,9 +64,7 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
    *
    * <p>A route's color and `route_text_color` should be contrasting.
    */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs(GtfsRouteSchema.class))
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsRouteSchema.class))
   static class RouteColorContrastNotice extends ValidationNotice {
 
     /** The id of the faulty record. */

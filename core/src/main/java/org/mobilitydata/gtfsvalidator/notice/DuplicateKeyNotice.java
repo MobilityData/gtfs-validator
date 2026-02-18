@@ -21,16 +21,13 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Duplicated entity.
  *
  * <p>The values of the given key and rows are duplicates.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS))
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class DuplicateKeyNotice extends ValidationNotice {
 
   /** The name of the faulty file */

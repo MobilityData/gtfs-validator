@@ -20,7 +20,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Wrong foreign key.
@@ -30,9 +29,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * file (the parent file). The Foreign keys are defined in the specification under "Type" for each
  * file.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS))
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
   /** The name of the file from which reference is made. */
