@@ -29,11 +29,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    urls = {})
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

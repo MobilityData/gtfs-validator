@@ -23,11 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 /** A column name is unknown. */
 @GtfsValidationNotice(
     severity = INFO,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    urls = {})
 public class UnknownColumnNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

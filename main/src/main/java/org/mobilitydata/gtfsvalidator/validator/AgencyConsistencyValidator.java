@@ -121,11 +121,7 @@ public class AgencyConsistencyValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs(GtfsAgencySchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
     /** The row of the faulty record. */

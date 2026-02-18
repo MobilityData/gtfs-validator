@@ -68,11 +68,7 @@ public class TripUsabilityValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class UnusableTripNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

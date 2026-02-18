@@ -28,11 +28,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = WARNING,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    urls = {})
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   /** Name of the faulty file. */

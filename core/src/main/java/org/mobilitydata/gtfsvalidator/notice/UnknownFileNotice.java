@@ -23,11 +23,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 /** A file is unknown. */
 @GtfsValidationNotice(
     severity = INFO,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    urls = {}
+    )
 public class UnknownFileNotice extends ValidationNotice {
 
   /** The name of the unknown file. */

@@ -263,10 +263,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = ERROR,
       files = @FileRefs({GtfsTripSchema.class}),
-      urls =
-          @UrlRef(
-              label = "Original Python validator implementation",
-              url = "https://github.com/google/transitfeed"))
+      urls = {})
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
     /** The row number from `trips.txt` of the first faulty trip. */

@@ -70,11 +70,7 @@ public class ShapeUsageValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class UnusedShapeNotice extends ValidationNotice {
 
     /** The faulty record's id. */

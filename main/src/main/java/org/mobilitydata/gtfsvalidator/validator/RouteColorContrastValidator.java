@@ -68,11 +68,7 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs(GtfsRouteSchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class RouteColorContrastNotice extends ValidationNotice {
 
     /** The id of the faulty record. */

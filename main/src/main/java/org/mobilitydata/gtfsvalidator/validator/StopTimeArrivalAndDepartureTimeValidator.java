@@ -100,11 +100,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = ERROR,
       files = @FileRefs(GtfsStopTimeSchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

@@ -412,11 +412,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
           }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */
@@ -508,11 +504,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
           }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */

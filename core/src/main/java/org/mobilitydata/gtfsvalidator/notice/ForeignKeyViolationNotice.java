@@ -33,11 +33,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 @GtfsValidationNotice(
     severity = ERROR,
     sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    urls = {})
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
   /** The name of the file from which reference is made. */
