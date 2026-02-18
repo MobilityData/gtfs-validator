@@ -22,9 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /** A file is unknown. */
 @GtfsValidationNotice(
-    severity = INFO,
-    urls = {}
-    )
+    severity = INFO)
 public class UnknownFileNotice extends ValidationNotice {
 
   /** The name of the unknown file. */

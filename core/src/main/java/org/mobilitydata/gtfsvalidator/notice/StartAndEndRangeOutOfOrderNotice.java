@@ -27,9 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * <p>Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and
  * `stop_times.txt`.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    urls = {})
+@GtfsValidationNotice(severity = ERROR)
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

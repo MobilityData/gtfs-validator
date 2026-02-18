@@ -27,8 +27,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * recommended.
  */
 @GtfsValidationNotice(
-    severity = WARNING,
-    urls = {})
+  severity = WARNING)
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   /** Name of the faulty file. */

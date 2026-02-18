@@ -22,8 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /** A column name is unknown. */
 @GtfsValidationNotice(
-    severity = INFO,
-    urls = {})
+    severity = INFO)
 public class UnknownColumnNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

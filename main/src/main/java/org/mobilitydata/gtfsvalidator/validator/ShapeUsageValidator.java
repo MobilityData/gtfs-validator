@@ -69,8 +69,7 @@ public class ShapeUsageValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
-      urls = {})
+      files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}))
   static class UnusedShapeNotice extends ValidationNotice {
 
     /** The faulty record's id. */

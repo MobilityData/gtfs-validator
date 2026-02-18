@@ -67,8 +67,7 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs(GtfsRouteSchema.class),
-      urls = {})
+      files = @FileRefs(GtfsRouteSchema.class))
   static class RouteColorContrastNotice extends ValidationNotice {
 
     /** The id of the faulty record. */

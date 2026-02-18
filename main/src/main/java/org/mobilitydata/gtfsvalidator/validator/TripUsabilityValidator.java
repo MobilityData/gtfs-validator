@@ -67,8 +67,7 @@ public class TripUsabilityValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
-      urls = {})
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}))
   static class UnusableTripNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */

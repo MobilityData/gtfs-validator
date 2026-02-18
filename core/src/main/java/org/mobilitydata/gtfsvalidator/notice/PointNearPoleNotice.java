@@ -23,8 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /** A point is too close to the North or South Pole. */
 @GtfsValidationNotice(
-    severity = ERROR,
-    urls = {})
+    severity = ERROR)
 public class PointNearPoleNotice extends ValidationNotice {
 
   /** The name of the affected GTFS file. */

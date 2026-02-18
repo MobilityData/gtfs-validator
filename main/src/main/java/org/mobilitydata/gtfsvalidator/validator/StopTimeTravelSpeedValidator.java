@@ -503,8 +503,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopSchema.class,
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
-          }),
-      urls = {})
+          }))
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */

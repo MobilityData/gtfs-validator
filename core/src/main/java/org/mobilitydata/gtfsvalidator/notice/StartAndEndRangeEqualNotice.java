@@ -30,8 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * for this case.
  */
 @GtfsValidationNotice(
-    severity = ERROR,
-    urls = {})
+    severity = ERROR)
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

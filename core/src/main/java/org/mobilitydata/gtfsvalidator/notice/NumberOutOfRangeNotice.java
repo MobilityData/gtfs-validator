@@ -31,8 +31,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES, DATASET_FILES}),
-    urls = {})
+    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES, DATASET_FILES}))
 public class NumberOutOfRangeNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

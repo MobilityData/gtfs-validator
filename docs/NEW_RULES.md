@@ -56,7 +56,6 @@ public class TripUsabilityValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      urls = {},
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
       )
 
@@ -248,7 +247,6 @@ Coming back to our example:
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      urls = {},
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
   )
 

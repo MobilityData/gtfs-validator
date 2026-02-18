@@ -120,8 +120,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs(GtfsAgencySchema.class),
-      urls = {})
+      files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
     /** The row of the faulty record. */

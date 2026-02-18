@@ -23,8 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /** A point is too close to origin `(0, 0)`. */
 @GtfsValidationNotice(
-    severity = ERROR,
-    urls = {})
+    severity = ERROR)
 public class PointNearOriginNotice extends ValidationNotice {
 
   /** The name of the affected GTFS file. */

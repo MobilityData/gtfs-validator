@@ -30,8 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {})
+    sections = @SectionRefs(FILE_REQUIREMENTS))
 public class DuplicateKeyNotice extends ValidationNotice {
 
   /** The name of the faulty file */

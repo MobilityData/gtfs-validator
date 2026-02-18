@@ -32,8 +32,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {})
+    sections = @SectionRefs(FILE_REQUIREMENTS))
 public class ForeignKeyViolationNotice extends ValidationNotice {
 
   /** The name of the file from which reference is made. */
