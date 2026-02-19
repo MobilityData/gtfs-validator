@@ -232,7 +232,9 @@ public class NoticeFieldsTest {
             "riderCategoryId2",
             "currencyCode",
             "stopAccess",
-            "platformCode");
+            "platformCode",
+            "startCsvRowNumber",
+            "endCsvRowNumber");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
