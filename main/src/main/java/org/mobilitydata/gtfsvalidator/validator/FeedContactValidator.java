@@ -41,12 +41,8 @@ public class FeedContactValidator extends SingleEntityValidator<GtfsFeedInfo> {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @GtfsValidationNotice.FileRefs(GtfsFeedInfo.class),
-      urls = {
-        @GtfsValidationNotice.UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://gtfs.org/schedule/best-practices/#feed_infotxt")
-      })
+      files = @GtfsValidationNotice.FileRefs(GtfsFeedInfo.class))
+
   static class MissingFeedContactEmailAndUrlNotice extends ValidationNotice {
     /** The row number of the validated record. */
     private final int csvRowNumber;
