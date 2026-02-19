@@ -72,8 +72,8 @@ public class ShapeUsageValidator extends FileValidator {
       files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
       urls = {
         @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
+            label = "Shapes Data Guidance",
+            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
       })
   static class UnusedShapeNotice extends ValidationNotice {
 
