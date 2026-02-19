@@ -153,7 +153,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+      })
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -201,7 +206,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = ERROR,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+      })
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -254,7 +264,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+      })
   static class EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice
       extends ValidationNotice {
 
