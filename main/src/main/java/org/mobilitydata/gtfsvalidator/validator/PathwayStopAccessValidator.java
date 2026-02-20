@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStop.PLATFORM_CODE_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsStop.STOP_ACCESS_FIELD_NAME;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -30,6 +32,11 @@ public class PathwayStopAccessValidator extends FileValidator {
       GtfsPathwayTableContainer pathwayTable, GtfsStopTableContainer stopTable) {
     this.pathwayTable = pathwayTable;
     this.stopTable = stopTable;
+  }
+
+  @Override
+  public boolean shouldCallValidate() {
+    return stopTable.hasColumn(STOP_ACCESS_FIELD_NAME) && stopTable.hasColumn(PLATFORM_CODE_FIELD_NAME);
   }
 
   @Override
