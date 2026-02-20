@@ -232,6 +232,7 @@ public class NoticeFieldsTest {
             "riderCategoryId2",
             "currencyCode",
             "stopAccess",
+            "platformCode",
             "startCsvRowNumber",
             "endCsvRowNumber");
   }
