@@ -50,13 +50,14 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   /**
    * Given a list of calendars, map each date to the services it's in range for.
    *
-   * This doesn't take exceptions into account. We also don't consider the days of the week; if a
-   * calendar has a range of June 1st to June 30th and June 3rd happens to be a day of the week where
-   * service is not available, we still associate it with that service id.
+   * <p>This doesn't take exceptions into account. We also don't consider the days of the week; if a
+   * calendar has a range of June 1st to June 30th and June 3rd happens to be a day of the week
+   * where service is not available, we still associate it with that service id.
    *
    * @return The set of service ids for each date.
    */
-  private static Map<LocalDate, Set<String>> getServiceIdsByDateFromCalendars(List<GtfsCalendar> calendars) {
+  private static Map<LocalDate, Set<String>> getServiceIdsByDateFromCalendars(
+      List<GtfsCalendar> calendars) {
     Map<LocalDate, Set<String>> serviceIdsByDate = new HashMap<>();
 
     for (GtfsCalendar calendar : calendars) {
@@ -74,45 +75,50 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   /**
-   * Given some calendars and calendar dates, get the service window. Removed dates are only
-   * taken into account if they apply to all relevant services.
+   * Given some calendars and calendar dates, get the service window. Removed dates are only taken
+   * into account if they apply to all relevant services.
    *
    * @return The service window if there's at least one date with service, and empty otherwise.
    */
   static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
-      List<GtfsCalendar> calendars,
-      List<GtfsCalendarDate> calendarDates) {
-    Map<LocalDate, Set<String>> serviceIdsByDateFromCalendars = getServiceIdsByDateFromCalendars(calendars);
+      List<GtfsCalendar> calendars, List<GtfsCalendarDate> calendarDates) {
+    Map<LocalDate, Set<String>> serviceIdsByDateFromCalendars =
+        getServiceIdsByDateFromCalendars(calendars);
     if (serviceIdsByDateFromCalendars.isEmpty()) {
       return Optional.empty();
     }
 
     // Dates added to at least one service via an exception. We don't check for
     // contradicting exceptions.
-    Set<LocalDate> addedDates = calendarDates
-        .stream()
-        .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED )
-        .map(d -> d.date().getLocalDate())
-        .collect(toSet());
+    Set<LocalDate> addedDates =
+        calendarDates.stream()
+            .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED)
+            .map(d -> d.date().getLocalDate())
+            .collect(toSet());
 
     // Dates removed from all relevant services via an exception.
-    Set<LocalDate> removedDates = calendarDates
-        .stream()
-        .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED)
-        .collect(groupingBy(d -> d.date().getLocalDate(), mapping(GtfsCalendarDate::serviceId, toSet())))
-        .entrySet()
-        .stream()
-        .filter(serviceIdsForDate -> {
-          LocalDate date = serviceIdsForDate.getKey();
-          Set<String> serviceIds = serviceIdsForDate.getValue();
-          // If the date is in `addedDates`, we know there's at least one service
-          // available on that date.
-          return !addedDates.contains(date) && serviceIds.equals(serviceIdsByDateFromCalendars.get(date));
-        })
-        .map(Map.Entry::getKey)
-        .collect(toSet());
+    Set<LocalDate> removedDates =
+        calendarDates.stream()
+            .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED)
+            .collect(
+                groupingBy(
+                    d -> d.date().getLocalDate(), mapping(GtfsCalendarDate::serviceId, toSet())))
+            .entrySet()
+            .stream()
+            .filter(
+                serviceIdsForDate -> {
+                  LocalDate date = serviceIdsForDate.getKey();
+                  Set<String> serviceIds = serviceIdsForDate.getValue();
+                  // If the date is in `addedDates`, we know there's at least one service
+                  // available on that date.
+                  return !addedDates.contains(date)
+                      && serviceIds.equals(serviceIdsByDateFromCalendars.get(date));
+                })
+            .map(Map.Entry::getKey)
+            .collect(toSet());
 
-    Set<LocalDate> servicedDates = SetUtil.difference(serviceIdsByDateFromCalendars.keySet(), removedDates);
+    Set<LocalDate> servicedDates =
+        SetUtil.difference(serviceIdsByDateFromCalendars.keySet(), removedDates);
 
     // Only empty if there are no serviced dates.
     Optional<LocalDate> startDate = servicedDates.stream().min(LocalDate::compareTo);
@@ -153,8 +159,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     }
 
     if (calendars.isPresent() && calendarDates.isPresent()) {
-      return ServiceWindow.fromCalendarsAndCalendarDates(
-          calendars.get(), calendarDates.get());
+      return ServiceWindow.fromCalendarsAndCalendarDates(calendars.get(), calendarDates.get());
     }
 
     return Optional.empty();
