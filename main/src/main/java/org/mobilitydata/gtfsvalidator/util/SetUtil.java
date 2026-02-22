@@ -1,29 +1,21 @@
 package org.mobilitydata.gtfsvalidator.util;
 
-import static java.util.Collections.emptySet;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Set operations that don't mutate the sets.
+ */
 public class SetUtil {
-  /**
-   * Given a collection of sets, compute their intersection (the set of elements present in all of
-   * them).
-   */
-  public static <T> Set<T> intersectAll(Collection<Set<T>> sets) {
-    if (sets.isEmpty()) {
-      return emptySet();
-    }
+  public static <T> Set<T> union(Set<T> s1, Set<T> s2) {
+    Set<T> s = new HashSet<>(s1);
+    s.addAll(s2);
+    return s;
+  }
 
-    Set<T> intersection = null;
-    for (Set<T> set : sets) {
-      if (intersection == null) {
-        intersection = new HashSet<>(set);
-      } else {
-        intersection.retainAll(set);
-      }
-    }
-    return intersection;
+  public static <T> Set<T> difference(Set<T> s1, Set<T> s2) {
+    Set<T> s = new HashSet<>(s1);
+    s.removeAll(s2);
+    return s;
   }
 }

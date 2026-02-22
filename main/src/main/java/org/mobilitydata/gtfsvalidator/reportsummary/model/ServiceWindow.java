@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
@@ -14,18 +15,11 @@ import org.mobilitydata.gtfsvalidator.util.SetUtil;
 
 record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   /**
-   * Given a list of calendars, get the earliest start date and latest end date for calendars
-   * associated with at least one trip.
+   * Given a list of calendars, get the service window.
    *
    * @return The service window if there's at least one calendar, and empty otherwise.
    */
-  static Optional<ServiceWindow> fromCalendars(
-      GtfsTripTableContainer tripTable, List<GtfsCalendar> allCalendars) {
-    List<GtfsCalendar> calendars =
-        allCalendars.stream()
-            .filter(calendar -> !tripTable.byServiceId(calendar.serviceId()).isEmpty())
-            .toList();
-
+  static Optional<ServiceWindow> fromCalendars(List<GtfsCalendar> calendars) {
     // Only empty if there are no calendars.
     Optional<LocalDate> startDate =
         calendars.stream().map(c -> c.startDate().getLocalDate()).min(LocalDate::compareTo);
@@ -35,20 +29,15 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   /**
-   * Given a list of calendar dates, get the earliest and latest dates on which service is available
-   * for at least one route.
+   * Given a list of calendar dates, get the service window.
    *
    * @return The service window if there's at least one date on which service is available, and
    *     empty otherwise.
    */
-  static Optional<ServiceWindow> fromCalendarDates(
-      GtfsTripTableContainer tripTable, List<GtfsCalendarDate> allCalendarDates) {
+  static Optional<ServiceWindow> fromCalendarDates(List<GtfsCalendarDate> allCalendarDates) {
     List<LocalDate> calendarDates =
         allCalendarDates.stream()
-            .filter(
-                d ->
-                    d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED
-                        && !tripTable.byServiceId(d.serviceId()).isEmpty())
+            .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED)
             .map(d -> d.date().getLocalDate())
             .toList();
 
@@ -59,51 +48,80 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   }
 
   /**
-   * Given a list of calendars and a list of calendar dates, get the earliest start date and latest
-   * end date for calendars associated with at least one trip. Exceptions are only taken into
-   * account if they apply to _all_ services.
+   * Given a list of calendars, map each date to the services it's in range for.
    *
-   * @return The service window if there's at least one calendar, and empty otherwise.
+   * This doesn't take exceptions into account. We also don't consider the days of the week; if a
+   * calendar has a range of June 1st to June 30th and June 3rd happens to be a day of the week where
+   * service is not available, we still associate it with that service id.
+   *
+   * @return The set of service ids for each date.
    */
-  static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
-      GtfsTripTableContainer tripTable,
-      List<GtfsCalendar> calendars,
-      List<GtfsCalendarDate> calendarDates) {
-    Optional<ServiceWindow> serviceWindowFromCalendars =
-        ServiceWindow.fromCalendars(tripTable, calendars);
-    if (serviceWindowFromCalendars.isEmpty()) {
-      return Optional.empty();
+  private static Map<LocalDate, Set<String>> getServiceIdsByDateFromCalendars(List<GtfsCalendar> calendars) {
+    Map<LocalDate, Set<String>> serviceIdsByDate = new HashMap<>();
+
+    for (GtfsCalendar calendar : calendars) {
+      LocalDate startDate = calendar.startDate().getLocalDate();
+      LocalDate endDate = calendar.endDate().getLocalDate();
+
+      for (LocalDate date : startDate.datesUntil(endDate.plusDays(1)).toList()) {
+        Set<String> serviceIdsForDate = serviceIdsByDate.getOrDefault(date, new HashSet<>());
+        serviceIdsForDate.add(calendar.serviceId());
+        serviceIdsByDate.put(date, serviceIdsForDate);
+      }
     }
 
-    Map<String, Set<LocalDate>> removedDaysByServiceId =
-        calendarDates.stream()
-            .filter(
-                d ->
-                    d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED
-                        && !tripTable.byServiceId(d.serviceId()).isEmpty())
-            .collect(
-                groupingBy(
-                    GtfsCalendarDate::serviceId, mapping(d -> d.date().getLocalDate(), toSet())));
-
-    // We compute the set of days that are removed across all services in
-    // order to shift the start and end dates.
-    Set<LocalDate> removedDays = SetUtil.intersectAll(removedDaysByServiceId.values());
-
-    LocalDate startDate = serviceWindowFromCalendars.get().startDate();
-    LocalDate endDate = serviceWindowFromCalendars.get().endDate();
-
-    while (removedDays.contains(startDate)) {
-      startDate = startDate.plusDays(1);
-    }
-    while (removedDays.contains(endDate)) {
-      endDate = endDate.minusDays(1);
-    }
-    return Optional.of(new ServiceWindow(startDate, endDate));
+    return serviceIdsByDate;
   }
 
   /**
-   * Given a list of calendars and/or a list of calendar dates, get the earliest and latest dates
-   * where service is available for at least one route.
+   * Given some calendars and calendar dates, get the service window. Removed dates are only
+   * taken into account if they apply to all relevant services.
+   *
+   * @return The service window if there's at least one date with service, and empty otherwise.
+   */
+  static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
+      List<GtfsCalendar> calendars,
+      List<GtfsCalendarDate> calendarDates) {
+    Map<LocalDate, Set<String>> serviceIdsByDateFromCalendars = getServiceIdsByDateFromCalendars(calendars);
+    if (serviceIdsByDateFromCalendars.isEmpty()) {
+      return Optional.empty();
+    }
+
+    // Dates added to at least one service via an exception. We don't check for
+    // contradicting exceptions.
+    Set<LocalDate> addedDates = calendarDates
+        .stream()
+        .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED )
+        .map(d -> d.date().getLocalDate())
+        .collect(toSet());
+
+    // Dates removed from all relevant services via an exception.
+    Set<LocalDate> removedDates = calendarDates
+        .stream()
+        .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_REMOVED)
+        .collect(groupingBy(d -> d.date().getLocalDate(), mapping(GtfsCalendarDate::serviceId, toSet())))
+        .entrySet()
+        .stream()
+        .filter(serviceIdsForDate -> {
+          LocalDate date = serviceIdsForDate.getKey();
+          Set<String> serviceIds = serviceIdsForDate.getValue();
+          // If the date is in `addedDates`, we know there's at least one service
+          // available on that date.
+          return !addedDates.contains(date) && serviceIds.equals(serviceIdsByDateFromCalendars.get(date));
+        })
+        .map(Map.Entry::getKey)
+        .collect(toSet());
+
+    Set<LocalDate> servicedDates = SetUtil.difference(serviceIdsByDateFromCalendars.keySet(), removedDates);
+
+    // Only empty if there are no serviced dates.
+    Optional<LocalDate> startDate = servicedDates.stream().min(LocalDate::compareTo);
+    Optional<LocalDate> endDate = servicedDates.stream().max(LocalDate::compareTo);
+    return startDate.map(d -> new ServiceWindow(d, endDate.get()));
+  }
+
+  /**
+   * Given some calendars and/or calendar dates, get the service window.
    *
    * @return The service window if there's at least one date on which service is available, and
    *     empty otherwise.
@@ -114,21 +132,29 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
       Optional<GtfsCalendarDateTableContainer> calendarDateTable) {
 
     Optional<List<GtfsCalendar>> calendars =
-        calendarTable.map(GtfsCalendarTableContainer::getEntities);
+        calendarTable
+            .map(GtfsCalendarTableContainer::getEntities)
+            .map(List::stream)
+            .map(cs -> cs.filter(c -> !tripTable.byServiceId(c.serviceId()).isEmpty()))
+            .map(Stream::toList);
     Optional<List<GtfsCalendarDate>> calendarDates =
-        calendarDateTable.map(GtfsCalendarDateTableContainer::getEntities);
+        calendarDateTable
+            .map(GtfsCalendarDateTableContainer::getEntities)
+            .map(List::stream)
+            .map(ds -> ds.filter(d -> !tripTable.byServiceId(d.serviceId()).isEmpty()))
+            .map(Stream::toList);
 
     if (calendarDates.isEmpty() && calendars.isPresent()) {
-      return ServiceWindow.fromCalendars(tripTable, calendars.get());
+      return ServiceWindow.fromCalendars(calendars.get());
     }
 
     if (calendarDates.isPresent() && calendars.isEmpty()) {
-      return ServiceWindow.fromCalendarDates(tripTable, calendarDates.get());
+      return ServiceWindow.fromCalendarDates(calendarDates.get());
     }
 
     if (calendars.isPresent() && calendarDates.isPresent()) {
       return ServiceWindow.fromCalendarsAndCalendarDates(
-          tripTable, calendars.get(), calendarDates.get());
+          calendars.get(), calendarDates.get());
     }
 
     return Optional.empty();
