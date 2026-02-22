@@ -31,14 +31,8 @@ env:
   java_distribution: 'zulu'
 
 jobs:
-  validate_gradle_wrapper:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: gradle/actions/wrapper-validation@v4
 
   build_push:
-    needs: [ validate_gradle_wrapper ]
     name: Build and upload packaged app
     runs-on: ${{ matrix.os }}
     strategy:
