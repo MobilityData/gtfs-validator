@@ -267,8 +267,8 @@ public class FeedMetadata {
   }
 
   /**
-   * Determines the presence of the "Cars Allowed" feature, which requires that the field cars_allowed
-   * exists in at least one entry in trips.txt.
+   * Determines the presence of the "Cars Allowed" feature, which requires that the field
+   * cars_allowed exists in at least one entry in trips.txt.
    *
    * @param feedContainer Feed container to check for the presence of the required fields for the
    *     "Cars Allowed" feature.
