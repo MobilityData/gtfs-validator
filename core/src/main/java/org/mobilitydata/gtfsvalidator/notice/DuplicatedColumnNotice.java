@@ -20,21 +20,13 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Duplicated column in CSV.
  *
  * <p>The input file CSV header has the same column name repeated.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class DuplicatedColumnNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
