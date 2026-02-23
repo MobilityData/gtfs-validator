@@ -250,6 +250,7 @@ public class FeedMetadata {
     loadTTSFeature(feedContainer);
     loadBikeAllowanceFeature(feedContainer);
     loadLocationTypesFeature(feedContainer);
+    loadStopAccessFeature(feedContainer);
     loadTraversalTimeFeature(feedContainer);
     loadPathwaySignsFeature(feedContainer);
     loadPathwayDetailsFeature(feedContainer);
@@ -601,6 +602,15 @@ public class FeedMetadata {
             feedContainer,
             GtfsStop.FILENAME,
             List.of((Function<GtfsStop, Boolean>) GtfsStop::hasLocationType)));
+  }
+
+  private void loadStopAccessFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Stop Access", "Location Types"),
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsStop.FILENAME,
+            List.of((Function<GtfsStop, Boolean>) GtfsStop::hasStopAccess)));
   }
 
   private void loadBikeAllowanceFeature(GtfsFeedContainer feedContainer) {
