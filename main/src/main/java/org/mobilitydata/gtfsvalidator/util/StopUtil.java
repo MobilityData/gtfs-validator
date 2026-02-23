@@ -32,6 +32,8 @@ public class StopUtil {
    *
    * <p>Returns (0, 0) if no coordinates are found in parent chain.
    */
+  // TODO: Replace with `getOptionalStopOrParentLatLng` everywhere. Falling back to
+  //   `S2LatLng.CENTER` can (and does) cause bugs.
   public static S2LatLng getStopOrParentLatLng(GtfsStopTableContainer stopTable, String stopId) {
     // Do not do an infinite loop since there may be a data bug and an infinite cycle of parents.
     for (int i = 0; i < 3; ++i) {
@@ -50,6 +52,12 @@ public class StopUtil {
       }
     }
     return S2LatLng.CENTER;
+  }
+
+  public static Optional<S2LatLng> getOptionalStopOrParentLatLng(
+      GtfsStopTableContainer stopTable, String stopId) {
+    return Optional.of(getStopOrParentLatLng(stopTable, stopId))
+        .filter(s2LatLng -> s2LatLng != S2LatLng.CENTER);
   }
 
   /**

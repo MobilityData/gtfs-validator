@@ -17,13 +17,16 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.findDistancesKmBetweenStops;
 import static org.mobilitydata.gtfsvalidator.validator.StopTimeTravelSpeedValidator.getSpeedKphBetweenStops;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
+import com.ibm.icu.impl.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -298,6 +301,8 @@ public final class StopTimeTravelSpeedValidatorTest {
                 GtfsTime.fromString("08:02:30")));
     assertThat(generateNotices(ImmutableList.of(route), ImmutableList.of(trip), stopTimes, stops))
         .containsExactly(
+            createFastTravelBetweenConsecutiveStopsNotice(
+                trip, stopTimes.get(0), stops.get(0), stopTimes.get(2), stops.get(2)),
             createFastTravelBetweenFarStopsNotice(
                 trip,
                 stopTimes.get(0),
@@ -325,5 +330,44 @@ public final class StopTimeTravelSpeedValidatorTest {
     List<GtfsStopTime> stopTimes =
         createStopTimesSameDepartureArrival(ImmutableList.of(GtfsTime.fromString("08:00:00")));
     assertThat(getSpeedKphBetweenStops(2, stopTimes.get(0), stopTimes.get(0))).isEqualTo(120);
+  }
+
+  @Test
+  public void findDistancesKmBetweenStops_geoJsonLocation() {
+    List<S2LatLng> points =
+        ImmutableList.of(
+            S2LatLng.fromDegrees(42.879, -73.19313), // s0
+            S2LatLng.fromDegrees(42.89522, -73.20155)); // 21
+    List<GtfsStop> stops = createStops(points);
+
+    List<Optional<Pair<String, GtfsTime>>> stopIdsAndTimes =
+        ImmutableList.of(
+            Optional.of(Pair.of("s0", GtfsTime.fromString("14:48:00"))),
+            // There's a GeoJSON location between the two stops.
+            Optional.empty(),
+            Optional.of(Pair.of("s1", GtfsTime.fromString("14:56:00"))));
+
+    List<GtfsStopTime> stopTimes = new ArrayList<>(stopIdsAndTimes.size());
+    for (int i = 0; i < stopIdsAndTimes.size(); ++i) {
+      GtfsStopTime.Builder stopTimeBuilder =
+          new GtfsStopTime.Builder().setTripId(TEST_TRIP_ID).setStopSequence(i);
+
+      stopIdsAndTimes
+          .get(i)
+          .ifPresent(
+              t ->
+                  stopTimeBuilder
+                      .setArrivalTime(t.second)
+                      .setDepartureTime(t.second)
+                      .setStopId(t.first));
+      stopTimes.add(stopTimeBuilder.build());
+    }
+
+    double[] distancesKm =
+        findDistancesKmBetweenStops(stopTimes, GtfsStopTableContainer.forEntities(stops, null));
+
+    assertThat(distancesKm).hasLength(2);
+    assertThat(distancesKm[0]).isEqualTo(0.0);
+    assertThat(distancesKm[1]).isEqualTo(S2Earth.getDistanceKm(points.get(0), points.get(1)));
   }
 }
