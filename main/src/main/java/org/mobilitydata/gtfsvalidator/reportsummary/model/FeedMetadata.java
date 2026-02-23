@@ -263,6 +263,23 @@ public class FeedMetadata {
     loadTimeBasedFaresFeature(feedContainer);
     loadZoneBasedFaresFeature(feedContainer);
     loadFixedStopsDemandResponseTransit(feedContainer);
+    loadCarsAllowedFeature(feedContainer);
+  }
+
+  /**
+   * Determines the presence of the "Cars Allowed" feature, which requires that the field
+   * cars_allowed exists in at least one entry in trips.txt.
+   *
+   * @param feedContainer Feed container to check for the presence of the required fields for the
+   *     "Cars Allowed" feature.
+   */
+  private void loadCarsAllowedFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Cars Allowed", null),
+        hasAtLeastOneRecordForFields(
+            feedContainer,
+            GtfsTrip.FILENAME,
+            List.of((Function<GtfsTrip, Boolean>) GtfsTrip::hasCarsAllowed)));
   }
 
   /**
