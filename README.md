@@ -174,7 +174,7 @@ The validator can then be executed via bash commands. See the [preceeding instru
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
 # Validation rules
-* See the list of all the noticed emitted by this validator [here](https://gtfs-validator.mobilitydata.org/rules.html).
+* See the list of all the notices emitted by this validator [here](https://gtfs-validator.mobilitydata.org/rules.html).
 * If you'd like to map notice names between two validator versions, see [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
 * Possible future rules for:
   * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/GTFS%20Reference)
