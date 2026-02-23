@@ -36,7 +36,8 @@ public class PathwayStopAccessValidator extends FileValidator {
 
   @Override
   public boolean shouldCallValidate() {
-    return stopTable.hasColumn(STOP_ACCESS_FIELD_NAME) && stopTable.hasColumn(PLATFORM_CODE_FIELD_NAME);
+    return stopTable.hasColumn(STOP_ACCESS_FIELD_NAME)
+        && stopTable.hasColumn(PLATFORM_CODE_FIELD_NAME);
   }
 
   @Override
@@ -52,6 +53,10 @@ public class PathwayStopAccessValidator extends FileValidator {
               }
             });
 
+    if (externalAccessStopIdToPlatformCode.isEmpty()) {
+      return;
+    }
+
     pathwayTable
         .getEntities()
         .forEach(
@@ -63,6 +68,7 @@ public class PathwayStopAccessValidator extends FileValidator {
                   && !fromStopId.isBlank()
                   && externalAccessStopIdToPlatformCode.containsKey(fromStopId)
                   && emittedStopIds.add(fromStopId)) {
+                // add() returns false if already present, preventing duplicate notices
                 noticeContainer.addValidationNotice(
                     new PathwayToStopWithAccessOutsideOfStationPathwaysNotice(
                         pathway.csvRowNumber(),
