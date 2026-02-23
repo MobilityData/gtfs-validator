@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
-import static org.mobilitydata.gtfsvalidator.table.GtfsStop.PLATFORM_CODE_FIELD_NAME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStop.STOP_ACCESS_FIELD_NAME;
 
 import java.util.*;
