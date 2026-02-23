@@ -139,6 +139,69 @@ public class FeedMetadataTest {
         feedMetadata.feedInfo.get(JsonReportFeedInfo.FEED_INFO_SERVICE_WINDOW));
   }
 
+  @Test
+  public void testFromCalendarsAndCalendarDates() {
+    List<GtfsCalendar> calendars =
+        List.of(
+            createCalendar(
+                1,
+                "service1",
+                GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+                GtfsDate.fromLocalDate(LocalDate.of(2026, 2, 17))),
+            createCalendar(
+                2,
+                "service2",
+                GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+                GtfsDate.fromLocalDate(LocalDate.of(2026, 4, 3))),
+            createCalendar(
+                3,
+                "service3",
+                GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+                GtfsDate.fromLocalDate(LocalDate.of(2026, 8, 11))),
+            createCalendar(
+                4,
+                "service4",
+                GtfsDate.fromLocalDate(LocalDate.of(2026, 1, 1)),
+                GtfsDate.fromLocalDate(LocalDate.of(2026, 8, 11))));
+
+    GtfsCalendarDate calendarDate1 =
+        createCalendarDate(
+            1,
+            "service1",
+            GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+            GtfsCalendarDateExceptionType.SERVICE_REMOVED);
+
+    GtfsCalendarDate calendarDate2 =
+        createCalendarDate(
+            2,
+            "service2",
+            GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+            GtfsCalendarDateExceptionType.SERVICE_REMOVED);
+
+    GtfsCalendarDate calendarDate3 =
+        createCalendarDate(
+            3,
+            "service3",
+            GtfsDate.fromLocalDate(LocalDate.of(2025, 10, 10)),
+            GtfsCalendarDateExceptionType.SERVICE_REMOVED);
+
+    assertEquals(
+        Optional.of(new ServiceWindow(LocalDate.of(2025, 10, 10), LocalDate.of(2026, 8, 11))),
+        ServiceWindow.fromCalendarsAndCalendarDates(
+            calendars,
+            // 2/3 services that start on 2025-10-10 have that date removed, so the service
+            // window should still start on that date.
+            List.of(calendarDate1, calendarDate2)));
+
+    assertEquals(
+        Optional.of(new ServiceWindow(LocalDate.of(2025, 10, 11), LocalDate.of(2026, 8, 11))),
+        ServiceWindow.fromCalendarsAndCalendarDates(
+            calendars,
+            // 3/3 services that start on 2025-10-10 have that date removed, so the service
+            // window should start a day later.
+            List.of(calendarDate1, calendarDate2, calendarDate3)));
+  }
+
   private void validateSpecFeature(
       String specFeature,
       Boolean expectedValue,
