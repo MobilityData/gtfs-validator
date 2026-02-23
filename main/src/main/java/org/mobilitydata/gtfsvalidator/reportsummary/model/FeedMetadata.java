@@ -203,7 +203,7 @@ public class FeedMetadata {
 
   private void loadCarsAllowedFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        new FeatureMetadata("Cars Allowed", "Base"),
+        new FeatureMetadata("Cars Allowed", null),
         hasAtLeastOneRecordForFields(
             feedContainer,
             GtfsTrip.FILENAME,
