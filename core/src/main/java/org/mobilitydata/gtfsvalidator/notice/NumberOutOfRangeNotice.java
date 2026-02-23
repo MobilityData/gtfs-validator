@@ -22,7 +22,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Out of range value.
@@ -31,12 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  */
 @GtfsValidationNotice(
     severity = ERROR,
-    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES, DATASET_FILES}),
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+    sections = @SectionRefs({FILE_REQUIREMENTS, FILED_TYPES, DATASET_FILES}))
 public class NumberOutOfRangeNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

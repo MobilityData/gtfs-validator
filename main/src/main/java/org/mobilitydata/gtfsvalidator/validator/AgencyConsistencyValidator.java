@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -118,14 +117,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    *
    * <p>Agencies from GTFS `agency.txt` have been found to have different languages.
    */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs(GtfsAgencySchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
     /** The row of the faulty record. */

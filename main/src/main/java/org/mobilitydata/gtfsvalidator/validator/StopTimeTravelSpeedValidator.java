@@ -30,7 +30,6 @@ import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -439,11 +438,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
           }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */
@@ -534,12 +529,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopSchema.class,
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
-          }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+          }))
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */
