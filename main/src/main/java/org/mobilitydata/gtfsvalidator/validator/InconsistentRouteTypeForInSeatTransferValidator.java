@@ -50,6 +50,17 @@ public class InconsistentRouteTypeForInSeatTransferValidator extends FileValidat
             });
   }
 
+  @Override
+  public boolean shouldCallValidate() {
+    return transferTable != null
+        && !transferTable.isMissingFile()
+        && transferTable.hasColumn(GtfsTransfer.FROM_ROUTE_ID_FIELD_NAME)
+        && transferTable.hasColumn(GtfsTransfer.TO_ROUTE_ID_FIELD_NAME)
+        && transferTable.hasColumn(GtfsTransfer.TRANSFER_TYPE_FIELD_NAME)
+        && routeTable != null
+        && !routeTable.isMissingFile();
+  }
+
   /** An in-seat transfer should occur in the same route mode. */
   @GtfsValidationNotice(
       severity = SeverityLevel.WARNING,

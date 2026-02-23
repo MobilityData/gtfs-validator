@@ -51,6 +51,15 @@ public class InconsistentRouteTypeForBlockIdValidator extends FileValidator {
             });
   }
 
+  @Override
+  public boolean shouldCallValidate() {
+    return tripTable != null
+        && !tripTable.isMissingFile()
+        && tripTable.hasColumn(GtfsTrip.BLOCK_ID_FIELD_NAME)
+        && routeTable != null
+        && !routeTable.isMissingFile();
+  }
+
   /** A block should have the same route mode. */
   @GtfsValidationNotice(
       severity = WARNING,
