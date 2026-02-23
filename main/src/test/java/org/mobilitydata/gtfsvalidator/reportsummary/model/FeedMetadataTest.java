@@ -458,40 +458,420 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void containsFareMediaFeatureTest() throws IOException, InterruptedException {
-    String content = "fare_media_id, fare_media_type\n" + "dummyFareId, 0\n";
-    createDataFile(GtfsFareMedia.FILENAME, content);
+  public void containsRiderCategoriesFeatureTest() throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n"
+            + "rider::GP,General Public,1,https://www.example.com\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
     validateSpecFeature(
-        "Fare Media",
+        "Rider Categories",
         true,
-        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(
+            GtfsRiderCategoriesTableDescriptor.class, GtfsFareProductTableDescriptor.class));
   }
 
   @Test
-  public void omitsFareMediaFeatureTest() throws IOException, InterruptedException {
-    String content = "fare_media_id, fare_media_type\n";
-    createDataFile(GtfsFareMedia.FILENAME, content);
+  public void containsRouteBasedFaresFeatureWithNetworkFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsNetwork.FILENAME, "network_id,network_name\n" + "id,name\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "leg,network,,,,,product,2\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsFareLegRuleTableDescriptor.class,
+            GtfsNetworkTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void containsRouteBasedFaresFeatureWithRouteNetworkIdFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRoute.FILENAME,
+        "route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color,route_text_color,network_id\n"
+            + "1,1,1,name,3,,74CFE2,000000,network\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "leg,network,,,,,product,2\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsRouteTableDescriptor.class,
+            GtfsNetworkTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRouteBasedFaresFeatureNoNetworkFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash, 1.00,EUR,rider::GP\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "leg,network,,,,,product,2\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        false,
+        ImmutableList.of(
+            GtfsFareLegRuleTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRouteBasedFaresFeatureNoFareLegRuleFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsNetwork.FILENAME, "network_id,network_name\n" + "id,name\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,rider::GP\n");
+    validateSpecFeature(
+        "Route-Based Fares",
+        false,
+        ImmutableList.of(GtfsNetworkTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRiderCategoriesFeatureNoRiderCategoriesTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n");
+    validateSpecFeature(
+        "Rider Categories", false, ImmutableList.of(GtfsRiderCategoriesTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRiderCategoriesFeatureNoFareProductsTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n"
+            + "rider::GP,General Public,1,https://www.example.com\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n");
+
+    validateSpecFeature(
+        "Rider Categories",
+        false,
+        ImmutableList.of(
+            GtfsRiderCategoriesTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsRiderCategoriesFeatureFareProductsNoRiderCategoryTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsRiderCategories.FILENAME,
+        "rider_category_id,rider_category_name,is_default_fare_category,eligibility_url\n"
+            + "rider::GP,General Public,1,https://www.example.com\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency,rider_category_id\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR,\n");
+
+    validateSpecFeature(
+        "Rider Categories",
+        false,
+        ImmutableList.of(
+            GtfsRiderCategoriesTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void containsTimeBasedFaresFeatureWithFromTimeframeTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsTimeframe.FILENAME,
+        "timeframe_group_id,start_time,end_time,service_id\n" + "weekday_timeframe,,,id\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_timeframe_group_id,leg_group_id,network_id,from_area_id,to_area_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "weekday_timeframe,leg,network,,,,product,2\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsTimeframeTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void containsTimeBasedFaresFeatureWithToTimeframeTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsTimeframe.FILENAME,
+        "timeframe_group_id,start_time,end_time,service_id\n" + "weekday_timeframe,,,id\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "to_timeframe_group_id,leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "weekday_timeframe,leg,network,,,,product,2\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsTimeframeTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsTimeBasedFaresFeatureWithNoFromToTimeframeTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsTimeframe.FILENAME,
+        "timeframe_group_id,start_time,end_time,service_id\n" + "weekday_timeframe,,,id\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "to_timeframe_group_id,leg_group_id,network_id,from_area_id,to_area_id,from_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",leg,network,,,,product,2\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        false,
+        ImmutableList.of(
+            GtfsTimeframeTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsTimeBasedFaresFeatureNoTimeframeFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_timeframe_group_id,leg_group_id,network_id,from_area_id,to_area_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "weekday_timeframe,leg,network,,,,product,2\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        false,
+        ImmutableList.of(
+            GtfsFareProductTableDescriptor.class, GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsTimeBasedFaresFeatureNoFareLegRuleFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsTimeframe.FILENAME,
+        "timeframe_group_id,start_time,end_time,service_id\n" + "weekday_timeframe,,,id\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        false,
+        ImmutableList.of(GtfsTimeframeTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsTimeBasedFaresFeatureNoFareProductFileTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsTimeframe.FILENAME,
+        "timeframe_group_id,start_time,end_time,service_id\n" + "weekday_timeframe,,,id\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_timeframe_group_id,leg_group_id,network_id,from_area_id,to_area_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "weekday_timeframe,leg,network,,,,product,2\n");
+    validateSpecFeature(
+        "Time-Based Fares",
+        false,
+        ImmutableList.of(GtfsTimeframeTableDescriptor.class, GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void containsFareMediaFeatureTest() throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,cash,1.00,EUR\n");
+    validateSpecFeature(
+        "Fare Media",
+        true,
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaFeatureNoFareMediaTest() throws IOException, InterruptedException {
+    createDataFile(GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n");
+    validateSpecFeature("Fare Media", false, ImmutableList.of(GtfsFareMediaTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaFeatureNoFareProductsTest() throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n");
+
     validateSpecFeature(
         "Fare Media",
         false,
-        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFareMediaFeatureFareProductsNoFareMediaTest()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsFareMedia.FILENAME, "fare_media_id, fare_media_type\n" + "dummyFareMediaId, 0\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+
+    validateSpecFeature(
+        "Fare Media",
+        false,
+        ImmutableList.of(GtfsFareMediaTableDescriptor.class, GtfsFareProductTableDescriptor.class));
   }
 
   // Zone-Based Fares
   @Test
-  public void containsZoneBasedFaresFeatureTest() throws IOException, InterruptedException {
-    String content = "area_id, stop_id\n" + "dummyArea, dummyStop\n";
-    createDataFile(GtfsArea.FILENAME, content);
+  public void containsZoneBasedFaresFeatureWithAreaFromTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "area_from,weekday_timeframe,leg,network,,,product,2\n");
     validateSpecFeature(
         "Zone-Based Fares",
         true,
-        ImmutableList.of(GtfsAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+        ImmutableList.of(
+            GtfsAreaTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
   }
 
   @Test
-  public void omitsZoneBasedFaresFeatureTest() throws IOException, InterruptedException {
-    String content = "area_id, stop_id\n";
-    createDataFile(GtfsStopArea.FILENAME, content);
+  public void containsZoneBasedFaresFeatureWithAreaToTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        true,
+        ImmutableList.of(
+            GtfsAreaTableDescriptor.class,
+            GtfsFareProductTableDescriptor.class,
+            GtfsFareLegRuleTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoAreaTest() throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n"
+            + "ticket_1h_cash,Ticket 1h,,1.00,EUR\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoFareProductTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",area_to,weekday_timeframe,leg,network,,product,2\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoFareLegTest() throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + "\n");
+    validateSpecFeature(
+        "Zone-Based Fares",
+        false,
+        ImmutableList.of(GtfsStopAreaTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsZoneBasedFaresFeatureNoAreaFromtoTest()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsArea.FILENAME, "area_id, stop_id\n" + "dummyArea, dummyStop\n");
+    createDataFile(
+        GtfsFareProduct.FILENAME,
+        "fare_product_id,fare_product_name,fare_media_id,amount,currency\n" + "\n");
+    createDataFile(
+        GtfsFareLegRule.FILENAME,
+        "from_area_id,to_area_id,from_timeframe_group_id,leg_group_id,network_id,to_timeframe_group_id,fare_product_id,rule_priority\n"
+            + ",,weekday_timeframe,leg,network,,product,2\n");
     validateSpecFeature(
         "Zone-Based Fares",
         false,
@@ -581,5 +961,74 @@ public class FeedMetadataTest {
             GtfsAgencyTableDescriptor.class,
             GtfsStopTimeTableDescriptor.class,
             GtfsTripTableDescriptor.class));
+  }
+
+  @Test
+  public void containsFixedStopsDemandResponseTransitFeatureWithDemandResponseStopsAndStopTimes()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        true,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenNoLocationGroups()
+      throws IOException, InterruptedException {
+    createDataFile(GtfsLocationGroups.FILENAME, "location_group_id,location_group_name\n");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenNoStopTimes()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsFixedStopsDemandResponseTransitFeatureWhenStopTimesWithNoLocationGroupId()
+      throws IOException, InterruptedException {
+    createDataFile(
+        GtfsLocationGroups.FILENAME,
+        "location_group_id,location_group_name\n" + "location_group_id,location_group_name");
+    createDataFile(
+        GtfsStopTime.FILENAME,
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence,location_group_id\n"
+            + "trip_1,01:00:00,01:10:00,,1,\n");
+
+    validateSpecFeature(
+        "Fixed-Stops Demand Responsive Transit",
+        false,
+        ImmutableList.of(
+            GtfsLocationGroupsTableDescriptor.class, GtfsStopTimeTableDescriptor.class));
   }
 }
