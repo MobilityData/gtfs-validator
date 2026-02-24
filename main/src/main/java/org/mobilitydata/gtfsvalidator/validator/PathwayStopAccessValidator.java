@@ -35,7 +35,7 @@ public class PathwayStopAccessValidator extends FileValidator {
 
   @Override
   public boolean shouldCallValidate() {
-    return stopTable.hasColumn(STOP_ACCESS_FIELD_NAME);
+    return stopTable != null && stopTable.hasColumn(STOP_ACCESS_FIELD_NAME);
   }
 
   @Override
