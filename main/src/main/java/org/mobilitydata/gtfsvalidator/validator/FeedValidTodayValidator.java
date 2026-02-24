@@ -68,7 +68,7 @@ public class FeedValidTodayValidator extends FileValidator {
    * The feed covers the future only.
    *
    * <p>The minimum `start_date` in `feed_info.txt` is greater than today's date, indicating the
-   * feed is not yet valid.
+   * feed covers the future only.
    */
   @GtfsValidationNotice(severity = INFO, files = @FileRefs(GtfsFeedInfoSchema.class))
   static class FutureFeedNotice extends ValidationNotice {
