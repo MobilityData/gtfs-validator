@@ -83,14 +83,26 @@ public class FeedExpirationDateValidatorTest {
   }
 
   @Test
-  public void feedExpiring30DaysFromNowShouldGenerateNotice() {
-    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)))))
+  public void feedExpiring29DaysFromNowShouldGenerateNotice() {
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(29)))))
         .containsExactly(
             new FeedExpirationDate30DaysNotice(
                 1,
                 GtfsDate.fromLocalDate(TEST_NOW),
-                GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)),
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(29)),
                 GtfsDate.fromLocalDate(TEST_NOW.plusDays(30))));
+  }
+
+  @Test
+  public void feedExpiring30DaysFromNowShouldGenerateNotice() {
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(30)))))
+        .isEmpty();
+  }
+
+  @Test
+  public void feedExpiring31DaysFromNowShouldGenerateNotice() {
+    assertThat(validateFeedInfo(createFeedInfo(GtfsDate.fromLocalDate(TEST_NOW.plusDays(31)))))
+        .isEmpty();
   }
 
   @Test
