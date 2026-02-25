@@ -30,6 +30,9 @@ After joining, you can add the `gtfs-validators` channel and introduce yourself 
 ## Contributor meeting
 We host a monthly contributor meeting to keep track of current projects, discuss requirements, unblock contributors, and organize cross-organization projects. Anybody can join, even if it's just to listen. If you'd like to participate, please reach-out to Isabelle via Slack.
 
+## Project canvas
+The project canvas (planning board) is available on [GitHub Projects](https://github.com/MobilityData/gtfs-validator/projects). It gives an overview of ongoing and upcoming work, and is a great place to see what is being planned for the project.
+
 ## Roles and Responsibilities
 **Contributors**
 
