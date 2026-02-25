@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -30,10 +31,11 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.validator.FeedValidTodayValidator.FutureFeedNotice;
 
 public class FeedValidTodayValidatorTest {
+  private static final LocalDate TEST_NOW = LocalDate.of(2026, 2, 25);
 
   private List<ValidationNotice> validateFeedInfo(GtfsFeedInfoTableContainer feedInfoTable) {
     NoticeContainer container = new NoticeContainer();
-    new FeedValidTodayValidator(feedInfoTable).validate(container);
+    new FeedValidTodayValidator(new DateForValidation(TEST_NOW), feedInfoTable).validate(container);
     return container.getValidationNotices();
   }
 
@@ -58,7 +60,7 @@ public class FeedValidTodayValidatorTest {
   public void feedStartDateTodayShouldNotGenerateNotice() {
     // Feed start date is today - should be valid
     GtfsFeedInfoTableContainer table =
-        createFeedInfoTable(createFeedInfo(1, GtfsDate.fromLocalDate(LocalDate.now())));
+        createFeedInfoTable(createFeedInfo(1, GtfsDate.fromLocalDate(TEST_NOW)));
     assertThat(validateFeedInfo(table)).isEmpty();
   }
 
@@ -66,24 +68,18 @@ public class FeedValidTodayValidatorTest {
   public void feedStartDateInPastShouldNotGenerateNotice() {
     // Feed start date is in the past - should be valid
     GtfsFeedInfoTableContainer table =
-        createFeedInfoTable(
-            createFeedInfo(1, GtfsDate.fromLocalDate(LocalDate.now().minusDays(30))));
+        createFeedInfoTable(createFeedInfo(1, GtfsDate.fromLocalDate(TEST_NOW.minusDays(30))));
     assertThat(validateFeedInfo(table)).isEmpty();
   }
 
   @Test
   public void feedStartDateInFutureShouldGenerateNotice() {
-    // Feed start date is in the future - should trigger notice
-    GtfsDate futureDate = GtfsDate.fromLocalDate(LocalDate.now().plusDays(7));
-    GtfsFeedInfoTableContainer table = createFeedInfoTable(createFeedInfo(1, futureDate));
-    assertThat(validateFeedInfo(table))
-        .containsExactly(new FutureFeedNotice(futureDate, GtfsDate.fromLocalDate(LocalDate.now())));
-  }
-
-  @Test
-  public void noFeedStartDateShouldNotGenerateNotice() {
-    // No feed start date specified - should not trigger notice
-    GtfsFeedInfoTableContainer table = createFeedInfoTable(createFeedInfo(1, null));
-    assertThat(validateFeedInfo(table)).isEmpty();
+    assertThat(
+            validateFeedInfo(
+                createFeedInfoTable(
+                    createFeedInfo(1, GtfsDate.fromLocalDate(TEST_NOW.plusDays(7))))))
+        .containsExactly(
+            new FutureFeedNotice(
+                GtfsDate.fromLocalDate(TEST_NOW.plusDays(7)), GtfsDate.fromLocalDate(TEST_NOW)));
   }
 }

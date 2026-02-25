@@ -17,11 +17,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
-import java.time.LocalDate;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
@@ -39,16 +39,19 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 @GtfsValidator
 public class FeedValidTodayValidator extends FileValidator {
 
+  private final DateForValidation dateForValidation;
   private final GtfsFeedInfoTableContainer feedInfoTable;
 
   @Inject
-  FeedValidTodayValidator(GtfsFeedInfoTableContainer feedInfoTable) {
+  FeedValidTodayValidator(
+      DateForValidation dateForValidation, GtfsFeedInfoTableContainer feedInfoTable) {
+    this.dateForValidation = dateForValidation;
     this.feedInfoTable = feedInfoTable;
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    GtfsDate currentDate = GtfsDate.fromLocalDate(LocalDate.now());
+    GtfsDate currentDate = GtfsDate.fromLocalDate(dateForValidation.getDate());
 
     GtfsDate minFeedStartDate = null;
     for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
