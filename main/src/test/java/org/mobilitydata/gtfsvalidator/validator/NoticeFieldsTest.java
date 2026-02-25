@@ -240,7 +240,8 @@ public class NoticeFieldsTest {
             "stopAccess",
             "platformCode",
             "startCsvRowNumber",
-            "endCsvRowNumber");
+            "endCsvRowNumber",
+            "feedStartDate");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {
