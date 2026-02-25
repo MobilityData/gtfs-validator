@@ -33,18 +33,22 @@ public class MissingRequiredAgencyIdValidator extends FileValidator {
   }
 
   @Override
-  public void validate(NoticeContainer noticeContainer) {
+  public boolean shouldCallValidate() {
     if (agencyTable == null) {
       // agencyTable is a required file, so if it's null there will be a notice issued by another
       // validator.
-      return;
+      return false;
     }
     // Check if there are more than one agency in the agency table
-    if (agencyTable.getEntities().size() <= 1) {
-      return;
-    }
+    return agencyTable.getEntities().size() > 1;
+  }
 
-    // There is, check if all agencyId fields have an actual value in the 3 tables.
+  @Override
+  public void validate(NoticeContainer noticeContainer) {
+
+    // At this point we know that there is at least 2 agencies in agency.txt (as per
+    // shouldCallValidate).
+    // Check if all agencyId fields have an actual value in the 3 tables.
     for (GtfsAgency agency : agencyTable.getEntities()) {
       addNoticeIfMissingAgencyId(
           agencyTable.gtfsFilename(),

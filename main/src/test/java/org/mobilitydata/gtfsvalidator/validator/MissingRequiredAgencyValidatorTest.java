@@ -39,7 +39,7 @@ public class MissingRequiredAgencyValidatorTest {
         .build();
   }
 
-  private static List<ValidationNotice> generateNotices(
+  private static MissingRequiredAgencyIdValidator createValidator(
       List<GtfsAgency> agencies, List<GtfsRoute> routes, List<GtfsFareAttribute> fares) {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsAgencyTableContainer agencyTable =
@@ -48,12 +48,47 @@ public class MissingRequiredAgencyValidatorTest {
         GtfsRouteTableContainer.forEntities(routes, noticeContainer);
     GtfsFareAttributeTableContainer fareTable =
         GtfsFareAttributeTableContainer.forEntities(fares, noticeContainer);
-    new MissingRequiredAgencyIdValidator(agencyTable, routeTable, fareTable)
-        .validate(noticeContainer);
+    return new MissingRequiredAgencyIdValidator(agencyTable, routeTable, fareTable);
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsAgency> agencies, List<GtfsRoute> routes, List<GtfsFareAttribute> fares) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    MissingRequiredAgencyIdValidator validator = createValidator(agencies, routes, fares);
+    validator.validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
-  // ── single agency → early return, no notices ─────────────────────────────
+  // ── shouldCallValidate ───────────────────────────────────────────────────
+
+  @Test
+  public void shouldCallValidate_singleAgency_returnsFalse() {
+    MissingRequiredAgencyIdValidator validator =
+        createValidator(
+            ImmutableList.of(agencyWithId(1, "a1", "Agency 1")),
+            ImmutableList.of(),
+            ImmutableList.of());
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_noAgencies_returnsFalse() {
+    MissingRequiredAgencyIdValidator validator =
+        createValidator(ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_multipleAgencies_returnsTrue() {
+    MissingRequiredAgencyIdValidator validator =
+        createValidator(
+            ImmutableList.of(agencyWithId(1, "a1", "Agency 1"), agencyWithId(2, "a2", "Agency 2")),
+            ImmutableList.of(),
+            ImmutableList.of());
+    assertThat(validator.shouldCallValidate()).isTrue();
+  }
+
+  // ── single agency → shouldCallValidate is false, no notices ──────────────
 
   @Test
   public void singleAgencyWithId_noNotice() {
@@ -67,13 +102,15 @@ public class MissingRequiredAgencyValidatorTest {
 
   @Test
   public void singleAgencyWithoutId_noNotice() {
-    // Only one agency ⇒ the validator returns early (size <= 1).
-    assertThat(
-            generateNotices(
-                ImmutableList.of(agencyWithId(1, null, "Solo Agency")),
-                ImmutableList.of(routeWithAgencyId(1, "r1", null)),
-                ImmutableList.of(fareWithAgencyId(1, "f1", null))))
-        .isEmpty();
+    // Only one agency ⇒ shouldCallValidate returns false, so validate would not be called
+    // by the framework. Calling validate directly still works because the iteration finds
+    // a missing id, but the framework gate prevents it from running.
+    MissingRequiredAgencyIdValidator validator =
+        createValidator(
+            ImmutableList.of(agencyWithId(1, null, "Solo Agency")),
+            ImmutableList.of(routeWithAgencyId(1, "r1", null)),
+            ImmutableList.of(fareWithAgencyId(1, "f1", null)));
+    assertThat(validator.shouldCallValidate()).isFalse();
   }
 
   // ── multiple agencies, all ids present → no notices ──────────────────────
