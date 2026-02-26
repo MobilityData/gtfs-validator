@@ -1,10 +1,10 @@
-package org.mobilitydata.gtfsvalidator.notice.deprecated;
+package org.mobilitydata.gtfsvalidator.deprecated;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastDayNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsBookingRulesSchema;
+import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator;
 
 /**
  * The `prior_notice_last_day` and the `prior_notice_last_time` values are required for prior day
@@ -12,13 +12,14 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
  */
 @GtfsValidationNotice(
     severity = SeverityLevel.ERROR,
+    files = @GtfsValidationNotice.FileRefs(GtfsBookingRulesSchema.class),
     deprecated = true,
     deprecationVersion = "7.0.0",
     deprecationReason =
         "Separated into `missing_prior_notice_last_day` and `missing_prior_notice_last_time` notices",
     replacementNotices = {
-      MissingPriorNoticeLastDayNotice.class,
-      MissingPriorNoticeLastTimeNotice.class
+      BookingRulesEntityValidator.MissingPriorNoticeLastDayNotice.class,
+      BookingRulesEntityValidator.MissingPriorNoticeLastTimeNotice.class
     })
 public class MissingPriorDayBookingFieldValueNotice extends ValidationNotice {
   /** The row number of the faulty record. */
