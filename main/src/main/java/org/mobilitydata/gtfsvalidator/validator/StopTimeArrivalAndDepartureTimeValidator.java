@@ -22,7 +22,6 @@ import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -97,14 +96,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
    * <p>For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede
    * the `departure_time` of n-th stoptime in sequence in `stop_times.txt`.
    */
-  @GtfsValidationNotice(
-      severity = ERROR,
-      files = @FileRefs(GtfsStopTimeSchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsStopTimeSchema.class))
   static class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
