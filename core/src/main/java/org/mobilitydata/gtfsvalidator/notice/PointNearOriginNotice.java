@@ -19,16 +19,9 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /** A point is too close to origin `(0, 0)`. */
-@GtfsValidationNotice(
-    severity = ERROR,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR)
 public class PointNearOriginNotice extends ValidationNotice {
 
   /** The name of the affected GTFS file. */

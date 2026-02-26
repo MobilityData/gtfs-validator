@@ -19,7 +19,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Two date or time fields are out of order.
@@ -27,13 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * <p>Date or time fields have been found out of order in `calendar.txt`, `feed_info.txt` and
  * `stop_times.txt`.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR)
 public class StartAndEndRangeOutOfOrderNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
