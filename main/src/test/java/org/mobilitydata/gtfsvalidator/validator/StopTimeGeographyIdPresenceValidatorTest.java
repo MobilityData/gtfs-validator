@@ -5,7 +5,6 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeographyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -26,7 +25,9 @@ public class StopTimeGeographyIdPresenceValidatorTest {
     StopTimesGeographyIdPresenceValidator validator = new StopTimesGeographyIdPresenceValidator();
     validator.validate(stopTime, noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(new ForbiddenGeographyIdNotice(1, null, "locationGroupId", "locationId"));
+        .containsExactly(
+            new StopTimesGeographyIdPresenceValidator.ForbiddenGeographyIdNotice(
+                1, null, "locationGroupId", "locationId"));
   }
 
   @Test

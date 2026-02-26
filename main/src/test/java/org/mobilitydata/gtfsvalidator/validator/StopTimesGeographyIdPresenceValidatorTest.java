@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.util.List;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeographyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -66,7 +65,9 @@ public class StopTimesGeographyIdPresenceValidatorTest {
                     .setLocationGroupId("location_group_id")
                     .setCsvRowNumber(2)
                     .build()))
-        .containsExactly(new ForbiddenGeographyIdNotice(2, "stop_id", "location_group_id", ""));
+        .containsExactly(
+            new StopTimesGeographyIdPresenceValidator.ForbiddenGeographyIdNotice(
+                2, "stop_id", "location_group_id", ""));
 
     assertThat(
             validationNoticesFor(
@@ -75,7 +76,9 @@ public class StopTimesGeographyIdPresenceValidatorTest {
                     .setLocationId("location_id")
                     .setCsvRowNumber(2)
                     .build()))
-        .containsExactly(new ForbiddenGeographyIdNotice(2, "stop_id", "", "location_id"));
+        .containsExactly(
+            new StopTimesGeographyIdPresenceValidator.ForbiddenGeographyIdNotice(
+                2, "stop_id", "", "location_id"));
 
     assertThat(
             validationNoticesFor(
@@ -84,7 +87,9 @@ public class StopTimesGeographyIdPresenceValidatorTest {
                     .setLocationId("location_id")
                     .setCsvRowNumber(2)
                     .build()))
-        .containsExactly(new ForbiddenGeographyIdNotice(2, "", "location_group_id", "location_id"));
+        .containsExactly(
+            new StopTimesGeographyIdPresenceValidator.ForbiddenGeographyIdNotice(
+                2, "", "location_group_id", "location_id"));
 
     assertThat(
             validationNoticesFor(
@@ -95,7 +100,8 @@ public class StopTimesGeographyIdPresenceValidatorTest {
                     .setCsvRowNumber(2)
                     .build()))
         .containsExactly(
-            new ForbiddenGeographyIdNotice(2, "stop_id", "location_group_id", "location_id"));
+            new StopTimesGeographyIdPresenceValidator.ForbiddenGeographyIdNotice(
+                2, "stop_id", "location_group_id", "location_id"));
   }
 
   private List<ValidationNotice> validationNoticesFor(GtfsStopTime entity) {
