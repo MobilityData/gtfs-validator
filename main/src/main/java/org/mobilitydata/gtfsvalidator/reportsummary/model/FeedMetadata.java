@@ -263,8 +263,22 @@ public class FeedMetadata {
     loadRiderCategoriesFeature(feedContainer);
     loadTimeBasedFaresFeature(feedContainer);
     loadZoneBasedFaresFeature(feedContainer);
+    loadContactlessEMVSupportFeature(feedContainer);
     loadFixedStopsDemandResponseTransit(feedContainer);
     loadCarsAllowedFeature(feedContainer);
+  }
+
+  private void loadContactlessEMVSupportFeature(GtfsFeedContainer feedContainer) {
+    specFeatures.put(
+        new FeatureMetadata("Contactless EMV Support", "Fares"),
+        hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsAgency.FILENAME,
+                List.of((Function<GtfsAgency, Boolean>) (GtfsAgency::hasCemvSupport)))
+            || hasAtLeastOneRecordForFields(
+                feedContainer,
+                GtfsRoute.FILENAME,
+                List.of((Function<GtfsRoute, Boolean>) (GtfsRoute::hasCemvSupport))));
   }
 
   /**
