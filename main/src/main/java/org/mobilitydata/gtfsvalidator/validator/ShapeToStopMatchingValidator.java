@@ -250,7 +250,13 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class StopHasTooManyMatchesForShapeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -304,7 +310,13 @@ public class ShapeToStopMatchingValidator extends FileValidator {
             GtfsStopTimeSchema.class,
             GtfsStopSchema.class,
             GtfsStopTimeSchema.class
-          }))
+          }),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -358,7 +370,13 @@ public class ShapeToStopMatchingValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsStopSchema.class, GtfsTripSchema.class}),
-      bestPractices = @FileRefs(GtfsShapeSchema.class))
+      bestPractices = @FileRefs(GtfsShapeSchema.class),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */
@@ -410,7 +428,13 @@ public class ShapeToStopMatchingValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
     /** The row number of the faulty record from `trips.txt`. */

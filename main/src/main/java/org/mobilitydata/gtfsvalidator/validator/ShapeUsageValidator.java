@@ -68,7 +68,13 @@ public class ShapeUsageValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class UnusedShapeNotice extends ValidationNotice {
 
     /** The faulty record's id. */
