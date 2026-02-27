@@ -53,6 +53,11 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   @Override
+  public boolean shouldCallValidate() {
+    return agencyTable != null && agencyTable.entityCount() > 0;
+  }
+
+  @Override
   public void validate(NoticeContainer noticeContainer) {
     final int agencyCount = agencyTable.entityCount();
     if (agencyCount == 1) {
@@ -73,10 +78,8 @@ public class AgencyConsistencyValidator extends FileValidator {
         // agency_id is required when there are 2 or more agencies.
         if (!agency.hasAgencyId()) {
           noticeContainer.addValidationNotice(
-              new MissingRequiredFieldNotice(
-                  agencyTable.gtfsFilename(),
-                  agency.csvRowNumber(),
-                  GtfsAgency.AGENCY_ID_FIELD_NAME));
+              new MissingRequiredAgencyIdNotice(
+                  agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
         }
       }
       // agency_timezone field is required and it must be the same for all agencies.
