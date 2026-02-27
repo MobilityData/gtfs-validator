@@ -111,7 +111,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = ERROR,
-      files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}),
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsShapeSchema.class}),
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
@@ -155,7 +155,7 @@ public class TripAndShapeDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}),
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsShapeSchema.class}),
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
