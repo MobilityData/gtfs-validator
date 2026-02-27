@@ -56,8 +56,8 @@ public class StopTimesRecordValidatorTest {
                         "trip1",
                         "locationGroupId1",
                         "locationId1",
-                        GtfsPickupDropOff.ALLOWED,
-                        GtfsPickupDropOff.ALLOWED,
+                        GtfsPickupDropOff.REGULAR,
+                        GtfsPickupDropOff.REGULAR,
                         GtfsTime.fromString("08:00:00"),
                         GtfsTime.fromString("09:00:00")))))
         .isEmpty();

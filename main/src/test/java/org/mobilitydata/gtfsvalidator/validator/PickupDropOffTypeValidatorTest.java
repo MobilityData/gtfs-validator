@@ -28,7 +28,7 @@ public class PickupDropOffTypeValidatorTest {
         new GtfsStopTime.Builder()
             .setCsvRowNumber(1)
             .setPickupType(GtfsPickupDropOff.NOT_AVAILABLE)
-            .setDropOffType(GtfsPickupDropOff.ALLOWED)
+            .setDropOffType(GtfsPickupDropOff.REGULAR)
             .setStartPickupDropOffWindow(GtfsTime.fromString("00:00:02"))
             .setEndPickupDropOffWindow(GtfsTime.fromString("00:00:03"))
             .build();
@@ -53,7 +53,7 @@ public class PickupDropOffTypeValidatorTest {
     GtfsStopTime stopTime =
         new GtfsStopTime.Builder()
             .setCsvRowNumber(3)
-            .setPickupType(GtfsPickupDropOff.ALLOWED)
+            .setPickupType(GtfsPickupDropOff.REGULAR)
             .setDropOffType(GtfsPickupDropOff.NOT_AVAILABLE)
             .setStartPickupDropOffWindow(GtfsTime.fromString("08:00:00"))
             .setEndPickupDropOffWindow(GtfsTime.fromString("09:00:00"))
