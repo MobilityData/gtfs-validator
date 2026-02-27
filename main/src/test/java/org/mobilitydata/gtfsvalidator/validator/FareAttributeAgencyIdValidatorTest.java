@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareAttribute;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;

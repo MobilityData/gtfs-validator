@@ -20,12 +20,7 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareLegRule;
-import org.mobilitydata.gtfsvalidator.table.GtfsFareLegRuleTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsNetwork;
-import org.mobilitydata.gtfsvalidator.table.GtfsNetworkTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
-import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
  * Validates that network_id field in "fare_leg_rules.txt" references a valid network_id in
