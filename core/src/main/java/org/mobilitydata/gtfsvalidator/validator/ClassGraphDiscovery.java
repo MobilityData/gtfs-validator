@@ -18,7 +18,9 @@ public class ClassGraphDiscovery {
   /** Default packages to find notices in open-source validator. */
   public static final ImmutableList<String> DEFAULT_NOTICE_PACKAGES =
       ImmutableList.of(
-          "org.mobilitydata.gtfsvalidator.notice", "org.mobilitydata.gtfsvalidator.validator");
+          "org.mobilitydata.gtfsvalidator.notice",
+          "org.mobilitydata.gtfsvalidator.validator",
+          "org.mobilitydata.gtfsvalidator.deprecated");
 
   private ClassGraphDiscovery() {}
 
