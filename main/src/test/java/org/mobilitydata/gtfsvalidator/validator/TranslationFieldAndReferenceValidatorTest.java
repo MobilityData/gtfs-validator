@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;

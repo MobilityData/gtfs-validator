@@ -26,7 +26,15 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStop;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 
 /**
  * Validates that:

@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteBothShortAndLongNameMissingNotice;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteLongNameContainsShortNameNotice;
 import org.mobilitydata.gtfsvalidator.validator.RouteNameValidator.RouteShortNameTooLongNotice;

@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.AgencyConsistencyValidator.InconsistentAgencyLangNotice;
 import org.mobilitydata.gtfsvalidator.validator.AgencyConsistencyValidator.InconsistentAgencyTimezoneNotice;

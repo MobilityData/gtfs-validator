@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFareLegRule;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareLegRuleTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsNetwork;
 import org.mobilitydata.gtfsvalidator.table.GtfsNetworkTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
 public class GtfsFareLegRuleNetworkIdForeignKeyValidatorTest {

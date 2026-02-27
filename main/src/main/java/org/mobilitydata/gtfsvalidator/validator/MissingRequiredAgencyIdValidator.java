@@ -6,7 +6,15 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareAttribute;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsFareAttributeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableContainer;
 
 @GtfsValidator
 public class MissingRequiredAgencyIdValidator extends FileValidator {

@@ -24,7 +24,11 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencySchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 
 /**
  * Validates that {@code agency.agency_lang} and {@code feed_info.feed_lang} are matching.
