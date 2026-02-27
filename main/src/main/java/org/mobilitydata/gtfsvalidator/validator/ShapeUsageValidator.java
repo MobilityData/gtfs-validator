@@ -72,7 +72,8 @@ public class ShapeUsageValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class UnusedShapeNotice extends ValidationNotice {
 

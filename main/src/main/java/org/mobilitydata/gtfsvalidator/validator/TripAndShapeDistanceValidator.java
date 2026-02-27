@@ -115,7 +115,8 @@ public class TripAndShapeDistanceValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class TripDistanceExceedsShapeDistanceNotice extends ValidationNotice {
 
@@ -158,7 +159,8 @@ public class TripAndShapeDistanceValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class TripDistanceExceedsShapeDistanceBelowThresholdNotice extends ValidationNotice {
 

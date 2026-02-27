@@ -254,7 +254,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class StopHasTooManyMatchesForShapeNotice extends ValidationNotice {
 
@@ -313,7 +314,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class StopTooFarFromShapeUsingUserDistanceNotice extends ValidationNotice {
 
@@ -372,7 +374,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class StopTooFarFromShapeNotice extends ValidationNotice {
 
@@ -429,7 +432,8 @@ public class ShapeToStopMatchingValidator extends FileValidator {
       urls = {
         @GtfsValidationNotice.UrlRef(
             label = "Shapes Data Guidance",
-            url = "https://gtfs.org/documentation/schedule/examples/shapes/#shapes-data-guidance")
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class StopsMatchShapeOutOfOrderNotice extends ValidationNotice {
 
