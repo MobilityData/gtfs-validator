@@ -85,7 +85,13 @@ public class FareProductDefaultRiderCategoriesValidator extends FileValidator {
    *
    * <p>Each fare product should have at most one default rider category.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files =
+          @GtfsValidationNotice.FileRefs({
+            GtfsFareProductSchema.class,
+            GtfsRiderCategoriesSchema.class
+          }))
   static class FareProductWithMultipleDefaultRiderCategoriesNotice extends ValidationNotice {
 
     /** The ID of the fare product associated with the notice */

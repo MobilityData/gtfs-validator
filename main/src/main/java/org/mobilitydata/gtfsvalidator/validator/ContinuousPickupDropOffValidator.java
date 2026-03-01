@@ -79,7 +79,14 @@ public class ContinuousPickupDropOffValidator extends FileValidator {
    * routes.continuous_drop_off are 0, 2 or 3 and stop_times.start_pickup_drop_off_window or
    * stop_times.end_pickup_drop_off_window are defined for any trip of this route.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files =
+          @GtfsValidationNotice.FileRefs({
+            GtfsRouteSchema.class,
+            GtfsStopTimeSchema.class,
+            GtfsTripSchema.class
+          }))
   public static class ForbiddenContinuousPickupDropOffNotice extends ValidationNotice {
     /** The row number of the route in the `routes.txt` file. */
     private final int routeCsvRowNumber;
