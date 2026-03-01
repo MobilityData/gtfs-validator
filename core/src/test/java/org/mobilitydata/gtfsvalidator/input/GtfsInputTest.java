@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class GtfsInputTest {
   // Use String instead of URL since the URL() constructor throws MalformedURLException.
   private static final String INVALID_URL = "https://openmobilitydata.org/invalid-feed.zip";
   private static final String VALID_URL =
-      "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
+      "https://github.com/MobilityData/gtfs-validator/raw/refs/tags/v1.4.0/usecase/src/test/resources/"
           + "valid_zip_sample.zip";
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
@@ -102,7 +103,8 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
+  public void createFromUrlInMemory_valid_success()
+      throws IOException, URISyntaxException, ZipException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer, "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
