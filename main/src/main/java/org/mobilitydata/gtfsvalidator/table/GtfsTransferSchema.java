@@ -35,6 +35,7 @@ public interface GtfsTransferSchema extends GtfsEntity {
   String toStopId();
 
   @RequiredColumn
+  @Index
   GtfsTransferType transferType();
 
   @NonNegative

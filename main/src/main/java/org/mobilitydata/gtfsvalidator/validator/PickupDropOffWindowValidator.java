@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
@@ -92,7 +93,9 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
    *
    * <p>This violates GTFS specification, as both cannot coexist for a single stop time record.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class ForbiddenArrivalOrDepartureTimeNotice extends ValidationNotice {
 
     /** The row of the faulty record. */
@@ -130,7 +133,9 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
    * <p>GTFS specification requires both the start and end pickup/drop-off windows to be provided
    * together, if used.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class MissingPickupOrDropOffWindowNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final int csvRowNumber;
@@ -155,7 +160,9 @@ public class PickupDropOffWindowValidator extends SingleEntityValidator<GtfsStop
    * <p>The `end_pickup_drop_off_window` must be strictly later than the
    * `start_pickup_drop_off_window`.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class InvalidPickupDropOffWindowNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final int csvRowNumber;
