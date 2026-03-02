@@ -9,6 +9,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPickupDropOff;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 
 /**
@@ -68,7 +69,9 @@ public class StopTimesRecordValidator extends FileValidator {
    * <p>Travel within the same location group or GeoJSON location requires two records in
    * stop_times.txt with the same location_group_id or location_id.
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class MissingStopTimesRecordNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final long csvRowNumber;

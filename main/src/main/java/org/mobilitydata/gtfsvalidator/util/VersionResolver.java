@@ -57,6 +57,14 @@ public class VersionResolver {
       versionInfo = resolve(skipValidatorUpdate);
     } catch (Throwable ex) {
       logger.atSevere().withCause(ex).log("Error resolving version");
+    } finally {
+      try {
+        if (versionInfo.currentVersion().isEmpty()) {
+          versionInfo.setCurrentVersion(resolveCurrentVersion());
+        }
+      } catch (IOException e) {
+        logger.atSevere().withCause(e).log("Error setting  current release version");
+      }
     }
 
     try {

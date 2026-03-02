@@ -71,4 +71,6 @@ public interface GtfsStopSchema extends GtfsEntity {
   String levelId();
 
   String platformCode();
+
+  GtfsStopAccess stopAccess();
 }

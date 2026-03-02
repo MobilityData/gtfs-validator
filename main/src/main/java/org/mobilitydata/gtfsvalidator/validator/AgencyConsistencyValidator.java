@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -54,6 +53,11 @@ public class AgencyConsistencyValidator extends FileValidator {
   }
 
   @Override
+  public boolean shouldCallValidate() {
+    return agencyTable != null && agencyTable.entityCount() > 0;
+  }
+
+  @Override
   public void validate(NoticeContainer noticeContainer) {
     final int agencyCount = agencyTable.entityCount();
     if (agencyCount == 1) {
@@ -74,10 +78,8 @@ public class AgencyConsistencyValidator extends FileValidator {
         // agency_id is required when there are 2 or more agencies.
         if (!agency.hasAgencyId()) {
           noticeContainer.addValidationNotice(
-              new MissingRequiredFieldNotice(
-                  agencyTable.gtfsFilename(),
-                  agency.csvRowNumber(),
-                  GtfsAgency.AGENCY_ID_FIELD_NAME));
+              new MissingRequiredAgencyIdNotice(
+                  agencyTable.gtfsFilename(), agency.csvRowNumber(), agency.agencyName()));
         }
       }
       // agency_timezone field is required and it must be the same for all agencies.
@@ -118,14 +120,7 @@ public class AgencyConsistencyValidator extends FileValidator {
    *
    * <p>Agencies from GTFS `agency.txt` have been found to have different languages.
    */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs(GtfsAgencySchema.class),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsAgencySchema.class))
   static class InconsistentAgencyLangNotice extends ValidationNotice {
 
     /** The row of the faulty record. */

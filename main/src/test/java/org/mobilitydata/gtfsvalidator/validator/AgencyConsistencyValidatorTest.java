@@ -26,7 +26,10 @@ import javax.annotation.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredAgencyIdNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.AgencyConsistencyValidator.InconsistentAgencyLangNotice;
@@ -97,9 +100,7 @@ public class AgencyConsistencyValidatorTest {
                     ZoneId.of("America/Montreal"),
                     Locale.CANADA)));
     assertThat(notices)
-        .containsExactly(
-            new MissingRequiredFieldNotice(
-                GtfsAgency.FILENAME, 1, GtfsAgency.AGENCY_ID_FIELD_NAME));
+        .containsExactly(new MissingRequiredAgencyIdNotice(GtfsAgency.FILENAME, 1, "agency name"));
   }
 
   @Test
@@ -218,5 +219,43 @@ public class AgencyConsistencyValidatorTest {
                         ZoneId.of("America/Montreal"),
                         Locale.CANADA_FRENCH))))
         .isEmpty();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableNull() {
+    AgencyConsistencyValidator validator = new AgencyConsistencyValidator(null);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer emptyAgencyTable =
+        GtfsAgencyTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+
+    AgencyConsistencyValidator validator = new AgencyConsistencyValidator(emptyAgencyTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_trueWhenAgencyTableNonEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                createAgency(
+                    0,
+                    "agency1",
+                    "Agency 1",
+                    "www.mobilitydata.org",
+                    ZoneId.of("America/Montreal"),
+                    Locale.CANADA)),
+            noticeContainer);
+
+    AgencyConsistencyValidator validator = new AgencyConsistencyValidator(agencyTable);
+
+    assertThat(validator.shouldCallValidate()).isTrue();
   }
 }

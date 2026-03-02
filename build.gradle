@@ -123,7 +123,7 @@ subprojects {
                             }
                         } else {
                             // For releases, the publish task does not upload to MavenCentral.
-                            // It just the artifacts directory hierarchy on the local disk,
+                            // It just creates the artifacts directory hierarchy on the local disk,
                             // The actual zipping and uploading is done in the publishToMavenCentral task.
                             url = "${buildDir}/local-repo"
                         }
@@ -195,7 +195,7 @@ subprojects {
             }
 
             tasks.register('publishToSnapshotRepository') {
-                // We want to do call the publish task only if the version is a snapshot.
+                // We want to call the publish task only if the version is a snapshot.
                 // Without this conditional, with a release it would do the publish first, then throw the Exception below.
                 // But since the dependsOn is within the conditional, the dependency is not created for release versions
                 // so the publish in that case is never executed.

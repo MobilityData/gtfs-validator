@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -71,9 +70,10 @@ public class ShapeUsageValidator extends FileValidator {
       severity = WARNING,
       files = @FileRefs({GtfsShapeSchema.class, GtfsTripSchema.class}),
       urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
   static class UnusedShapeNotice extends ValidationNotice {
 
