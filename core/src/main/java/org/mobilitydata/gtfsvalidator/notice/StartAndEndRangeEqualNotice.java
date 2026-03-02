@@ -19,7 +19,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Two date or time fields are equal.
@@ -29,13 +28,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * it a trip that circulates once?). It is recommended to use a trip not defined via frequencies.txt
  * for this case.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR)
 public class StartAndEndRangeEqualNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

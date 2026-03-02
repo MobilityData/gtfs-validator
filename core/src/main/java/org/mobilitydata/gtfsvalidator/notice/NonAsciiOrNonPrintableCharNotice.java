@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.notice;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Non ascii or non printable char in ID field.
@@ -26,13 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * <p>A value of a field with type ID contains non ASCII or non printable characters. This is not
  * recommended.
  */
-@GtfsValidationNotice(
-    severity = WARNING,
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = WARNING)
 public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
 
   /** Name of the faulty file. */

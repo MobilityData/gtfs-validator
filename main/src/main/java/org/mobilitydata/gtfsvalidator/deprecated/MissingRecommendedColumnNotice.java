@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.mobilitydata.gtfsvalidator.notice.deprecated;
+package org.mobilitydata.gtfsvalidator.deprecated;
 
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.TERM_DEFINITIONS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
