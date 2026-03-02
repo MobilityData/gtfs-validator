@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
@@ -49,9 +49,7 @@ public class FareAttributeAgencyIdValidatorTest {
             noticeContainer);
     new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(
-            new MissingRequiredFieldNotice(
-                fareTable.gtfsFilename(), 1, GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
+        .containsExactly(new MissingRequiredAgencyIdNotice(fareTable.gtfsFilename(), 1, null));
   }
 
   @Test
@@ -151,5 +149,112 @@ public class FareAttributeAgencyIdValidatorTest {
             noticeContainer);
     new FareAttributeAgencyIdValidator(agencyTable, fareTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableNull() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setFareId("fare 0")
+                    .build()),
+            noticeContainer);
+
+    FareAttributeAgencyIdValidator validator = new FareAttributeAgencyIdValidator(null, fareTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer emptyAgencyTable =
+        GtfsAgencyTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setFareId("fare 0")
+                    .build()),
+            noticeContainer);
+
+    FareAttributeAgencyIdValidator validator =
+        new FareAttributeAgencyIdValidator(emptyAgencyTable, fareTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenFareTableNull() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+
+    FareAttributeAgencyIdValidator validator =
+        new FareAttributeAgencyIdValidator(agencyTable, null);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenFareTableEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+    GtfsFareAttributeTableContainer emptyFareTable =
+        GtfsFareAttributeTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+
+    FareAttributeAgencyIdValidator validator =
+        new FareAttributeAgencyIdValidator(agencyTable, emptyFareTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_trueWhenBothTablesNonEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+    GtfsFareAttributeTableContainer fareTable =
+        GtfsFareAttributeTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsFareAttribute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setFareId("fare 0")
+                    .build()),
+            noticeContainer);
+
+    FareAttributeAgencyIdValidator validator =
+        new FareAttributeAgencyIdValidator(agencyTable, fareTable);
+
+    assertThat(validator.shouldCallValidate()).isTrue();
   }
 }

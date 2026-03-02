@@ -606,7 +606,7 @@ public class FeedMetadata {
 
   private void loadStopAccessFeature(GtfsFeedContainer feedContainer) {
     specFeatures.put(
-        new FeatureMetadata("Stop Access", "Location Types"),
+        new FeatureMetadata("Stop Access", null),
         hasAtLeastOneRecordForFields(
             feedContainer,
             GtfsStop.FILENAME,
