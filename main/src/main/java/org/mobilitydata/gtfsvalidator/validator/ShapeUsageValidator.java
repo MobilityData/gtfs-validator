@@ -65,7 +65,7 @@ public class ShapeUsageValidator extends FileValidator {
     }
   }
 
-  /**
+   /**
    * Shape is not used in GTFS file `trips.txt`.
    *
    * <p>All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
@@ -79,7 +79,7 @@ public class ShapeUsageValidator extends FileValidator {
             url =
                 "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
-  static class !MissingRecommendedFileNotice extends ValidationNotice {
+  static class UnusedShapeNotice extends ValidationNotice {
 
     /** The faulty record's id. */
     private final String shapeId;
@@ -87,38 +87,10 @@ public class ShapeUsageValidator extends FileValidator {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    MissingRecommendedFileNotice(String shapeId, int csvRowNumber) {
+    UnusedShapeNotice(String shapeId, int csvRowNumber) {
       this.shapeId = shapeId;
       this.csvRowNumber = csvRowNumber;
     }
   }
 
-  /**
- * Validates that every trip in "trips.txt" is used by at least two stops from "stop_times.txt"
- *
- * <p>Generated notice: {@link MissingRecommendedFileNotice}.
- */
-
-    /**
-   * Trips must have more than one stop to be usable.                                                
-   *
-   * A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
-   */
-  @GtfsValidationNotice(
-      severity = WARNING,
-      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
-      )
-
-  static class MissingRecommendedFileNotice extends ValidationNotice {
-    /** The row number of the faulty record. */
-    private final int csvRowNumber;
-
-    /** The faulty record's id. */
-    private final String tripId;
-
-    MissingRecommendedFileNotice(int csvRowNumber, String tripId) {
-      this.csvRowNumber = csvRowNumber;
-      this.tripId = tripId;
-    }
-  }
 }
