@@ -28,8 +28,12 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.ShapeUsageValidator.UnusedShapeNotice;
 
 /**
  * Validates that every shape in "shapes.txt" is used by some trip from "trips.txt"
@@ -75,7 +79,7 @@ public class ShapeUsageValidator extends FileValidator {
             url =
                 "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
       })
-  static class UnusedShapeNotice extends ValidationNotice {
+  static class !MissingRecommendedFileNotice extends ValidationNotice {
 
     /** The faulty record's id. */
     private final String shapeId;
@@ -83,9 +87,38 @@ public class ShapeUsageValidator extends FileValidator {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
 
-    UnusedShapeNotice(String shapeId, int csvRowNumber) {
+    MissingRecommendedFileNotice(String shapeId, int csvRowNumber) {
       this.shapeId = shapeId;
       this.csvRowNumber = csvRowNumber;
+    }
+  }
+
+  /**
+ * Validates that every trip in "trips.txt" is used by at least two stops from "stop_times.txt"
+ *
+ * <p>Generated notice: {@link MissingRecommendedFileNotice}.
+ */
+
+    /**
+   * Trips must have more than one stop to be usable.                                                
+   *
+   * A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
+      )
+
+  static class MissingRecommendedFileNotice extends ValidationNotice {
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The faulty record's id. */
+    private final String tripId;
+
+    MissingRecommendedFileNotice(int csvRowNumber, String tripId) {
+      this.csvRowNumber = csvRowNumber;
+      this.tripId = tripId;
     }
   }
 }
