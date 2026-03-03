@@ -15,8 +15,7 @@ zip -qr ${zipfile} *
 
 bearer_token=$(echo "$MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:$MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD" | base64)
 
-# We delete older snapshots before uploading the new one to Maven Central's snapshot repository.
-#TODO: this does not iterate properly into the for. fix
+# We delete older snapshots before uploading the newest one to the project's snapshot repository on Maven Central.
 for deployments in $subproject; do
 getId=$(curl -s --request POST \
   --header "Authorization: Bearer ${bearer_token}" \
