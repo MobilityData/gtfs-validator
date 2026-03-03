@@ -72,6 +72,13 @@ public class FeedMetadataTest {
         .setServiceId(serviceId)
         .setStartDate(startDate)
         .setEndDate(endDate)
+        .setMonday(GtfsCalendarService.AVAILABLE)
+        .setTuesday(GtfsCalendarService.AVAILABLE)
+        .setWednesday(GtfsCalendarService.AVAILABLE)
+        .setThursday(GtfsCalendarService.AVAILABLE)
+        .setFriday(GtfsCalendarService.AVAILABLE)
+        .setSaturday(GtfsCalendarService.AVAILABLE)
+        .setSunday(GtfsCalendarService.AVAILABLE)
         .build();
   }
 
