@@ -111,14 +111,14 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
                   Set<String> serviceIds = serviceIdsForDate.getValue();
                   // If the date is in `addedDates`, we know there's at least one service
                   // available on that date.
-                  return !addedDates.contains(date)
-                      && serviceIds.equals(serviceIdsByDateFromCalendars.get(date));
+                  return serviceIds.equals(serviceIdsByDateFromCalendars.get(date));
                 })
             .map(Map.Entry::getKey)
             .collect(toSet());
 
     Set<LocalDate> servicedDates =
-        SetUtil.difference(serviceIdsByDateFromCalendars.keySet(), removedDates);
+        SetUtil.union(
+            SetUtil.difference(serviceIdsByDateFromCalendars.keySet(), removedDates), addedDates);
 
     // Only empty if there are no serviced dates.
     Optional<LocalDate> startDate = servicedDates.stream().min(LocalDate::compareTo);
