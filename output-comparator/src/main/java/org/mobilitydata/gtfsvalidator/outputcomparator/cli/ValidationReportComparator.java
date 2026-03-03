@@ -104,12 +104,16 @@ public class ValidationReportComparator {
       // As an edge case, when the execution raise a system exception the report will contain
       // no notices but system notices are found in the system_errors.json file.
       // In this case, the system notices are not considered as corrupted sources.
-      if (hasSystemErrors(referenceReport, referenceErrorsPath)) {
-        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+      ValidationReport referenceSystemErrors = getValidationReport(referenceErrorsPath);
+      ValidationReport latestSystemErrors = getValidationReport(latestErrorsPath);
+      if (hasSystemErrors(referenceReport, referenceSystemErrors)) {
+        corruptedSources.addCorruptedSource(
+            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
         continue;
       }
-      if (hasSystemErrors(latestReport, latestErrorsPath)) {
-        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+      if (hasSystemErrors(latestReport, latestSystemErrors)) {
+        corruptedSources.addCorruptedSource(
+            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
         continue;
       }
 
@@ -151,8 +155,8 @@ public class ValidationReportComparator {
     return Result.create(report, reportSummaryString, failure);
   }
 
-  private boolean hasSystemErrors(ValidationReport validationReport, Path path) {
-    var systemErrors = getValidationReport(path);
+  private boolean hasSystemErrors(
+      ValidationReport validationReport, ValidationReport systemErrors) {
     return validationReport.getNotices().isEmpty()
         && systemErrors != null
         && !systemErrors.getNotices().isEmpty();
