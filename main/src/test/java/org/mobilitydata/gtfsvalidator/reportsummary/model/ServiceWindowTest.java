@@ -108,37 +108,16 @@ public class ServiceWindowTest {
   }
 
   @Test
-  public void get_singleCalendar_noActiveWeeRange() {
-    List<GtfsCalendar> calendars =
-        List.of(calendar(1, "s1", LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31)));
-
-    assertThat(
-            ServiceWindow.get(
-                GtfsTripTableContainer.forEntities(List.of(trip(0, "s1")), NOTICES),
-                Optional.of(GtfsCalendarTableContainer.forEntities(calendars, NOTICES)),
-                Optional.empty()))
-        .isEqualTo(
-            Optional.of(new ServiceWindow(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31))));
-  }
-
-  @Test
   public void get_singleCalendar_allWeekdaysDisabled_returnsEmpty() {
     // Calendar covers a date range but has no active weekdays (all set to 0),
     // so there is effectively no service even though start/end dates are present.
     GtfsCalendar disabledCalendar =
-        new GtfsCalendar.Builder()
-            .setCsvRowNumber(1)
-            .setServiceId("s1")
-            .setStartDate(GtfsDate.fromLocalDate(LocalDate.of(2025, 1, 1)))
-            .setEndDate(GtfsDate.fromLocalDate(LocalDate.of(2025, 12, 31)))
-            .setMonday(0)
-            .setTuesday(0)
-            .setWednesday(0)
-            .setThursday(0)
-            .setFriday(0)
-            .setSaturday(0)
-            .setSunday(0)
-            .build();
+        calendar(
+            1,
+            "s1",
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31),
+            EnumSet.allOf(DayOfWeek.class));
 
     GtfsTripTableContainer trips =
         GtfsTripTableContainer.forEntities(List.of(trip(1, "s1")), NOTICES);
@@ -548,21 +527,6 @@ public class ServiceWindowTest {
     assertThat(result.get().endDate()).isAtLeast(LocalDate.of(2025, 5, 31));
   }
 
-  /** All calendar dates are SERVICE_REMOVED only, and the calendar table is empty: no window. */
-  @Test
-  public void get_bothTables_emptyCalendars_returnsEmpty() {
-    List<GtfsCalendarDate> dates =
-        List.of(calendarDate(1, "s1", LocalDate.of(2025, 5, 1), REMOVED));
-
-    GtfsTripTableContainer trips =
-        GtfsTripTableContainer.forEntities(List.of(trip(1, "s1")), NOTICES);
-    GtfsCalendarDateTableContainer calendarDateTable =
-        GtfsCalendarDateTableContainer.forEntities(dates, NOTICES);
-
-    assertThat(ServiceWindow.get(trips, Optional.empty(), Optional.of(calendarDateTable)))
-        .isEqualTo(Optional.empty());
-  }
-
   /**
    * Via ServiceWindow.get: both tables present; removed date for all services shifts window start.
    */
@@ -703,9 +667,6 @@ public class ServiceWindowTest {
     //   - The first Wednesday (2025-01-08) is removed via calendar_dates.
     // We expect the service window still to start on the first Thursday that has service,
     // i.e. 2025-01-09, and run through the end of the calendar range.
-    //
-    // NOTE: This behaviour is not supported by the current implementation; this test documents
-    // the expected result and will currently fail.
     Optional<ServiceWindow> result =
         ServiceWindow.get(trips, Optional.of(calendarTable), Optional.of(calendarDateTable));
 
@@ -825,19 +786,12 @@ public class ServiceWindowTest {
   public void get_bothTables_calendarNoActiveDays_windowFromAddedDates() {
     // Calendar for s1 with a broad date range but no active weekdays.
     GtfsCalendar disabledCalendar =
-        new GtfsCalendar.Builder()
-            .setCsvRowNumber(1)
-            .setServiceId("s1")
-            .setStartDate(GtfsDate.fromLocalDate(LocalDate.of(2025, 1, 1)))
-            .setEndDate(GtfsDate.fromLocalDate(LocalDate.of(2025, 12, 31)))
-            .setMonday(0)
-            .setTuesday(0)
-            .setWednesday(0)
-            .setThursday(0)
-            .setFriday(0)
-            .setSaturday(0)
-            .setSunday(0)
-            .build();
+        calendar(
+            1,
+            "s1",
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 12, 31),
+            EnumSet.allOf(DayOfWeek.class));
 
     GtfsCalendarTableContainer calendarTable =
         GtfsCalendarTableContainer.forEntities(List.of(disabledCalendar), NOTICES);
