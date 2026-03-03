@@ -67,6 +67,7 @@ SAMPLES = set(
         "mdb-1791",  # Rio de Janeiro, BR
         "mdb-1807",  # Bamako, ML
         "mdb-1815",  # Nairobi, KE
+        "mdb-383"
     ]
 )
 
