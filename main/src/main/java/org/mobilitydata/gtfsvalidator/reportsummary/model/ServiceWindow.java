@@ -36,7 +36,8 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
    * @return The service window if there's at least one date on which service is available, and
    *     empty otherwise.
    */
-  private static Optional<ServiceWindow> fromCalendarDates(List<GtfsCalendarDate> allCalendarDates) {
+  private static Optional<ServiceWindow> fromCalendarDates(
+      List<GtfsCalendarDate> allCalendarDates) {
     List<LocalDate> calendarDates =
         allCalendarDates.stream()
             .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED)
