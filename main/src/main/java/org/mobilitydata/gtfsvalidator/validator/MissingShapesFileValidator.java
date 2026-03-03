@@ -12,7 +12,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsShape;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
@@ -37,11 +37,19 @@ public class MissingShapesFileValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (GtfsShape shape : shapeTable.getEntities()) {
-      String shapeId = shape.shapeId();
-      if (stopTimeTable.byTripId(shapeId).size() <= 1) {
-        noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(shape.csvRowNumber(), shapeId));
+    for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
+      String stopId = stopTime.toString();
+      Boolean missingShapes = shapeTable.isMissingFile();
+      Boolean hasLocationId = stopTimeTable.hasColumn("location_id");
+      Boolean hasLocationGroupId = stopTimeTable.hasColumn("location_group_id");
+      Boolean hasLocationGroupsRecord = locationGroupsTable.isParsedSuccessfully();
+      // Do we not have a shapes.txt file and not have a location_id (required for Zone-Based DRT)?
+      if (missingShapes && !hasLocationId) {
+        // Do we not have a record in location_groups.txt and not have a trip in stop_times.txt that references location_group_id (required for Fixed-Stop DRT)?
+        if (!hasLocationGroupsRecord && !hasLocationGroupId) {
+        noticeContainer.addValidationNotice(new MissingRecommendedFileNotice(stopTime.csvRowNumber(), stopId));
       }
+    }
     }
   }
 
