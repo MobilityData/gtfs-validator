@@ -20,7 +20,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
    *
    * @return The service window if there's at least one calendar, and empty otherwise.
    */
-  static Optional<ServiceWindow> fromCalendars(List<GtfsCalendar> calendars) {
+  private static Optional<ServiceWindow> fromCalendars(List<GtfsCalendar> calendars) {
     List<LocalDate> activeDatesForCalendars =
         calendars.stream().flatMap(c -> getActiveDatesForCalendar(c).stream()).toList();
     // Only empty if there are no calendars or no active weekdays for
@@ -36,7 +36,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
    * @return The service window if there's at least one date on which service is available, and
    *     empty otherwise.
    */
-  static Optional<ServiceWindow> fromCalendarDates(List<GtfsCalendarDate> allCalendarDates) {
+  private static Optional<ServiceWindow> fromCalendarDates(List<GtfsCalendarDate> allCalendarDates) {
     List<LocalDate> calendarDates =
         allCalendarDates.stream()
             .filter(d -> d.exceptionType() == GtfsCalendarDateExceptionType.SERVICE_ADDED)
@@ -77,7 +77,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
    *
    * @return The service window if there's at least one date with service, and empty otherwise.
    */
-  static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
+  private static Optional<ServiceWindow> fromCalendarsAndCalendarDates(
       List<GtfsCalendar> calendars, List<GtfsCalendarDate> calendarDates) {
     Map<LocalDate, Set<String>> serviceIdsByDateFromCalendars =
         getServiceIdsByDateFromCalendars(calendars);
