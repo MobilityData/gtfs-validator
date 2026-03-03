@@ -7,14 +7,13 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastDayNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingPriorNoticeLastTimeNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingRules;
 import org.mobilitydata.gtfsvalidator.table.GtfsBookingType;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.ForbiddenRealTimeBookingFieldValueNotice;
+import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.MissingPriorNoticeLastTimeNotice;
 import org.mobilitydata.gtfsvalidator.validator.BookingRulesEntityValidator.PriorNoticeLastDayAfterStartDayNotice;
 
 @RunWith(JUnit4.class)
@@ -218,7 +217,7 @@ public class BookingRulesEntityValidatorTest {
             .build(); // No prior_notice_last_day or prior_notice_last_time set
     List<ValidationNotice> expectedNotices =
         List.of(
-            new MissingPriorNoticeLastDayNotice(
+            new BookingRulesEntityValidator.MissingPriorNoticeLastDayNotice(
                 bookingRule.csvRowNumber(), bookingRule.bookingRuleId()),
             new MissingPriorNoticeLastTimeNotice(
                 bookingRule.csvRowNumber(), bookingRule.bookingRuleId()));
@@ -250,7 +249,7 @@ public class BookingRulesEntityValidatorTest {
 
     assertThat(generateNotices(bookingRuleMissingDay))
         .containsExactly(
-            new MissingPriorNoticeLastDayNotice(
+            new BookingRulesEntityValidator.MissingPriorNoticeLastDayNotice(
                 bookingRuleMissingDay.csvRowNumber(), bookingRuleMissingDay.bookingRuleId()));
   }
 

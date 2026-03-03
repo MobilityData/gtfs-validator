@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
  * Check that only entries with stop_id have shape_dist_traveled. A GeoJSON location or location
@@ -69,6 +70,7 @@ public class StopTimesShapeDistTraveledPresenceValidator
    */
   @GtfsValidationNotice(
       severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class),
       sections = @GtfsValidationNotice.SectionRefs(FILE_REQUIREMENTS))
   public static class ForbiddenShapeDistTraveledNotice extends ValidationNotice {
 

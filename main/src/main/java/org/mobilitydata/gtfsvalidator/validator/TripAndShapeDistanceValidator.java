@@ -111,7 +111,13 @@ public class TripAndShapeDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = ERROR,
-      files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}))
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsShapeSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class TripDistanceExceedsShapeDistanceNotice extends ValidationNotice {
 
     /** The faulty record's trip id. */
@@ -149,7 +155,13 @@ public class TripAndShapeDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsTrip.class, GtfsStopTime.class, GtfsShape.class}))
+      files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsShapeSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class TripDistanceExceedsShapeDistanceBelowThresholdNotice extends ValidationNotice {
 
     /** The faulty record's trip id. */

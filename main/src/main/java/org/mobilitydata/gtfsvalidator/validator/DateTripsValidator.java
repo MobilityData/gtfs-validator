@@ -102,7 +102,15 @@ public class DateTripsValidator extends FileValidator {
    * <p>This notice is triggered if the date range where a significant number of trips are running
    * ends in less than 7 days.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files =
+          @GtfsValidationNotice.FileRefs({
+            GtfsCalendarSchema.class,
+            GtfsCalendarDateSchema.class,
+            GtfsFrequencySchema.class,
+            GtfsTripSchema.class
+          }))
   static class TripCoverageNotActiveForNext7DaysNotice extends ValidationNotice {
 
     /** Current date (YYYYMMDD format). */

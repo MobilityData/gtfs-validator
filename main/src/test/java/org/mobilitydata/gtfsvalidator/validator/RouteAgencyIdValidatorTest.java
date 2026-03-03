@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
-import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
 
@@ -48,9 +48,7 @@ public class RouteAgencyIdValidatorTest {
             noticeContainer);
     new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
-        .containsExactly(
-            new MissingRequiredFieldNotice(
-                routeTable.gtfsFilename(), 1, GtfsRoute.AGENCY_ID_FIELD_NAME));
+        .containsExactly(new MissingRequiredAgencyIdNotice(routeTable.gtfsFilename(), 1, null));
   }
 
   @Test
@@ -155,5 +153,111 @@ public class RouteAgencyIdValidatorTest {
             noticeContainer);
     new RouteAgencyIdValidator(agencyTable, routeTable).validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableNull() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsRouteTableContainer routeTable =
+        GtfsRouteTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build()),
+            noticeContainer);
+
+    RouteAgencyIdValidator validator = new RouteAgencyIdValidator(null, routeTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenAgencyTableEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer emptyAgencyTable =
+        GtfsAgencyTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+    GtfsRouteTableContainer routeTable =
+        GtfsRouteTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build()),
+            noticeContainer);
+
+    RouteAgencyIdValidator validator = new RouteAgencyIdValidator(emptyAgencyTable, routeTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenRouteTableNull() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+
+    RouteAgencyIdValidator validator = new RouteAgencyIdValidator(agencyTable, null);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_falseWhenRouteTableEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+    GtfsRouteTableContainer emptyRouteTable =
+        GtfsRouteTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+
+    RouteAgencyIdValidator validator = new RouteAgencyIdValidator(agencyTable, emptyRouteTable);
+
+    assertThat(validator.shouldCallValidate()).isFalse();
+  }
+
+  @Test
+  public void shouldCallValidate_trueWhenBothTablesNonEmpty() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsAgencyTableContainer agencyTable =
+        GtfsAgencyTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsAgency.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setAgencyName("Agency 1")
+                    .build()),
+            noticeContainer);
+    GtfsRouteTableContainer routeTable =
+        GtfsRouteTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsRoute.Builder()
+                    .setCsvRowNumber(0)
+                    .setAgencyId("agency1")
+                    .setRouteId("route_0")
+                    .setRouteShortName("Route 0")
+                    .build()),
+            noticeContainer);
+
+    RouteAgencyIdValidator validator = new RouteAgencyIdValidator(agencyTable, routeTable);
+
+    assertThat(validator.shouldCallValidate()).isTrue();
   }
 }
