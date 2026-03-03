@@ -5,8 +5,10 @@ import static com.google.common.truth.Truth8.assertThat;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -47,12 +49,12 @@ public class ServiceWindowTest {
     return new GtfsTrip.Builder().setCsvRowNumber(row).setServiceId(serviceId).build();
   }
 
+  private static GtfsCalendar calendar(int row, String serviceId, LocalDate start, LocalDate end) {
+    return calendar(row, serviceId, start, end, EnumSet.noneOf(DayOfWeek.class));
+  }
+
   private static GtfsCalendar calendar(
-      int row, String serviceId, LocalDate start, LocalDate end, DayOfWeek... removedDays) {
-    java.util.Set<DayOfWeek> removed = java.util.EnumSet.noneOf(DayOfWeek.class);
-    if (removedDays != null) {
-      java.util.Collections.addAll(removed, removedDays);
-    }
+      int row, String serviceId, LocalDate start, LocalDate end, Set<DayOfWeek> removed) {
     return new GtfsCalendar.Builder()
         .setCsvRowNumber(row)
         .setServiceId(serviceId)
@@ -687,8 +689,7 @@ public class ServiceWindowTest {
                     "s1",
                     LocalDate.of(2025, 1, 6),
                     LocalDate.of(2025, 1, 31),
-                    DayOfWeek.WEDNESDAY,
-                    DayOfWeek.THURSDAY)),
+                    EnumSet.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY))),
             NOTICES);
 
     // calendar_dates: remove the first Wednesday (2025-01-08) completely for s1.

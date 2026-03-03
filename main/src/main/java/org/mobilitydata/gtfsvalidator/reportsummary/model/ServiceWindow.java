@@ -9,6 +9,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarService;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.util.SetUtil;
@@ -20,11 +21,12 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
    * @return The service window if there's at least one calendar, and empty otherwise.
    */
   static Optional<ServiceWindow> fromCalendars(List<GtfsCalendar> calendars) {
-    // Only empty if there are no calendars.
-    Optional<LocalDate> startDate =
-        calendars.stream().map(c -> c.startDate().getLocalDate()).min(LocalDate::compareTo);
-    Optional<LocalDate> endDate =
-        calendars.stream().map(c -> c.endDate().getLocalDate()).max(LocalDate::compareTo);
+    List<LocalDate> activeDatesForCalendars =
+        calendars.stream().flatMap(c -> getActiveDatesForCalendar(c).stream()).toList();
+    // Only empty if there are no calendars or no active weekdays for
+    // any of the calendars.
+    Optional<LocalDate> startDate = activeDatesForCalendars.stream().min(LocalDate::compareTo);
+    Optional<LocalDate> endDate = activeDatesForCalendars.stream().max(LocalDate::compareTo);
     return startDate.map(d -> new ServiceWindow(d, endDate.get()));
   }
 
@@ -50,9 +52,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
   /**
    * Given a list of calendars, map each date to the services it's in range for.
    *
-   * <p>This doesn't take exceptions into account. We also don't consider the days of the week; if a
-   * calendar has a range of June 1st to June 30th and June 3rd happens to be a day of the week
-   * where service is not available, we still associate it with that service id.
+   * <p>This doesn't take exceptions into account.
    *
    * @return The set of service ids for each date.
    */
@@ -61,10 +61,7 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     Map<LocalDate, Set<String>> serviceIdsByDate = new HashMap<>();
 
     for (GtfsCalendar calendar : calendars) {
-      LocalDate startDate = calendar.startDate().getLocalDate();
-      LocalDate endDate = calendar.endDate().getLocalDate();
-
-      for (LocalDate date : startDate.datesUntil(endDate.plusDays(1)).toList()) {
+      for (LocalDate date : getActiveDatesForCalendar(calendar)) {
         Set<String> serviceIdsForDate = serviceIdsByDate.getOrDefault(date, new HashSet<>());
         serviceIdsForDate.add(calendar.serviceId());
         serviceIdsByDate.put(date, serviceIdsForDate);
@@ -84,9 +81,6 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
       List<GtfsCalendar> calendars, List<GtfsCalendarDate> calendarDates) {
     Map<LocalDate, Set<String>> serviceIdsByDateFromCalendars =
         getServiceIdsByDateFromCalendars(calendars);
-    if (serviceIdsByDateFromCalendars.isEmpty()) {
-      return Optional.empty();
-    }
 
     // Dates added to at least one service via an exception. We don't check for
     // contradicting exceptions.
@@ -163,5 +157,29 @@ record ServiceWindow(LocalDate startDate, LocalDate endDate) {
     }
 
     return Optional.empty();
+  }
+
+  /**
+   * Given a calendar, get the dates that are active based on the service interval and on weekday
+   * patterns.
+   */
+  private static List<LocalDate> getActiveDatesForCalendar(GtfsCalendar calendar) {
+    LocalDate startDate = calendar.startDate().getLocalDate();
+    LocalDate endDate = calendar.endDate().getLocalDate();
+
+    return startDate.datesUntil(endDate.plusDays(1)).toList().stream()
+        .filter(
+            d ->
+                switch (d.getDayOfWeek()) {
+                      case MONDAY -> calendar.monday();
+                      case TUESDAY -> calendar.tuesday();
+                      case WEDNESDAY -> calendar.wednesday();
+                      case THURSDAY -> calendar.thursday();
+                      case FRIDAY -> calendar.friday();
+                      case SATURDAY -> calendar.saturday();
+                      case SUNDAY -> calendar.sunday();
+                    }
+                    == GtfsCalendarService.AVAILABLE)
+        .toList();
   }
 }
