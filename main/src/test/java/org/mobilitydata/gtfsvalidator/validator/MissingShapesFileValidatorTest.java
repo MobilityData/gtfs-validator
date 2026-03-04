@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.junit.Assert.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -10,84 +9,90 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroups;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.MissingShapesFileValidator.MissingRecommendedFileNotice;
 
 public class MissingShapesFileValidatorTest {
 
-  private static List<GtfsShape> createShapeTable(
-      int rows, double shapeDistTraveled, double lonLat) {
+  private static List<GtfsShape> createShapeTable(int rows) {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
-      shapes.add(
-          new GtfsShape.Builder()
-              .setCsvRowNumber(i + 1)
-              .setShapeId("s" + i)
-              .setShapePtLat(lonLat)
-              .setShapePtLon(lonLat)
-              .setShapePtSequence(0)
-              .setShapeDistTraveled(shapeDistTraveled + i)
-              .build());
+      shapes.add(new GtfsShape.Builder().setCsvRowNumber(i + 1).setShapeId("s" + i).build());
     }
     return shapes;
   }
 
-    private static List<GtfsStopTime> createStopTimesTable(int rows, double shapeDistTraveled) {
+  private static List<GtfsStopTime> createStopTimesTable(
+      int rows, String locationGroupId, String locationId) {
     ArrayList<GtfsStopTime> stopTimes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       stopTimes.add(
           new GtfsStopTime.Builder()
               .setCsvRowNumber(i + 1)
-              .setTripId("t" + i)
-              .setStopSequence(0)
-              .setStopId("st" + i)
-              .setShapeDistTraveled(shapeDistTraveled + i)
+              .setLocationGroupId(locationGroupId)
+              .setLocationId(locationId)
               .build());
     }
     return stopTimes;
   }
 
-
-  private static GtfsStop createLocationGroupsTable(int csvRowNumber, GtfsLocationGroups locationGroups) {
-    return new GtfsStop.Builder()
-        .setCsvRowNumber(csvRowNumber)
-        .build();
+  private static List<GtfsLocationGroups> createLocationGroupsTable(
+      int rows, String groupId, String groupName) {
+    ArrayList<GtfsLocationGroups> locationGroups = new ArrayList<>();
+    for (int i = 0; i < rows; i++) {
+      locationGroups.add(
+          new GtfsLocationGroups.Builder()
+              .setCsvRowNumber(i + 1)
+              .setLocationGroupId(groupId)
+              .setLocationGroupName(groupName)
+              .build());
+    }
+    return locationGroups;
   }
 
   @Test
-  public void testTripDistanceExceedsShapeDistance() {
+  public void testShapesFileAndFixedDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            createStopTimesTable(1, 10.0),
-            createShapeTable(1, 9.0, 10.0),
-            createLocationGroupsTable());
+            createShapeTable(1),
+            createStopTimesTable(1, "a", null),
+            createLocationGroupsTable(1, "b", "testgroup"));
     boolean found =
         notices.stream()
             .anyMatch(
                 notice ->
-                    notice
-                        instanceof
-                        TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
+                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
     assertThat(found).isTrue();
   }
 
-  @Test
-  public void tripServingOneStopShouldGenerateNotice() {
-    assertThat(
-            generateNotices(
-                ImmutableList.of(
-                    createTrip(1, "route id value", "service id value", "t0"),
-                    createTrip(3, "route id value", "service id value", "t1")),
-                ImmutableList.of(
-                    createStopTime(0, "t0", "s0", 2),
-                    createStopTime(0, "t1", "s3", 5),
-                    createStopTime(2, "t1", "s4", 9))))
-        .containsExactly(new MissingRecommendedFileNotice(1, "t0"));
+    public void testShapesFileAndZoneBasedDrtPresent() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            createShapeTable(1),
+            createStopTimesTable(1, null, "c"),
+            createLocationGroupsTable(1, "d", "t3stgroup"));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
+    assertThat(found).isTrue();
+  }
+
+    public void testNoShapesFileAndNoDrtPresent() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            createShapeTable(0),
+            createStopTimesTable(1, null, null),
+            createLocationGroupsTable(0, null, null));
+    boolean found =
+        notices.stream()
+            .anyMatch(
+                notice ->
+                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
+    assertThat(found).isTrue();
   }
 
   private static List<ValidationNotice> generateNotices(
