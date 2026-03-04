@@ -117,7 +117,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json -s)
+          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json)
           echo $DATASETS
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
@@ -132,7 +132,7 @@ jobs:
     needs: [ fetch-urls, pack-master, pack-snapshot ]
     # We use machines with more memory to run validation, as large feeds
     # can consume too much heap for default machine instances (see #1304).
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-4-cores
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
