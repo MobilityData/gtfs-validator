@@ -56,15 +56,7 @@ jobs:
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
-  validate-gradle-wrapper:
-    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
-    needs: pre_ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: gradle/actions/wrapper-validation@v3
   pack-snapshot:
-    needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,14 +65,9 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Persist gtfs-validator snapshot jar
@@ -94,7 +81,6 @@ jobs:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
   pack-master:
-    needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -105,14 +91,9 @@ jobs:
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Persist gtfs-validator jar from master branch
