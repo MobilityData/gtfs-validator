@@ -28,9 +28,6 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.validator.ShapeUsageValidator.UnusedShapeNotice;
@@ -65,7 +62,7 @@ public class ShapeUsageValidator extends FileValidator {
     }
   }
 
-   /**
+  /**
    * Shape is not used in GTFS file `trips.txt`.
    *
    * <p>All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
@@ -92,5 +89,4 @@ public class ShapeUsageValidator extends FileValidator {
       this.csvRowNumber = csvRowNumber;
     }
   }
-
 }
