@@ -68,7 +68,8 @@ SAMPLES = set(
 #         "mdb-1807",  # Bamako, ML
 #         "mdb-1815",  # Nairobi, KE
         "mdb-383",
-        "mdb-2014" # UK aggregate feed
+        "mdb-2014", # UK aggregate feed
+        "mdb-2393" # Aggregate feed for Baden-Württemberg
     ]
 )
 
