@@ -45,10 +45,6 @@ public class ServiceInterval {
   // Maps interval start -> interval end (both inclusive).
   private final TreeMap<LocalDate, LocalDate> intervals = new TreeMap<>();
 
-  // -------------------------------------------------------------------------
-  // Construction
-  // -------------------------------------------------------------------------
-
   /**
    * Adds active dates from a {@code calendar.txt} entry.
    *
@@ -159,10 +155,6 @@ public class ServiceInterval {
     // If start == end == date, both pieces are empty and the interval simply disappears.
   }
 
-  // -------------------------------------------------------------------------
-  // Read API
-  // -------------------------------------------------------------------------
-
   /**
    * Returns an unmodifiable, chronologically sorted list of all active {@link DateInterval}s.
    *
@@ -235,10 +227,6 @@ public class ServiceInterval {
   public LocalDate lastActiveDate() {
     return intervals.isEmpty() ? null : intervals.lastEntry().getValue();
   }
-
-  // -------------------------------------------------------------------------
-  // Internal helpers
-  // -------------------------------------------------------------------------
 
   /**
    * Merges the interval [newStart, newEnd] into the map, absorbing any existing intervals that

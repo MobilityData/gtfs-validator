@@ -40,7 +40,7 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
  * overall service range. Dates before the first active day or after the last are not considered
  * gaps.
  *
- * <p>Generated notice: {@link ServiceWithBigGapNotice}.
+ * <p>Generated notice: {@link BigGapInServiceNotice}.
  */
 @GtfsValidator
 public class ServiceGapValidator extends FileValidator {
@@ -68,17 +68,20 @@ public class ServiceGapValidator extends FileValidator {
         .forEach(
             calendar -> {
               String serviceId = calendar.serviceId();
-              ServiceInterval interval =
+              ServiceInterval intervals =
                   serviceIntervalCache.getIntervals(
                       serviceId, calendarTableContainer, calendarDateTableContainer);
-              if (interval == null) {
+              if (intervals == null) {
                 return;
               }
-              for (DateInterval gap : interval.getGaps()) {
+              for (DateInterval gap : intervals.getGaps()) {
                 if (gap.lengthInDays() > MAX_GAP_DAYS) {
                   noticeContainer.addValidationNotice(
-                      new ServiceWithBigGapNotice(
-                          serviceId, gap.getStart(), gap.getEnd(), gap.lengthInDays()));
+                      new BigGapInServiceNotice(
+                          serviceId,
+                          gap.start().minusDays(1), // Last active day before the gap
+                          gap.end().plusDays(1), // First active day after the gap
+                          gap.lengthInDays()));
                 }
               }
             });
@@ -88,26 +91,26 @@ public class ServiceGapValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = INFO,
       files = @FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}))
-  static class ServiceWithBigGapNotice extends ValidationNotice {
+  static class BigGapInServiceNotice extends ValidationNotice {
 
     /** The service_id that has the gap. */
     private final String serviceId;
 
-    //    /** The first day of the gap. */
-    //    private final LocalDate gapStartDate;
-    //
-    //    /** The last day of the gap. */
-    //    private final LocalDate gapEndDate;
-    //
-    //    /** The number of days in the gap. */
-    //    private final long gapDurationDays;
-    //
-    ServiceWithBigGapNotice(
+    /** The first day of the gap. */
+    private final String gapStartDate;
+
+    /** The last day of the gap. */
+    private final String gapEndDate;
+
+    /** The number of days in the gap. */
+    private final long gapDurationDays;
+
+    BigGapInServiceNotice(
         String serviceId, LocalDate gapStartDate, LocalDate gapEndDate, long gapDurationDays) {
       this.serviceId = serviceId;
-      //      this.gapStartDate = gapStartDate;
-      //      this.gapEndDate = gapEndDate;
-      //      this.gapDurationDays = gapDurationDays;
+      this.gapStartDate = gapStartDate.toString();
+      this.gapEndDate = gapEndDate.toString();
+      this.gapDurationDays = gapDurationDays;
     }
   }
 }

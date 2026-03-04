@@ -61,10 +61,6 @@ public class ServiceIntervalCache {
     return getOrBuild(calendarTable, calendarDateTable).get(serviceId);
   }
 
-  // ---------------------------------------------------------------------------
-  // Internal
-  // ---------------------------------------------------------------------------
-
   private ImmutableMap<String, ServiceInterval> getOrBuild(
       @Nullable GtfsCalendarTableContainer calendarTable,
       @Nullable GtfsCalendarDateTableContainer calendarDateTable) {

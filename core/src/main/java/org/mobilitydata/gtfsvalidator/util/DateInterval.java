@@ -3,19 +3,15 @@ package org.mobilitydata.gtfsvalidator.util;
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 
 /**
  * An immutable, inclusive date range [start, end].
  *
  * <p>Represents a contiguous block of calendar days. Used as the building block of {@link
- * ServiceIntervals} to represent runs of active service days without enumerating every individual
+ * ServiceInterval} to represent runs of active service days without enumerating every individual
  * date.
  */
-public final class DateInterval {
-
-  private final LocalDate start;
-  private final LocalDate end;
+public record DateInterval(LocalDate start, LocalDate end) {
 
   /**
    * Creates a new interval.
@@ -23,22 +19,22 @@ public final class DateInterval {
    * @param start the first active date, inclusive
    * @param end the last active date, inclusive; must be >= start
    */
-  public DateInterval(LocalDate start, LocalDate end) {
+  public DateInterval {
     Preconditions.checkNotNull(start, "start must not be null");
     Preconditions.checkNotNull(end, "end must not be null");
     Preconditions.checkArgument(
         !start.isAfter(end), "start (%s) must be before or equal to end (%s)", start, end);
-    this.start = start;
-    this.end = end;
   }
 
   /** Returns the first date of this interval, inclusive. */
-  public LocalDate getStart() {
+  @Override
+  public LocalDate start() {
     return start;
   }
 
   /** Returns the last date of this interval, inclusive. */
-  public LocalDate getEnd() {
+  @Override
+  public LocalDate end() {
     return end;
   }
 
@@ -77,11 +73,6 @@ public final class DateInterval {
     if (!(o instanceof DateInterval)) return false;
     DateInterval that = (DateInterval) o;
     return start.equals(that.start) && end.equals(that.end);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(start, end);
   }
 
   @Override
