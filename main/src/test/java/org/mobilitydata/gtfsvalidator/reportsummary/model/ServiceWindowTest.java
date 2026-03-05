@@ -524,7 +524,7 @@ public class ServiceWindowTest {
     // The window is at minimum the calendar range [2025-05-01, 2025-05-31].
     assertThat(result).isPresent();
     assertThat(result.get().startDate()).isEqualTo(LocalDate.of(2025, 5, 1));
-    assertThat(result.get().endDate()).isAtLeast(LocalDate.of(2025, 5, 31));
+    assertThat(result.get().endDate()).isAtLeast(LocalDate.of(2025, 6, 15));
   }
 
   /**
