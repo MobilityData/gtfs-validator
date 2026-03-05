@@ -75,6 +75,8 @@ public class NoticeFieldsTest {
             "currCsvRowNumber",
             "currStartTime",
             "currentDate",
+            "daysAfterFeedEnd",
+            "daysBeforeFeedStart",
             "departureTime",
             "departureTime1",
             "distanceKm",
