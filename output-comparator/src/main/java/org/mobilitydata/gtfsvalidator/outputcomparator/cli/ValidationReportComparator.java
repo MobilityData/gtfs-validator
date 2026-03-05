@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.CorruptedSourcesCollector;
+import org.mobilitydata.gtfsvalidator.outputcomparator.io.OutOfMemorySourcesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationPerformanceCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AcceptanceReport;
@@ -58,6 +59,7 @@ public class ValidationReportComparator {
             args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
+    OutOfMemorySourcesCollector oomSources = new OutOfMemorySourcesCollector();
     ValidationPerformanceCollector validationPerformanceCollector =
         new ValidationPerformanceCollector();
 
@@ -104,12 +106,28 @@ public class ValidationReportComparator {
       // As an edge case, when the execution raise a system exception the report will contain
       // no notices but system notices are found in the system_errors.json file.
       // In this case, the system notices are not considered as corrupted sources.
-      if (hasSystemErrors(referenceReport, referenceErrorsPath)) {
-        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+      ValidationReport referenceSystemErrors = getValidationReport(referenceErrorsPath);
+      ValidationReport latestSystemErrors = getValidationReport(latestErrorsPath);
+      if (hasSystemErrors(referenceReport, referenceSystemErrors)) {
+        corruptedSources.addCorruptedSource(
+            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
         continue;
       }
-      if (hasSystemErrors(latestReport, latestErrorsPath)) {
-        corruptedSources.addCorruptedSource(sourceId, true, true, true, true);
+      if (hasSystemErrors(latestReport, latestSystemErrors)) {
+        corruptedSources.addCorruptedSource(
+            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
+        continue;
+      }
+
+      // Check for OutOfMemoryError in the validation reports. An OOM in a validation thread may
+      // still produce partial results, so we check independently of whether the report has other
+      // notices.
+      boolean refOom = hasOutOfMemoryError(referenceReport);
+      boolean latestOom = hasOutOfMemoryError(latestReport);
+      if (refOom || latestOom) {
+        corruptedSources.addCorruptedSource(
+            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
+        oomSources.addOomSource(sourceId, refOom, latestOom);
         continue;
       }
 
@@ -145,17 +163,22 @@ public class ValidationReportComparator {
             newWarnings,
             droppedWarnings,
             corruptedSources,
+            oomSources,
             validationPerformanceCollector,
             args);
 
     return Result.create(report, reportSummaryString, failure);
   }
 
-  private boolean hasSystemErrors(ValidationReport validationReport, Path path) {
-    var systemErrors = getValidationReport(path);
+  private boolean hasSystemErrors(
+      ValidationReport validationReport, ValidationReport systemErrors) {
     return validationReport.getNotices().isEmpty()
         && systemErrors != null
         && !systemErrors.getNotices().isEmpty();
+  }
+
+  private static boolean hasOutOfMemoryError(ValidationReport report) {
+    return report != null && report.hasOutOfMemoryError();
   }
 
   private static ValidationReport getValidationReport(Path referenceReportPath) {
@@ -198,6 +221,7 @@ public class ValidationReportComparator {
       ChangedNoticesCollector newWarnings,
       ChangedNoticesCollector droppedWarnings,
       CorruptedSourcesCollector corruptedSources,
+      OutOfMemorySourcesCollector oomSources,
       ValidationPerformanceCollector validationPerformanceCollector,
       Arguments args) {
     StringBuilder b = new StringBuilder();
@@ -225,6 +249,7 @@ public class ValidationReportComparator {
     b.append(newWarnings.generateLogString("New Warnings")).append('\n');
     b.append(droppedWarnings.generateLogString("Dropped Warnings")).append("\n\n");
     b.append(corruptedSources.generateLogString()).append("\n").append("\n");
+    b.append(oomSources.generateLogString()).append("\n").append("\n");
     b.append(validationPerformanceCollector.generateLogString()).append("\n");
     return b.toString();
   }
