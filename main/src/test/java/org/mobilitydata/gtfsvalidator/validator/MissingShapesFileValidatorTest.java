@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +64,10 @@ public class MissingShapesFileValidatorTest {
             .anyMatch(
                 notice ->
                     notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
-    assertThat(found).isTrue();
+    assertTrue(found);
   }
 
+  @Test
     public void testShapesFileAndZoneBasedDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
@@ -78,9 +79,10 @@ public class MissingShapesFileValidatorTest {
             .anyMatch(
                 notice ->
                     notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
-    assertThat(found).isTrue();
+    assertTrue(found);
   }
 
+  @Test
     public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
@@ -92,7 +94,7 @@ public class MissingShapesFileValidatorTest {
             .anyMatch(
                 notice ->
                     notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
-    assertThat(found).isTrue();
+    assertTrue(found);
   }
 
   private static List<ValidationNotice> generateNotices(
