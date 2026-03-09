@@ -179,7 +179,7 @@ public abstract class GtfsInput implements Closeable {
       }
 
       return new GtfsZipFileInput(
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
+          new File(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
     }
   }
 
