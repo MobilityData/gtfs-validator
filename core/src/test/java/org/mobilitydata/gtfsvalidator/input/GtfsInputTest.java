@@ -80,10 +80,12 @@ public class GtfsInputTest {
 
   @Test
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
+    var storageDir = tmpDir.getRoot().toPath().resolve("storage");
+    java.nio.file.Files.createDirectories(storageDir);
     try (GtfsInput underTest =
         GtfsInput.createFromUrl(
             new URL(VALID_URL),
-            tmpDir.getRoot().toPath().resolve("storage"),
+            storageDir,
             noticeContainer,
             "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
@@ -91,13 +93,15 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void createFromUrl_invalid_throwsException() {
+  public void createFromUrl_invalid_throwsException() throws IOException {
+    var storageDir = tmpDir.getRoot().toPath().resolve("storage");
+    java.nio.file.Files.createDirectories(storageDir);
     assertThrows(
         IOException.class,
         () ->
             GtfsInput.createFromUrl(
                 new URL(INVALID_URL),
-                tmpDir.getRoot().toPath().resolve("storage"),
+                storageDir,
                 noticeContainer,
                 "1.0.1"));
   }
