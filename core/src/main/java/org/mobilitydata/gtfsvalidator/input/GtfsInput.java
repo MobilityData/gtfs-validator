@@ -32,6 +32,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
+import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 
@@ -159,7 +160,7 @@ public abstract class GtfsInput implements Closeable {
    */
   public static GtfsInput createFromUrlInMemory(
       URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
-      throws IOException, URISyntaxException, ZipException, NoSuchFileException {
+      throws IOException, URISyntaxException, ZipException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
       ZipFile zipFile = new ZipFile(sourceUrl.toString());
@@ -175,7 +176,7 @@ public abstract class GtfsInput implements Closeable {
         ZipArchiveEntry entry = entries.nextElement();
         // If the file was created using STORE (method 0), we can't properly extract it.
         if (entry.getMethod() == 0) {
-          throw new ZipException(GtfsInput.invalidCompressionMessage);
+        noticeContainer.addSystemError(new IOError(new ZipException(GtfsInput.invalidCompressionMessage)));
         }
       }
       zipFile.close();
