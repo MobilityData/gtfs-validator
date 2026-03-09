@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -104,7 +105,7 @@ public class GtfsInputTest {
 
   @Test
   public void createFromUrlInMemory_valid_success()
-      throws IOException, URISyntaxException {
+      throws IOException, URISyntaxException, NoSuchFileException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer, "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
