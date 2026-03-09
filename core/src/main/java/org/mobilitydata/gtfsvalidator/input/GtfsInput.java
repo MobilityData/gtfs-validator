@@ -177,6 +177,7 @@ public abstract class GtfsInput implements Closeable {
           throw new ZipException(GtfsInput.invalidCompressionMessage);
         }
       }
+      zipFile.close();
 
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);

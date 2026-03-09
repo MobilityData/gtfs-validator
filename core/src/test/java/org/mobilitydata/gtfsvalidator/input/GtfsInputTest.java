@@ -105,7 +105,7 @@ public class GtfsInputTest {
 
   @Test
   public void createFromUrlInMemory_valid_success()
-      throws IOException, URISyntaxException, NoSuchFileException {
+      throws IOException, URISyntaxException, ZipException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer, "1.0.1")) {
       assertThat(underTest instanceof GtfsZipFileInput);
