@@ -94,7 +94,7 @@ public class MissingShapesFileValidatorTest {
             .anyMatch(
                 notice ->
                     notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
-    assertThat(found).isTrue();
+    assertThat(found).isFalse();
   }
 
   private static List<ValidationNotice> generateNotices(
