@@ -239,4 +239,82 @@ public class ValidationReportTest {
                     + "  ]\n"
                     + "}"));
   }
+
+  @Test
+  public void hasOutOfMemoryError_withOomError_true() throws IOException {
+    ValidationReport report =
+        createValidationReportFromPath(
+            "oom_report.json",
+            "{\n"
+                + "  \"notices\": [\n"
+                + "    {\n"
+                + "      \"code\": \"thread_execution_error\",\n"
+                + "      \"severity\": \"ERROR\",\n"
+                + "      \"totalNotices\": 1,\n"
+                + "      \"sampleNotices\": [\n"
+                + "        {\n"
+                + "          \"exception\": \"java.lang.OutOfMemoryError\",\n"
+                + "          \"message\": \"Java heap space\"\n"
+                + "        }\n"
+                + "      ]\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}");
+    assertThat(report.hasOutOfMemoryError()).isTrue();
+  }
+
+  @Test
+  public void hasOutOfMemoryError_withOtherThreadError_false() throws IOException {
+    ValidationReport report =
+        createValidationReportFromPath(
+            "other_error_report.json",
+            "{\n"
+                + "  \"notices\": [\n"
+                + "    {\n"
+                + "      \"code\": \"thread_execution_error\",\n"
+                + "      \"severity\": \"ERROR\",\n"
+                + "      \"totalNotices\": 1,\n"
+                + "      \"sampleNotices\": [\n"
+                + "        {\n"
+                + "          \"exception\": \"java.lang.NullPointerException\",\n"
+                + "          \"message\": \"some message\"\n"
+                + "        }\n"
+                + "      ]\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}");
+    assertThat(report.hasOutOfMemoryError()).isFalse();
+  }
+
+  @Test
+  public void hasOutOfMemoryError_withNoSystemErrors_false() throws IOException {
+    ValidationReport report =
+        createValidationReportFromPath(
+            "no_errors_report.json",
+            "{\n"
+                + "  \"notices\": [\n"
+                + "    {\n"
+                + "      \"code\": \"invalid_url\",\n"
+                + "      \"severity\": \"ERROR\",\n"
+                + "      \"totalNotices\": 1,\n"
+                + "      \"sampleNotices\": [\n"
+                + "        {\n"
+                + "          \"filename\": \"stops.txt\",\n"
+                + "          \"csvRowNumber\": 163,\n"
+                + "          \"fieldName\": \"stop_url\",\n"
+                + "          \"fieldValue\": \"http://example.com\"\n"
+                + "        }\n"
+                + "      ]\n"
+                + "    }\n"
+                + "  ]\n"
+                + "}");
+    assertThat(report.hasOutOfMemoryError()).isFalse();
+  }
+
+  @Test
+  public void hasOutOfMemoryError_emptyNotices_false() throws IOException {
+    ValidationReport report =
+        createValidationReportFromPath("empty_report.json", "{\n" + "  \"notices\": []\n" + "}");
+    assertThat(report.hasOutOfMemoryError()).isFalse();
+  }
 }
