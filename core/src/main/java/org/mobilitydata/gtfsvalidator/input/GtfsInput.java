@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -158,7 +159,7 @@ public abstract class GtfsInput implements Closeable {
    */
   public static GtfsInput createFromUrlInMemory(
       URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
-      throws IOException, URISyntaxException, ZipException {
+      throws IOException, URISyntaxException, ZipException, NoSuchFileException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
       ZipFile zipFile = new ZipFile(sourceUrl.toString());
@@ -170,13 +171,14 @@ public abstract class GtfsInput implements Closeable {
       }
 
       Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
-      //while (entries.hasMoreElements()) {
+      while (entries.hasMoreElements()) {
         ZipArchiveEntry entry = entries.nextElement();
         // If the file was created using STORE (method 0), we can't properly extract it.
         if (entry.getMethod() == 0) {
           throw new ZipException(GtfsInput.invalidCompressionMessage);
         }
-      //}
+      }
+      zipFile.close();
 
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
