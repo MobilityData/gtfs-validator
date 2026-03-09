@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -15,9 +16,10 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
-import org.mobilitydata.gtfsvalidator.validator.ServiceGapValidator.BigGapInServiceNotice;
+import org.mobilitydata.gtfsvalidator.validator.ServiceSpreadValidator.BigGapInServiceNotice;
+import org.mobilitydata.gtfsvalidator.validator.ServiceSpreadValidator.ServiceExtendsFarInTheFutureNotice;
 
-public class ServiceGapValidatorTest {
+public class ServiceSpreadValidatorTest {
 
   private record CalendarMetadata(
       String serviceId, String startDate, String endDate, boolean activeAllWeek) {}
@@ -74,7 +76,9 @@ public class ServiceGapValidatorTest {
     GtfsCalendarDateTableContainer calendarDateTable =
         GtfsCalendarDateTableContainer.forEntities(calendarDates, noticeContainer);
 
-    new ServiceGapValidator(new ServiceIntervalCache(), calendarTable, calendarDateTable)
+    DateForValidation dateForValidation = new DateForValidation(LocalDate.of(2024, 1, 1));
+    new ServiceSpreadValidator(
+            new ServiceIntervalCache(), dateForValidation, calendarTable, calendarDateTable)
         .validate(noticeContainer);
 
     return noticeContainer.getValidationNotices();
@@ -254,5 +258,90 @@ public class ServiceGapValidatorTest {
         generateNotices(
             ImmutableList.of(new CalendarMetadata("service_1", "20240101", "20240101", true)));
     assertThat(notices).isEmpty();
+  }
+
+  @Test
+  public void serviceEndFarInFuture_calendarOnly_generatesNotice() {
+    // calendar.txt defines a service ending more than 2 years after the validation date
+    // (2024-01-01).
+    // Here endDate is 2026-02-01 (> 2 * 365 days after 2024-01-01), so exactly one
+    // ServiceExtendsFarInTheFutureNotice should be emitted. We assert that there is one and only
+    // one such notice with the expected data, allowing for any additional notices of other types.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("service_future_cal", "20240101", "20260201", true)));
+
+    LocalDate end = LocalDate.of(2026, 2, 1);
+    ValidationNotice expectedFutureNotice =
+        new ServiceExtendsFarInTheFutureNotice("service_future_cal", end);
+
+    List<ServiceExtendsFarInTheFutureNotice> futureNotices =
+        notices.stream()
+            .filter(ServiceExtendsFarInTheFutureNotice.class::isInstance)
+            .map(ServiceExtendsFarInTheFutureNotice.class::cast)
+            .toList();
+
+    assertThat(futureNotices).containsExactly(expectedFutureNotice);
+  }
+
+  @Test
+  public void serviceEndFarInFuture_calendarDatesOnly_generatesNotice() {
+    // No real range in calendar.txt (single day), service effectively defined by far future
+    // SERVICE_ADDED in calendar_dates.txt.
+    // Last added date is 2026-02-01 (> 2 years after 2024-01-01), so exactly one
+    // ServiceExtendsFarInTheFutureNotice should be emitted for this service. There may also be
+    // other notices of different types (e.g., BigGapInServiceNotice); we only assert that there
+    // is one and only one future-extent notice with the expected data.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("service_future_cd", "20240101", "20240101", true)),
+            ImmutableList.of(
+                new CalendarDateMetadata(
+                    "service_future_cd", "20260201", GtfsCalendarDateExceptionType.SERVICE_ADDED)));
+
+    LocalDate end = LocalDate.of(2026, 2, 1);
+    ValidationNotice expectedFutureNotice =
+        new ServiceExtendsFarInTheFutureNotice("service_future_cd", end);
+
+    // Filter out only ServiceExtendsFarInTheFutureNotice instances.
+    List<ServiceExtendsFarInTheFutureNotice> futureNotices =
+        notices.stream()
+            .filter(ServiceExtendsFarInTheFutureNotice.class::isInstance)
+            .map(ServiceExtendsFarInTheFutureNotice.class::cast)
+            .toList();
+
+    assertThat(futureNotices).containsExactly(expectedFutureNotice);
+  }
+
+  @Test
+  public void serviceEndFarInFuture_calendarAndCalendarDates_generatesNotice() {
+    // calendar.txt defines regular service through 2025-01-01.
+    // calendar_dates.txt adds a single far-future SERVICE_ADDED date in 2026. Exactly one
+    // ServiceExtendsFarInTheFutureNotice should be emitted for this service. There may be other
+    // notices (e.g., BigGapInServiceNotice); we only assert that there is one and only one
+    // future-extent notice with the expected data.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("service_future_both", "20240101", "20250101", true)),
+            ImmutableList.of(
+                new CalendarDateMetadata(
+                    "service_future_both",
+                    "20260201",
+                    GtfsCalendarDateExceptionType.SERVICE_ADDED)));
+
+    LocalDate end = LocalDate.of(2026, 2, 1);
+    ValidationNotice expectedFutureNotice =
+        new ServiceExtendsFarInTheFutureNotice("service_future_both", end);
+
+    List<ServiceExtendsFarInTheFutureNotice> futureNotices =
+        notices.stream()
+            .filter(ServiceExtendsFarInTheFutureNotice.class::isInstance)
+            .map(ServiceExtendsFarInTheFutureNotice.class::cast)
+            .toList();
+
+    assertThat(futureNotices).containsExactly(expectedFutureNotice);
   }
 }
