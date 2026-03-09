@@ -41,7 +41,7 @@ public class GtfsInputTest {
   // Use String instead of URL since the URL() constructor throws MalformedURLException.
   private static final String INVALID_URL = "https://openmobilitydata.org/invalid-feed.zip";
   private static final String VALID_URL =
-      "https://github.com/MobilityData/gtfs-validator/raw/refs/tags/v1.4.0/usecase/src/test/resources/"
+      "https://raw.githubusercontent.com/MobilityData/gtfs-validator/v1.4.0/usecase/src/test/resources/"
           + "valid_zip_sample.zip";
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
