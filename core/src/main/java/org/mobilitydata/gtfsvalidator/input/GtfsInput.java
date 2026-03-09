@@ -170,14 +170,13 @@ public abstract class GtfsInput implements Closeable {
       }
 
       Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
-      while (entries.hasMoreElements()) {
+      //while (entries.hasMoreElements()) {
         ZipArchiveEntry entry = entries.nextElement();
         // If the file was created using STORE (method 0), we can't properly extract it.
         if (entry.getMethod() == 0) {
           throw new ZipException(GtfsInput.invalidCompressionMessage);
         }
-      }
-      zipFile.close();
+      //}
 
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
