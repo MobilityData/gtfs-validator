@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -95,6 +97,31 @@ public class ValidationReport {
 
   public List<MemoryUsage> getMemoryUsageRecords() {
     return memoryUsageRecords;
+  }
+
+  /**
+   * Checks if this report contains a {@code thread_execution_error} notice with an {@code
+   * exception} field indicating a {@code java.lang.OutOfMemoryError}.
+   *
+   * @return true if an out-of-memory error is found in the notices.
+   */
+  public boolean hasOutOfMemoryError() {
+    for (NoticeReport notice : notices) {
+      if ("thread_execution_error".equals(notice.getCode())) {
+        for (JsonElement sample : notice.getSampleNotices()) {
+          if (sample.isJsonObject()) {
+            JsonObject obj = sample.getAsJsonObject();
+            if (obj.has("exception")) {
+              String exception = obj.get("exception").getAsString();
+              if (exception.contains("OutOfMemoryError")) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /**

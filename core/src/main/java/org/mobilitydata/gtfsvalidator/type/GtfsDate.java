@@ -35,6 +35,10 @@ public class GtfsDate implements Comparable<GtfsDate> {
     return new GtfsDate(LocalDate.ofEpochDay(epochDay));
   }
 
+  public GtfsDate plusDays(long days) {
+    return new GtfsDate(localDate.plusDays(days));
+  }
+
   /**
    * Parses date from string in {@code YYYYMMDD} format.
    *
