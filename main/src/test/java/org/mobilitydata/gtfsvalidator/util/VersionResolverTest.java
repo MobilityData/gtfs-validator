@@ -13,6 +13,7 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -107,6 +108,27 @@ public class VersionResolverTest {
     callbackLatch.await(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS);
 
     assertThat(versionInfo.get().latestReleaseVersion()).hasValue("10.0.5");
+  }
+
+  @Test
+  public void getVersionInfoWithTimeoutException_usesCurrentVersionFallback() {
+    VersionResolver resolver =
+        new VersionResolver(ApplicationType.CLI) {
+          @Override
+          public synchronized VersionInfo resolve(boolean skipValidatorUpdate) {
+            throw new RuntimeException("Test exception");
+          }
+
+          @Override
+          public Optional<String> resolveCurrentVersion() {
+            return Optional.of("1.2.3");
+          }
+        };
+
+    VersionInfo info = resolver.getVersionInfoWithTimeout(Duration.ofMillis(1), true);
+
+    assertThat(info.currentVersion()).isPresent();
+    assertThat(info.currentVersion().get()).isEqualTo("1.2.3");
   }
 
   private static class MockStreamHandler extends URLStreamHandler {

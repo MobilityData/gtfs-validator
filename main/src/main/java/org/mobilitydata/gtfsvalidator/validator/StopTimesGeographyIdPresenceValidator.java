@@ -15,11 +15,16 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+
+import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
-import org.mobilitydata.gtfsvalidator.notice.ForbiddenGeographyIdNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
  * Validates that only one of `stop_id`, `location_group_id` or `location_id` is defined in a given
@@ -67,5 +72,38 @@ public class StopTimesGeographyIdPresenceValidator extends SingleEntityValidator
     return header.hasColumn(GtfsStopTime.STOP_ID_FIELD_NAME)
         || header.hasColumn(GtfsStopTime.LOCATION_GROUP_ID_FIELD_NAME)
         || header.hasColumn(GtfsStopTime.LOCATION_ID_FIELD_NAME);
+  }
+
+  /**
+   * A stop_time entry has more than one geographical id defined.
+   *
+   * <p>In stop_times.txt, you can have only one of stop_id, location_group_id or location_id
+   * defined for given entry.
+   */
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class),
+      sections = @GtfsValidationNotice.SectionRefs(FILE_REQUIREMENTS))
+  public static class ForbiddenGeographyIdNotice extends ValidationNotice {
+
+    /** The row of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The id that already exists. */
+    private final String stopId;
+
+    /** The id that already exists. */
+    private final String locationGroupId;
+
+    /** The id that already exists. */
+    private final String locationId;
+
+    public ForbiddenGeographyIdNotice(
+        int csvRowNumber, String stopId, String locationGroupId, String locationId) {
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.locationGroupId = locationGroupId;
+      this.locationId = locationId;
+    }
   }
 }

@@ -100,6 +100,8 @@ public class ExpiredCalendarValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
+      files =
+          @GtfsValidationNotice.FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}),
       urls = {
         @UrlRef(
             label = "Dataset Publishing & General Practices",

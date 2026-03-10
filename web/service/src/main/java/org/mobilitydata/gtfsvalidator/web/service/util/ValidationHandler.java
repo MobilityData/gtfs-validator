@@ -35,6 +35,9 @@ public class ValidationHandler {
             .setGtfsSource(feedFile.toURI())
             .setOutputDirectory(Optional.of(outputPath))
             .setStdoutOutput(false);
+            .setSkipValidatorUpdate(
+                true); // skipValidatorUpdate is true to prevent remote version checks and forces
+    // use of the JAR manifest version.
     if (!countryCode.isEmpty()) {
       var country = CountryCode.forStringOrUnknown(countryCode);
       logger.debug("setting country code: {}", country.getCountryCode());

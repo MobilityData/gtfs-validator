@@ -46,6 +46,7 @@ import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -135,6 +136,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
+            .set(ServiceIntervalCache.class, new ServiceIntervalCache())
             .setDateForValidation(new DateForValidation(config.dateForValidation()))
             .build();
     try {

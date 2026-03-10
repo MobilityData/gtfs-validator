@@ -109,7 +109,12 @@ public class NoticeFieldsTest {
             "fileNameB",
             "filename",
             "firstIndex",
+            "fromRouteId",
+            "fromRouteType",
             "fromStopId",
+            "gapDurationDays",
+            "gapEndDate",
+            "gapStartDate",
             "geoDistanceToShape",
             "geoJsonType",
             "geographyId",
@@ -171,10 +176,12 @@ public class NoticeFieldsTest {
             "routeId",
             "routeId1",
             "routeId2",
+            "routeIds",
             "routeLongName",
             "routeShortName",
             "routeTextColor",
             "routeTypeValue",
+            "routeTypes",
             "routeUrl",
             "rowLength",
             "rowNumber",
@@ -215,6 +222,8 @@ public class NoticeFieldsTest {
             "tableName",
             "time",
             "timeframeGroupId",
+            "toRouteId",
+            "toRouteType",
             "toStopId",
             "transferCount",
             "tripCsvRowNumber",
@@ -231,7 +240,11 @@ public class NoticeFieldsTest {
             "riderCategoryId1",
             "riderCategoryId2",
             "currencyCode",
-            "stopAccess");
+            "stopAccess",
+            "platformCode",
+            "startCsvRowNumber",
+            "endCsvRowNumber",
+            "feedStartDate");
   }
 
   private static List<String> discoverValidationNoticeFieldNames() {

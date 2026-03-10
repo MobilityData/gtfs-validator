@@ -42,6 +42,16 @@ public class FareAttributeAgencyIdValidator extends FileValidator {
   }
 
   @Override
+  public boolean shouldCallValidate() {
+    if (agencyTable == null || agencyTable.entityCount() == 0) {
+      // agencyTable is a required file, so if it's null there will be a notice issued by another
+      // validator.
+      return false;
+    }
+    return attributeTable != null && attributeTable.entityCount() > 0;
+  }
+
+  @Override
   public void validate(NoticeContainer noticeContainer) {
     // routes.agency_id is required when there are multiple agencies
     int totalAgencies = agencyTable.entityCount();
@@ -51,10 +61,8 @@ public class FareAttributeAgencyIdValidator extends FileValidator {
         if (totalAgencies > 1) {
           // add error notice if more than one agency
           noticeContainer.addValidationNotice(
-              new MissingRequiredFieldNotice(
-                  attributeTable.gtfsFilename(),
-                  fare.csvRowNumber(),
-                  GtfsFareAttribute.AGENCY_ID_FIELD_NAME));
+              new MissingRequiredAgencyIdNotice(
+                  attributeTable.gtfsFilename(), fare.csvRowNumber(), null));
         } else {
           // add warning notice if only one agency
           noticeContainer.addValidationNotice(

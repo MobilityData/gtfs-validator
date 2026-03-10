@@ -20,21 +20,13 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 
 /**
  * Invalid csv row length.
  *
  * <p>A row in the input file has a different number of values than specified by the CSV header.
  */
-@GtfsValidationNotice(
-    severity = ERROR,
-    sections = @SectionRefs(FILE_REQUIREMENTS),
-    urls = {
-      @UrlRef(
-          label = "Original Python validator implementation",
-          url = "https://github.com/google/transitfeed")
-    })
+@GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
 public class InvalidRowLengthNotice extends ValidationNotice {
 
   /** The name of the faulty file. */

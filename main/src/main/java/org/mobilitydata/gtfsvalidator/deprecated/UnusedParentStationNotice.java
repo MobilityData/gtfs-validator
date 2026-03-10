@@ -1,10 +1,11 @@
-package org.mobilitydata.gtfsvalidator.notice.deprecated;
+package org.mobilitydata.gtfsvalidator.deprecated;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.notice.UnusedStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
+import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator;
 
 /**
  * Unused parent station.
@@ -13,10 +14,11 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
  */
 @GtfsValidationNotice(
     severity = INFO,
+    files = @GtfsValidationNotice.FileRefs(GtfsStopSchema.class),
     deprecated = true,
     deprecationVersion = "7.0.0",
     deprecationReason = "Renamed to `unused_station`",
-    replacementNotices = {UnusedStationNotice.class})
+    replacementNotices = {ParentStationValidator.UnusedStationNotice.class})
 class UnusedParentStationNotice extends ValidationNotice {
   /** The row number of the faulty record. */
   private final int csvRowNumber;
