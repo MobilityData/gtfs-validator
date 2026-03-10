@@ -191,7 +191,7 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedExtendsJustAtThreshold_noNotice() {
-    // Feed starts exactly THRESHOLD_DAYS (14) before service window — no notice expected.
+    // Feed starts exactly THRESHOLD_DAYS (14) before service window -> no notice expected.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240115", "20240131")),
@@ -339,7 +339,7 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedStartsTooEarly_beyondThreshold_oneNotice() {
-    // Service Jan 15 – Jan 31, feed starts Jan 1 (14 days before) — exactly at threshold, no
+    // Service Jan 15 – Jan 31, feed starts Jan 1 (14 days before)-> exactly at threshold, no
     // notice.
     // Shift to Dec 31 (15 days before) to trigger.
     List<ValidationNotice> notices =
@@ -369,7 +369,7 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedExceedsBothSides_oneNotice() {
-    // Feed extends beyond THRESHOLD_DAYS on both sides — still only one notice.
+    // Feed extends beyond THRESHOLD_DAYS on both sides -> still only one notice.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240115", "20240115")),

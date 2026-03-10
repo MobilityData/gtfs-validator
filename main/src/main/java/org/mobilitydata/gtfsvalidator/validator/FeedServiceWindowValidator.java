@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -94,7 +94,7 @@ public class FeedServiceWindowValidator extends FileValidator {
     LocalDate totalWindowStart = null;
     LocalDate totalWindowEnd = null;
 
-    // Iterate unique service IDs from trips.txt — one entry per service, no deduplication needed.
+    // Iterate unique service IDs from trips.txt. One entry per service, no deduplication needed.
     for (String serviceId : tripTable.byServiceIdMap().keySet()) {
       ServiceInterval interval =
           serviceIntervalCache.getIntervals(serviceId, calendarTable, calendarDateTable);
@@ -167,7 +167,7 @@ public class FeedServiceWindowValidator extends FileValidator {
 
   /** A service window is not covered by the feed's validity period. */
   @GtfsValidationNotice(
-      severity = WARNING, // TODO tmp should be INFO
+      severity = INFO,
       files =
           @FileRefs({
             GtfsCalendarSchema.class,
@@ -207,7 +207,7 @@ public class FeedServiceWindowValidator extends FileValidator {
 
   /** The feed is valid 14 days beyond its total service window. */
   @GtfsValidationNotice(
-      severity = WARNING, // TODO tmp should be INFO
+      severity = INFO,
       files =
           @FileRefs({
             GtfsCalendarSchema.class,
