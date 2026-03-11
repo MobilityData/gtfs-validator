@@ -163,15 +163,14 @@ public abstract class GtfsInput implements Closeable {
       throws IOException, URISyntaxException, ZipException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
-      ZipFile zipFileInput = new ZipFile(sourceUrl.toString());
+      ZipFile zipFileInput = new ZipFile(sourceUrl.toString().replace(".zip", ""));
       String fileName = sourceUrl.toString().replace(".zip", "");
-      ZipFile zipFile = new ZipFile(fileName);
-      if (containsGtfsFileInSubfolder(
+\      if (containsGtfsFileInSubfolder(
           new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
         noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
       }
 
-      Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+      Enumeration<ZipArchiveEntry> entries = zipFileInput.getEntries();
       while (entries.hasMoreElements()) {
         ZipArchiveEntry entry = entries.nextElement();
         // If the file was created using STORE (method 0), we can't properly extract it.
@@ -179,7 +178,7 @@ public abstract class GtfsInput implements Closeable {
         noticeContainer.addSystemError(new IOError(new ZipException(GtfsInput.invalidCompressionMessage)));
         }
       }
-      zipFile.close();
+      zipFileInput.close();
 
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
