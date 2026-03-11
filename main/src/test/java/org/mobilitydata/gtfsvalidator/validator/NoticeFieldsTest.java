@@ -146,6 +146,7 @@ public class NoticeFieldsTest {
             "maxShapeDistanceTraveled",
             "maxTripDistanceTraveled",
             "message",
+            "minServiceStartDate",
             "missingElement",
             "newCsvRowNumber",
             "oldCsvRowNumber",

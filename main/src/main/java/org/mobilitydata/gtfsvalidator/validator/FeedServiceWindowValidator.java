@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
@@ -35,7 +36,7 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
  * Validates the relationship between the feed validity period (feed_info.txt) and the service
  * windows defined in calendar.txt and calendar_dates.txt.
  *
- * <p>Two complementary checks are performed in a single pass over all unique service IDs sourced
+ * <p>Three complementary checks are performed in a single pass over all unique service IDs sourced
  * from trips.txt:
  *
  * <ol>
@@ -47,10 +48,13 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
  *       beyond the total service window. A {@link FeedValidBeyondTotalServiceWindowNotice} is
  *       emitted when the feed start/end date exceeds the total service window bounds by more than
  *       {@link #THRESHOLD_DAYS} days.
+ *   <li>Future calendar: at least one service in the feed should cover today. A {@link
+ *       FutureCalendarNotice} is emitted when the minimum service start date across all services is
+ *       strictly after today's date.
  * </ol>
  *
  * <p>Generated notices: {@link ServiceWindowExtendsPastFeedPeriodNotice}, {@link
- * FeedValidBeyondTotalServiceWindowNotice}.
+ * FeedValidBeyondTotalServiceWindowNotice}, {@link FutureCalendarNotice}.
  */
 @GtfsValidator
 public class FeedServiceWindowValidator extends FileValidator {
@@ -62,14 +66,17 @@ public class FeedServiceWindowValidator extends FileValidator {
   private final GtfsFeedInfoTableContainer feedInfoTable;
   private final GtfsTripTableContainer tripTable;
   private final ServiceIntervalCache serviceIntervalCache;
+  private final DateForValidation dateForValidation;
 
   @Inject
   FeedServiceWindowValidator(
+      DateForValidation dateForValidation,
       GtfsCalendarTableContainer calendarTable,
       GtfsCalendarDateTableContainer calendarDateTable,
       GtfsFeedInfoTableContainer feedInfoTable,
       GtfsTripTableContainer tripTable,
       ServiceIntervalCache serviceIntervalCache) {
+    this.dateForValidation = dateForValidation;
     this.calendarTable = calendarTable;
     this.calendarDateTable = calendarDateTable;
     this.feedInfoTable = feedInfoTable;
@@ -106,15 +113,16 @@ public class FeedServiceWindowValidator extends FileValidator {
       // Check 1: one notice per service summarizing how far it extends outside the feed period.
       checkServiceWindow(serviceId, interval, feedStartDate, feedEndDate, noticeContainer);
 
-      // Check 2: accumulate total service window.
+      // Check 2 & 3: accumulate total service window.
       totalWindowStart = earliest(totalWindowStart, interval.firstActiveDate());
       totalWindowEnd = latest(totalWindowEnd, interval.lastActiveDate());
     }
 
-    // Check 2: emit notice if feed period extends far beyond total service window.
     if (totalWindowStart == null || totalWindowEnd == null) {
       return;
     }
+
+    // Check 2: emit notice if feed period extends far beyond total service window.
     if (feedStartDate.isBefore(totalWindowStart.minusDays(THRESHOLD_DAYS))
         || feedEndDate.isAfter(totalWindowEnd.plusDays(THRESHOLD_DAYS))) {
       noticeContainer.addValidationNotice(
@@ -123,6 +131,12 @@ public class FeedServiceWindowValidator extends FileValidator {
               feedEndDate.toString(),
               totalWindowStart.toString(),
               totalWindowEnd.toString()));
+    }
+
+    // Check 3: emit notice if all services start in the future (none cover today).
+    if (totalWindowStart.isAfter(dateForValidation.getDate())) {
+      noticeContainer.addValidationNotice(
+          new FutureCalendarNotice(totalWindowStart.toString(), dateForValidation.getDate().toString()));
     }
   }
 
@@ -237,6 +251,24 @@ public class FeedServiceWindowValidator extends FileValidator {
       this.feedEndDate = feedEndDate;
       this.serviceWindowStartDate = totalServiceWindowStartDate;
       this.serviceWindowEndDate = totalServiceWindowEndDate;
+    }
+  }
+
+  /** All services in the feed start in the future; no service covers today's date. */
+  @GtfsValidationNotice(
+      severity = INFO,
+      files = @FileRefs({GtfsCalendarSchema.class, GtfsCalendarDateSchema.class}))
+  static class FutureCalendarNotice extends ValidationNotice {
+
+    /** The earliest service start date across all services in the feed. */
+    private final String minServiceStartDate;
+
+    /** Today's date at validation time. */
+    private final String currentDate;
+
+    FutureCalendarNotice(String minServiceStartDate, String currentDate) {
+      this.minServiceStartDate = minServiceStartDate;
+      this.currentDate = currentDate;
     }
   }
 }

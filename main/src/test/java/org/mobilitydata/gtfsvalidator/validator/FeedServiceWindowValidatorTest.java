@@ -1,10 +1,28 @@
+/*
+ * Copyright 2026 MobilityData IO
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.Test;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
@@ -19,9 +37,13 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.FeedValidBeyondTotalServiceWindowNotice;
+import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.FutureCalendarNotice;
 import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.ServiceWindowExtendsPastFeedPeriodNotice;
 
 public class FeedServiceWindowValidatorTest {
+
+  private static final LocalDate TODAY = LocalDate.of(2024, 1, 15);
+  private static final DateForValidation DATE_FOR_VALIDATION = new DateForValidation(TODAY);
 
   // ---------------------------------------------------------------------------
   // Builders
@@ -82,7 +104,8 @@ public class FeedServiceWindowValidatorTest {
       List<CalendarDateMetadata> calendarDateMetadataList,
       String feedStartDate,
       String feedEndDate,
-      List<String> serviceIds) {
+      List<String> serviceIds,
+      DateForValidation dateForValidation) {
     NoticeContainer noticeContainer = new NoticeContainer();
 
     ImmutableList<GtfsCalendar> calendars =
@@ -95,7 +118,6 @@ public class FeedServiceWindowValidatorTest {
             .map(meta -> buildCalendarDate(meta, 1))
             .collect(ImmutableList.toImmutableList());
 
-    // Build one trip per service ID so byServiceIdMap is populated.
     ImmutableList<GtfsTrip> trips =
         serviceIds.stream()
             .map(id -> buildTrip(id, "trip_" + id, 1))
@@ -111,13 +133,34 @@ public class FeedServiceWindowValidatorTest {
     GtfsTripTableContainer tripTable = GtfsTripTableContainer.forEntities(trips, noticeContainer);
 
     new FeedServiceWindowValidator(
-            calendarTable, calendarDateTable, feedInfoTable, tripTable, new ServiceIntervalCache())
+            dateForValidation,
+            calendarTable,
+            calendarDateTable,
+            feedInfoTable,
+            tripTable,
+            new ServiceIntervalCache())
         .validate(noticeContainer);
 
     return noticeContainer.getValidationNotices();
   }
 
-  // Convenience overload: single service ID, calendar only.
+  // Convenience overload: uses the fixed TODAY constant.
+  private static List<ValidationNotice> generateNotices(
+      List<CalendarMetadata> calendarMetadataList,
+      List<CalendarDateMetadata> calendarDateMetadataList,
+      String feedStartDate,
+      String feedEndDate,
+      List<String> serviceIds) {
+    return generateNotices(
+        calendarMetadataList,
+        calendarDateMetadataList,
+        feedStartDate,
+        feedEndDate,
+        serviceIds,
+        DATE_FOR_VALIDATION);
+  }
+
+  // Convenience overload: calendar only (no calendar_dates).
   private static List<ValidationNotice> generateNotices(
       List<CalendarMetadata> calendarMetadataList,
       String feedStartDate,
@@ -143,6 +186,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of(buildTrip("s1", "trip_s1", 1)), noticeContainer);
 
     new FeedServiceWindowValidator(
+            DATE_FOR_VALIDATION,
             calendarTable,
             GtfsCalendarDateTableContainer.forEntities(ImmutableList.of(), noticeContainer),
             GtfsFeedInfoTableContainer.forEntities(ImmutableList.of(), noticeContainer),
@@ -155,7 +199,6 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedInfoMissingDates_noNotice() {
-    // feed_info exists but has no feed_start_date / feed_end_date.
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedInfo feedInfo = new GtfsFeedInfo.Builder().setCsvRowNumber(1).build();
     GtfsCalendarTableContainer calendarTable =
@@ -167,6 +210,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of(buildTrip("s1", "trip_s1", 1)), noticeContainer);
 
     new FeedServiceWindowValidator(
+            DATE_FOR_VALIDATION,
             calendarTable,
             GtfsCalendarDateTableContainer.forEntities(ImmutableList.of(), noticeContainer),
             GtfsFeedInfoTableContainer.forEntities(ImmutableList.of(feedInfo), noticeContainer),
@@ -179,7 +223,7 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void serviceWindowWithinFeedPeriod_noNotice() {
-    // Service Jan 1 – Jan 31, feed Jan 1 – Dec 31: fully covered, feed not excessively long.
+    // TODAY = Jan 15. Service Jan 1 – Jan 31 covers today, feed matches service window exactly.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240101", "20240131")),
@@ -191,7 +235,8 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedExtendsJustAtThreshold_noNotice() {
-    // Feed starts exactly THRESHOLD_DAYS (14) before service window -> no notice expected.
+    // Feed starts exactly THRESHOLD_DAYS (14) before service window -> no FeedBeyond notice.
+    // TODAY = Jan 15, service starts Jan 15 -> no FutureCalendar notice either.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240115", "20240131")),
@@ -203,9 +248,9 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void emptyTripTable_noNotice() {
-    // No trips means no service IDs to check.
     NoticeContainer noticeContainer = new NoticeContainer();
     new FeedServiceWindowValidator(
+            DATE_FOR_VALIDATION,
             GtfsCalendarTableContainer.forEntities(
                 ImmutableList.of(
                     buildCalendar(new CalendarMetadata("s1", "20240101", "20240131"), 1)),
@@ -227,6 +272,7 @@ public class FeedServiceWindowValidatorTest {
   @Test
   public void serviceStartsBeforeFeedStart_oneNotice() {
     // Service starts Dec 1 2023, feed starts Jan 1 2024.
+    // TODAY = Jan 15 2024, service covers today -> no FutureCalendar notice.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20231201", "20240131")),
@@ -240,7 +286,7 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void serviceEndsAfterFeedEnd_oneNotice() {
-    // Service ends Feb 28, feed ends Jan 31.
+    // Service ends Feb 28, feed ends Jan 31. TODAY = Jan 15 -> covered, no FutureCalendar.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240101", "20240229")),
@@ -309,10 +355,8 @@ public class FeedServiceWindowValidatorTest {
             "20240131",
             ImmutableList.of("s1"));
 
-    assertThat(notices)
-        .hasSize(
-            2); // One notice for service outside feed period, one for SERVICE_ADDED outside feed
-    // period.
+    // ServiceWindowExtendsPastFeedPeriodNotice + FeedValidBeyondTotalServiceWindowNotice.
+    assertThat(notices).hasSize(2);
     assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
     assertThat(notices.get(1)).isInstanceOf(FeedValidBeyondTotalServiceWindowNotice.class);
   }
@@ -339,9 +383,8 @@ public class FeedServiceWindowValidatorTest {
 
   @Test
   public void feedStartsTooEarly_beyondThreshold_oneNotice() {
-    // Service Jan 15 – Jan 31, feed starts Jan 1 (14 days before)-> exactly at threshold, no
-    // notice.
-    // Shift to Dec 31 (15 days before) to trigger.
+    // Service Jan 15 – Jan 31, feed starts Dec 31 (15 days before) -> triggers FeedBeyond.
+    // TODAY = Jan 15, service starts on today -> no FutureCalendar.
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(new CalendarMetadata("s1", "20240115", "20240131")),
@@ -395,6 +438,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1", "s2"));
 
     assertThat(notices).hasSize(1);
+    assertThat(notices.get(0)).isInstanceOf(FeedValidBeyondTotalServiceWindowNotice.class);
   }
 
   @Test
@@ -409,5 +453,145 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1"));
 
     assertThat(notices).hasSize(2);
+  }
+
+  @Test
+  public void allServicesStartInFuture_futureCalendarNotice() {
+    // TODAY = Jan 15. All services start Jan 16 or later -> FutureCalendar triggered.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20240116", "20240131")),
+            "20240116",
+            "20240131",
+            ImmutableList.of("s1"));
+
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0)).isInstanceOf(FutureCalendarNotice.class);
+  }
+
+  @Test
+  public void serviceStartsExactlyToday_noFutureCalendarNotice() {
+    // TODAY = Jan 15. Service starts Jan 15 -> isAfter(today) is false, no notice.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20240115", "20240131")),
+            "20240115",
+            "20240131",
+            ImmutableList.of("s1"));
+
+    assertThat(notices).isEmpty();
+  }
+
+  @Test
+  public void serviceStartedInPast_noFutureCalendarNotice() {
+    // TODAY = Jan 15. Service started Jan 1 -> covers today, no FutureCalendar.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20240101", "20240131")),
+            "20240101",
+            "20240131",
+            ImmutableList.of("s1"));
+
+    assertThat(notices).isEmpty();
+  }
+
+  @Test
+  public void multipleServicesBothFuture_futureCalendarNotice() {
+    // TODAY = Jan 15. Both services start in the future; minServiceStartDate = Jan 16.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("s1", "20240116", "20240131"),
+                new CalendarMetadata("s2", "20240120", "20240229")),
+            "20240116",
+            "20240229",
+            ImmutableList.of("s1", "s2"));
+
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0)).isInstanceOf(FutureCalendarNotice.class);
+  }
+
+  @Test
+  public void oneServicePastOneServiceFuture_noFutureCalendarNotice() {
+    // TODAY = Jan 15. s1 starts Jan 1 (past), s2 starts Jan 20 (future).
+    // totalWindowStart = Jan 1 -> not after today, no FutureCalendar.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("s1", "20240101", "20240131"),
+                new CalendarMetadata("s2", "20240120", "20240229")),
+            "20240101",
+            "20240229",
+            ImmutableList.of("s1", "s2"));
+
+    assertThat(notices).isEmpty();
+  }
+
+  @Test
+  public void futureCalendarAndFeedBeyondNotices_canCoexist() {
+    // TODAY = Jan 15. Service starts Feb 1 (future) -> FutureCalendar.
+    // Feed starts Nov 1 (>14 days before service start) -> FeedBeyond.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20240201", "20240229")),
+            "20231101", // far before service window
+            "20240229",
+            ImmutableList.of("s1"));
+
+    assertThat(notices).hasSize(2);
+    assertThat(notices.stream().anyMatch(n -> n instanceof FutureCalendarNotice)).isTrue();
+    assertThat(notices.stream().anyMatch(n -> n instanceof FeedValidBeyondTotalServiceWindowNotice))
+        .isTrue();
+  }
+
+  @Test
+  public void futureCalendarViaCalendarDatesOnly_futureCalendarNotice() {
+    // Service defined only via SERVICE_ADDED on a future date.
+    // TODAY = Jan 15. Date = Jan 20 -> FutureCalendar triggered.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(),
+            ImmutableList.of(
+                new CalendarDateMetadata(
+                    "s1", "20240120", GtfsCalendarDateExceptionType.SERVICE_ADDED)),
+            "20240120",
+            "20240131",
+            ImmutableList.of("s1"));
+
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0)).isInstanceOf(FutureCalendarNotice.class);
+  }
+
+  @Test
+  public void customDate_serviceInFutureRelativeToCustomDate_futureCalendarNotice() {
+    // Use a custom DateForValidation to verify the injected date is used, not LocalDate.now().
+    DateForValidation customDate = new DateForValidation(LocalDate.of(2025, 6, 1));
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20250701", "20250731")),
+            ImmutableList.of(),
+            "20250701",
+            "20250731",
+            ImmutableList.of("s1"),
+            customDate);
+
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0)).isInstanceOf(FutureCalendarNotice.class);
+  }
+
+  @Test
+  public void customDate_serviceCoversCustomDate_noFutureCalendarNotice() {
+    // Same service, but custom date is within the service window.
+    DateForValidation customDate = new DateForValidation(LocalDate.of(2025, 7, 15));
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(new CalendarMetadata("s1", "20250701", "20250731")),
+            ImmutableList.of(),
+            "20250701",
+            "20250731",
+            ImmutableList.of("s1"),
+            customDate);
+
+    assertThat(notices).isEmpty();
   }
 }
