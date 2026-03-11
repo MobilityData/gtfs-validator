@@ -86,22 +86,10 @@ public class FeedServiceWindowValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (feedInfoTable.getEntities().isEmpty()) {
-      return;
-    }
-    GtfsFeedInfo feedInfo = feedInfoTable.getEntities().get(0);
-    if (!feedInfo.hasFeedStartDate() || !feedInfo.hasFeedEndDate()) {
-      return;
-    }
-
-    LocalDate feedStartDate = feedInfo.feedStartDate().getLocalDate();
-    LocalDate feedEndDate = feedInfo.feedEndDate().getLocalDate();
-
-    // Track total service window bounds via ServiceIntervalCache (respects SERVICE_REMOVED).
     LocalDate totalWindowStart = null;
     LocalDate totalWindowEnd = null;
 
-    // Iterate unique service IDs from trips.txt. One entry per service, no deduplication needed.
+    // Iterate unique service IDs from trips.txt
     for (String serviceId : tripTable.byServiceIdMap().keySet()) {
       ServiceInterval interval =
           serviceIntervalCache.getIntervals(serviceId, calendarTable, calendarDateTable);
@@ -110,19 +98,45 @@ public class FeedServiceWindowValidator extends FileValidator {
         continue;
       }
 
-      // Check 1: one notice per service summarizing how far it extends outside the feed period.
-      checkServiceWindow(serviceId, interval, feedStartDate, feedEndDate, noticeContainer);
-
-      // Check 2 & 3: accumulate total service window.
+      // Accumulate total service window
       totalWindowStart = earliest(totalWindowStart, interval.firstActiveDate());
       totalWindowEnd = latest(totalWindowEnd, interval.lastActiveDate());
     }
 
-    if (totalWindowStart == null || totalWindowEnd == null) {
+    // Check 1: emit notice if all services start in the future (none cover today).
+    if (totalWindowStart != null && totalWindowStart.isAfter(dateForValidation.getDate())) {
+      noticeContainer.addValidationNotice(
+          new FutureCalendarNotice(
+              totalWindowStart.toString(), dateForValidation.getDate().toString()));
+    }
+
+    if (feedInfoTable.getEntities().isEmpty()) {
+      return;
+    }
+    GtfsFeedInfo feedInfo = feedInfoTable.getEntities().get(0);
+    if (!feedInfo.hasFeedStartDate()
+        || !feedInfo.hasFeedEndDate()
+        || totalWindowStart == null
+        || totalWindowEnd == null) {
       return;
     }
 
-    // Check 2: emit notice if feed period extends far beyond total service window.
+    LocalDate feedStartDate = feedInfo.feedStartDate().getLocalDate();
+    LocalDate feedEndDate = feedInfo.feedEndDate().getLocalDate();
+
+    for (String serviceId : tripTable.byServiceIdMap().keySet()) {
+      ServiceInterval interval =
+          serviceIntervalCache.getIntervals(serviceId, calendarTable, calendarDateTable);
+
+      if (interval == null || interval.isEmpty()) {
+        continue;
+      }
+
+      // Check 2: one notice per service summarizing how far it extends outside the feed period.
+      checkServiceWindow(serviceId, interval, feedStartDate, feedEndDate, noticeContainer);
+    }
+
+    // Check 3: emit notice if feed period extends far beyond total service window.
     if (feedStartDate.isBefore(totalWindowStart.minusDays(THRESHOLD_DAYS))
         || feedEndDate.isAfter(totalWindowEnd.plusDays(THRESHOLD_DAYS))) {
       noticeContainer.addValidationNotice(
@@ -131,13 +145,6 @@ public class FeedServiceWindowValidator extends FileValidator {
               feedEndDate.toString(),
               totalWindowStart.toString(),
               totalWindowEnd.toString()));
-    }
-
-    // Check 3: emit notice if all services start in the future (none cover today).
-    if (totalWindowStart.isAfter(dateForValidation.getDate())) {
-      noticeContainer.addValidationNotice(
-          new FutureCalendarNotice(
-              totalWindowStart.toString(), dateForValidation.getDate().toString()));
     }
   }
 

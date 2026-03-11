@@ -128,7 +128,7 @@ public class FeedServiceWindowValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
-  // Convenience overload: uses the fixed TODAY constant.
+  // Convenience overload: uses the fixed DATE_FOR_VALIDATION constant.
   private static List<ValidationNotice> generateNotices(
       List<CalendarMetadata> calendarMetadataList,
       List<CalendarDateMetadata> calendarDateMetadataList,
