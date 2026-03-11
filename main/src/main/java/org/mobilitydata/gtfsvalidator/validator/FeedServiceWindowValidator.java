@@ -136,7 +136,8 @@ public class FeedServiceWindowValidator extends FileValidator {
     // Check 3: emit notice if all services start in the future (none cover today).
     if (totalWindowStart.isAfter(dateForValidation.getDate())) {
       noticeContainer.addValidationNotice(
-          new FutureCalendarNotice(totalWindowStart.toString(), dateForValidation.getDate().toString()));
+          new FutureCalendarNotice(
+              totalWindowStart.toString(), dateForValidation.getDate().toString()));
     }
   }
 
