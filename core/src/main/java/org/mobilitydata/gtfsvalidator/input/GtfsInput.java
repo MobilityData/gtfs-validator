@@ -165,7 +165,7 @@ public abstract class GtfsInput implements Closeable {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
       ZipFile zipFileInput = new ZipFile(sourceUrl.toString().replace(".zip", ""));
       String fileName = sourceUrl.toString().replace(".zip", "");
-\      if (containsGtfsFileInSubfolder(
+      if (containsGtfsFileInSubfolder(
           new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
         noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
       }
