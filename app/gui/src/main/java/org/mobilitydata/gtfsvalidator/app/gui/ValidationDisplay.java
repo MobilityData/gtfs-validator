@@ -23,6 +23,15 @@ class ValidationDisplay {
       reportPath = config.systemErrorsReportPath().orElse(null);
     }
 
+    // Handle missing report path explicitly instead of letting null reach browse().
+    if (reportPath == null) {
+      logger.atSevere().log(
+          "No report path available to display results. "
+              + "Ensure an output directory is configured when running the GUI.");
+      handleError();
+      return;
+    }
+
     try {
       Desktop.getDesktop().browse(reportPath.toUri());
     } catch (IOException ex) {

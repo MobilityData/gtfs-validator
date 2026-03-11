@@ -178,6 +178,11 @@ public class Arguments {
    */
   public boolean validate() {
     if (getExportNoticeSchema() && abortAfterNoticeSchemaExport()) {
+      if (outputBase == null) {
+        logger.atSevere().log(
+            "Must provide --output_base when using --export_notices_schema without --input or --url");
+        return false;
+      }
       return true;
     }
 
