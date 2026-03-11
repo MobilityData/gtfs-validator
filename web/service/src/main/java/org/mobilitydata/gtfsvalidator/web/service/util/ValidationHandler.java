@@ -34,7 +34,7 @@ public class ValidationHandler {
         ValidationRunnerConfig.builder()
             .setGtfsSource(feedFile.toURI())
             .setOutputDirectory(Optional.of(outputPath))
-            .setStdoutOutput(false);
+            .setStdoutOutput(false)
             .setSkipValidatorUpdate(
                 true); // skipValidatorUpdate is true to prevent remote version checks and forces
     // use of the JAR manifest version.
