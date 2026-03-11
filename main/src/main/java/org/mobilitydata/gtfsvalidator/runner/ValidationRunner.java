@@ -338,45 +338,41 @@ public class ValidationRunner {
       return;
     }
 
-    // Existing file-based output
-    if (config.outputDirectory().isPresent()) {
-      Path outputDir = config.outputDirectory().get();
-      if (!Files.exists(outputDir)) {
-        try {
-          Files.createDirectories(outputDir);
-        } catch (IOException ex) {
-          logger.atSevere().withCause(ex).log("Error creating output directory: %s", outputDir);
-        }
+    // Existing file-based output. At this point, stdoutOutput is false and
+    // validate() guarantees that an output directory is configured.
+    Path outputDir = config.outputDirectory().get();
+    if (!Files.exists(outputDir)) {
+      try {
+        Files.createDirectories(outputDir);
+      } catch (IOException ex) {
+        logger.atSevere().withCause(ex).log("Error creating output directory: %s", outputDir);
       }
     }
     boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
-    if (config.outputDirectory().isPresent()) {
-      Path outputDir = config.outputDirectory().get();
-      try {
-        Files.write(
-            outputDir.resolve(config.validationReportFileName()),
-            gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
-      } catch (Exception ex) {
-        logger.atSevere().withCause(ex).log("Error creating JSON report");
-      }
+    try {
+      Files.write(
+          outputDir.resolve(config.validationReportFileName()),
+          gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
+    } catch (Exception ex) {
+      logger.atSevere().withCause(ex).log("Error creating JSON report");
+    }
 
-      try {
-        htmlGenerator.generateReport(
-            feedMetadata,
-            noticeContainer,
-            config,
-            versionInfo,
-            outputDir.resolve(config.htmlReportFileName()),
-            date,
-            is_different_date);
-        Files.write(
-            outputDir.resolve(config.systemErrorsReportFileName()),
-            gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
-      } catch (IOException e) {
-        logger.atSevere().withCause(e).log("Cannot store report files");
-      }
+    try {
+      htmlGenerator.generateReport(
+          feedMetadata,
+          noticeContainer,
+          config,
+          versionInfo,
+          outputDir.resolve(config.htmlReportFileName()),
+          date,
+          is_different_date);
+      Files.write(
+          outputDir.resolve(config.systemErrorsReportFileName()),
+          gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.atSevere().withCause(e).log("Cannot store report files");
     }
   }
 

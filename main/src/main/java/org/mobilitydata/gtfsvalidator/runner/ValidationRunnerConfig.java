@@ -80,7 +80,8 @@ public abstract class ValidationRunnerConfig {
         .setPrettyJson(false)
         .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
         .setDateForValidation(LocalDate.now())
-        .setSkipValidatorUpdate(false);
+        .setSkipValidatorUpdate(false)
+        .setStdoutOutput(false);
   }
 
   @AutoValue.Builder

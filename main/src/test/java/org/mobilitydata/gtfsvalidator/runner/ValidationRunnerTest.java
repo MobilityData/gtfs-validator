@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.runner;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 
 import java.io.FileNotFoundException;
@@ -44,5 +45,16 @@ public class ValidationRunnerTest {
     // InvalidPathException. This should catch issues such as #1158.
     assertThrows(
         FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
+  }
+
+  @Test
+  public void builderShouldDefaultStdoutOutputToFalse() {
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(Path.of("/tmp/nonexistent.zip").toUri())
+            .setOutputDirectory(Optional.of(Path.of("out")))
+            .build();
+
+    assertFalse(config.stdoutOutput());
   }
 }
