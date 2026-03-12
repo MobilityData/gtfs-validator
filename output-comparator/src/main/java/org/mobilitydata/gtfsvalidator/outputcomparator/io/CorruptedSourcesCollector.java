@@ -1,7 +1,10 @@
 package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import org.mobilitydata.gtfsvalidator.model.ValidationReport;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.CorruptedSources;
 
 /**
@@ -9,6 +12,8 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.CorruptedSou
  * collects the set of "corrupted" sources where a validation report was not correctly generated.
  */
 public class CorruptedSourcesCollector {
+
+  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
   private final float percentCorruptedSourcesThreshold;
 
@@ -46,7 +51,27 @@ public class CorruptedSourcesCollector {
       Boolean latestExists,
       Boolean latestReadable) {
     this.corruptedSourceDetails.add(
-        new CorruptedSourceDetail(sourceId, refExists, refReadable, latestExists, latestReadable));
+        new CorruptedSourceDetail(
+            sourceId, refExists, refReadable, latestExists, latestReadable, null, null));
+  }
+
+  public void addCorruptedSource(
+      String sourceId,
+      Boolean refExists,
+      Boolean refReadable,
+      Boolean latestExists,
+      Boolean latestReadable,
+      ValidationReport referenceSystemErrors,
+      ValidationReport latestSystemErrors) {
+    this.corruptedSourceDetails.add(
+        new CorruptedSourceDetail(
+            sourceId,
+            refExists,
+            refReadable,
+            latestExists,
+            latestReadable,
+            referenceSystemErrors,
+            latestSystemErrors));
   }
 
   public boolean isAboveThreshold() {
@@ -82,6 +107,31 @@ public class CorruptedSourcesCollector {
               detail.latestExists ? "✅" : "❌",
               detail.latestReadable == null ? "N/A" : (detail.latestReadable ? "✅" : "❌")));
     }
+    b.append("\n");
+
+    // Append collapsible system errors for each corrupted source that has them
+    for (CorruptedSourceDetail detail : corruptedSourceDetails) {
+      if (detail.referenceSystemErrors != null
+          && !detail.referenceSystemErrors.getNotices().isEmpty()) {
+        b.append(
+            String.format(
+                "<details>\n<summary>🔍 System errors for <strong>%s</strong> (reference)</summary>\n\n",
+                detail.sourceId));
+        b.append("```json\n");
+        b.append(GSON.toJson(detail.referenceSystemErrors.getNotices()));
+        b.append("\n```\n</details>\n\n");
+      }
+      if (detail.latestSystemErrors != null && !detail.latestSystemErrors.getNotices().isEmpty()) {
+        b.append(
+            String.format(
+                "<details>\n<summary>🔍 System errors for <strong>%s</strong> (latest)</summary>\n\n",
+                detail.sourceId));
+        b.append("```json\n");
+        b.append(GSON.toJson(detail.latestSystemErrors.getNotices()));
+        b.append("\n```\n</details>\n\n");
+      }
+    }
+
     b.append("</details>");
     return b.toString();
   }
@@ -100,18 +150,24 @@ public class CorruptedSourcesCollector {
     Boolean refReadable;
     Boolean latestExists;
     Boolean latestReadable;
+    ValidationReport referenceSystemErrors;
+    ValidationReport latestSystemErrors;
 
     CorruptedSourceDetail(
         String sourceId,
         Boolean refExists,
         Boolean refReadable,
         Boolean latestExists,
-        Boolean latestReadable) {
+        Boolean latestReadable,
+        ValidationReport referenceSystemErrors,
+        ValidationReport latestSystemErrors) {
       this.sourceId = sourceId;
       this.refExists = refExists;
       this.refReadable = refReadable;
       this.latestExists = latestExists;
       this.latestReadable = latestReadable;
+      this.referenceSystemErrors = referenceSystemErrors;
+      this.latestSystemErrors = latestSystemErrors;
     }
   }
 }
