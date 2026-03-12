@@ -78,7 +78,7 @@ public class ServiceSpreadValidator extends FileValidator {
               ServiceInterval intervals =
                   serviceIntervalCache.getIntervals(
                       serviceId, calendarTableContainer, calendarDateTableContainer);
-              if (intervals == null) {
+              if (intervals == null || intervals.isEmpty()) {
                 return;
               }
               for (DateInterval gap : intervals.getGaps()) {
