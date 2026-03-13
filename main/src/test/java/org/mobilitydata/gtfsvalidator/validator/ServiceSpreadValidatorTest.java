@@ -15,6 +15,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.util.ServiceInterval;
 import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.validator.ServiceSpreadValidator.BigGapInServiceNotice;
 import org.mobilitydata.gtfsvalidator.validator.ServiceSpreadValidator.ServiceExtendsFarInTheFutureNotice;
@@ -343,5 +344,64 @@ public class ServiceSpreadValidatorTest {
             .toList();
 
     assertThat(futureNotices).containsExactly(expectedFutureNotice);
+  }
+
+  @Test
+  public void serviceIntervalCacheReturnsNull_noNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    ImmutableList<GtfsCalendar> calendars =
+        ImmutableList.of(
+            buildCalendar(new CalendarMetadata("service_null", "20240101", "20240131", true), 1));
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, noticeContainer);
+    GtfsCalendarDateTableContainer calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+    DateForValidation dateForValidation = new DateForValidation(LocalDate.of(2024, 1, 1));
+
+    ServiceIntervalCache cache =
+        new ServiceIntervalCache() {
+          @Override
+          public ServiceInterval getIntervals(
+              String serviceId,
+              GtfsCalendarTableContainer calendarTableContainer,
+              GtfsCalendarDateTableContainer calendarDateTableContainer) {
+            return null;
+          }
+        };
+
+    new ServiceSpreadValidator(cache, dateForValidation, calendarTable, calendarDateTable)
+        .validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
+
+  @Test
+  public void serviceIntervalCacheReturnsEmptyIntervals_noNotice() {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    ImmutableList<GtfsCalendar> calendars =
+        ImmutableList.of(
+            buildCalendar(new CalendarMetadata("service_empty", "20240101", "20240131", true), 1));
+    GtfsCalendarTableContainer calendarTable =
+        GtfsCalendarTableContainer.forEntities(calendars, noticeContainer);
+    GtfsCalendarDateTableContainer calendarDateTable =
+        GtfsCalendarDateTableContainer.forEntities(ImmutableList.of(), noticeContainer);
+    DateForValidation dateForValidation = new DateForValidation(LocalDate.of(2024, 1, 1));
+
+    ServiceInterval emptyInterval = new ServiceInterval();
+    ServiceIntervalCache cache =
+        new ServiceIntervalCache() {
+          @Override
+          public ServiceInterval getIntervals(
+              String serviceId,
+              GtfsCalendarTableContainer calendarTableContainer,
+              GtfsCalendarDateTableContainer calendarDateTableContainer) {
+            return emptyInterval;
+          }
+        };
+
+    new ServiceSpreadValidator(cache, dateForValidation, calendarTable, calendarDateTable)
+        .validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
   }
 }
