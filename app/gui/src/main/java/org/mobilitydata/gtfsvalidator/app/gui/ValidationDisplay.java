@@ -18,9 +18,18 @@ class ValidationDisplay {
       handleError();
     }
 
-    Path reportPath = config.htmlReportPath();
+    Path reportPath = config.htmlReportPath().orElse(null);
     if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
-      reportPath = config.systemErrorsReportPath();
+      reportPath = config.systemErrorsReportPath().orElse(null);
+    }
+
+    // Handle missing report path explicitly instead of letting null reach browse().
+    if (reportPath == null) {
+      logger.atSevere().log(
+          "No report path available to display results. "
+              + "Ensure an output directory is configured when running the GUI.");
+      handleError();
+      return;
     }
 
     try {
