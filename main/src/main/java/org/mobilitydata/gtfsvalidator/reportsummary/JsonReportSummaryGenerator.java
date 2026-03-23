@@ -31,10 +31,12 @@ public class JsonReportSummaryGenerator {
             date,
             config != null ? config.gtfsSource().toString() : null,
             config != null ? config.numThreads() : 0,
-            config != null ? config.outputDirectory().toString() : null,
-            config != null ? config.systemErrorsReportFileName() : null,
-            config != null ? config.validationReportFileName() : null,
-            config != null ? config.htmlReportFileName() : null,
+            config != null && config.outputDirectory().isPresent()
+                ? config.outputDirectory().get().toString()
+                : null,
+            config != null && !config.stdoutOutput() ? config.systemErrorsReportFileName() : null,
+            config != null && !config.stdoutOutput() ? config.validationReportFileName() : null,
+            config != null && !config.stdoutOutput() ? config.htmlReportFileName() : null,
             config != null ? config.countryCode().getCountryCode() : null,
             config != null ? config.dateForValidation().toString() : null,
             feedMetadata != null && feedMetadata.feedInfo != null

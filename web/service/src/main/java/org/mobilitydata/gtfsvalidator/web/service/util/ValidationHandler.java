@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
@@ -32,7 +33,8 @@ public class ValidationHandler {
     var configBuilder =
         ValidationRunnerConfig.builder()
             .setGtfsSource(feedFile.toURI())
-            .setOutputDirectory(outputPath)
+            .setOutputDirectory(Optional.of(outputPath))
+            .setStdoutOutput(false)
             .setSkipValidatorUpdate(
                 true); // skipValidatorUpdate is true to prevent remote version checks and forces
     // use of the JAR manifest version.

@@ -43,25 +43,25 @@ jobs:
 
       - name: Upload CLI JAR Asset
         if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./cli/build/libs/gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
-          asset_name: gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
-          asset_content_type: application/java-archive
+          files: ./cli/build/libs/gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
+
+      - name: Rename GUI jar for release asset
+        if: github.event_name == 'release'
+        run: |
+          cp ./app/gui/build/libs/gui-${{ steps.get_version.outputs.version-without-v }}-all.jar \
+             ./gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
 
       - name: Upload GUI JAR Asset
         if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./app/gui/build/libs/gui-${{ steps.get_version.outputs.version-without-v }}-all.jar
-          asset_name: gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
-          asset_content_type: application/java-archive
+          files: ./gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
 
       - name: Generate rules.json
         if: github.event_name == 'release'
@@ -69,14 +69,11 @@ jobs:
 
       - name: Upload rules.json asset
         if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./web/client/static/rules.json
-          asset_name: rules.json
-          asset_content_type: application/json
+          files: ./web/client/static/rules.json
 
       - name: Generate JavaDocs
         if: github.event_name == 'release'
@@ -88,14 +85,11 @@ jobs:
 
       - name: Upload zipped Javadocs
         if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./javadocs.zip
-          asset_name: javadocs.zip
-          asset_content_type: application/zip
+          files: ./javadocs.zip
 
       - name: Load secrets from 1Password
         id: onepw_secrets
@@ -115,4 +109,3 @@ jobs:
           # From this page you can examine the list of artefacts, and either drop them or release them.
           # Note that once released, the artefacts cannot be removed or altered.
           ./gradlew publishToMavenCentral
-
