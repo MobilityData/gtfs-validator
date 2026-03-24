@@ -30,7 +30,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShapeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
-import org.mobilitydata.gtfsvalidator.validator.ShapeUsageValidator.UnusedShapeNotice;
 
 /**
  * Validates that every shape in "shapes.txt" is used by some trip from "trips.txt"

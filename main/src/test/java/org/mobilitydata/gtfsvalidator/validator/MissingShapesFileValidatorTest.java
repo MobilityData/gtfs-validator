@@ -33,6 +33,8 @@ public class MissingShapesFileValidatorTest {
               .setCsvRowNumber(i + 1)
               .setLocationGroupId(locationGroupId)
               .setLocationId(locationId)
+              .setTripId(locationGroupId)
+              .setStopSequence(i + 1)
               .build());
     }
     return stopTimes;
@@ -63,7 +65,7 @@ public class MissingShapesFileValidatorTest {
         notices.stream()
             .anyMatch(
                 notice ->
-                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
+                    notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
   }
 
@@ -78,7 +80,7 @@ public class MissingShapesFileValidatorTest {
         notices.stream()
             .anyMatch(
                 notice ->
-                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
+                    notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
   }
 
@@ -89,12 +91,13 @@ public class MissingShapesFileValidatorTest {
             createShapeTable(0),
             createStopTimesTable(1, null, null),
             createLocationGroupsTable(0, null, null));
-    boolean found =
+    long missingRecommendedFileNoticesCount =
         notices.stream()
-            .anyMatch(
+            .filter(
                 notice ->
-                    notice instanceof MissingShapesFileValidator.MissingRecommendedFileNotice);
-    assertThat(found).isFalse();
+                    notice instanceof MissingRecommendedFileNotice)
+            .count();
+    assertThat(missingRecommendedFileNoticesCount).isEqualTo(1L);
   }
 
   private static List<ValidationNotice> generateNotices(
