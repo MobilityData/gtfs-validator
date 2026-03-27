@@ -14,6 +14,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 public class MissingShapesFileValidatorTest {
 
@@ -60,6 +61,7 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
+            GtfsShapeTableContainer.forStatus(null),
             createStopTimesTable(1, "a", null),
             createLocationGroupsTable(1, "b", "testgroup"));
     boolean found =
@@ -75,6 +77,7 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
+            GtfsShapeTableContainer.forStatus(null),
             createStopTimesTable(1, null, "c"),
             createLocationGroupsTable(1, "d", "t3stgroup"));
     boolean found =
@@ -90,6 +93,7 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(0),
+            GtfsShapeTableContainer.forStatus(TableStatus.MISSING_FILE),
             createStopTimesTable(1, null, null),
             createLocationGroupsTable(0, null, null));
     long missingRecommendedFileNoticesCount =
@@ -103,6 +107,7 @@ public class MissingShapesFileValidatorTest {
 
   private static List<ValidationNotice> generateNotices(
       List<GtfsShape> shapes,
+      GtfsShapeTableContainer shapeContainer,
       List<GtfsStopTime> stopTimes,
       List<GtfsLocationGroups> locationGroups) {
     NoticeContainer noticeContainer = new NoticeContainer();
