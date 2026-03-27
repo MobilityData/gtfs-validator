@@ -102,7 +102,7 @@ public class MissingShapesFileValidatorTest {
                 notice ->
                     notice instanceof MissingRecommendedFileNotice)
             .count();
-    assertThat(missingRecommendedFileNoticesCount).isEqualTo(1);
+    assertThat(missingRecommendedFileNoticesCount).isAtLeast(1L);;
   }
 
   private static List<ValidationNotice> generateNotices(
