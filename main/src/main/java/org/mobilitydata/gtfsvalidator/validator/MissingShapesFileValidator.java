@@ -43,7 +43,7 @@ public class MissingShapesFileValidator extends FileValidator {
     Boolean missingShapes = shapeTable.isMissingFile();
     Boolean hasLocationId = stopTimeTable.hasColumn("location_id");
     Boolean hasLocationGroupId = stopTimeTable.hasColumn("location_group_id");
-          Boolean hasLocationGroupsRecord =
+    Boolean hasLocationGroupsRecord =
           !locationGroupsTable.isMissingFile() && locationGroupsTable.entityCount() > 0;
     // Detect DRT usage from the data, not just from column presence.
     boolean hasLocationIdInData = false;
