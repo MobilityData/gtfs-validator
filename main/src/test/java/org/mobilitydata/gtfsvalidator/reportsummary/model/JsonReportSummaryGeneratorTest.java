@@ -40,12 +40,13 @@ public class JsonReportSummaryGeneratorTest {
     builder.setCountryCode(CountryCode.forStringOrUnknown("GB"));
     builder.setGtfsSource(new URI("some_dataset_filename"));
     builder.setHtmlReportFileName("some_html_filename");
-    builder.setOutputDirectory(Path.of("some_output_directory"));
+    builder.setOutputDirectory(Optional.of(Path.of("some_output_directory")));
     builder.setNumThreads(1);
     builder.setPrettyJson(true);
     builder.setSystemErrorsReportFileName("some_error_filename");
     builder.setValidationReportFileName("some_report_filename");
     builder.setDateForValidation(LocalDate.parse("2020-01-02"));
+    builder.setStdoutOutput(false);
 
     return builder.build();
   }
@@ -166,6 +167,38 @@ public class JsonReportSummaryGeneratorTest {
             + "\"files\":[\"file1\",\"file2\"],"
             + "\"counts\":{\"Shapes\":1,\"Trips\":2},"
             + "\"gtfsFeatures\":[\"Feature2\"]}";
+
+    assertEquals(JsonParser.parseString(expected), gson.toJsonTree(summaryGenerator.summary));
+  }
+
+  @Test
+  public void summaryOmitsReportNamesWhenStdoutOutputIsTrue() throws Exception {
+
+    ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
+    builder.setCountryCode(CountryCode.forStringOrUnknown("GB"));
+    builder.setGtfsSource(new URI("some_dataset_filename"));
+    builder.setHtmlReportFileName("some_html_filename");
+    builder.setOutputDirectory(Optional.of(Path.of("some_output_directory")));
+    builder.setNumThreads(1);
+    builder.setPrettyJson(true);
+    builder.setSystemErrorsReportFileName("some_error_filename");
+    builder.setValidationReportFileName("some_report_filename");
+    builder.setDateForValidation(LocalDate.parse("2020-01-02"));
+    builder.setStdoutOutput(true);
+
+    ValidationRunnerConfig config = builder.build();
+
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(null, config, versionInfo, "now");
+
+    String expected =
+        "{\"validatorVersion\":\"1.0\","
+            + "\"validatedAt\":\"now\","
+            + "\"gtfsInput\":\"some_dataset_filename\","
+            + "\"threads\":1,"
+            + "\"outputDirectory\":\"some_output_directory\","
+            + "\"countryCode\":\"GB\","
+            + "\"dateForValidation\":\"2020-01-02\"}";
 
     assertEquals(JsonParser.parseString(expected), gson.toJsonTree(summaryGenerator.summary));
   }
