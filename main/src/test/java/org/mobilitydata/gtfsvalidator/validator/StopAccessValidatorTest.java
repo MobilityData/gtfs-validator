@@ -61,4 +61,30 @@ public class StopAccessValidatorTest {
                 GtfsStopAccess.NOT_ACCESSIBLE_VIA_PATHWAYS,
                 GtfsLocationType.STATION));
   }
+
+  @Test
+  public void stopLocationWithoutParentStation_withoutStopAccess_generatesNoNotice() {
+    GtfsStop stop =
+        new GtfsStop.Builder()
+            .setCsvRowNumber(10)
+            .setStopId("S3")
+            .setLocationType(GtfsLocationType.STOP)
+            .setStopName("Stop 3")
+            .build();
+
+    assertThat(generateNotices(stop)).isEmpty();
+  }
+
+  @Test
+  public void nonStopLocation_withoutStopAccess_generatesNoNotice() {
+    GtfsStop stop =
+        new GtfsStop.Builder()
+            .setCsvRowNumber(11)
+            .setStopId("S4")
+            .setLocationType(GtfsLocationType.STATION)
+            .setStopName("Stop 4")
+            .build();
+
+    assertThat(generateNotices(stop)).isEmpty();
+  }
 }
