@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 public class StopAccessValidator extends SingleEntityValidator<GtfsStop> {
   @Override
   public void validate(GtfsStop entity, NoticeContainer noticeContainer) {
-    if (entity.stopAccess() == null) {
+    if (entity.stopAccess() == null || !entity.hasStopAccess()) {
       return;
     }
     if (entity.locationType() == GtfsLocationType.STOP) {
