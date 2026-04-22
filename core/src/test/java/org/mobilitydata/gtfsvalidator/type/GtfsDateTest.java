@@ -84,4 +84,24 @@ public class GtfsDateTest {
     assertThat(GtfsDate.fromString("20210301").toYYYYMMDD()).isEqualTo("20210301");
     assertThat(GtfsDate.fromString("20210301").toString()).isEqualTo("20210301");
   }
+
+  @Test
+  public void plusDays_addsPositiveOffset() {
+    GtfsDate base = GtfsDate.fromString("20260304");
+    // 30 days after 2026-03-04 is 2026-04-03
+    assertThat(base.plusDays(30).toYYYYMMDD()).isEqualTo("20260403");
+  }
+
+  @Test
+  public void plusDays_withZeroDaysReturnsSameDate() {
+    GtfsDate base = GtfsDate.fromString("20260304");
+    assertThat(base.plusDays(0).toYYYYMMDD()).isEqualTo("20260304");
+  }
+
+  @Test
+  public void plusDays_supportsNegativeOffset() {
+    GtfsDate base = GtfsDate.fromString("20260304");
+    // 1 day before 2026-03-04 is 2026-03-03
+    assertThat(base.plusDays(-1).toYYYYMMDD()).isEqualTo("20260303");
+  }
 }

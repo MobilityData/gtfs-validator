@@ -12,7 +12,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -260,13 +259,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
   }
 
   /** Trips with the same block id have overlapping stop times. */
-  @GtfsValidationNotice(
-      severity = ERROR,
-      files = @FileRefs({GtfsTripSchema.class}),
-      urls =
-          @UrlRef(
-              label = "Original Python validator implementation",
-              url = "https://github.com/google/transitfeed"))
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs({GtfsTripSchema.class}))
   static class BlockTripsWithOverlappingStopTimesNotice extends ValidationNotice {
 
     /** The row number from `trips.txt` of the first faulty trip. */

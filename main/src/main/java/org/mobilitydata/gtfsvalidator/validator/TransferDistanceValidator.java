@@ -78,7 +78,9 @@ public class TransferDistanceValidator extends FileValidator {
   }
 
   /** The transfer distance from stop to stop in `transfers.txt` is larger than 2 km. */
-  @GtfsValidationNotice(severity = INFO)
+  @GtfsValidationNotice(
+      severity = INFO,
+      files = @GtfsValidationNotice.FileRefs({GtfsTransferSchema.class, GtfsStopSchema.class}))
   public static class TransferDistanceAbove_2KmNotice extends ValidationNotice {
 
     /** The row number from `transfers.txt` for the faulty entry. */
@@ -102,7 +104,9 @@ public class TransferDistanceValidator extends FileValidator {
   }
 
   /** The transfer distance from stop to stop in `transfers.txt` is larger than 10 km. */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @GtfsValidationNotice.FileRefs({GtfsTransferSchema.class, GtfsStopSchema.class}))
   public static class TransferDistanceTooLargeNotice extends ValidationNotice {
 
     /** The row number from `transfers.txt` for the faulty entry. */

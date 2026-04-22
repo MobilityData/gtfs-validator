@@ -134,6 +134,8 @@ public class ValidationReportComparatorTest {
                 + "\n"
                 + "### \uD83D\uDEE1\uFE0F Corruption Check\n"
                 + "0 out of 2 sources (~0 %) are corrupted.\n\n\n\n"
+                + "### 💾 Out of Memory Check\n"
+                + "No datasets experienced an OutOfMemoryError.\n\n\n"
                 + "### ⏱️ Performance Assessment\n\n"
                 + "<details>\n"
                 + "<summary><strong>📈 Validation Time</strong></summary>\n"

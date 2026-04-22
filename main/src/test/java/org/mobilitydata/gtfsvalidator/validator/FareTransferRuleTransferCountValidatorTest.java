@@ -8,8 +8,8 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFareTransferRule;
 import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleInvalidTransferCountNotice;
-import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleMissingTransferCountNotice;
 import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleWithForbiddenTransferCountNotice;
+import org.mobilitydata.gtfsvalidator.validator.FareTransferRuleTransferCountValidator.FareTransferRuleWithoutTransferCountNotice;
 
 public class FareTransferRuleTransferCountValidatorTest {
   private static List<ValidationNotice> generateNotices(GtfsFareTransferRule rule) {
@@ -77,7 +77,7 @@ public class FareTransferRuleTransferCountValidatorTest {
                     .setFromLegGroupId("a")
                     .setToLegGroupId("a")
                     .build()))
-        .containsExactly(new FareTransferRuleMissingTransferCountNotice(2));
+        .containsExactly(new FareTransferRuleWithoutTransferCountNotice(2));
   }
 
   @Test

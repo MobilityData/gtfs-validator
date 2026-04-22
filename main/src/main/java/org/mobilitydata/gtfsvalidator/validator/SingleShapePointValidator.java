@@ -53,7 +53,13 @@ public class SingleShapePointValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @GtfsValidationNotice.FileRefs({GtfsShapeSchema.class}))
+      files = @GtfsValidationNotice.FileRefs({GtfsShapeSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class SingleShapePointNotice extends ValidationNotice {
     /** The faulty record's id. */
     private final String shapeId;

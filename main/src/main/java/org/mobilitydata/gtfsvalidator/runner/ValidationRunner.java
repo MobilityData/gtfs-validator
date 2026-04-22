@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -45,6 +46,7 @@ import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -75,6 +77,11 @@ public class ValidationRunner {
 
   @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
+    // Suppress logging when using stdout mode to avoid interfering with JSON output
+    if (config.stdoutOutput()) {
+      // Set logging level to SEVERE to minimize output
+      java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.SEVERE);
+    }
     MemoryUsageRegister.getInstance().clearRegistry();
     // Registering the memory metrics manually to avoid multiple entries due to concurrent calls
     // and exclude from the metric the generation of the reports.
@@ -129,6 +136,7 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
+            .set(ServiceIntervalCache.class, new ServiceIntervalCache())
             .setDateForValidation(new DateForValidation(config.dateForValidation()))
             .build();
     try {
@@ -151,7 +159,7 @@ public class ValidationRunner {
 
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(feedMetadata, feedContainer, feedLoader);
+    printSummary(feedMetadata, feedContainer, feedLoader, config);
     return Status.SUCCESS;
   }
 
@@ -162,7 +170,14 @@ public class ValidationRunner {
    * @param feedContainer the {@code GtfsFeedContainer}
    */
   public static void printSummary(
-      FeedMetadata feedMetadata, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
+      FeedMetadata feedMetadata,
+      GtfsFeedContainer feedContainer,
+      GtfsFeedLoader loader,
+      ValidationRunnerConfig config) {
+    // Skip summary output when using stdout mode to avoid interfering with JSON output
+    if (config.stdoutOutput()) {
+      return;
+    }
     final long endNanos = System.nanoTime();
     var skippedValidators = loader.getSkippedValidators();
     var multiFileValidatorsWithParsingErrors =
@@ -296,26 +311,49 @@ public class ValidationRunner {
       NoticeContainer noticeContainer,
       ValidationRunnerConfig config,
       VersionInfo versionInfo) {
-    if (!Files.exists(config.outputDirectory())) {
-      try {
-        Files.createDirectories(config.outputDirectory());
-      } catch (IOException ex) {
-        logger.atSevere().withCause(ex).log(
-            "Error creating output directory: %s", config.outputDirectory());
-      }
-    }
+
     ZonedDateTime now = ZonedDateTime.now();
     String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
+    Gson gson = createGson(config.prettyJson());
+    JsonReportGenerator jsonGenerator = new JsonReportGenerator();
+
+    // Generate JSON report
+    JsonReport jsonReport = null;
+    try {
+      jsonReport =
+          jsonGenerator.generateReport(feedMetadata, noticeContainer, config, versionInfo, date);
+    } catch (Exception ex) {
+      logger.atSevere().withCause(ex).log("Error creating JSON report");
+      return;
+    }
+
+    if (config.stdoutOutput()) {
+      // Output JSON to stdout
+      try {
+        System.out.println(gson.toJson(jsonReport));
+      } catch (Exception ex) {
+        logger.atSevere().withCause(ex).log("Error creating JSON report");
+      }
+
+      return;
+    }
+
+    // Existing file-based output. At this point, stdoutOutput is false and
+    // validate() guarantees that an output directory is configured.
+    Path outputDir = config.outputDirectory().get();
+    if (!Files.exists(outputDir)) {
+      try {
+        Files.createDirectories(outputDir);
+      } catch (IOException ex) {
+        logger.atSevere().withCause(ex).log("Error creating output directory: %s", outputDir);
+      }
+    }
     boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
-    Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
-    JsonReportGenerator jsonGenerator = new JsonReportGenerator();
     try {
-      JsonReport jsonReport =
-          jsonGenerator.generateReport(feedMetadata, noticeContainer, config, versionInfo, date);
       Files.write(
-          config.outputDirectory().resolve(config.validationReportFileName()),
+          outputDir.resolve(config.validationReportFileName()),
           gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
     } catch (Exception ex) {
       logger.atSevere().withCause(ex).log("Error creating JSON report");
@@ -327,11 +365,11 @@ public class ValidationRunner {
           noticeContainer,
           config,
           versionInfo,
-          config.outputDirectory().resolve(config.htmlReportFileName()),
+          outputDir.resolve(config.htmlReportFileName()),
           date,
           is_different_date);
       Files.write(
-          config.outputDirectory().resolve(config.systemErrorsReportFileName()),
+          outputDir.resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");

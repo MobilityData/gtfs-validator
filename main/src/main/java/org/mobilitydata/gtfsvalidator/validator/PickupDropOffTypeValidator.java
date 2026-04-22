@@ -8,6 +8,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsPickupDropOff;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 /**
@@ -23,7 +24,7 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
   @Override
   public void validate(GtfsStopTime entity, NoticeContainer noticeContainer) {
     if ((entity.hasStartPickupDropOffWindow() || entity.hasEndPickupDropOffWindow())
-        && (entity.pickupType().equals(GtfsPickupDropOff.ALLOWED)
+        && (entity.pickupType().equals(GtfsPickupDropOff.REGULAR)
             || entity.pickupType().equals(GtfsPickupDropOff.ON_REQUEST_TO_DRIVER))) {
       noticeContainer.addValidationNotice(
           new ForbiddenPickupTypeNotice(
@@ -33,7 +34,7 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
     }
 
     if ((entity.hasStartPickupDropOffWindow() || entity.hasEndPickupDropOffWindow())
-        && entity.dropOffType().equals(GtfsPickupDropOff.ALLOWED)) {
+        && entity.dropOffType().equals(GtfsPickupDropOff.REGULAR)) {
       noticeContainer.addValidationNotice(
           new ForbiddenDropOffTypeNotice(
               entity.csvRowNumber(),
@@ -52,7 +53,9 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
    * pickup_drop_off_window fields are forbidden when the pickup_type is regularly scheduled (0) or
    * must be coordinated with the driver (3).
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class ForbiddenPickupTypeNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final int csvRowNumber;
@@ -74,7 +77,9 @@ public class PickupDropOffTypeValidator extends SingleEntityValidator<GtfsStopTi
   /**
    * pickup_drop_off_window fields are forbidden when the drop_off_type is regularly scheduled (0).
    */
-  @GtfsValidationNotice(severity = ERROR)
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @GtfsValidationNotice.FileRefs(GtfsStopTimeSchema.class))
   public static class ForbiddenDropOffTypeNotice extends ValidationNotice {
     /** The row of the faulty record. */
     private final int csvRowNumber;
