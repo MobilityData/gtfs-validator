@@ -5,6 +5,7 @@ on:
     branches: [ master ]
   release:
     types: [ prereleased, released ]
+  workflow_dispatch:
 
 env:
   java_version: '17'
