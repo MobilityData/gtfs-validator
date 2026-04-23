@@ -16,11 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import com.google.common.collect.Multimap;
 import java.util.List;
-import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 
 /**
  * Provider of all kinds of validators for fields, entities and files.
@@ -46,18 +48,23 @@ public interface ValidatorProvider {
    * @return a list of validators
    */
   <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> clazz);
+      Class<T> clazz,
+      ColumnInspector header,
+      Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 
   /**
    * Creates a list of validators for the given table.
    *
    * <p>Use {@link ValidatorUtil#invokeSingleFileValidators} to invoke the created validators.
    *
-   * @param table GTFS table to validate
    * @param <T> type of the GTFS entity
+   * @param table GTFS table to validate
+   * @param skippedValidators A map where to put the validators classes that did not run.
    */
-  <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table);
+  <T extends GtfsEntity, D extends GtfsTableDescriptor>
+      List<FileValidator> createSingleFileValidators(
+          GtfsEntityContainer<T, D> table,
+          Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 
   /**
    * Creates a list of cross-table validators. Any validator that has a dependency with parse errors
@@ -70,5 +77,5 @@ public interface ValidatorProvider {
    * @param skippedValidators
    */
   List<FileValidator> createMultiFileValidators(
-      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators);
+      GtfsFeedContainer feed, Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 }

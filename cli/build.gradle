@@ -15,9 +15,9 @@
  */
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
+    alias(libs.plugins.shadow.jar)
 }
 
 applicationDefaultJvmArgs = [ "-Xmx8G" ]
@@ -37,7 +37,10 @@ shadowJar {
         // Validator classes are loaded dynamically from the main project, so we exclude the project
         // from minimization.
         exclude(project(':main'))
-        exclude(dependency('org.apache.httpcomponents:httpclient'))
+        exclude(dependency(libs.httpclient5.get().toString()))
+        // Keep SLF4J implementation to avoid warnings
+        // Note that SLF4J comes from some transitive dependencies
+        exclude(dependency('org.slf4j:slf4j-jdk14'))
     }
     // Change the JAR name from 'main' to 'gtfs-validator'
     archiveBaseName = rootProject.name
@@ -50,15 +53,16 @@ mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
 dependencies {
     implementation project(':core')
     implementation project(':main')
-    implementation 'com.beust:jcommander:1.48'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.flogger:flogger:0.6'
-    implementation 'com.google.flogger:flogger-system-backend:0.6'
-    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation libs.jcommander
+    implementation libs.gson
+    implementation libs.flogger
+    implementation libs.flogger.system.backend
+    implementation libs.guava
+    implementation libs.slf4j.jul
 
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation 'com.google.truth:truth:1.0.1'
-    testImplementation 'com.google.truth.extensions:truth-java8-extension:1.0.1'
-    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation libs.junit
+    testImplementation libs.truth
+    testImplementation libs.truth.extension
+    testImplementation libs.mockito.core
 }
 

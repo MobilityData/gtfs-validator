@@ -28,12 +28,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
 /**
  * A {@code ValidatorLoader} object locates all validators registered with {@code @GtfsValidator}
@@ -45,7 +43,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 public class ValidatorLoader {
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators = ArrayListMultimap.create();
-  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  private final ListMultimap<
+          Class<? extends GtfsEntityContainer<?, ?>>, Class<? extends FileValidator>>
       singleFileValidators = ArrayListMultimap.create();
   private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
@@ -77,7 +76,7 @@ public class ValidatorLoader {
   }
 
   /** Loaded single-file validator classes keyed by table container class. */
-  public ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  public ListMultimap<Class<? extends GtfsEntityContainer<?, ?>>, Class<? extends FileValidator>>
       getSingleFileValidators() {
     return singleFileValidators;
   }
@@ -89,16 +88,7 @@ public class ValidatorLoader {
 
   @SuppressWarnings("unchecked")
   private <T extends SingleEntityValidator<?>> void addSingleEntityValidator(
-      Class<T> validatorClass) throws ValidatorLoaderException {
-    Constructor<T> constructor = chooseConstructor(validatorClass);
-    for (Class<?> parameterType : constructor.getParameterTypes()) {
-      if (!isInjectableFromContext(parameterType)) {
-        throw new ValidatorLoaderException(
-            String.format(
-                "Cannot inject parameter of type %s to %s constructor",
-                parameterType.getCanonicalName(), validatorClass.getCanonicalName()));
-      }
-    }
+      Class<T> validatorClass) {
     for (Method method : validatorClass.getMethods()) {
       // A child class of SingleEntityValidator has two `validate' methods:
       // 1) the inherited void validate(GtfsEntity entity, NoticeContainer noticeContainer);
@@ -124,22 +114,15 @@ public class ValidatorLoader {
     // Indicates that the full GtfsFeedContainer needs to be injected.
     boolean injectFeedContainer = false;
     // Find out which GTFS tables need to be injected.
-    List<Class<? extends GtfsTableContainer<?>>> injectedTables = new ArrayList<>();
+    List<Class<? extends GtfsEntityContainer<?, ?>>> injectedTables = new ArrayList<>();
     for (Class<?> parameterType : constructor.getParameterTypes()) {
-      if (isInjectableFromContext(parameterType)) {
-        continue;
-      }
       if (GtfsFeedContainer.class.isAssignableFrom(parameterType)) {
         injectFeedContainer = true;
         continue;
       }
-      if (!GtfsTableContainer.class.isAssignableFrom(parameterType)) {
-        throw new ValidatorLoaderException(
-            String.format(
-                "Cannot inject parameter of type %s to %s constructor",
-                parameterType.getCanonicalName(), validatorClass.getCanonicalName()));
+      if (GtfsEntityContainer.class.isAssignableFrom(parameterType)) {
+        injectedTables.add((Class<? extends GtfsEntityContainer<?, ?>>) parameterType);
       }
-      injectedTables.add((Class<? extends GtfsTableContainer<?>>) parameterType);
     }
 
     if (!injectFeedContainer && injectedTables.size() == 1) {
@@ -147,11 +130,6 @@ public class ValidatorLoader {
     } else {
       multiFileValidators.add(validatorClass);
     }
-  }
-
-  private static boolean isInjectableFromContext(Class<?> parameterType) {
-    return parameterType.isAssignableFrom(CurrentDateTime.class)
-        || parameterType.isAssignableFrom(CountryCode.class);
   }
 
   /** Chooses the default or injectable constructor. */
@@ -169,9 +147,14 @@ public class ValidatorLoader {
             validatorClass.getCanonicalName()));
   }
 
-  /** Instantiates a validator of given class and injects its dependencies. */
+  /**
+   * Instantiates a validator of given class and injects its dependencies. A dependency is typically
+   * a table that is used by the validator. If any of the dependencies have errors, we put this
+   * information in the returned {@link ValidatorWithDependencyStatus}.
+   */
   private static <T> ValidatorWithDependencyStatus<T> createValidator(
-      Class<T> clazz, DependencyResolver dependencyResolver) throws ReflectiveOperationException {
+      Class<T> clazz, DependencyResolver dependencyResolver)
+      throws ReflectiveOperationException, ValidatorLoaderException {
     Constructor<T> chosenConstructor;
     try {
       chosenConstructor = chooseConstructor(clazz);
@@ -182,8 +165,16 @@ public class ValidatorLoader {
     // Inject constructor parameters.
     Object[] parameters = new Object[chosenConstructor.getParameterCount()];
     for (int i = 0; i < parameters.length; ++i) {
-      parameters[i] =
-          dependencyResolver.resolveDependency(chosenConstructor.getParameters()[i].getType());
+      Class<?> parameterType = chosenConstructor.getParameters()[i].getType();
+      try {
+        parameters[i] = dependencyResolver.resolveDependency(parameterType);
+      } catch (IllegalArgumentException e) {
+        throw new ValidatorLoaderException(
+            String.format(
+                "Cannot inject parameter of type %s to %s constructor",
+                parameterType.getCanonicalName(), clazz.getCanonicalName()),
+            e);
+      }
     }
     chosenConstructor.setAccessible(true);
     T validator = chosenConstructor.newInstance(parameters);
@@ -199,27 +190,30 @@ public class ValidatorLoader {
    * @param <T> type of the validator to instantiate
    * @return a new validator
    */
-  public static <T> T createValidatorWithContext(
-      Class<T> clazz, ValidationContext validationContext) throws ReflectiveOperationException {
-    return createValidator(clazz, new DependencyResolver(validationContext, null, null))
-        .validator();
+  public static <T extends SingleEntityValidator>
+      ValidatorWithDependencyStatus<T> createValidatorWithContext(
+          Class<T> clazz, ValidationContext validationContext)
+          throws ReflectiveOperationException, ValidatorLoaderException {
+    return (ValidatorWithDependencyStatus<T>)
+        createValidator(clazz, new DependencyResolver(validationContext, null, null));
   }
 
   /** Instantiates a {@code FileValidator} for a single table. */
-  public static FileValidator createSingleFileValidator(
-      Class<? extends FileValidator> clazz,
-      GtfsTableContainer<?> table,
-      ValidationContext validationContext)
-      throws ReflectiveOperationException {
-    return createValidator(clazz, new DependencyResolver(validationContext, table, null))
-        .validator();
+  public static <T extends FileValidator>
+      ValidatorWithDependencyStatus<T> createSingleFileValidator(
+          Class<? extends FileValidator> clazz,
+          GtfsEntityContainer<?, ?> table,
+          ValidationContext validationContext)
+          throws ReflectiveOperationException, ValidatorLoaderException {
+    return (ValidatorWithDependencyStatus<T>)
+        createValidator(clazz, new DependencyResolver(validationContext, table, null));
   }
 
   /** Instantiates a {@code FileValidator} for multiple tables in a given feed. */
   @SuppressWarnings("unchecked")
   public static <T extends FileValidator> ValidatorWithDependencyStatus<T> createMultiFileValidator(
       Class<T> clazz, GtfsFeedContainer feed, ValidationContext validationContext)
-      throws ReflectiveOperationException {
+      throws ReflectiveOperationException, ValidatorLoaderException {
     return createValidator(clazz, new DependencyResolver(validationContext, null, feed));
   }
 
@@ -229,7 +223,7 @@ public class ValidatorLoader {
    */
   private static class DependencyResolver {
     private final ValidationContext context;
-    @Nullable private final GtfsTableContainer<?> tableContainer;
+    @Nullable private final GtfsEntityContainer<?, ?> tableContainer;
     @Nullable private final GtfsFeedContainer feedContainer;
 
     /** This will be set to true if a resolved dependency was not parsed successfully. */
@@ -237,13 +231,20 @@ public class ValidatorLoader {
 
     public DependencyResolver(
         ValidationContext context,
-        @Nullable GtfsTableContainer<?> tableContainer,
+        @Nullable GtfsEntityContainer<?, ?> tableContainer,
         @Nullable GtfsFeedContainer feedContainer) {
       this.context = context;
       this.tableContainer = tableContainer;
       this.feedContainer = feedContainer;
     }
 
+    /**
+     * This is typically called to obtain the container related to each parameter in a validator's
+     * constructor or a basic type related to country code or date.
+     *
+     * @param parameterClass The parameter of the constructor we want to examine.
+     * @return
+     */
     public Object resolveDependency(Class<?> parameterClass) {
       if (feedContainer != null && parameterClass.isAssignableFrom(GtfsFeedContainer.class)) {
         if (!feedContainer.isParsedSuccessfully()) {
@@ -257,9 +258,9 @@ public class ValidatorLoader {
         }
         return tableContainer;
       }
-      if (feedContainer != null && GtfsTableContainer.class.isAssignableFrom(parameterClass)) {
-        GtfsTableContainer<?> container =
-            feedContainer.getTable((Class<? extends GtfsTableContainer<?>>) parameterClass);
+      if (feedContainer != null && GtfsEntityContainer.class.isAssignableFrom(parameterClass)) {
+        GtfsEntityContainer<?, ?> container =
+            feedContainer.getTable((Class<? extends GtfsEntityContainer<?, ?>>) parameterClass);
         if (container != null && !container.isParsedSuccessfully()) {
           dependenciesHaveErrors = true;
         }
@@ -305,7 +306,8 @@ public class ValidatorLoader {
     if (!singleFileValidators.isEmpty()) {
       builder.append("Single-file validators\n");
       for (Map.Entry<
-              Class<? extends GtfsTableContainer<?>>, Collection<Class<? extends FileValidator>>>
+              Class<? extends GtfsEntityContainer<?, ?>>,
+              Collection<Class<? extends FileValidator>>>
           entry : singleFileValidators.asMap().entrySet()) {
         builder.append("\t").append(entry.getKey().getSimpleName()).append(": ");
         for (Class<? extends FileValidator> validatorClass : entry.getValue()) {

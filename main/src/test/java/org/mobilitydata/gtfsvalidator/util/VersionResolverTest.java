@@ -13,6 +13,7 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,6 +22,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 
 @RunWith(JUnit4.class)
 public class VersionResolverTest {
@@ -39,29 +41,38 @@ public class VersionResolverTest {
 
   @Test
   public void testResolveLatestReleaseVersion() throws IOException {
-    StringBuilder b = new StringBuilder();
-    b.append("Version Information from the wiki\n");
-    b.append("```\n");
-    b.append("version=10.0.5\n");
-    b.append("```\n");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
-    VersionResolver checker = new VersionResolver();
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.latestReleaseVersion()).hasValue("10.0.5");
   }
 
   @Test
   public void testLatestReleaseVersionNotFound() throws IOException {
-    StringBuilder b = new StringBuilder();
-    b.append("Page not found");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("Page not found");
 
-    VersionResolver checker = new VersionResolver();
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.latestReleaseVersion()).isEmpty();
+  }
+
+  @Test
+  public void testReleaseVersionUrlParams() throws IOException {
+    // This property is set via gradle test { } stanza.
+    String expectedVersion = System.getProperty("gtfsValidatorVersionForTest");
+    assertThat(expectedVersion).isNotEmpty();
+
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
+
+    VersionResolver checker = new VersionResolver(ApplicationType.WEB);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
+
+    assertThat(mockStreamHandler.url).isNotNull();
+    assertThat(mockStreamHandler.url.getQuery())
+        .isEqualTo("application_type=WEB&current_version=" + expectedVersion);
   }
 
   @Test
@@ -70,17 +81,15 @@ public class VersionResolverTest {
     String expectedVersion = System.getProperty("gtfsValidatorVersionForTest");
     assertThat(expectedVersion).isNotEmpty();
 
-    VersionResolver checker = new VersionResolver();
-    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT);
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
+    VersionInfo versionInfo = checker.getVersionInfoWithTimeout(TIMEOUT, false);
 
     assertThat(versionInfo.currentVersion()).hasValue(expectedVersion);
   }
 
   @Test
   public void testVersionCallback() throws IOException, InterruptedException {
-    StringBuilder b = new StringBuilder();
-    b.append("version=10.0.5\n");
-    mockStreamHandler.setContent(b.toString());
+    mockStreamHandler.setContent("{\"version\":\"10.0.5\"}");
 
     // A dummy callback that captures the updated version info and triggers a countdown latch
     // that our test can wait for.
@@ -92,7 +101,7 @@ public class VersionResolverTest {
           callbackLatch.countDown();
         };
 
-    VersionResolver checker = new VersionResolver();
+    VersionResolver checker = new VersionResolver(ApplicationType.CLI);
     checker.addCallback(callback);
 
     // Wait until the callback is actually triggered.
@@ -101,17 +110,45 @@ public class VersionResolverTest {
     assertThat(versionInfo.get().latestReleaseVersion()).hasValue("10.0.5");
   }
 
+  @Test
+  public void getVersionInfoWithTimeoutException_usesCurrentVersionFallback() {
+    VersionResolver resolver =
+        new VersionResolver(ApplicationType.CLI) {
+          @Override
+          public synchronized VersionInfo resolve(boolean skipValidatorUpdate) {
+            throw new RuntimeException("Test exception");
+          }
+
+          @Override
+          public Optional<String> resolveCurrentVersion() {
+            return Optional.of("1.2.3");
+          }
+        };
+
+    VersionInfo info = resolver.getVersionInfoWithTimeout(Duration.ofMillis(1), true);
+
+    assertThat(info.currentVersion()).isPresent();
+    assertThat(info.currentVersion().get()).isEqualTo("1.2.3");
+  }
+
   private static class MockStreamHandler extends URLStreamHandler {
 
     private URLConnection connection = mock(URLConnection.class);
+
+    private URL url = null;
 
     public void setContent(String content) throws IOException {
       when(connection.getInputStream())
           .thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
     }
 
+    public URL getUrl() {
+      return this.url;
+    }
+
     @Override
     protected URLConnection openConnection(URL u) throws IOException {
+      this.url = u;
       return connection;
     }
   }

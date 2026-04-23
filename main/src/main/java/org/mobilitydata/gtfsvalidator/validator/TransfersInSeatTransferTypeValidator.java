@@ -11,14 +11,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransfer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTransferType;
+import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.validator.TransfersStopTypeValidator.TransferWithInvalidStopLocationTypeNotice;
 
 /**
@@ -137,7 +130,14 @@ public class TransfersInSeatTransferTypeValidator extends FileValidator {
    * functionality is still considered to be partially experimental in some interpretations of the
    * spec.
    */
-  @GtfsValidationNotice(severity = WARNING)
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files =
+          @GtfsValidationNotice.FileRefs({
+            GtfsTransferSchema.class,
+            GtfsStopSchema.class,
+            GtfsStopTimeSchema.class
+          }))
   public static class TransferWithSuspiciousMidTripInSeatNotice extends ValidationNotice {
 
     /** The row number from `transfers.txt` for the faulty entry. */

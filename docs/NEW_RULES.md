@@ -57,11 +57,8 @@ public class TripUsabilityValidator extends FileValidator {
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      )
+
   static class UnusableTripNotice extends ValidationNotice {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
@@ -142,10 +139,6 @@ For example, this notice will appear in JSON output as:
 Values for `csvRowNumber` and `tripId` will be different for each generated notice.
 
 ### c. Implement the validation rule logic (`FileValidator`)
-
-<!--suppress ALL -->
-
-<a name="examples"/>
 
 Here's the fun part - writing the rule. Because this rule `...extends FileValidator`, we need to define what GTFS files we want - in this case the `trips.txt` and `stop_times.txt` tables.
 
@@ -255,12 +248,9 @@ Coming back to our example:
   @GtfsValidationNotice(
       severity = WARNING,
       files = @FileRefs({GtfsStopTimeSchema.class, GtfsTripSchema.class}),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
-  static class UnusableTripNotice extends ValidationNotice {
+  )
+
+    static class UnusableTripNotice extends ValidationNotice {
     /** The row number of the faulty record. */
     private final int csvRowNumber;
 

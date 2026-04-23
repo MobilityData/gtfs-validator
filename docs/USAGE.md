@@ -1,26 +1,34 @@
 # Instructions to run the application locally
-*If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
+*If you're running a [`v1.x` release JAR file](https://github.com/MobilityData/gtfs-validator/releases) you'll need Java 17, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer). The below instructions are for the master branch, which will be v2.0.*
 
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html).
-1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle
+2. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster).
 
 ## via cli-app
 **Full list of command line parameters available**
 
-| Short name | Long name                     | required?              | Description                                                                                                                                                                                                                                                  |
-| ---------- | ----------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `-i`       | `--input`                     | Conditionally required | The path to the GTFS file (e.g., `/myDirectory/gtfs.zip`). Required if `-u` or `--url` is not provided.                                                                                                                                                      |
-| `-u`       | `--url`                       | Conditionally Required | `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`). Required if `-i` or `--input` is not provided.                                                                                                             |
-| `-o`       | `--output`                    | Required               | Path to where the validation report will be stored (e.g., `output`)                                                                                                                                                                                          |
-| `-s`       | `--storage_directory`         | Optional               | Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory).                                                                                                                                    |
-| `-c`       | `--country_code`              | Optional               | Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2). (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If the country code is provided, phone numbers will be validated based on it. |
-| `-h`       | `--help`                      | Optional               | Print help menu.                                                                                                                                                                                                                                             |
-| `-t`       | `--threads`                   | Optional               | Number of threads to be used by Java to run the validator.                                                                                                                                                                                                   |
-| `-v`       | `--validation_report_name`    | Optional               | Name of the validation report (including `.json` extension).                                                                                                                                                                                                 |
-| `-r`       | `--html_report_name`          | Optional               | Name of the HTML validation report (including `.html` extension).                                                                                                                                                                                            |
-| `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                              |
-| `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                         |
-| `-p`       | `--pretty`                    | Optional               | Pretty JSON validation report. If specified, the JSON validation report will be printed using JSON Pretty print. This does not impact data parsing.                                                                                                      |
+| Short name | Long name                     | required?              | Description                                                                                                                                                                                                                                                   |
+|------------|-------------------------------| ---------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-i`       | `--input`                     | Conditionally required | The path to the GTFS file (e.g., `/myDirectory/gtfs.zip`). Required if `-u` or `--url` is not provided.                                                                                                                                                       |
+| `-u`       | `--url`                       | Conditionally Required | `--url` or `-u`: the fully qualified URL to the GTFS file (e.g., `https://www.abc.com/gtfs.zip`). Required if `-i` or `--input` is not provided.                                                                                                              |
+| `-o`       | `--output`                    | Required               | Path to where the validation report will be stored (e.g., `output`)                                                                                                                                                                                           |
+| `-s`       | `--storage_directory`         | Optional               | Target path where to store the GTFS archive. Downloaded from network (if not provided, the ZIP will be stored in memory).                                                                                                                                     |
+| `-c`       | `--country_code`              | Optional               | Country code of the feed, e.g., `nl`. It must be a two-letter country code (ISO 3166-1 alpha-2). (e.g., `ca`, `us`). It can be either lower or upper case (e.g. `FR` or `GP`). If the country code is provided, phone numbers will be validated based on it.  |
+| `-h`       | `--help`                      | Optional               | Print help menu.                                                                                                                                                                                                                                              |
+| `-t`       | `--threads`                   | Optional               | Number of threads to be used by Java to run the validator.                                                                                                                                                                                                    |
+| `-v`       | `--validation_report_name`    | Optional               | Name of the validation report (including `.json` extension).                                                                                                                                                                                                  |
+| `-r`       | `--html_report_name`          | Optional               | Name of the HTML validation report (including `.html` extension).                                                                                                                                                                                             |
+| `-e`       | `--system_errors_report_name` | Optional               | Name of the system errors report (including `.json` extension).                                                                                                                                                                                               |
+| `-n`       | `--export_notices_schema`     | Optional               | Export notice schema as a json file.                                                                                                                                                                                                                          |
+| `-p`       | `--pretty`                    | Optional               | Pretty JSON validation report. If specified, the JSON validation report will be printed using JSON Pretty print. This does not impact data parsing.                                                                                                           |
+| `--stdout` | `--stdout`                    | Optional               | Output JSON report to stdout instead of writing to files. Use with `-i` or `-u` but not with `-o`. Enables piping to tools like `jq`.                                                                                                                          |
+| `-d`       | `--date`                      | Optional               | The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used.                                                                                       |
+| `-svu`     | `--skip_validator_update`     | Optional               | Skip GTFS version validation update check. If specified, the GTFS version validation will be skipped. By default, the GTFS version validation will be performed.                                                                                              |                                              
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
@@ -53,6 +61,34 @@ java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/outp
  1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
 Please note that since downloading will take time, we recommend validating repeatedly on a local file.
+
+## via stdout output (for scripting and piping)
+
+The `--stdout` option outputs JSON directly to stdout instead of writing files, making it ideal for scripting and piping to other tools.
+
+### Basic stdout usage
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout
+```
+
+### Pipe to jq for processing
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout | jq '.summary.validationTimeSeconds'
+```
+
+### Pretty JSON output to stdout
+``` 
+java -jar gtfs-validator-v2.0.jar -i relative/path/to/dataset.zip --stdout --pretty
+```
+
+### URL-based input with stdout
+``` 
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip --stdout
+```
+
+⚠️ Note that `--stdout` cannot be used with `-o` or `--output_base`. Use one or the other.
+
+⚠️ When using `--stdout`, all system errors and logging output are suppressed to ensure clean JSON output. Only severe-level log messages (hard crashes) will appear on stderr.
 
 ## via GitHub Actions - Run the validator on any gtfs archive available on a public url
 

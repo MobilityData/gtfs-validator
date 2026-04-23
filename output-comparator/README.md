@@ -10,8 +10,13 @@ This is a command-line tool written in Java that performs the following steps:
 
 # Run the app via command line
 ### Setup
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download [output-comparator-v3.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v3.0.0/output-comparator-v3.0.0_cli.jar)
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle
+2. Download [output-comparator-v3.0.0_cli.jar](https://github.com/MobilityData/gtfs-validator/releases/download/v3.0.0/output-comparator-v3.0.0_cli.jar)
 
 ### Run it
 To validate a GTFS dataset on your computer:

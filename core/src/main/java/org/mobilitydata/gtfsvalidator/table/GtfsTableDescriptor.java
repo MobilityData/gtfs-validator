@@ -7,24 +7,17 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
-public abstract class GtfsTableDescriptor<T extends GtfsEntity> {
-  public abstract GtfsTableContainer createContainerForInvalidStatus(
-      GtfsTableContainer.TableStatus tableStatus);
+public abstract class GtfsTableDescriptor<T extends GtfsEntity> extends GtfsFileDescriptor<T> {
+
+  @Override
+  public abstract GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus);
 
   public abstract GtfsTableContainer createContainerForHeaderAndEntities(
       CsvHeader header, List<T> entities, NoticeContainer noticeContainer);
 
   public abstract GtfsEntityBuilder createEntityBuilder();
 
-  public abstract Class<T> getEntityClass();
-
-  public abstract String gtfsFilename();
-
   public abstract ImmutableMap<String, GtfsFieldLoader> getFieldLoaders();
-
-  public abstract boolean isRecommended();
-
-  public abstract boolean isRequired();
 
   public abstract Optional<Integer> maxCharsPerColumn();
 

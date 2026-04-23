@@ -16,26 +16,33 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 
 /**
  * A read-only context passed to particular validator objects. It gives information relevant for
  * validation: properties of the feed as a whole, system properties (current time) etc.
  */
-@AutoValue
-public abstract class ValidationContext {
+public class ValidationContext {
   public static Builder builder() {
-    return new AutoValue_ValidationContext.Builder();
+    return new Builder();
+  }
+
+  private final ImmutableMap<Class<?>, Object> context;
+
+  private ValidationContext(ImmutableMap<Class<?>, Object> context) {
+    this.context = context;
   }
 
   /**
-   * Represents a name of a GTFS feed, such as "nl-openov".
+   * Represents the country code of a GTFS feed, such as US or NL.
    *
-   * @return the @code{GtfsFeedName} representing the feed's name
+   * @return the @code{CountryCode} representing the feed's country code
    */
-  public abstract CountryCode countryCode();
+  public CountryCode countryCode() {
+    return get(CountryCode.class);
+  }
 
   /**
    * The time when validation started.
@@ -50,27 +57,43 @@ public abstract class ValidationContext {
    *
    * @return The time when validation started as @code{ZonedDateTime}
    */
-  public abstract CurrentDateTime currentDateTime();
+  public DateForValidation dateForValidation() {
+    return get(DateForValidation.class);
+  }
 
   /** Returns a member of the context with requested class. */
   @SuppressWarnings("unchecked")
   public <T> T get(Class<T> clazz) {
-    if (clazz.isAssignableFrom(CountryCode.class)) {
-      return (T) countryCode();
+    Object o = context.get(clazz);
+    if (o == null) {
+      throw new IllegalArgumentException(
+          "Cannot find " + clazz.getCanonicalName() + " in validation context");
     }
-    if (clazz.isAssignableFrom(CurrentDateTime.class)) {
-      return (T) currentDateTime();
-    }
-    throw new IllegalArgumentException(
-        "Cannot find " + clazz.getCanonicalName() + " in validation context");
+    return (T) o;
   }
 
-  @AutoValue.Builder
-  public abstract static class Builder {
-    public abstract Builder setCountryCode(CountryCode countryCode);
+  /** Builder for {@link ValidationContext}. */
+  public static class Builder {
+    private final ImmutableMap.Builder<Class<?>, Object> context = ImmutableMap.builder();
 
-    public abstract Builder setCurrentDateTime(CurrentDateTime currentDateTime);
+    /** Sets the country code. */
+    public Builder setCountryCode(CountryCode countryCode) {
+      return set(CountryCode.class, countryCode);
+    }
 
-    public abstract ValidationContext build();
+    /** Sets the current time. */
+    public Builder setDateForValidation(DateForValidation dateForValidation) {
+      return set(DateForValidation.class, dateForValidation);
+    }
+
+    /** Sets a member of the context with requested class. */
+    public <T> Builder set(Class<T> clazz, T obj) {
+      context.put(clazz, obj);
+      return this;
+    }
+
+    public ValidationContext build() {
+      return new ValidationContext(context.buildOrThrow());
+    }
   }
 }

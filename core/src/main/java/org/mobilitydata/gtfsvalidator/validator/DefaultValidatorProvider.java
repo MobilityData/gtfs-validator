@@ -16,14 +16,19 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason.*;
+
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.flogger.FluentLogger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader.ValidatorWithDependencyStatus;
 
 /** Default implementation of {@link ValidatorProvider}. */
@@ -35,7 +40,8 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   private final TableHeaderValidator tableHeaderValidator;
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators;
-  private final ListMultimap<Class<? extends GtfsTableContainer<?>>, Class<? extends FileValidator>>
+  private final ListMultimap<
+          Class<? extends GtfsEntityContainer<?, ?>>, Class<? extends FileValidator>>
       singleFileValidators;
   private final List<Class<? extends FileValidator>> multiFileValidators;
 
@@ -76,15 +82,29 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @Override
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity> List<SingleEntityValidator<T>> createSingleEntityValidators(
-      Class<T> clazz) {
+      Class<T> clazz,
+      ColumnInspector header,
+      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     List<SingleEntityValidator<T>> validators = new ArrayList<>();
     for (Class<? extends SingleEntityValidator<?>> validatorClass :
         singleEntityValidators.get(clazz)) {
       try {
-        validators.add(
-            ValidatorLoader.createValidatorWithContext(
-                ((Class<? extends SingleEntityValidator<T>>) validatorClass), validationContext));
-      } catch (ReflectiveOperationException e) {
+        ValidatorWithDependencyStatus<? extends SingleEntityValidator<?>>
+            validatorWithDependencyStatus =
+                ValidatorLoader.createValidatorWithContext(
+                    ((Class<? extends SingleEntityValidator<?>>) validatorClass),
+                    validationContext);
+        if (validatorWithDependencyStatus.dependenciesHaveErrors()) {
+          skippedValidators.put(SINGLE_ENTITY_VALIDATORS_WITH_ERROR, validatorClass);
+        } else {
+          var validator = validatorWithDependencyStatus.validator();
+          if (validator.shouldCallValidate(header)) {
+            validators.add((SingleEntityValidator<T>) validator);
+          } else {
+            skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+          }
+        }
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }
@@ -94,15 +114,24 @@ public class DefaultValidatorProvider implements ValidatorProvider {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T extends GtfsEntity> List<FileValidator> createSingleFileValidators(
-      GtfsTableContainer<T> table) {
+  public <T extends GtfsEntity, D extends GtfsTableDescriptor>
+      List<FileValidator> createSingleFileValidators(
+          GtfsEntityContainer<T, D> table,
+          Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :
-        singleFileValidators.get((Class<? extends GtfsTableContainer<?>>) table.getClass())) {
+        singleFileValidators.get((Class<? extends GtfsTableContainer<?, ?>>) table.getClass())) {
       try {
-        validators.add(
-            ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext));
-      } catch (ReflectiveOperationException e) {
+        ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
+            ValidatorLoader.createSingleFileValidator(validatorClass, table, validationContext);
+        if (validatorWithStatus.dependenciesHaveErrors()) {
+          skippedValidators.put(SINGLE_FILE_VALIDATORS_WITH_ERROR, validatorClass);
+        } else if (validatorWithStatus.validator().shouldCallValidate()) {
+          validators.add(validatorWithStatus.validator());
+        } else {
+          skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+        }
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }
@@ -112,7 +141,8 @@ public class DefaultValidatorProvider implements ValidatorProvider {
 
   @Override
   public List<FileValidator> createMultiFileValidators(
-      GtfsFeedContainer feed, Consumer<Class<? extends FileValidator>> skippedValidators) {
+      GtfsFeedContainer feed,
+      Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     ArrayList<FileValidator> validators = new ArrayList<>();
     validators.ensureCapacity(multiFileValidators.size());
     for (Class<? extends FileValidator> validatorClass : multiFileValidators) {
@@ -120,11 +150,15 @@ public class DefaultValidatorProvider implements ValidatorProvider {
         ValidatorWithDependencyStatus<? extends FileValidator> validatorWithStatus =
             ValidatorLoader.createMultiFileValidator(validatorClass, feed, validationContext);
         if (validatorWithStatus.dependenciesHaveErrors()) {
-          skippedValidators.accept(validatorClass);
+          skippedValidators.put(MULTI_FILE_VALIDATORS_WITH_ERROR, validatorClass);
         } else {
-          validators.add(validatorWithStatus.validator());
+          if (validatorWithStatus.validator().shouldCallValidate()) {
+            validators.add(validatorWithStatus.validator());
+          } else {
+            skippedValidators.put(VALIDATORS_NO_NEED_TO_RUN, validatorClass);
+          }
         }
-      } catch (ReflectiveOperationException e) {
+      } catch (ReflectiveOperationException | ValidatorLoaderException e) {
         logger.atSevere().withCause(e).log(
             "Cannot instantiate validator %s", validatorClass.getCanonicalName());
       }

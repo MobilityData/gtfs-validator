@@ -1,5 +1,5 @@
 # Canonical GTFS Schedule Validator
-[![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg) ![End to end big](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20big/badge.svg) ![End to end 100](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end%20100/badge.svg) [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://share.mobilitydata.org/slack)
+[![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) ![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg)  [![Rule acceptance tests](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions/workflows/acceptance_test.yml) ![Docker image](https://github.com/MobilityData/gtfs-validator/actions/workflows/docker.yml/badge.svg) [![Join the gtfs-validator chat](https://badgen.net/badge/slack/%20/green?icon=slack)](https://share.mobilitydata.org/slack)
 
 
 A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) (static) feed validator, maintained by [MobilityData](https://mobilitydata.org). 
@@ -17,7 +17,7 @@ A [General Transit Feed Specification (GTFS) Schedule](https://gtfs.mobilitydata
 
 
 <p align="center">
-<a href="https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md">☑️ List of rules implemented</a>
+<a href="https://gtfs-validator.mobilitydata.org/rules.html">☑️ List of rules implemented</a>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ This README contains information for the latest version of the project, which is
 This is a cross-platform application written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk.
 2. Checks file integrity, numeric type parsing and ranges.
-3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference/#h.hc443y62gb8c).
+3. Performs complete validation against the [GTFS Schedule standard](https://gtfs.org/schedule/reference).
 4. Provides an easy-to-use validation report in HTML format that can be opened in the browser and shared with other parties. See an [example of a validation report](https://htmlpreview.github.io/?https://github.com/MobilityData/gtfs-validator/blob/master/docs/report.html). The report is also available in JSON format that can be used for parsing and running additional analyses.
 
 <video src="https://user-images.githubusercontent.com/63653518/234697111-59cbc5de-5bf2-4c49-8474-fd41ac51a745.mp4" controls="controls" style="max-width: 730px;">
@@ -45,6 +45,13 @@ Validation reports have a unique URL link that can be shared and are available 3
 
 The GTFS Web Validator contains two main components: the GTFS Web Validator Client and the GTFS Validator Web Service. More information about these components can be found in [GTFS Web Validator Client](./web/client/README.md) and [GTFS Validator Web Service](./web/service/README.md).
 
+Several users have reported issues with the validator when processing their GTFS feeds. These issues arise due to the configuration of their websites, which may not be set up to handle:
+
+1. Requests that come with custom user agents.
+2. Requests originating from non-browser sources.
+
+To facilitate easier debugging and logging, we have made our user agent header explicit. The user agent string follows the format: "MobilityData GTFS-Validator/{validatorVersion} (Java {java version})". In cases where the `validatorVersion` is null, the `{validatorVersion}` segment in the user agent string will be left blank. The string "MobilityData GTFS-Validator/5.0.1 (Java 17.0.8)" serves as an example of the User Agent string.
+
 # Using the Desktop app
 ### Setup
 1. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` installer for your operating system:
@@ -56,7 +63,7 @@ The GTFS Web Validator contains two main components: the GTFS Web Validator Clie
 ### Run it
 Once installed, run the application and you will see the following screen:
 
-![Application-Windows](/docs/Application-Windows.png)
+![Application-Windows](/docs/images/Application-Windows.png)
 
 There are two primary options to set:
 
@@ -77,10 +84,33 @@ Before running validation, tap the `Advanced` button to configure other aspects 
 * Number of threads used to run the validator.
 * The country code used for phone number validation.
 
+### Using GUI by command line
+#### Setup
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle
+2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` GUI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X-gui.jar`
+3. Open the terminal on your computer
+4. Navigate to the directory containing the jar file. You can do this by typing the following command in the terminal:`cd {directory path}`, where {directory path} is the absolute or relative path to the directory. You can then make sure you're in the right directory by typing `pwd` in the terminal (this stands for *present working directory*). You can also make sure the jar file is there by typing `ls` in the terminal (this stands for *list* and will display the list of files in this directory). More about commands to navigate file and directories [here](https://help.ubuntu.com/community/UsingTheTerminal#File_.26_Directory_Commands).
+
+#### Run it
+You can run this validator using a GTFS dataset on your computer, or from a URL.
+- To validate a GTFS dataset on your computer, run the following command in the terminal, replacing the text in brackets:
+    - `java -jar {name of the jar file}`
+    - here is an example of what the command could look like:  `java -jar gtfs-validator-gui.jar`
+
 # Using the command line
-### Setup
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html). To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`.
-2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X_cli.jar`
+### Setup 
+1. Install Java 17 or higher. To check which version of Java is installed on your computer, type the following command in the terminal: `java --version`. You can download Java from one of the following sources:
+    - **[Eclipse Adoptium (Temurin)](https://adoptium.net/temurin/releases/)** – Open-source & widely used
+    - **[Amazon Corretto](https://aws.amazon.com/corretto/)** - AWS-supported, optimized for cloud
+    - **[Azul Zulu](https://www.azul.com/downloads/)** - Enterprise ready
+    - **[Microsoft Build of OpenJDK](https://learn.microsoft.com/en-us/java/openjdk/download/)** - Microsoft's JDK
+    - **[Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html)** - Official Java from Oracle 
+2. Navigate to the [Releases page](https://github.com/MobilityData/gtfs-validator/releases) and download the latest `Gtfs Validator` CLI jar (not OS-specific). It is located in the **Assets** section of the release, and it looks like `gtfs-validator-vX.X.X-cli.jar`
 3. Open the terminal on your computer
 4. Navigate to the directory containing the jar file. You can do this by typing the following command in the terminal:`cd {directory path}`, where {directory path} is the absolute or relative path to the directory. You can then make sure you're in the right directory by typing `pwd` in the terminal (this stands for *present working directory*). You can also make sure the jar file is there by typing `ls` in the terminal (this stands for *list* and will display the list of files in this directory). More about commands to navigate file and directories [here](https://help.ubuntu.com/community/UsingTheTerminal#File_.26_Directory_Commands).
 
@@ -138,18 +168,18 @@ where:
 
 `... c:/myDirectory:/work ...`
 
-The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#run-the-app-via-command-line).
+The validator can then be executed via bash commands. See the [preceeding instructions for command line usage](#using-the-command-line).
 
 ### Visualize the results
 In the output directory, the reports will be created as described [here](#visualize-the-results).
 
 # Validation rules
-* See the list of all the noticed emitted by this validator in [RULES.md](/RULES.md).
+* See the list of all the notices emitted by this validator [here](https://gtfs-validator.mobilitydata.org/rules.html).
 * If you'd like to map notice names between two validator versions, see [NOTICE_MIGRATION.md](/docs/NOTICE_MIGRATION.md).
 * Possible future rules for:
-  * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Reference)
-  * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20GTFS%20Best%20Practices)
-  * [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Rules%20-%20Community%20rules)
+  * [GTFS Reference](https://github.com/MobilityData/gtfs-validator/labels/GTFS%20Reference)
+  * [GTFS Best Practices](https://github.com/MobilityData/gtfs-validator/labels/GTFS%20Best%20Practices)
+  * [Community rules](https://github.com/MobilityData/gtfs-validator/labels/Community%20rules)
 
 Have a suggestion for a new rule? Open [an issue](https://github.com/MobilityData/gtfs-validator/issues/new/choose). You can see the complete process for adding new rules on the ["Adding new rules"](/docs/NEW_RULES.md) page.
 
@@ -170,10 +200,10 @@ Instructions to build the project from the command-line using [Gradle](https://g
 The architecture of the `gtfs-validator` is described on our [Architecture page](/docs/ARCHITECTURE.md). 
 
 # Acceptance tests
-In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](http://old.mobilitydatabase.org/wiki/Main_Page). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
+In order to avoid sudden changes in the validation output that might declare previously valid datasets invalid, all code changes in pull requests are tested against GTFS datasets in the [MobilityDatabase](https://mobilitydatabase.org). The acceptance test process is described in [ACCEPTANCE_TESTS.md](docs/ACCEPTANCE_TESTS.md).
 
 # Projects based on this validator
-[CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/gtfs-validator-api) - A thin wrapper around MobilityData/gtfs-validator.
+[CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/data-infra/tree/main/jobs/gtfs-schedule-validator) - A thin wrapper around MobilityData/gtfs-validator.
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).

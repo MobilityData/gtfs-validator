@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.runner;
 
+import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidatorReason.*;
+
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,25 +26,27 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import javax.annotation.Nonnull;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
-import org.mobilitydata.gtfsvalidator.report.HtmlReportGenerator;
-import org.mobilitydata.gtfsvalidator.report.JsonReport;
-import org.mobilitydata.gtfsvalidator.report.JsonReportGenerator;
-import org.mobilitydata.gtfsvalidator.report.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.reportsummary.HtmlReportGenerator;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReport;
+import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 import org.mobilitydata.gtfsvalidator.validator.*;
@@ -52,7 +56,6 @@ public class ValidationRunner {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
   private static final String GTFS_ZIP_FILENAME = "gtfs.zip";
-  private static NoticeContainer noticeContainer;
 
   private final VersionResolver versionResolver;
 
@@ -72,8 +75,21 @@ public class ValidationRunner {
     this.versionResolver = versionResolver;
   }
 
+  @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
-    VersionInfo versionInfo = versionResolver.getVersionInfoWithTimeout(Duration.ofSeconds(5));
+    // Suppress logging when using stdout mode to avoid interfering with JSON output
+    if (config.stdoutOutput()) {
+      // Set logging level to SEVERE to minimize output
+      java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.SEVERE);
+    }
+    MemoryUsageRegister.getInstance().clearRegistry();
+    // Registering the memory metrics manually to avoid multiple entries due to concurrent calls
+    // and exclude from the metric the generation of the reports.
+    var memoryBefore =
+        MemoryUsageRegister.getInstance().getMemoryUsageSnapshot("ValidationRunner.run", null);
+    VersionInfo versionInfo =
+        versionResolver.getVersionInfoWithTimeout(
+            Duration.ofSeconds(5), config.skipValidatorUpdate());
     logger.atInfo().log("VersionInfo: %s", versionInfo);
     if (versionInfo.updateAvailable()) {
       logger.atInfo().log("A new version of the validator is available!");
@@ -96,11 +112,12 @@ public class ValidationRunner {
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
-    noticeContainer = new NoticeContainer();
+    NoticeContainer noticeContainer = new NoticeContainer();
     GtfsFeedContainer feedContainer;
     GtfsInput gtfsInput = null;
     try {
-      gtfsInput = createGtfsInput(config);
+      gtfsInput =
+          createGtfsInput(config, versionInfo.currentVersion().orElse(null), noticeContainer);
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       noticeContainer.addSystemError(new IOError(e));
@@ -119,7 +136,8 @@ public class ValidationRunner {
     ValidationContext validationContext =
         ValidationContext.builder()
             .setCountryCode(config.countryCode())
-            .setCurrentDateTime(new CurrentDateTime(ZonedDateTime.now(ZoneId.systemDefault())))
+            .set(ServiceIntervalCache.class, new ServiceIntervalCache())
+            .setDateForValidation(new DateForValidation(config.dateForValidation()))
             .build();
     try {
       feedContainer =
@@ -132,34 +150,105 @@ public class ValidationRunner {
     FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
     closeGtfsInput(gtfsInput, noticeContainer);
 
+    //    Performance metrics
+    feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+    var after =
+        MemoryUsageRegister.getInstance()
+            .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
+    MemoryUsageRegister.getInstance().registerMemoryUsage(after);
+
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(startNanos, feedContainer, feedLoader);
+    printSummary(feedMetadata, feedContainer, feedLoader, config);
     return Status.SUCCESS;
   }
 
   /**
    * Prints validation metadata.
    *
-   * @param startNanos start time as nanoseconds
+   * @param feedMetadata the {@code FeedMetadata}
    * @param feedContainer the {@code GtfsFeedContainer}
    */
   public static void printSummary(
-      long startNanos, GtfsFeedContainer feedContainer, GtfsFeedLoader loader) {
-    final long endNanos = System.nanoTime();
-    List<Class<? extends FileValidator>> skippedValidators = loader.getSkippedValidators();
-    if (!skippedValidators.isEmpty()) {
-      StringBuilder b = new StringBuilder();
-      b.append("\n");
-      b.append(" ----------------------------------------- \n");
-      b.append("|   Some validators were never invoked.   |\n");
-      b.append(" ----------------------------------------- \n");
-      b.append("Skipped validators: ");
-      b.append(
-          skippedValidators.stream().map(Class::getSimpleName).collect(Collectors.joining(",")));
-      logger.atSevere().log(b.toString());
+      FeedMetadata feedMetadata,
+      GtfsFeedContainer feedContainer,
+      GtfsFeedLoader loader,
+      ValidationRunnerConfig config) {
+    // Skip summary output when using stdout mode to avoid interfering with JSON output
+    if (config.stdoutOutput()) {
+      return;
     }
-    logger.atInfo().log("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+    final long endNanos = System.nanoTime();
+    var skippedValidators = loader.getSkippedValidators();
+    var multiFileValidatorsWithParsingErrors =
+        skippedValidators.get(MULTI_FILE_VALIDATORS_WITH_ERROR);
+    var singleFileValidatorsWithParsingErrors =
+        skippedValidators.get(SINGLE_FILE_VALIDATORS_WITH_ERROR);
+    // In theory single entity validators do not depend on files so there should not be any of these
+    // with parsing errors
+    var singleEntityValidatorsWithParsingErrors =
+        skippedValidators.get(SINGLE_ENTITY_VALIDATORS_WITH_ERROR);
+
+    StringBuilder b = new StringBuilder();
+    if (!singleFileValidatorsWithParsingErrors.isEmpty()
+        || !singleEntityValidatorsWithParsingErrors.isEmpty()
+        || !multiFileValidatorsWithParsingErrors.isEmpty()) {
+
+      b.append("\n");
+      b.append(
+          "---------------------------------------------------------------------------------------- \n");
+      b.append(
+          "| Some validators were skipped because the GTFS files they rely on could not be parsed | \n");
+      b.append(
+          "---------------------------------------------------------------------------------------- \n");
+      if (!multiFileValidatorsWithParsingErrors.isEmpty()) {
+        // Add some spaces to the delimiter so the validator names are indented. Easier to read.
+        b.append("Multi-file validators:\n   ");
+        b.append(
+            multiFileValidatorsWithParsingErrors.stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.joining("\n   ")));
+      }
+
+      if (!singleFileValidatorsWithParsingErrors.isEmpty()) {
+        b.append("Single-file validators:\n   ");
+        b.append(
+            singleFileValidatorsWithParsingErrors.stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.joining("\n   ")));
+      }
+      if (!singleEntityValidatorsWithParsingErrors.isEmpty()) {
+        b.append("Single-entity validators:\n   ");
+        b.append(
+            singleEntityValidatorsWithParsingErrors.stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.joining("\n   ")));
+      }
+    }
+
+    var skippedNoNeedToValidate = skippedValidators.get(VALIDATORS_NO_NEED_TO_RUN);
+
+    if (!skippedNoNeedToValidate.isEmpty()) {
+      b.append("\n");
+      b.append(
+          "----------------------------------------------------------------------------------------\n");
+      b.append(
+          "| Validators that were skipped because the data used by the validator is absent.       |\n");
+      b.append(
+          "----------------------------------------------------------------------------------------\n");
+
+      b.append("   ")
+          .append(
+              skippedNoNeedToValidate.stream()
+                  .map(Class::getSimpleName)
+                  .collect(Collectors.joining("\n   ")));
+    }
+
+    if (b.length() > 0) {
+      logger.atWarning().log(b.toString());
+    }
+
+    logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
     logger.atInfo().log(feedContainer.tableTotalsText());
   }
 
@@ -222,26 +311,49 @@ public class ValidationRunner {
       NoticeContainer noticeContainer,
       ValidationRunnerConfig config,
       VersionInfo versionInfo) {
-    if (!Files.exists(config.outputDirectory())) {
+
+    ZonedDateTime now = ZonedDateTime.now();
+    String date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX"));
+    Gson gson = createGson(config.prettyJson());
+    JsonReportGenerator jsonGenerator = new JsonReportGenerator();
+
+    // Generate JSON report
+    JsonReport jsonReport = null;
+    try {
+      jsonReport =
+          jsonGenerator.generateReport(feedMetadata, noticeContainer, config, versionInfo, date);
+    } catch (Exception ex) {
+      logger.atSevere().withCause(ex).log("Error creating JSON report");
+      return;
+    }
+
+    if (config.stdoutOutput()) {
+      // Output JSON to stdout
       try {
-        Files.createDirectories(config.outputDirectory());
+        System.out.println(gson.toJson(jsonReport));
+      } catch (Exception ex) {
+        logger.atSevere().withCause(ex).log("Error creating JSON report");
+      }
+
+      return;
+    }
+
+    // Existing file-based output. At this point, stdoutOutput is false and
+    // validate() guarantees that an output directory is configured.
+    Path outputDir = config.outputDirectory().get();
+    if (!Files.exists(outputDir)) {
+      try {
+        Files.createDirectories(outputDir);
       } catch (IOException ex) {
-        logger.atSevere().withCause(ex).log(
-            "Error creating output directory: %s", config.outputDirectory());
+        logger.atSevere().withCause(ex).log("Error creating output directory: %s", outputDir);
       }
     }
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-    Date now = new Date(System.currentTimeMillis());
-    String date = formatter.format(now);
+    boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
-    Gson gson = createGson(config.prettyJson());
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
-    JsonReportGenerator jsonGenerator = new JsonReportGenerator();
     try {
-      JsonReport jsonReport =
-          jsonGenerator.generateReport(feedMetadata, noticeContainer, config, versionInfo, date);
       Files.write(
-          config.outputDirectory().resolve(config.validationReportFileName()),
+          outputDir.resolve(config.validationReportFileName()),
           gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
     } catch (Exception ex) {
       logger.atSevere().withCause(ex).log("Error creating JSON report");
@@ -253,10 +365,11 @@ public class ValidationRunner {
           noticeContainer,
           config,
           versionInfo,
-          config.outputDirectory().resolve(config.htmlReportFileName()),
-          date);
+          outputDir.resolve(config.htmlReportFileName()),
+          date,
+          is_different_date);
       Files.write(
-          config.outputDirectory().resolve(config.systemErrorsReportFileName()),
+          outputDir.resolve(config.systemErrorsReportFileName()),
           gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
@@ -267,11 +380,20 @@ public class ValidationRunner {
    * Creates a {@code GtfsInput}
    *
    * @param config used to retrieve information needed to the creation of the {@code GtfsInput}
+   * @param validatorVersion version of the validator
    * @return the {@code GtfsInput} generated after
    * @throws IOException in case of error while loading a file
    * @throws URISyntaxException in case of error in the {@code URL} syntax
    */
-  public static GtfsInput createGtfsInput(ValidationRunnerConfig config)
+  public static GtfsInput createGtfsInput(ValidationRunnerConfig config, String validatorVersion)
+      throws IOException, URISyntaxException {
+    return createGtfsInput(config, validatorVersion, new NoticeContainer());
+  }
+
+  private static GtfsInput createGtfsInput(
+      ValidationRunnerConfig config,
+      String validatorVersion,
+      @Nonnull NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {
@@ -279,12 +401,13 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer);
+      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer, validatorVersion);
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),
           config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
-          noticeContainer);
+          noticeContainer,
+          validatorVersion);
     }
   }
 }

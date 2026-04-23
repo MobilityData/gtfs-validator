@@ -1,11 +1,13 @@
 package org.mobilitydata.gtfsvalidator.runner;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -17,9 +19,10 @@ public class ValidationRunnerTest {
   private static ValidationRunnerConfig buildConfig(String gtfsDirectory) {
     ValidationRunnerConfig.Builder config = ValidationRunnerConfig.builder();
     config.setGtfsSource(Path.of(gtfsDirectory).toUri());
-    config.setOutputDirectory(Path.of(""));
+    config.setOutputDirectory(Optional.of(Path.of("")));
     config.setNumThreads(1);
     config.setCountryCode(CountryCode.forStringOrUnknown(""));
+    config.setStdoutOutput(false);
     return config.build();
   }
 
@@ -30,7 +33,8 @@ public class ValidationRunnerTest {
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
     // InvalidPathException. This should catch issues such as #1158.
-    assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
+    assertThrows(
+        FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
   }
 
   @Test
@@ -39,6 +43,18 @@ public class ValidationRunnerTest {
 
     // We are testing path parsing here only. We expect a FileNotFoundException but NOT a
     // InvalidPathException. This should catch issues such as #1158.
-    assertThrows(FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config));
+    assertThrows(
+        FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
+  }
+
+  @Test
+  public void builderShouldDefaultStdoutOutputToFalse() {
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(Path.of("/tmp/nonexistent.zip").toUri())
+            .setOutputDirectory(Optional.of(Path.of("out")))
+            .build();
+
+    assertFalse(config.stdoutOutput());
   }
 }

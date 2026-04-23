@@ -23,6 +23,9 @@ import java.util.Optional;
 /** Command-line arguments for output-comparator CLI. */
 public class Arguments {
 
+  public static final String REFERENCE_SYSTEM_ERRORS_NAME = "reference_errors.json";
+  public static final String LATEST_SYSTEM_ERRORS_NAME = "latest_errors.json";
+
   @Parameter(
       names = {"-d", "--report_directory"},
       description = "Directory where reports are stored.",
@@ -43,9 +46,19 @@ public class Arguments {
   private String referenceValidationReportName;
 
   @Parameter(
+      names = {"-rse", "--reference_system_errors_name"},
+      description = "Name of the reference system errors file.")
+  private String referenceSystemErrorsName;
+
+  @Parameter(
       names = {"-l", "--latest_report_name"},
       description = "Name of the latest validation report.")
   private String latestValidationReportName;
+
+  @Parameter(
+      names = {"-lse", "--latest_system_errors_name"},
+      description = "Name of the latest system errors file.")
+  private String latestSystemErrorsName;
 
   @Parameter(
       names = {"-p", "--percent_invalid_datasets_threshold"},
@@ -163,5 +176,23 @@ public class Arguments {
 
   public void setCommitSha(String commitSha) {
     this.commitSha = commitSha;
+  }
+
+  public String getReferenceSystemErrorsName() {
+    return referenceSystemErrorsName == null
+        ? REFERENCE_SYSTEM_ERRORS_NAME
+        : referenceSystemErrorsName;
+  }
+
+  public void setReferenceSystemErrorsName(String referenceSystemErrorsName) {
+    this.referenceSystemErrorsName = referenceSystemErrorsName;
+  }
+
+  public String getLatestSystemErrorsName() {
+    return latestSystemErrorsName == null ? LATEST_SYSTEM_ERRORS_NAME : latestSystemErrorsName;
+  }
+
+  public void setLatestSystemErrorsName(String latestSystemErrorsName) {
+    this.latestSystemErrorsName = latestSystemErrorsName;
   }
 }

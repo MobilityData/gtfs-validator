@@ -51,4 +51,8 @@ public class ChangedNotice {
   public String toString() {
     return noticeCode + " " + affectedSources;
   }
+
+  public List<AffectedSource> getAffectedSources() {
+    return affectedSources;
+  }
 }

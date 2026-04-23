@@ -38,5 +38,5 @@ public enum SeverityLevel {
    * (e.g., using the language "must"). The validator uses RFC2119
    * (https://tools.ietf.org/html/rfc2119) to interpret the language in the GTFS spec.
    */
-  ERROR
+  ERROR;
 }

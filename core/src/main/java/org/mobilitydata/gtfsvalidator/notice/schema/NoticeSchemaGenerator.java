@@ -26,12 +26,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsJson;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef;
@@ -39,6 +36,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.schema.ReferencesSchema.UrlReference;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
@@ -80,6 +78,27 @@ public class NoticeSchemaGenerator {
     }
 
     NoticeSchema schema = new NoticeSchema(Notice.getCode(noticeClass), severity);
+
+    if (noticeAnnotation != null) {
+      if (noticeAnnotation.deprecated()) {
+        schema.setDeprecated(true);
+        schema.setDeprecationReason(noticeAnnotation.deprecationReason());
+        schema.setDeprecationVersion(noticeAnnotation.deprecationVersion());
+        // Validate that replacement notice is not Void.class and that it extends ValidationNotice
+        List<String> replacementNotices = new ArrayList<>();
+        for (Class<?> replacementNotice : noticeAnnotation.replacementNotices()) {
+          if (replacementNotice == Void.class
+              || !ValidationNotice.class.isAssignableFrom(replacementNotice)) {
+            continue;
+          }
+          String replacementNoticeCode = Notice.getCode(replacementNotice.asSubclass(Notice.class));
+          replacementNotices.add(replacementNoticeCode);
+        }
+        if (!replacementNotices.isEmpty()) {
+          schema.setReplacementNoticeCodes(replacementNotices);
+        }
+      }
+    }
 
     NoticeDocComments comments = loadComments(noticeClass);
     if (comments.getShortSummary() != null) {
@@ -125,7 +144,12 @@ public class NoticeSchemaGenerator {
   private static ReferencesSchema generateReferences(GtfsValidationNotice noticeAnnotation) {
     ReferencesSchema schema = new ReferencesSchema();
     Arrays.stream(noticeAnnotation.files().value())
-        .map(NoticeSchemaGenerator::getFileIdForTableClass)
+        .map(
+            // Both Table and Json annotations specify a file name, collect them all.
+            fileClass -> {
+              Optional<String> fileId = getFileIdForTableClass(fileClass);
+              return fileId.or(() -> getFileIdForJsonClass(fileClass));
+            })
         .flatMap(Optional::stream)
         .forEach(schema::addFileReference);
     Arrays.stream(noticeAnnotation.bestPractices().value())
@@ -144,6 +168,11 @@ public class NoticeSchemaGenerator {
   private static Optional<String> getFileIdForTableClass(Class<? extends GtfsEntity> tableClass) {
     GtfsTable table = tableClass.getAnnotation(GtfsTable.class);
     return Optional.ofNullable(table).map(GtfsTable::value);
+  }
+
+  private static Optional<String> getFileIdForJsonClass(Class<? extends GtfsEntity> entityClass) {
+    GtfsJson annotation = entityClass.getAnnotation(GtfsJson.class);
+    return Optional.ofNullable(annotation).map(GtfsJson::value);
   }
 
   private static UrlReference convertUrlRef(UrlRef ref) {

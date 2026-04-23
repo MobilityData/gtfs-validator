@@ -292,6 +292,7 @@ public class ShapePoints {
 
     /** The shape point index. */
     final int index;
+
     /** The fraction of distance between the index shape point and the next point. */
     final double fraction;
 

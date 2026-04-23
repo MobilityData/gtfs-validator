@@ -27,12 +27,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 
 /**
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a
@@ -52,7 +49,6 @@ public abstract class GtfsInput implements Closeable {
    */
   public static GtfsInput createFromPath(Path path, NoticeContainer noticeContainer)
       throws IOException {
-    ZipFile zipFile;
     if (!Files.exists(path)) {
       throw new FileNotFoundException(path.toString());
     }
@@ -60,21 +56,15 @@ public abstract class GtfsInput implements Closeable {
       return new GtfsUnarchivedInput(path);
     }
     String fileName = path.getFileName().toString().replace(".zip", "");
-    if (path.getFileSystem().equals(FileSystems.getDefault())) {
-      // Read from a local ZIP file.
-      zipFile = new ZipFile(path.toFile());
-      if (hasSubfolderWithGtfsFile(path)) {
-        noticeContainer.addValidationNotice(
-            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
-      }
+    ZipFile zipFile =
+        path.getFileSystem().equals(FileSystems.getDefault())
+            // Read from a local ZIP file.
+            ? new ZipFile(path.toFile())
+            // Load a remote ZIP file to memory.
+            : new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
 
-      return new GtfsZipFileInput(zipFile, fileName);
-    }
-    // Load a remote ZIP file to memory.
-    zipFile = new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
     if (hasSubfolderWithGtfsFile(path)) {
-      noticeContainer.addValidationNotice(
-          new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
     }
     return new GtfsZipFileInput(zipFile, fileName);
   }
@@ -93,18 +83,6 @@ public abstract class GtfsInput implements Closeable {
   }
 
   /**
-   * Check if an input zip file from an URL contains a subfolder with GTFS files
-   *
-   * @param url
-   * @return
-   * @throws IOException
-   */
-  public static boolean hasSubfolderWithGtfsFile(URL url) throws IOException {
-    ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(url.openStream()));
-    return containsGtfsFileInSubfolder(zipInputStream);
-  }
-
-  /**
    * Common method used by two overloaded hasSubfolderWithGtfsFile methods
    *
    * @param zipInputStream
@@ -113,23 +91,13 @@ public abstract class GtfsInput implements Closeable {
    */
   private static boolean containsGtfsFileInSubfolder(ZipInputStream zipInputStream)
       throws IOException {
-    boolean containsSubfolder = false;
-    String subfolder = null;
     ZipEntry entry;
     while ((entry = zipInputStream.getNextEntry()) != null) {
-      String entryName = entry.getName();
-
-      if (entry.isDirectory()) {
-        subfolder = entryName;
-        containsSubfolder = true;
-      }
-      if (containsSubfolder && entryName.contains(subfolder) && entryName.endsWith(".txt")) {
-        String[] files = entryName.split("/");
-        String lastElement = files[files.length - 1];
-
-        if (GtfsFiles.containsGtfsFile(lastElement)) {
-          return true;
-        }
+      String[] nameParts = entry.getName().split("/");
+      boolean isInSubfolder = nameParts.length > 1;
+      boolean isGtfsFile = GtfsFiles.containsGtfsFile(nameParts[nameParts.length - 1]);
+      if (isInSubfolder && isGtfsFile) {
+        return true;
       }
     }
     return false;
@@ -143,12 +111,13 @@ public abstract class GtfsInput implements Closeable {
    * @param sourceUrl the fully qualified URL to download of the resource to download
    * @param targetPath the path to store the downloaded GTFS archive
    * @param noticeContainer
+   * @param validatorVersion
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if GTFS archive cannot be stored at the specified location
    * @throws URISyntaxException if URL is malformed
    */
   public static GtfsInput createFromUrl(
-      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer)
+      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer, String validatorVersion)
       throws IOException, URISyntaxException {
     // getParent() may return null if there is no parent, so call toAbsolutePath() first.
     Path targetDirectory = targetPath.toAbsolutePath().getParent();
@@ -156,7 +125,7 @@ public abstract class GtfsInput implements Closeable {
       Files.createDirectories(targetDirectory);
     }
     try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
-      loadFromUrl(sourceUrl, outputStream);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
     }
     return createFromPath(targetPath, noticeContainer);
   }
@@ -171,37 +140,19 @@ public abstract class GtfsInput implements Closeable {
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
-  public static GtfsInput createFromUrlInMemory(URL sourceUrl, NoticeContainer noticeContainer)
+  public static GtfsInput createFromUrlInMemory(
+      URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-      loadFromUrl(sourceUrl, outputStream);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
       File zipFile = new File(sourceUrl.toString());
       String fileName = zipFile.getName().replace(".zip", "");
-      if (hasSubfolderWithGtfsFile(sourceUrl)) {
-
-        noticeContainer.addValidationNotice(
-            new InvalidInputFilesInSubfolderNotice(invalidInputMessage));
+      if (containsGtfsFileInSubfolder(
+          new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
+        noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
       }
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
-    }
-  }
-
-  /**
-   * Downloads data from network.
-   *
-   * @param sourceUrl the fully qualified URL
-   * @param outputStream the output stream
-   * @throws IOException if no file could not be found at the specified location
-   * @throws URISyntaxException if URL is malformed
-   */
-  private static void loadFromUrl(URL sourceUrl, OutputStream outputStream)
-      throws IOException, URISyntaxException {
-    try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-      HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-      try (CloseableHttpResponse httpResponse = httpClient.execute(httpGet)) {
-        httpResponse.getEntity().writeTo(outputStream);
-      }
     }
   }
 

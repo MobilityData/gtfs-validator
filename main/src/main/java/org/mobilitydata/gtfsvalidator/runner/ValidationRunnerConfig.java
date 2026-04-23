@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.runner;
 import com.google.auto.value.AutoValue;
 import java.net.URI;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 
@@ -28,7 +29,8 @@ public abstract class ValidationRunnerConfig {
   public abstract URI gtfsSource();
 
   // The directory where all validation reports will be written.
-  public abstract Path outputDirectory();
+  // Optional when using stdout mode.
+  public abstract Optional<Path> outputDirectory();
 
   // An optional storage directory to be used when downloading a GTFS feed
   // from an external URL.
@@ -38,14 +40,14 @@ public abstract class ValidationRunnerConfig {
 
   public abstract String htmlReportFileName();
 
-  public Path htmlReportPath() {
-    return outputDirectory().resolve(htmlReportFileName());
+  public Optional<Path> htmlReportPath() {
+    return outputDirectory().map(dir -> dir.resolve(htmlReportFileName()));
   }
 
   public abstract String systemErrorsReportFileName();
 
-  public Path systemErrorsReportPath() {
-    return outputDirectory().resolve(systemErrorsReportFileName());
+  public Optional<Path> systemErrorsReportPath() {
+    return outputDirectory().map(dir -> dir.resolve(systemErrorsReportFileName()));
   }
 
   // Determines the number of parallel threads of execution used during
@@ -56,8 +58,17 @@ public abstract class ValidationRunnerConfig {
   // validated.
   public abstract CountryCode countryCode();
 
+  // The date to use for validation.
+  public abstract LocalDate dateForValidation();
+
   // If true, any output json will be pretty-printed.
   public abstract boolean prettyJson();
+
+  // If true, the validator will not check for a new validator version
+  public abstract boolean skipValidatorUpdate();
+
+  // If true, output JSON report to stdout instead of writing to files
+  public abstract boolean stdoutOutput();
 
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
@@ -67,14 +78,17 @@ public abstract class ValidationRunnerConfig {
         .setSystemErrorsReportFileName("system_errors.json")
         .setNumThreads(1)
         .setPrettyJson(false)
-        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ));
+        .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
+        .setDateForValidation(LocalDate.now())
+        .setSkipValidatorUpdate(false)
+        .setStdoutOutput(false);
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setGtfsSource(URI gtfsSource);
 
-    public abstract Builder setOutputDirectory(Path outputDirectory);
+    public abstract Builder setOutputDirectory(Optional<Path> outputDirectory);
 
     public abstract Builder setStorageDirectory(Path storageDirectory);
 
@@ -88,7 +102,13 @@ public abstract class ValidationRunnerConfig {
 
     public abstract Builder setCountryCode(CountryCode countryCode);
 
+    public abstract Builder setDateForValidation(LocalDate dateForValidation);
+
     public abstract Builder setPrettyJson(boolean prettyJson);
+
+    public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
+
+    public abstract Builder setStdoutOutput(boolean stdoutOutput);
 
     public abstract ValidationRunnerConfig build();
   }

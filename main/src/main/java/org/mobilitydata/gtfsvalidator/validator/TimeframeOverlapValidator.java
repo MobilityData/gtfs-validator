@@ -49,7 +49,7 @@ public class TimeframeOverlapValidator extends FileValidator {
         GtfsTimeframe curr = timeframes.get(i);
         if (curr.startTime().isBefore(prev.endTime())) {
           noticeContainer.addValidationNotice(
-              new TimeframeOverlapNoice(
+              new TimeframeOverlapNotice(
                   prev.csvRowNumber(),
                   prev.endTime(),
                   curr.csvRowNumber(),
@@ -78,11 +78,11 @@ public class TimeframeOverlapValidator extends FileValidator {
    * overlapping time intervals.
    *
    * <p>Timeframes with the same group and service dates must not overlap in time. Two entries X and
-   * Y are considered to directly overlap if `X.start_time &lt;= Y.start_time` and `Y.start_time
-   * &lt; X.end_time`.
+   * Y are considered to directly overlap if X.start_time is less than or equal to Y.start_time and
+   * Y.start_time is less than X.end_time.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFrequencySchema.class))
-  static class TimeframeOverlapNoice extends ValidationNotice {
+  static class TimeframeOverlapNotice extends ValidationNotice {
 
     /** The row number of the first timeframe entry. */
     private final long prevCsvRowNumber;
@@ -102,7 +102,7 @@ public class TimeframeOverlapValidator extends FileValidator {
     /** The service id associated with the two entries. */
     private final String serviceId;
 
-    TimeframeOverlapNoice(
+    TimeframeOverlapNotice(
         long prevCsvRowNumber,
         GtfsTime prevEndTime,
         long currCsvRowNumber,

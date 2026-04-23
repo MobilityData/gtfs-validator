@@ -107,6 +107,26 @@
         "security": []
       }
     },
+    "/version": {
+      "get": {
+        "summary": "version",
+        "description": "This endpoint returns the current version of gtfs validator",
+        "operationId": "version",
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {},
+            "content": {
+              "text/plain": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": []
+      }
+    },
     "/error": {
       "post": {
         "summary": "error",

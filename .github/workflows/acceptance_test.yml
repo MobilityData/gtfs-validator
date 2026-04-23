@@ -1,5 +1,4 @@
 name: Rule acceptance tests
-
 on:
   pull_request:
     branches: [ master ]
@@ -14,16 +13,32 @@ on:
       - 'triage.yml'
       - 'end_to_end.yml'
       - 'web/**'
+      - '.github/workflows/web_**.yml'
+      - '.github/workflows/stg_web_**.yml'
+    types: [ opened, synchronize, reopened, ready_for_review ]
 concurrency:
   group: ${{ github.head_ref }}
   cancel-in-progress: true
+
+env:
+  python_version: '3.11'
+  java_version: '17'
+  java_distribution: 'zulu'
+
 jobs:
+  fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.
+    if: github.event.pull_request.draft == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if PR is a draft
+        run: exit 1
   pre_ci:
     name: Prepare CI environment
+    if: github.event.pull_request.draft == false # Skip this job and its dependencies if the PR is draft
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # We need to fetch with a depth of 2 for pull_request so we can do HEAD^2
           fetch-depth: 2
@@ -33,72 +48,56 @@ jobs:
       - name: "[Pull Request] Get commit message"
         if: github.event_name == 'pull_request'
         id: pr_get_commit_message
-        run: echo ::set-output name=pr_commit_message::$(git log --format=%B -n 1 HEAD^2)
+        # Obtain the last commit from the branch to merge (hence the HEAD^2).
+        # In case of multi-line commit messages, remove any \n, because the GITHUB_OUTPUT method
+        # of sending data to other jobs does not like them.
+        run: echo "pr_commit_message=$(git log --format=%B -n 1 HEAD^2 | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
-  validate-gradle-wrapper:
-    if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
-    needs: pre_ci
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
   pack-snapshot:
-    needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
+        run: ./gradlew shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
   pack-master:
-    needs: [ validate-gradle-wrapper ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: master
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Package cli app jar with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar
+        run: ./gradlew shadowJar
       - name: Persist gtfs-validator jar from master branch
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gtfs-validator-master
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -108,7 +107,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.python_version }}
       - name: Install dependencies
         run: |
           pip install -r scripts/mobility-database-harvester/requirements.txt
@@ -117,10 +119,10 @@ jobs:
         run: |
           DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json)
           echo $DATASETS
-          echo "::set-output name=matrix::$DATASETS"
+          echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -130,22 +132,26 @@ jobs:
     needs: [ fetch-urls, pack-master, pack-snapshot ]
     # We use machines with more memory to run validation, as large feeds
     # can consume too much heap for default machine instances (see #1304).
-    runs-on: gitrunners-ubuntu-2204-x64-4vcpu
-    ## ubuntu-latest-4-cores
+    runs-on: ubuntu-latest-4-cores
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download .jar file from master branch
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gtfs-validator-master
           path: gtfs-validator-master
       - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gtfs-validator-snapshot
           path: gtfs-validator-snapshot
+      - name: Extract and concatenate IDs
+        run: |
+          concatenated_ids=$(bash ./scripts/extract_ids.sh '${{ matrix.data }}')
+          echo "CONCATENATED_IDS=$concatenated_ids" >> $GITHUB_ENV
+          echo "CONCATENATED_IDS=$concatenated_ids"
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
@@ -153,25 +159,35 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: reports_all
+          name: reports_${{ env.CONCATENATED_IDS }}
           path: ${{ github.sha }}/output
+  merge-reports-artifacts:
+     runs-on: ubuntu-latest
+     needs: [ get-reports ]
+     steps:
+       - name: Merge Artifacts
+         uses: actions/upload-artifact/merge@v4
+         with:
+           name: reports_all
+           pattern: reports_*
+           delete-merged: true
   compare-outputs:
-    needs: [ get-reports ]
+    needs: [ merge-reports-artifacts ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download comparator .jar file from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: comparator-snapshot
       - name: Retrieve reports from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: reports_all
       - name: Retrieve gtfs latest versions from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: datasets_metadata
       - name: Generate acceptance report test
@@ -189,7 +205,7 @@ jobs:
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: acceptance_test_report
           path: acceptance-test-output
@@ -197,7 +213,7 @@ jobs:
         id: generate-comment
         if: always()
         run: |
-          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.txt)
+          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.md)
           echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV

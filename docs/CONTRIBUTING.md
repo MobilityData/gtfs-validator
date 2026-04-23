@@ -88,7 +88,7 @@ This process is described in more detail in the GitHub documentation [**Contribu
 
 This image shows the tests implemented in the Pull Request process.
 
-<img src="/docs/Pull-Request-process.jpg" width="700">
+<img src="/docs/images/Pull-Request-process.jpg" width="700">
 
 ## Pull Request comments and reviews
 Reviewing Pull Requests is a great way to get familiar with the code & architecture of this tool, and to make sure a functionality meets your needs. Each Pull Request has to be approved by at least one one core developer, but having community members helping with this process is significant for the MobilityData team. Additionally, having the eyes of people from different expertise and backgrounds on a contribution makes it higher quality (nobody can think of everything!).
@@ -131,7 +131,7 @@ A critical step in troubleshooting is being able to reproduce the problem. Instr
 
 The acceptance test is a key part of the Pull Request process. More information about this test is available in the [ACCEPTANCE_TEST.md](/docs/ACCEPTANCE_TESTS.md) file.
 
-<img src="/docs/Acceptance-test-process.jpg" width="650">
+<img src="/docs/images/Acceptance-test-process.jpg" width="650">
 
 **How to run tests locally?**
 

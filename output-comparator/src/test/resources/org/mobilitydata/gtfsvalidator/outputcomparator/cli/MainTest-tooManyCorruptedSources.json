@@ -12,5 +12,6 @@
     ],
     "percentCorruptedSourcesThreshold": 2.0,
     "aboveThreshold": true
-  }
+  },
+  "validationPerformance": []
 }

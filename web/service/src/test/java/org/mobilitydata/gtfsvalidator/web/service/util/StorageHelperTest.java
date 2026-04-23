@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,7 @@ public class StorageHelperTest {
     byte[] bytes = byteArrayCaptor.getValue();
     String expectedPath = jobMetadata.getJobId() + "/" + StorageHelper.JOB_FILENAME;
     BlobInfo expectedBlobInfo =
-        BlobInfo.newBuilder(BlobId.of(StorageHelper.JOB_INFO_BUCKET_NAME, expectedPath))
+        BlobInfo.newBuilder(BlobId.of(storageHelper.JOB_INFO_BUCKET_NAME, expectedPath))
             .setContentType("application/json")
             .build();
     byte[] expectedBytes = mapper.writeValueAsString(jobMetadata).getBytes();
@@ -69,7 +70,7 @@ public class StorageHelperTest {
 
     verify(storage, times(1)).get(blobIdCaptor.capture());
     BlobId expectedBlobId =
-        BlobId.of(StorageHelper.JOB_INFO_BUCKET_NAME, StorageHelper.getJobInfoPath(testJobId));
+        BlobId.of(storageHelper.JOB_INFO_BUCKET_NAME, StorageHelper.getJobInfoPath(testJobId));
     assertEquals(expectedBlobId, blobIdCaptor.getValue());
 
     assertEquals(expectedJson, mapper.writeValueAsString(actualJobMetadata));

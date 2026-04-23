@@ -28,11 +28,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
-import org.mobilitydata.gtfsvalidator.table.GtfsStop;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.*;
 import org.mobilitydata.gtfsvalidator.validator.LocationHasStopTimesValidator.LocationWithUnexpectedStopTimeNotice;
 import org.mobilitydata.gtfsvalidator.validator.LocationHasStopTimesValidator.StopWithoutStopTimeNotice;
 
@@ -40,67 +36,104 @@ import org.mobilitydata.gtfsvalidator.validator.LocationHasStopTimesValidator.St
 public final class LocationHasStopTimesValidatorTest {
 
   private static List<ValidationNotice> generateNotices(
-      List<GtfsStop> stops, List<GtfsStopTime> stopTimes) {
+      List<GtfsStop> stops,
+      List<GtfsStopTime> stopTimes,
+      List<GtfsLocationGroupStops> locationGroupStops) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new LocationHasStopTimesValidator(
             GtfsStopTableContainer.forEntities(stops, noticeContainer),
-            GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer))
+            GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer),
+            GtfsLocationGroupStopsTableContainer.forEntities(locationGroupStops, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
-  private static GtfsStop createLocation(GtfsLocationType locationType) {
+  private static GtfsStop createLocation(GtfsLocationType locationType, String stopId) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(2)
-        .setStopId("location1")
+        .setStopId(stopId)
         .setStopName("Location 1")
         .setLocationType(locationType)
         .build();
+  }
+
+  private static GtfsStop createLocation(GtfsLocationType locationType) {
+    return createLocation(locationType, "location1");
   }
 
   private static GtfsStopTime createStopTimeFor(GtfsStop stop) {
     return new GtfsStopTime.Builder().setStopId(stop.stopId()).build();
   }
 
+  private static GtfsLocationGroupStops createLocationGroupStops() {
+    return new GtfsLocationGroupStops.Builder()
+        .setCsvRowNumber(2)
+        .setLocationGroupId("locationGroupId")
+        .setStopId("stopId")
+        .build();
+  }
+
   @Test
   public void stopWithStopTime_yieldsNoNotice() {
     GtfsStop stop = createLocation(STOP);
-    assertThat(generateNotices(ImmutableList.of(stop), ImmutableList.of(createStopTimeFor(stop))))
+    assertThat(
+            generateNotices(
+                ImmutableList.of(stop),
+                ImmutableList.of(createStopTimeFor(stop)),
+                ImmutableList.of(createLocationGroupStops())))
         .isEmpty();
   }
 
   @Test
-  public void unusedStop_yieldsNotice() {
-    GtfsStop stop = createLocation(STOP);
-    assertThat(generateNotices(ImmutableList.of(stop), ImmutableList.of()))
-        .containsExactly(new StopWithoutStopTimeNotice(stop));
+  public void stopWithoutStopTime_yieldsNotice() {
+    GtfsStop location = createLocation(STOP, "stopId");
+    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of(), ImmutableList.of()))
+        .containsExactly(new StopWithoutStopTimeNotice(location));
   }
 
   @Test
   public void stationWithStopTime_yieldsNotice() {
     GtfsStop location = createLocation(STATION);
     GtfsStopTime stopTime = createStopTimeFor(location);
-    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of(stopTime)))
+    assertThat(
+            generateNotices(
+                ImmutableList.of(location),
+                ImmutableList.of(stopTime),
+                ImmutableList.of(createLocationGroupStops())))
         .containsExactly(new LocationWithUnexpectedStopTimeNotice(location, stopTime));
   }
 
   @Test
   public void stationWithoutStopTime_yieldsNoNotice() {
     GtfsStop location = createLocation(STATION);
-    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of())).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(location),
+                ImmutableList.of(),
+                ImmutableList.of(createLocationGroupStops())))
+        .isEmpty();
   }
 
   @Test
   public void entranceWithStopTime_yieldsNotice() {
     GtfsStop location = createLocation(ENTRANCE);
     GtfsStopTime stopTime = createStopTimeFor(location);
-    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of(stopTime)))
+    assertThat(
+            generateNotices(
+                ImmutableList.of(location),
+                ImmutableList.of(stopTime),
+                ImmutableList.of(createLocationGroupStops())))
         .containsExactly(new LocationWithUnexpectedStopTimeNotice(location, stopTime));
   }
 
   @Test
   public void entranceWithoutStopTime_yieldsNoNotice() {
     GtfsStop location = createLocation(ENTRANCE);
-    assertThat(generateNotices(ImmutableList.of(location), ImmutableList.of())).isEmpty();
+    assertThat(
+            generateNotices(
+                ImmutableList.of(location),
+                ImmutableList.of(),
+                ImmutableList.of(createLocationGroupStops())))
+        .isEmpty();
   }
 }

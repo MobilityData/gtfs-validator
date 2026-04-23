@@ -18,10 +18,10 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParameterException;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,7 +45,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
@@ -72,7 +72,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
-    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
@@ -87,19 +87,21 @@ public class ArgumentsTest {
       "--input", "/tmp/gtfs.zip",
       "--output_base", "/tmp/output",
       "--country_code", "ca",
-      "--threads", "4"
+      "--threads", "4",
+      "--date", "2020-01-02"
     };
 
     Arguments underTest = new Arguments();
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
     assertThat(config.htmlReportFileName()).matches("report.html");
     assertThat(config.systemErrorsReportFileName()).matches("system_errors.json");
+    assertThat(config.dateForValidation().toString()).matches("2020-01-02");
   }
 
   @Test
@@ -129,7 +131,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
-    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
@@ -150,7 +152,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat((Object) config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(1);
   }
@@ -180,7 +182,7 @@ public class ArgumentsTest {
 
   @Test
   public void noArguments_isNotValid() {
-    assertThrows(ParameterException.class, () -> validateArguments(new String[] {}));
+    assertThat(validateArguments(new String[] {})).isFalse();
   }
 
   @Test
@@ -256,5 +258,51 @@ public class ArgumentsTest {
     assertThat(args.validate()).isTrue();
     assertThat(args.getExportNoticeSchema()).isTrue();
     assertThat(args.abortAfterNoticeSchemaExport()).isFalse();
+  }
+
+  @Test
+  public void testStdoutOutput() {
+    String[] commandLineArgumentAsStringArray = {"--input", "test.zip", "--stdout"};
+
+    Arguments args = new Arguments();
+    new JCommander(args).parse(commandLineArgumentAsStringArray);
+
+    assertTrue(args.validate());
+    assertTrue(args.getStdoutOutput());
+  }
+
+  @Test
+  public void testStdoutOutputWithOutputBaseConflict() {
+    String[] commandLineArgumentAsStringArray = {
+      "--input", "test.zip",
+      "--output_base", "/tmp/output",
+      "--stdout"
+    };
+
+    Arguments args = new Arguments();
+    new JCommander(args).parse(commandLineArgumentAsStringArray);
+
+    assertFalse(args.validate());
+  }
+
+  @Test
+  public void testStdoutOutputWithoutInput() {
+    String[] commandLineArgumentAsStringArray = {"--stdout"};
+
+    Arguments args = new Arguments();
+    new JCommander(args).parse(commandLineArgumentAsStringArray);
+
+    assertFalse(args.validate());
+  }
+
+  @Test
+  public void exportNoticesSchema_schemaOnlyWithoutOutputBase_isNotValid() {
+    String[] cliArguments = {"--export_notices_schema"};
+    Arguments args = new Arguments();
+    new JCommander(args).parse(cliArguments);
+
+    assertThat(args.validate()).isFalse();
+    assertThat(args.getExportNoticeSchema()).isTrue();
+    assertThat(args.abortAfterNoticeSchemaExport()).isTrue();
   }
 }

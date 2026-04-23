@@ -23,20 +23,23 @@ import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
-public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
+public class GtfsTestTableContainer
+    extends GtfsTableContainer<GtfsTestEntity, GtfsTestTableDescriptor> {
   private static final ImmutableList<String> KEY_COLUMN_NAMES =
       ImmutableList.of(GtfsTestEntity.ID_FIELD_NAME);
 
   private List<GtfsTestEntity> entities;
 
-  private GtfsTestTableContainer(CsvHeader header, List<GtfsTestEntity> entities) {
-    super(TableStatus.PARSABLE_HEADERS_AND_ROWS, header);
+  private GtfsTestTableContainer(
+      GtfsTestTableDescriptor descriptor, CsvHeader header, List<GtfsTestEntity> entities) {
+    super(descriptor, TableStatus.PARSABLE_HEADERS_AND_ROWS, header);
     this.entities = entities;
   }
 
   public GtfsTestTableContainer(TableStatus tableStatus) {
-    super(tableStatus, CsvHeader.EMPTY);
+    super(new GtfsTestTableDescriptor(), tableStatus, CsvHeader.EMPTY);
     this.entities = new ArrayList<>();
   }
 
@@ -51,34 +54,18 @@ public class GtfsTestTableContainer extends GtfsTableContainer<GtfsTestEntity> {
   }
 
   @Override
-  public boolean isRecommended() {
-    return false;
-  }
-
-  @Override
-  public boolean isRequired() {
-    return true;
-  }
-
-  @Override
   public List<GtfsTestEntity> getEntities() {
     return entities;
   }
 
   /** Creates a table with given header and entities */
   public static GtfsTestTableContainer forHeaderAndEntities(
-      CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
-    GtfsTestTableContainer table = new GtfsTestTableContainer(header, entities);
+      GtfsTestTableDescriptor descriptor,
+      CsvHeader header,
+      List<GtfsTestEntity> entities,
+      NoticeContainer noticeContainer) {
+    GtfsTestTableContainer table = new GtfsTestTableContainer(descriptor, header, entities);
     return table;
-  }
-
-  /**
-   * Creates a table with given entities and empty header. This method is intended to be used in
-   * tests.
-   */
-  public static GtfsTestTableContainer forEntities(
-      List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
-    return forHeaderAndEntities(CsvHeader.EMPTY, entities, noticeContainer);
   }
 
   @Override

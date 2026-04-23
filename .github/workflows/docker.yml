@@ -6,35 +6,30 @@ on:
   release:
     types: [ prereleased, released ]
 
+env:
+  java_version: '17'
+  java_distribution: 'zulu'
+
 jobs:
-  validate_gradle_wrapper:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
   test:
-    needs: [ validate_gradle_wrapper ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
+
       - name: Run Java tests
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: testAggregateTestReport
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Generate aggregate test report
+        run: ./gradlew testAggregateTestReport
+
       - name: Persist aggregated test reports on failure
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test report - Java
           path: build/reports/tests/unit-test/aggregated-results/
@@ -45,22 +40,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [amd64 , arm64]
+        platform: [linux/amd64, linux/arm64]
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # need full clone so `./gradlew currentVersion` can search parents for older tags when needed
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to GitHub Container Registry
@@ -86,19 +77,23 @@ jobs:
           AXION_VERSION="$(./gradlew currentVersion -q -Prelease.quiet)"
           echo "Set AXION_VERSION=${AXION_VERSION}"
 
+          # Use a platform-specific tag to avoid tag collision between parallel matrix jobs
+          PLATFORM_SLUG="${{ matrix.platform }}"
+          PLATFORM_SLUG="${PLATFORM_SLUG//\//-}"  # replace / with - e.g. linux/amd64 -> linux-amd64
+
           # determine docker tags
           if [[ "${GITHUB_EVENT_NAME}" == "release" ]]; then
             # tag releases with version determined by axion-release-plugin
-            DOCKER_TAGS="${DOCKER_IMAGE}:${AXION_VERSION}"
+            DOCKER_TAGS="${DOCKER_IMAGE}:${AXION_VERSION}-${PLATFORM_SLUG}"
           else
-            # tag pushes to master as "latest"
-            DOCKER_TAGS="${DOCKER_IMAGE}:latest"
+            # tag pushes to master with platform suffix to avoid race condition
+            DOCKER_TAGS="${DOCKER_IMAGE}:latest-${PLATFORM_SLUG}"
           fi
           echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
 
-          echo ::set-output name=version::${AXION_VERSION}
-          echo ::set-output name=tags::${DOCKER_TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo "version=${AXION_VERSION}" >> $GITHUB_OUTPUT
+          echo "tags=${DOCKER_TAGS}" >> $GITHUB_OUTPUT
+          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Build Docker container image
         uses: docker/build-push-action@v3
@@ -116,7 +111,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
       - name: Test Docker container image
-        run: docker run --rm ${{ steps.prep.outputs.tags }} --help
+        run: docker run --rm --platform ${{ matrix.platform }} ${{ steps.prep.outputs.tags }} --help
   push_multiplatform:
     name: Build/Push multi-platform image
     needs: build_test
@@ -125,17 +120,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # need full clone so `./gradlew currentVersion` can search parents for older tags when needed
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to GitHub Container Registry
@@ -171,25 +162,10 @@ jobs:
           fi
           echo "Set DOCKER_TAGS=${DOCKER_TAGS}"
 
-          echo ::set-output name=version::${AXION_VERSION}
-          echo ::set-output name=tags::${DOCKER_TAGS}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      - name: Build Docker container image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile
-          build-args: |
-            VERSION_TAG=${{ steps.prep.outputs.version }}
-          load: false
-          platforms: linux/amd64, linux/arm64
-          tags: ${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY,,}.git
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-      - name: Push Docker container image
+          echo "version=${AXION_VERSION}" >> $GITHUB_OUTPUT
+          echo "tags=${DOCKER_TAGS}" >> $GITHUB_OUTPUT
+          echo "created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+      - name: Build and push multi-platform Docker image
         uses: docker/build-push-action@v3
         with:
           context: .

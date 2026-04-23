@@ -49,6 +49,15 @@ public class AttributionWithoutRoleValidator extends SingleEntityValidator<GtfsA
     }
   }
 
+  public boolean shouldCallValidate(ColumnInspector header) {
+    if (!header.hasColumn(GtfsAttribution.IS_PRODUCER_FIELD_NAME)
+        && !header.hasColumn(GtfsAttribution.IS_OPERATOR_FIELD_NAME)
+        && !header.hasColumn(GtfsAttribution.IS_AUTHORITY_FIELD_NAME)) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Attribution with no role.
    *

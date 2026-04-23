@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
@@ -31,11 +32,13 @@ public interface GtfsFareRuleSchema extends GtfsEntity {
   @Required
   @ForeignKey(table = "fare_attributes.txt", field = "fare_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @Index
   String fareId();
 
   @FieldType(FieldTypeEnum.ID)
   @ForeignKey(table = "routes.txt", field = "route_id")
   @PrimaryKey(translationRecordIdType = UNSUPPORTED)
+  @Index
   String routeId();
 
   @FieldType(FieldTypeEnum.ID)

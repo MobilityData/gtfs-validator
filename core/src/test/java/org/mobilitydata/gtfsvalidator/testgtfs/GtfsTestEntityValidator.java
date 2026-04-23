@@ -18,18 +18,18 @@ package org.mobilitydata.gtfsvalidator.testgtfs;
 
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 public class GtfsTestEntityValidator extends SingleEntityValidator<GtfsTestEntity> {
   private final CountryCode countryCode;
-  private final CurrentDateTime currentDateTime;
+  private final DateForValidation dateForValidation;
 
   @Inject
-  public GtfsTestEntityValidator(CountryCode countryCode, CurrentDateTime currentDateTime) {
+  public GtfsTestEntityValidator(CountryCode countryCode, DateForValidation dateForValidation) {
     this.countryCode = countryCode;
-    this.currentDateTime = currentDateTime;
+    this.dateForValidation = dateForValidation;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class GtfsTestEntityValidator extends SingleEntityValidator<GtfsTestEntit
     return countryCode;
   }
 
-  public CurrentDateTime getCurrentDateTime() {
-    return currentDateTime;
+  public DateForValidation getDateForValidation() {
+    return dateForValidation;
   }
 }

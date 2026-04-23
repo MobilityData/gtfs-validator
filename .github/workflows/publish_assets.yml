@@ -3,62 +3,109 @@ name: Upload Release Assets
 on:
   release:
     types: [ prereleased, released ]
+  workflow_dispatch:
+
+env:
+  java_version: '17'
+  java_distribution: 'zulu'
 
 jobs:
   upload-release-assets:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          # We need to download all tags so that the axion-release-plugin can resolve the most recent version tag.
+          # This is useful only for the manual trigger.
+          # For the release trigger, the tag is available on the current commit.
+          fetch-depth: 0
 
+      # Get the version from the commit. This will depend on the trigger of the workflow
+      # If the trigger is release, the version will be the tag on the commit.
+      # If the trigger is a workflow_dispatch, the version will be the branch name, which is
+      # not really useful.
       - id: get_version
         uses: battila7/get-version-action@v2
 
-      - name: Set up JDK 17
+      - name: printVersion
+        run: echo "The version extracted from github.ref is ${{ steps.get_version.outputs.version }}"
+
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          java-version: ${{ env.java_version }}
+          distribution: ${{ env.java_distribution }}
 
       - name: Generate CLI jar
+        if: github.event_name == 'release'
         run: ./gradlew shadowJar
 
-      - name: Upload JAR Asset
-        uses: actions/upload-release-asset@v1
+      - name: Upload CLI JAR Asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./cli/build/libs/gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
-          asset_name: gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
-          asset_content_type: application/java-archive
+          files: ./cli/build/libs/gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-cli.jar
+
+      - name: Rename GUI jar for release asset
+        if: github.event_name == 'release'
+        run: |
+          cp ./app/gui/build/libs/gui-${{ steps.get_version.outputs.version-without-v }}-all.jar \
+             ./gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
+
+      - name: Upload GUI JAR Asset
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ./gtfs-validator-${{ steps.get_version.outputs.version-without-v }}-gui.jar
 
       - name: Generate rules.json
+        if: github.event_name == 'release'
         run: ./gradlew webClientRulesJSON
 
       - name: Upload rules.json asset
-        uses: actions/upload-release-asset@v1
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./web/client/static/rules.json
-          asset_name: rules.json
-          asset_content_type: application/json
+          files: ./web/client/static/rules.json
 
       - name: Generate JavaDocs
+        if: github.event_name == 'release'
         run: ./gradlew aggregateJavadoc
 
       - name: Zip JavaDocs
+        if: github.event_name == 'release'
         run: zip -r javadocs.zip build/docs/aggregateJavadoc
 
       - name: Upload zipped Javadocs
-        uses: actions/upload-release-asset@v1
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./javadocs.zip
-          asset_name: javadocs.zip
-          asset_content_type: application/zip
+          files: ./javadocs.zip
 
+      - name: Load secrets from 1Password
+        id: onepw_secrets
+        uses: ./.github/actions/extract-1password-secret
+        with:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
+          VARIABLES_TO_EXTRACT: 'MAVEN_GPG_PASSPHRASE, MAVEN_GPG_PRIVATE_KEY, MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME, MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD'
+          ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
+
+      - name: Build and Publish to Maven Central
+        run: |
+          # Publishing to Maven Central will fail if the version is a snapshot, i.e. there is no version tag
+          # directly on the current commit.
+          # See https://repo1.maven.org/maven2/org/mobilitydata/gtfs-validator/ for the maven central repository.
+          # Once this step is done, the artefacts will be validated but not yet published.
+          # See https://central.sonatype.com/publishing/deployments (you need to login as mobilitydata)
+          # From this page you can examine the list of artefacts, and either drop them or release them.
+          # Note that once released, the artefacts cannot be removed or altered.
+          ./gradlew publishToMavenCentral

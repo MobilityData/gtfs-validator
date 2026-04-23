@@ -37,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslation;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnexpectedValueNotice;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnknownTableNameNotice;
@@ -65,7 +66,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
     NoticeContainer noticeContainer = new NoticeContainer();
     GtfsTranslationTableContainer translationTable =
         GtfsTranslationTableContainer.forHeaderAndEntities(
-            translationHeader, translations, noticeContainer);
+            new GtfsTranslationTableDescriptor(), translationHeader, translations, noticeContainer);
     new TranslationFieldAndReferenceValidator(
             translationTable,
             new GtfsFeedContainer(

@@ -119,24 +119,45 @@ public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
    *
    * <p>Good examples:
    *
-   * <pre>
-   * | `route_short_name`/`route_long_name`                                                                | Dataset                                                                                                                                                                |
-   * | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   * | ["N"/"Judah"](https://www.sfmta.com/getting-around/transit/routes-stops/n-judah)                | [Muni San Fransisco](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/us-california-san-francisco-municipal-transportation-agency-sfmta-gtfs-50.zip?alt=media) |
-   * | ["6"/"ML King Jr Blvd"](https://trimet.org/schedules/r006.htm)                                  | [Trimet Portland Streetcar](http://developer.trimet.org/schedule/gtfs.zip)                                                                                             |
-   * | ["55"/"Boulevard Saint Laurent"](https://www.stm.info/en/info/networks/bus/local/line-55-north) | [STM Montreal](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/ca-quebec-societe-de-transport-de-montreal-gtfs-1221.zip?alt=media)                            |
-   * | ["1"/"Rangiora/Cashmere"](https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/)          | [Metro Christchurch](https://storage.googleapis.com/storage/v1/b/mdb-latest/o/nz-christchurch-christchurch-metro-gtfs-1313.zip?alt=media)                              |
-   * </pre>
+   * <table>
+   *   <tr>
+   *     <th>route_short_name/route_long_name</th>
+   *     <th>Dataset</th>
+   *   </tr>
+   *   <tr>
+   *     <td>"N"/"Judah"</td>
+   *     <td><a href="https://www.sfmta.com/getting-around/transit/routes-stops/n-judah">Muni San Fransisco</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"6"/"ML King Jr Blvd"</td>
+   *     <td><a href="https://trimet.org/schedules/r006.htm">Trimet Portland Streetcar</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"55"/"Boulevard Saint Laurent"</td>
+   *     <td><a href="https://www.stm.info/en/info/networks/bus/local/line-55-north">STM Montreal</a></td>
+   *   </tr>
+   *   <tr>
+   *     <td>"1"/"Rangiora/Cashmere"</td>
+   *     <td><a href="https://www.metroinfo.co.nz/timetables/1-rangiora-cashmere/">Metro Christchurch</a></td>
+   *   </tr>
+   * </table>
    *
-   * Bad examples:
+   * <p>Bad examples:
    *
-   * <pre>
-   * | `route_short_name`/`route_long_name` |
-   * |-------------------------------------------|
-   * | "604"/"604"                               |
-   * | "14"/"Route 14"                           |
-   * | "2"/"Route 2: Bellows Falls In-Town"      |
-   * </pre>
+   * <table>
+   *   <tr>
+   *     <th>route_short_name/route_long_name</th>
+   *   </tr>
+   *   <tr>
+   *     <td>"604"/"604"</td>
+   *   </tr>
+   *   <tr>
+   *     <td>"14"/"Route 14"</td>
+   *   </tr>
+   *   <tr>
+   *     <td>"2"/"Route 2: Bellows Falls In-Town"</td>
+   *   </tr>
+   * </table>
    */
   @GtfsValidationNotice(
       severity = WARNING,

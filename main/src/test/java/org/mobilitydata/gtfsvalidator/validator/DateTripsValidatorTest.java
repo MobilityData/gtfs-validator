@@ -7,36 +7,34 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.CalendarUtilTest;
 
 @RunWith(JUnit4.class)
 public class DateTripsValidatorTest {
-  private static final ZonedDateTime TEST_NOW =
-      ZonedDateTime.of(2022, 12, 1, 8, 30, 0, 0, ZoneOffset.UTC);
+  private static final LocalDate TEST_NOW = LocalDate.of(2022, 12, 1);
 
   @Test
   public void serviceWindowEndingBefore7DaysFromNowShouldGenerateNotice() {
 
-    var serviceWindowStart = TEST_NOW.toLocalDate();
-    var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(6);
+    var serviceWindowStart = TEST_NOW;
+    var serviceWindowEnd = TEST_NOW.plusDays(6);
 
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
             new TripCoverageNotActiveForNext7DaysNotice(
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
+                GtfsDate.fromLocalDate(TEST_NOW),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
   }
@@ -44,13 +42,13 @@ public class DateTripsValidatorTest {
   @Test
   public void serviceWindowStartingAfterNowShouldGenerateNotice() {
 
-    var serviceWindowStart = TEST_NOW.toLocalDate().plusDays(1);
-    var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(7);
+    var serviceWindowStart = TEST_NOW.plusDays(1);
+    var serviceWindowEnd = TEST_NOW.plusDays(7);
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices)
         .containsExactly(
             new TripCoverageNotActiveForNext7DaysNotice(
-                GtfsDate.fromLocalDate(TEST_NOW.toLocalDate()),
+                GtfsDate.fromLocalDate(TEST_NOW),
                 GtfsDate.fromLocalDate(serviceWindowStart),
                 GtfsDate.fromLocalDate(serviceWindowEnd)));
   }
@@ -58,8 +56,8 @@ public class DateTripsValidatorTest {
   @Test
   public void serviceWindowStartingNowAndEndingIn7DaysShouldNotGenerateNotice() {
 
-    var serviceWindowStart = TEST_NOW.toLocalDate();
-    var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(7);
+    var serviceWindowStart = TEST_NOW;
+    var serviceWindowEnd = TEST_NOW.plusDays(7);
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices).isEmpty();
   }
@@ -67,8 +65,8 @@ public class DateTripsValidatorTest {
   @Test
   public void serviceWindowStartingBeforeNowAndEndingAfter7DaysShouldNotGenerateNotice() {
 
-    var serviceWindowStart = TEST_NOW.toLocalDate().minusDays(1);
-    var serviceWindowEnd = TEST_NOW.toLocalDate().plusDays(8);
+    var serviceWindowStart = TEST_NOW.minusDays(1);
+    var serviceWindowEnd = TEST_NOW.plusDays(8);
     var notices = validateSimpleServiceWindow(serviceWindowStart, serviceWindowEnd);
     assertThat(notices).isEmpty();
   }
@@ -85,15 +83,19 @@ public class DateTripsValidatorTest {
             ImmutableSet.copyOf(DayOfWeek.values()));
     var calendarTable =
         GtfsCalendarTableContainer.forEntities(ImmutableList.of(calendar), noticeContainer);
-    var dateTable = new GtfsCalendarDateTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
-    var frequencyTable = new GtfsFrequencyTableContainer(GtfsTableContainer.TableStatus.EMPTY_FILE);
+    var dateTable = GtfsCalendarDateTableContainer.forStatus(TableStatus.EMPTY_FILE);
+    var frequencyTable = GtfsFrequencyTableContainer.forStatus(TableStatus.EMPTY_FILE);
 
     var tripBlock = createTripBlock(serviceId, 6, "b1");
     var tripContainer = GtfsTripTableContainer.forEntities(tripBlock, noticeContainer);
 
     var validator =
         new DateTripsValidator(
-            new CurrentDateTime(TEST_NOW), dateTable, calendarTable, tripContainer, frequencyTable);
+            new DateForValidation(TEST_NOW),
+            dateTable,
+            calendarTable,
+            tripContainer,
+            frequencyTable);
 
     validator.validate(noticeContainer);
 

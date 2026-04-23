@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.notice.schema;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.annotation.Nullable;
@@ -37,6 +38,30 @@ public class NoticeSchema {
    * from field name to FieldSchema.
    */
   private Map<String, FieldSchema> properties = new TreeMap<>();
+
+  /**
+   * Whether the notice is deprecated. Deprecated notices are not used in the validator, but are
+   * still supported in the documentation.
+   */
+  private boolean deprecated = false;
+
+  /**
+   * Reason for the deprecation of the notice. This field is only used if {@link #deprecated} is
+   * true.
+   */
+  @Nullable private String deprecationReason;
+
+  /**
+   * Version on which the notice was deprecated. This field is only used if {@link #deprecated} is
+   * true.
+   */
+  @Nullable private String deprecationVersion;
+
+  /**
+   * Replacement notice codes for the deprecated notice. This field is only used if {@link
+   * #deprecated} is true and the notice has replacements.
+   */
+  @Nullable private List<String> replacementNoticeCodes;
 
   public NoticeSchema(String code, SeverityLevel severityLevel) {
     this.code = code;
@@ -82,5 +107,40 @@ public class NoticeSchema {
 
   public Map<String, FieldSchema> getFields() {
     return properties;
+  }
+
+  public boolean isDeprecated() {
+    return deprecated;
+  }
+
+  public void setDeprecated(boolean deprecated) {
+    this.deprecated = deprecated;
+  }
+
+  @Nullable
+  public String getDeprecationReason() {
+    return deprecationReason;
+  }
+
+  public void setDeprecationReason(@Nullable String deprecationReason) {
+    this.deprecationReason = deprecationReason;
+  }
+
+  @Nullable
+  public String getDeprecationVersion() {
+    return deprecationVersion;
+  }
+
+  public void setDeprecationVersion(@Nullable String deprecationVersion) {
+    this.deprecationVersion = deprecationVersion;
+  }
+
+  @Nullable
+  public List<String> getReplacementNoticeCodes() {
+    return replacementNoticeCodes;
+  }
+
+  public void setReplacementNoticeCodes(@Nullable List<String> replacementNoticeCodes) {
+    this.replacementNoticeCodes = replacementNoticeCodes;
   }
 }

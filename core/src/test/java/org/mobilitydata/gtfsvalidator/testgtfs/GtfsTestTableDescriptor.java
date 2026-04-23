@@ -13,15 +13,14 @@ import org.mobilitydata.gtfsvalidator.table.*;
 
 public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity> {
   @Override
-  public GtfsTableContainer createContainerForInvalidStatus(
-      GtfsTableContainer.TableStatus tableStatus) {
+  public GtfsTableContainer createContainerForInvalidStatus(TableStatus tableStatus) {
     return new GtfsTestTableContainer(tableStatus);
   }
 
   @Override
   public GtfsTableContainer createContainerForHeaderAndEntities(
       CsvHeader header, List<GtfsTestEntity> entities, NoticeContainer noticeContainer) {
-    return GtfsTestTableContainer.forHeaderAndEntities(header, entities, noticeContainer);
+    return GtfsTestTableContainer.forHeaderAndEntities(this, header, entities, noticeContainer);
   }
 
   @Override
@@ -41,7 +40,6 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
         GtfsColumnDescriptor.builder()
             .setColumnName(GtfsTestEntity.ID_FIELD_NAME)
             .setHeaderRequired(true)
-            .setHeaderRecommended(false)
             .setFieldLevel(FieldLevelEnum.REQUIRED)
             .setIsMixedCase(false)
             .setIsCached(false)
@@ -50,7 +48,6 @@ public class GtfsTestTableDescriptor extends GtfsTableDescriptor<GtfsTestEntity>
         GtfsColumnDescriptor.builder()
             .setColumnName(GtfsTestEntity.CODE_FIELD_NAME)
             .setHeaderRequired(false)
-            .setHeaderRecommended(false)
             .setFieldLevel(FieldLevelEnum.OPTIONAL)
             .setIsMixedCase(false)
             .setIsCached(false)

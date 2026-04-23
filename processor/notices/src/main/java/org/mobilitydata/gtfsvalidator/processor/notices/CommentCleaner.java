@@ -122,7 +122,7 @@ public class CommentCleaner {
     return matching;
   }
 
-  public final class SplitComment {
+  public static final class SplitComment {
     String shortSummary;
 
     String additionalDocumentation;

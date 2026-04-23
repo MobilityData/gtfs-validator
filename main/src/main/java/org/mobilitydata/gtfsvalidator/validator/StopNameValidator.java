@@ -60,6 +60,14 @@ public class StopNameValidator extends SingleEntityValidator<GtfsStop> {
     }
   }
 
+  public boolean shouldCallValidate(ColumnInspector header) {
+    if (!header.hasColumn(GtfsStop.STOP_NAME_FIELD_NAME)
+        && !header.hasColumn(GtfsStop.LOCATION_TYPE_FIELD_NAME)) {
+      return false;
+    }
+    return true;
+  }
+
   private boolean isValidStopDesc(String stopDesc, String stopName) {
     // ignore lower case and upper case difference
     return !stopDesc.equalsIgnoreCase(stopName);

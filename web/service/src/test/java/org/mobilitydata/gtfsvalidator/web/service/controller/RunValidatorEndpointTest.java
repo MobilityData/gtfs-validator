@@ -1,13 +1,16 @@
 package org.mobilitydata.gtfsvalidator.web.service.controller;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.web.service.util.JobMetadata;
@@ -53,6 +56,25 @@ public class RunValidatorEndpointTest {
     doReturn(jobMetaData).when(storageHelper).getJobMetadata(testJobId);
     doReturn(mockOutputPath).when(storageHelper).createOutputFolderForJob(testJobId);
     doReturn(mockOutputPathToFile).when(mockOutputPath).toFile();
+    doReturn(Path.of("./execution_result.json")).when(mockOutputPath).resolve(anyString());
+    doCallRealMethod()
+        .when(storageHelper)
+        .writeExecutionResultFile(any(ValidationController.ExecutionResult.class), any(Path.class));
+  }
+
+  public boolean executionResultIs(String result) throws Exception {
+    String executionResultJson = Files.readString(Paths.get("execution_result.json"));
+    JSONObject executionResult = new JSONObject(executionResultJson);
+    String expectedStatus = executionResult.getString("status");
+    return result.equals(expectedStatus);
+  }
+
+  public boolean executionResultIsError() throws Exception {
+    return executionResultIs("error");
+  }
+
+  public boolean executionResultIsSuccess() throws Exception {
+    return executionResultIs("success");
   }
 
   @Test
@@ -61,12 +83,16 @@ public class RunValidatorEndpointTest {
         .when(storageHelper)
         .downloadFeedFileFromStorage(anyString(), anyString());
 
+    doReturn(true).when(mockFeedFile).exists();
+    doReturn(true).when(mockOutputPathToFile).exists();
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/run-validator")
                 .content(mapper.writeValueAsString(pubSubMessage))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().isOk());
+
+    assertTrue(executionResultIsSuccess());
 
     // verify that the validationHandler is called with the downloaded feed file, output path, and
     // country code
@@ -77,7 +103,9 @@ public class RunValidatorEndpointTest {
     verify(storageHelper, times(1)).uploadFilesToStorage(testJobId, mockOutputPath);
 
     // verify that the temp files and directory are deleted
+    verify(mockFeedFile, times(1)).exists();
     verify(mockFeedFile, times(1)).delete();
+    verify(mockOutputPathToFile, times(1)).exists();
     verify(mockOutputPathToFile, times(1)).delete();
   }
 
@@ -94,13 +122,13 @@ public class RunValidatorEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.status().is5xxServerError());
 
-    // should not attempt validation
+    // should not have attempted validation
     verify(validationHandler, times(0)).validateFeed(any(File.class), any(Path.class), anyString());
 
-    // should not upload to storage
+    // should not have uploaded to storage
     verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
 
-    // should not delete temp files
+    // should not have tried to delete temp files
     verify(mockFeedFile, times(0)).delete();
     verify(mockOutputPathToFile, times(0)).delete();
   }
@@ -120,13 +148,8 @@ public class RunValidatorEndpointTest {
             MockMvcRequestBuilders.post("/run-validator")
                 .content(mapper.writeValueAsString(pubSubMessage))
                 .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
+        .andExpect(MockMvcResultMatchers.status().isOk());
 
-    // should not upload to storage
-    verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
-
-    // should delete temp files when an exception is thrown
-    verify(mockFeedFile, times(1)).delete();
-    verify(mockOutputPathToFile, times(1)).delete();
+    assertTrue(executionResultIsError());
   }
 }

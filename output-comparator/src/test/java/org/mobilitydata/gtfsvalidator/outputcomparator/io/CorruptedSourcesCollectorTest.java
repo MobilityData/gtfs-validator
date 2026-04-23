@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.io;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,14 +25,17 @@ public class CorruptedSourcesCollectorTest {
             CorruptedSources.builder()
                 .setSourceIdCount(1)
                 .setCorruptedSourcesCount(0)
-                .setCorruptedSources(Arrays.asList())
+                .setCorruptedSources(List.of())
                 .setPercentCorruptedSourcesThreshold(25)
                 .setAboveThreshold(false)
                 .build());
-    assertThat(collector.generateLogString()).isEqualTo("0 out of 1 sources (~0 %) are corrupted.");
+    assertThat(normalizeWhitespace(collector.generateLogString()))
+        .isEqualTo(
+            normalizeWhitespace(
+                "### 🛡️ Corruption Check\n0 out of 1 sources (~0 %) are corrupted.\n\n"));
 
     collector.addSource();
-    collector.addCorruptedSource("source-a");
+    collector.addCorruptedSource("source-a", true, true, false, false);
 
     assertThat(collector.isAboveThreshold()).isTrue();
     assertThat(collector.computeCorruptedSourcesPercentage()).isWithin(1f).of(50f);
@@ -44,10 +48,17 @@ public class CorruptedSourcesCollectorTest {
                 .setPercentCorruptedSourcesThreshold(25)
                 .setAboveThreshold(true)
                 .build());
-    assertThat(collector.generateLogString())
+    assertThat(normalizeWhitespace(collector.generateLogString()))
         .isEqualTo(
-            "1 out of 2 sources (~50 %) are corrupted, which is greater than or equal to the provided threshold of 25%.\n"
-                + "Corrupted sources:\n"
-                + "source-a");
+            normalizeWhitespace(
+                "### 🛡️ Corruption Check\n<details>\n<summary><strong>1 out of 2 sources (~50 %) are corrupted.</summary>\n\n"
+                    + "| Dataset  | Ref Report Exists | Ref Report Readable | Latest Report Exists | Latest Report Readable |\n"
+                    + "|-----------|-------------------|---------------------|----------------------|------------------------|\n"
+                    + "| source-a | ✅                | ✅                  | ❌                   | ❌                     |\n"
+                    + "</details>"));
+  }
+
+  private String normalizeWhitespace(String input) {
+    return input.replaceAll("\\s+", " ").trim();
   }
 }

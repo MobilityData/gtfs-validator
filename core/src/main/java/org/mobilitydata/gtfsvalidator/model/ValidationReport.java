@@ -18,13 +18,17 @@ package org.mobilitydata.gtfsvalidator.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
+import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 
 /**
  * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list of
@@ -41,6 +45,8 @@ public class ValidationReport {
           .serializeSpecialFloatingPointValues()
           .create();
   private final Set<NoticeReport> notices;
+  private final Double validationTimeSeconds;
+  private List<MemoryUsage> memoryUsageRecords;
 
   /**
    * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
@@ -49,7 +55,23 @@ public class ValidationReport {
    * @param noticeReports set of {@code NoticeReport}s
    */
   public ValidationReport(Set<NoticeReport> noticeReports) {
+    this(noticeReports, null, null);
+  }
+
+  /**
+   * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
+   * stores information for error {@code NoticeReport}.
+   *
+   * @param noticeReports set of {@code NoticeReport}s
+   * @param validationTimeSeconds the time taken to validate the GTFS dataset
+   */
+  public ValidationReport(
+      Set<NoticeReport> noticeReports,
+      Double validationTimeSeconds,
+      List<MemoryUsage> memoryUsageRecords) {
     this.notices = Collections.unmodifiableSet(noticeReports);
+    this.validationTimeSeconds = validationTimeSeconds;
+    this.memoryUsageRecords = memoryUsageRecords;
   }
 
   /**
@@ -67,6 +89,39 @@ public class ValidationReport {
 
   public Set<NoticeReport> getNotices() {
     return notices;
+  }
+
+  public Double getValidationTimeSeconds() {
+    return validationTimeSeconds;
+  }
+
+  public List<MemoryUsage> getMemoryUsageRecords() {
+    return memoryUsageRecords;
+  }
+
+  /**
+   * Checks if this report contains a {@code thread_execution_error} notice with an {@code
+   * exception} field indicating a {@code java.lang.OutOfMemoryError}.
+   *
+   * @return true if an out-of-memory error is found in the notices.
+   */
+  public boolean hasOutOfMemoryError() {
+    for (NoticeReport notice : notices) {
+      if ("thread_execution_error".equals(notice.getCode())) {
+        for (JsonElement sample : notice.getSampleNotices()) {
+          if (sample.isJsonObject()) {
+            JsonObject obj = sample.getAsJsonObject();
+            if (obj.has("exception")) {
+              String exception = obj.get("exception").getAsString();
+              if (exception.contains("OutOfMemoryError")) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /**

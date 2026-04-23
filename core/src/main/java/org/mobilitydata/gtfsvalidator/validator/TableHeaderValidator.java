@@ -28,6 +28,5 @@ public interface TableHeaderValidator {
       CsvHeader actualHeader,
       Set<String> supportedHeaders,
       Set<String> requiredHeaders,
-      Set<String> recommendedHeaders,
       NoticeContainer noticeContainer);
 }

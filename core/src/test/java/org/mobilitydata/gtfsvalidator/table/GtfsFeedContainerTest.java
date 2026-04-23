@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer.TableStatus;
 import org.mobilitydata.gtfsvalidator.testgtfs.GtfsTestTableContainer;
 
 public class GtfsFeedContainerTest {

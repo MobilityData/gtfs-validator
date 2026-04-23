@@ -10,6 +10,7 @@ Explain and/or show screenshots for how you expect the pull request to work in y
 Please make sure these boxes are checked before submitting your pull request - thanks!
 
 - [ ] Run the unit tests with `gradle test` to make sure you didn't break anything
+- [ ] Add or update any needed [documentation](https://github.com/MobilityData/gtfs-validator/tree/master/docs) to the repo 
 - [ ] Format the title like "feat: [new feature short description]". Title must follow the Conventional Commit Specification(https://www.conventionalcommits.org/en/v1.0.0/).
 - [ ] Linked all relevant issues
 - [ ] Include screenshot(s) showing how this pull request works and fixes the issue(s)

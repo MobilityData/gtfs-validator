@@ -18,16 +18,15 @@ package org.mobilitydata.gtfsvalidator.testing;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
-import org.mobilitydata.gtfsvalidator.input.CurrentDateTime;
+import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
-import org.mobilitydata.gtfsvalidator.table.AnyTableLoader;
+import org.mobilitydata.gtfsvalidator.table.CsvFileLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableDescriptor;
@@ -41,7 +40,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 public class LoadingHelper {
 
   private CountryCode countryCode = CountryCode.forStringOrUnknown("ca");
-  private ZonedDateTime currentTime = ZonedDateTime.of(2021, 1, 1, 14, 30, 0, 0, ZoneOffset.UTC);
+  private LocalDate dateForValidation = LocalDate.of(2021, 1, 1);
 
   private NoticeContainer noticeContainer = new NoticeContainer();
 
@@ -59,7 +58,7 @@ public class LoadingHelper {
     this.validatorLoader = validatorLoader;
   }
 
-  public <X extends GtfsEntity, Y extends GtfsTableContainer<X>> Y load(
+  public <X extends GtfsEntity, Y extends GtfsTableContainer<X, ?>> Y load(
       GtfsTableDescriptor<X> tableDescriptor, String... lines) throws ValidatorLoaderException {
     String content = Arrays.stream(lines).collect(Collectors.joining("\n"));
     InputStream in = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
@@ -68,9 +67,9 @@ public class LoadingHelper {
     ValidationContext context =
         ValidationContext.builder()
             .setCountryCode(countryCode)
-            .setCurrentDateTime(new CurrentDateTime(currentTime))
+            .setDateForValidation(new DateForValidation(dateForValidation))
             .build();
     ValidatorProvider provider = new DefaultValidatorProvider(context, validatorLoader);
-    return (Y) AnyTableLoader.load(tableDescriptor, provider, in, noticeContainer);
+    return (Y) CsvFileLoader.getInstance().load(tableDescriptor, provider, in, noticeContainer);
   }
 }

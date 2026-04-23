@@ -41,12 +41,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
  *   <li>{@link DecreasingShapeDistanceNotice}
  *   <li>{@link EqualShapeDistanceSameCoordinatesNotice}
  *   <li>{@link EqualShapeDistanceDiffCoordinatesNotice}
+ *   <li>{@link EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice}
  * </ul>
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   private final GtfsShapeTableContainer table;
+  private final double DISTANCE_THRESHOLD = 1.11;
 
   @Inject
   ShapeIncreasingDistanceValidator(GtfsShapeTableContainer table) {
@@ -72,8 +74,15 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         }
         // equal shape_dist_traveled and different coordinates
         if (!(curr.shapePtLon() == prev.shapePtLon() && curr.shapePtLat() == prev.shapePtLat())) {
-          noticeContainer.addValidationNotice(
-              new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          double distanceBetweenShapePoints =
+              getDistanceMeters(curr.shapePtLatLon(), prev.shapePtLatLon());
+          if (distanceBetweenShapePoints >= DISTANCE_THRESHOLD) {
+            noticeContainer.addValidationNotice(
+                new EqualShapeDistanceDiffCoordinatesNotice(prev, curr));
+          } else if (distanceBetweenShapePoints > 0) {
+            noticeContainer.addValidationNotice(
+                new EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice(prev, curr));
+          }
         } else {
           // equal shape_dist_traveled and same coordinates
           noticeContainer.addValidationNotice(
@@ -89,7 +98,15 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    * <p>When sorted by `shape.shape_pt_sequence`, two consecutive shape points must not have
    * decreasing values for `shape_dist_traveled`.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsShapeSchema.class))
+  @GtfsValidationNotice(
+      severity = ERROR,
+      files = @FileRefs(GtfsShapeSchema.class),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class DecreasingShapeDistanceNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -137,7 +154,13 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = WARNING,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class EqualShapeDistanceSameCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -177,7 +200,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
 
   /**
    * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
-   * `shapes.txt`.
+   * `shapes.txt` and the distance between the two points is greater than the 1.11m.
    *
    * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
    * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and different
@@ -185,7 +208,13 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
    */
   @GtfsValidationNotice(
       severity = ERROR,
-      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}))
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
   static class EqualShapeDistanceDiffCoordinatesNotice extends ValidationNotice {
 
     /** The id of the faulty shape. */
@@ -209,11 +238,74 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
     /** The previous record's `shapes.shape_pt_sequence`. */
     private final int prevShapePtSequence;
 
-    // Actual distance traveled along the shape from the first shape point to the previous shape
-    /** point. */
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
+     */
     private final double actualDistanceBetweenShapePoints;
 
     EqualShapeDistanceDiffCoordinatesNotice(GtfsShape previous, GtfsShape current) {
+      this.shapeId = current.shapeId();
+      this.csvRowNumber = current.csvRowNumber();
+      this.shapeDistTraveled = current.shapeDistTraveled();
+      this.shapePtSequence = current.shapePtSequence();
+      this.prevCsvRowNumber = previous.csvRowNumber();
+      this.prevShapeDistTraveled = previous.shapeDistTraveled();
+      this.prevShapePtSequence = previous.shapePtSequence();
+      this.actualDistanceBetweenShapePoints =
+          getDistanceMeters(current.shapePtLatLon(), previous.shapePtLatLon());
+    }
+  }
+
+  /**
+   * Two consecutive points have equal `shape_dist_traveled` and different lat/lon coordinates in
+   * `shapes.txt` and the distance between the two points is greater than 0 but less than 1.11m.
+   *
+   * <p>When sorted by `shape.shape_pt_sequence`, the values for `shape_dist_traveled` must increase
+   * along a shape. Two consecutive points with equal values for `shape_dist_traveled` and small
+   * difference of coordinates (greater than 0 but less than 1.11 m distance) result in a warning.
+   */
+  @GtfsValidationNotice(
+      severity = WARNING,
+      files = @FileRefs({GtfsShapeSchema.class, GtfsStopSchema.class}),
+      urls = {
+        @GtfsValidationNotice.UrlRef(
+            label = "Shapes Data Guidance",
+            url =
+                "https://gtfs.org/resources/gtfs-schedule-feature-guides/shapes/#shapes-data-guidance")
+      })
+  static class EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice
+      extends ValidationNotice {
+
+    /** The id of the faulty shape. */
+    private final String shapeId;
+
+    /** The row number from `shapes.txt`. */
+    private final int csvRowNumber;
+
+    /** The faulty record's `shape_dist_traveled` value. */
+    private final double shapeDistTraveled;
+
+    /** The faulty record's `shapes.shape_pt_sequence`. */
+    private final int shapePtSequence;
+
+    /** The row number from `shapes.txt` of the previous shape point. */
+    private final long prevCsvRowNumber;
+
+    /** The previous shape point's `shape_dist_traveled` value. */
+    private final double prevShapeDistTraveled;
+
+    /** The previous record's `shapes.shape_pt_sequence`. */
+    private final int prevShapePtSequence;
+
+    /**
+     * Actual distance traveled along the shape from the first shape point to the previous shape
+     * point.
+     */
+    private final double actualDistanceBetweenShapePoints;
+
+    EqualShapeDistanceDiffCoordinatesDistanceBelowThresholdNotice(
+        GtfsShape previous, GtfsShape current) {
       this.shapeId = current.shapeId();
       this.csvRowNumber = current.csvRowNumber();
       this.shapeDistTraveled = current.shapeDistTraveled();

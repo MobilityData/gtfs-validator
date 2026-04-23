@@ -11,8 +11,6 @@ public abstract class GtfsColumnDescriptor {
 
   public abstract boolean headerRequired();
 
-  public abstract boolean headerRecommended();
-
   public abstract FieldLevelEnum fieldLevel();
 
   public abstract Optional<RowParser.NumberBounds> numberBounds();
@@ -34,8 +32,6 @@ public abstract class GtfsColumnDescriptor {
     public abstract Builder setColumnName(String value);
 
     public abstract Builder setHeaderRequired(boolean value);
-
-    public abstract Builder setHeaderRecommended(boolean value);
 
     public abstract Builder setFieldLevel(FieldLevelEnum value);
 

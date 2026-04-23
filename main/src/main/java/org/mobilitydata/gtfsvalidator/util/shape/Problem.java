@@ -119,6 +119,7 @@ public class Problem {
                 && that.prevMatch != null
                 && this.prevMatch.approxEquals(that.prevMatch, maxError)));
   }
+
   /** Identifies particular types of stop-to-shape matching issues. */
   public enum ProblemType {
     /**

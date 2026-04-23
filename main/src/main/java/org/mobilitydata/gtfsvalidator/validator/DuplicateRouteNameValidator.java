@@ -81,12 +81,23 @@ public class DuplicateRouteNameValidator extends FileValidator {
    *
    * <p>Example of bad data:
    *
-   * <pre>
-   * | `route_id` 	| `route_short_name` 	| `route_long_name` 	|
-   * |------------	|--------------------	|-------------------	|
-   * | route1     	| U1                 	| Southern          	|
-   * | route2     	| U1                 	| Southern          	|
-   * </pre>
+   * <table style="table-layout:auto; width:auto;">
+   *   <tr>
+   *     <th><code>route_id</code></th>
+   *     <th><code>route_short_name</code></th>
+   *     <th><code>route_long_name</code></th>
+   *   </tr>
+   *   <tr>
+   *     <td>route1</td>
+   *     <td>U1</td>
+   *     <td>Southern</td>
+   *   </tr>
+   *   <tr>
+   *     <td>route2</td>
+   *     <td>U1</td>
+   *     <td>Southern</td>
+   *   </tr>
+   * </table>
    */
   @GtfsValidationNotice(
       severity = WARNING,

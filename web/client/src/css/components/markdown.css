@@ -63,9 +63,12 @@
 
   table {
     @apply my-2;
+    caption {
+      @apply text-left;
+    }
   }
 
-  th, td {
+  th, td,  {
     @apply align-baseline;
     @apply px-4 py-3;
     @apply text-left;

@@ -28,7 +28,7 @@ public class FareTransferRuleTransferCountValidator
         }
       } else {
         noticeContainer.addValidationNotice(
-            new FareTransferRuleMissingTransferCountNotice(rule.csvRowNumber()));
+            new FareTransferRuleWithoutTransferCountNotice(rule.csvRowNumber()));
       }
     } else {
       if (rule.hasTransferCount()) {
@@ -64,12 +64,12 @@ public class FareTransferRuleTransferCountValidator
    * <p>Per the spec, `transfer_count` is required if the two leg group ids are equal.
    */
   @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsFareTransferRuleSchema.class))
-  static class FareTransferRuleMissingTransferCountNotice extends ValidationNotice {
+  public static class FareTransferRuleWithoutTransferCountNotice extends ValidationNotice {
 
     /** The row of the faulty record. */
     private final int csvRowNumber;
 
-    FareTransferRuleMissingTransferCountNotice(int csvRowNumber) {
+    FareTransferRuleWithoutTransferCountNotice(int csvRowNumber) {
       this.csvRowNumber = csvRowNumber;
     }
   }

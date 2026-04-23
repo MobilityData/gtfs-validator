@@ -15,6 +15,7 @@
  */
 
 package org.mobilitydata.gtfsvalidator.annotation;
+
 /**
  * Enables caching of values for a given field to optimize memory usage.
  *

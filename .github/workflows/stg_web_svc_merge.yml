@@ -1,0 +1,73 @@
+name: Web service staging CD
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "20"
+  java_version: '17'
+  java_distribution: 'zulu'
+
+jobs:
+
+  web_cd:
+    name: Deploy web service
+    runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME              : stg
+      CLOUDSDK_CORE_PROJECT : web-based-gtfs-validator
+
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          # We need to download all tags so that the axion-release-plugin
+          # can resolve the most recent version tag.
+          fetch-depth: 0
+
+      - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
+        uses: actions/setup-java@v4
+        with:
+          # We need a recent version of Java with jpackage included.
+          java-version: ${{ env.java_version }}
+          # We use the zulu distribution, which is an OpenJDK distro.
+          distribution: ${{ env.java_distribution }}
+
+      # for npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: '>= 390.0.0'
+
+      - name: run gradle tasks
+        shell: bash
+        run: |
+          ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
+          ./gradlew ':web:service:webDeploy'
+
+      - name: Load secrets from 1Password to be used for sending notification
+        id: onepw_secrets
+        uses: ./.github/actions/extract-1password-secret
+        with:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
+          VARIABLES_TO_EXTRACT: 'GITHUB_GENERIC_ACTION_CREDENTIALS'
+          ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
+
+
+      - name: Send a notification to mobility-feed-api
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ env.GITHUB_GENERIC_ACTION_CREDENTIALS }}
+          repository: MobilityData/mobility-feed-api
+          event-type: gtfs-validator-update-stg

@@ -1,9 +1,14 @@
 package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
+import org.mobilitydata.gtfsvalidator.web.service.controller.ValidationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -19,16 +26,22 @@ import org.springframework.stereotype.Component;
 /** Helper class for interacting with GCS. */
 @Component
 public class StorageHelper {
-  public static final String JOB_INFO_BUCKET_NAME = "gtfs-validator-results";
+  public String JOB_INFO_BUCKET_NAME =
+      System.getenv().getOrDefault("JOB_INFO_BUCKET_NAME", "gtfs-validator-results");
+
   static final String JOB_FILENAME_PREFIX = "job";
   static final String JOB_FILENAME_SUFFIX = ".json";
   public static final String JOB_FILENAME = JOB_FILENAME_PREFIX + JOB_FILENAME_SUFFIX;
-  public static final String TEMP_FOLDER_NAME = "gtfs-validator-temp";
-  static final String USER_UPLOAD_BUCKET_NAME = "gtfs-validator-user-uploads";
-  static final String RESULTS_BUCKET_NAME = "gtfs-validator-results";
+  public static final String TEMP_FOLDER_NAME =
+      System.getenv().getOrDefault("TEMP_FOLDER_NAME", "gtfs-validator-temp");
+  static final String USER_UPLOAD_BUCKET_NAME =
+      System.getenv().getOrDefault("USER_UPLOAD_BUCKET_NAME", "gtfs-validator-user-uploads");
+  static final String RESULTS_BUCKET_NAME =
+      System.getenv().getOrDefault("RESULTS_BUCKET_NAME", "gtfs-validator-results");
   static final String FILE_NAME = "gtfs-job.zip";
 
-  private final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
+  private static final Logger logger = LoggerFactory.getLogger(StorageHelper.class);
+
   private Storage storage;
   private ApplicationContext applicationContext;
 
@@ -60,7 +73,7 @@ public class StorageHelper {
       var jobBlobInfo = BlobInfo.newBuilder(jobBlobId).setContentType("application/json").build();
       var om = new ObjectMapper();
       var json = om.writeValueAsString(metadata);
-      logger.info("Saving job metadata: " + json);
+      logger.debug("Saving job metadata: {}", json);
       storage.create(jobBlobInfo, json.getBytes());
     } catch (Exception exc) {
       logger.error("Error setting country code", exc);
@@ -80,13 +93,13 @@ public class StorageHelper {
       var jobBlobId = BlobId.of(JOB_INFO_BUCKET_NAME, jobInfoPath);
       Blob blob = storage.get(jobBlobId);
       var json = new String(blob.getContent());
-      logger.info("Loading job metadata: " + json);
+      logger.debug("Loading job metadata: {}", json);
 
       var objectMapper = new ObjectMapper();
       JobMetadata jobMetadata = objectMapper.readValue(json, JobMetadata.class);
       return jobMetadata;
     } catch (Exception exc) {
-      logger.error("Error could not load remote file, using default country code", exc);
+      logger.debug("No metadata found using default country code");
       return new JobMetadata(jobId, "");
     }
   }
@@ -96,18 +109,20 @@ public class StorageHelper {
    *
    * @param jobId
    * @param url
+   * @param validatorVersion
    * @throws Exception
    */
-  public void saveJobFileFromUrl(String jobId, String url) throws Exception {
-    // Read file into memory
-    var urlInputStream = new BufferedInputStream(new URL(url).openStream());
-
-    // Upload to GCS
-    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + jobId + ".zip");
-    var mimeType = "application/zip";
-    var blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-    var fileBytes = urlInputStream.readAllBytes();
-    storage.create(blobInfo, fileBytes);
+  public void saveJobFileFromUrl(String jobId, String url, String validatorVersion)
+      throws Exception {
+    var blobId = BlobId.of(USER_UPLOAD_BUCKET_NAME, jobId + "/" + FILE_NAME);
+    var blobInfo = BlobInfo.newBuilder(blobId).setContentType("application/zip").build();
+    URL signedURL =
+        storage.signUrl(
+            blobInfo, 1, TimeUnit.HOURS, Storage.SignUrlOption.httpMethod(HttpMethod.POST));
+    try (WriteChannel writer = storage.writer(signedURL)) {
+      OutputStream outputStream = Channels.newOutputStream(writer);
+      HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion);
+    }
   }
 
   /** Generates a job-specific signed URL for uploading a file to GCS. */
@@ -175,5 +190,27 @@ public class StorageHelper {
 
   public Path createOutputFolderForJob(String jobId) throws IOException {
     return Files.createTempDirectory(StorageHelper.TEMP_FOLDER_NAME + jobId);
+  }
+
+  private static final String executionResultFile = "execution_result.json";
+
+  public void writeExecutionResultFile(
+      ValidationController.ExecutionResult executionResult, Path outputPath) {
+    if (outputPath == null) {
+      logger.error("Error: outputPath is null, cannot write execution result file");
+      return;
+    }
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    Path executionResultPath = outputPath.resolve(executionResultFile);
+    try {
+      logger.debug("Writing executionResult file to " + executionResultFile);
+      Files.write(
+          executionResultPath, gson.toJson(executionResult).getBytes(StandardCharsets.UTF_8));
+      logger.debug(executionResultFile + " file written successfully");
+    } catch (IOException e) {
+      logger.error("Error writing to file " + executionResultFile);
+      e.printStackTrace();
+    }
   }
 }

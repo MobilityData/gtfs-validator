@@ -26,12 +26,10 @@ import com.google.common.geometry.S2LatLng;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -50,6 +48,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
+import org.mobilitydata.gtfsvalidator.util.StopUtil;
 
 /**
  * Validates that transit vehicles do not travel too fast between consecutive and between far stops.
@@ -100,8 +99,9 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
         continue;
       }
       final double maxSpeedKph = getMaxVehicleSpeedKph(route.get().routeType());
-      final double[] distancesKm = findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes());
-      validateConsecutiveStops(trips, distancesKm, maxSpeedKph, noticeContainer);
+      final double[] distancesKm =
+          findDistancesKmBetweenStops(tripAndStopTimes.getStopTimes(), stopTable);
+      validateConsecutiveStops(trips, maxSpeedKph, noticeContainer);
       validateFarStops(trips, distancesKm, maxSpeedKph, noticeContainer);
     }
   }
@@ -154,15 +154,37 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * <p>{@code distancesKm[i]} equals to distance between stops corresponding to stop times i, i +
    * 1.
    */
-  private double[] findDistancesKmBetweenStops(List<GtfsStopTime> stopTimes) {
+  @VisibleForTesting
+  static double[] findDistancesKmBetweenStops(
+      List<GtfsStopTime> stopTimes, GtfsStopTableContainer stopTable) {
     double[] distancesKm = new double[stopTimes.size() - 1];
     S2LatLng currLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(0).stopId());
     for (int i = 0; i < distancesKm.length; ++i) {
-      S2LatLng nextLatLng = getStopOrParentLatLng(stopTable, stopTimes.get(i + 1).stopId());
-      distancesKm[i] = S2Earth.getDistanceKm(currLatLng, nextLatLng);
-      currLatLng = nextLatLng;
+      Optional<S2LatLng> maybeNextLatLng =
+          StopUtil.getOptionalStopOrParentLatLng(stopTable, stopTimes.get(i + 1).stopId());
+      if (maybeNextLatLng.isPresent()) {
+        S2LatLng nextLatLng = maybeNextLatLng.get();
+        distancesKm[i] = S2Earth.getDistanceKm(currLatLng, nextLatLng);
+        currLatLng = nextLatLng;
+      } else {
+        distancesKm[i] = 0;
+      }
     }
     return distancesKm;
+  }
+
+  private Optional<Double> getDistanceKm(GtfsStopTime start, GtfsStopTime end) {
+    Optional<S2LatLng> maybeFirstLatLng =
+        StopUtil.getOptionalStopOrParentLatLng(stopTable, start.stopId());
+    Optional<S2LatLng> maybeSecondLatLng =
+        StopUtil.getOptionalStopOrParentLatLng(stopTable, end.stopId());
+
+    if (maybeFirstLatLng.isEmpty() || maybeSecondLatLng.isEmpty()) {
+      return Optional.empty();
+    }
+
+    double distanceKm = S2Earth.getDistanceKm(maybeFirstLatLng.get(), maybeSecondLatLng.get());
+    return Optional.of(distanceKm);
   }
 
   /**
@@ -234,40 +256,44 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    * <p>If there is a fast travel detected, then a separate notice is issued for each trip.
    */
   private void validateConsecutiveStops(
-      List<TripAndStopTimes> trips,
-      double[] distancesKm,
-      double maxSpeedKph,
-      NoticeContainer noticeContainer) {
+      List<TripAndStopTimes> trips, double maxSpeedKph, NoticeContainer noticeContainer) {
     final List<GtfsStopTime> stopTimes = trips.get(0).getStopTimes();
-    for (int i = 0; i < distancesKm.length; ++i) {
-      final GtfsStopTime stopTime1 = stopTimes.get(i);
-      final GtfsStopTime stopTime2 = stopTimes.get(i + 1);
-      if (!(stopTime1.hasDepartureTime() && stopTime2.hasArrivalTime())) {
+    GtfsStopTime start = stopTimes.get(0);
+    for (int i = 0; i < stopTimes.size() - 1; ++i) {
+      GtfsStopTime end = stopTimes.get(i + 1);
+
+      Optional<Double> maybeDistanceKm = getDistanceKm(start, end);
+      // We couldn't calculate the distance, for instance because one of the stops is
+      // actually a GeoJSON location and doesn't have a specific latitude and longitude.
+      // We try comparing with the next stop instead.
+      if (maybeDistanceKm.isEmpty()) {
         continue;
       }
-      final double distanceKm = distancesKm[i];
-      final double speedKph = getSpeedKphBetweenStops(distanceKm, stopTime1, stopTime2);
-      if (speedKph <= maxSpeedKph) {
+      double distanceKm = maybeDistanceKm.get();
+
+      // We can't calculate the speed if we're missing a departure time or
+      // arrival time.
+      if (!start.hasDepartureTime() || !end.hasArrivalTime()) {
         continue;
       }
-      final Optional<GtfsStop> stop1 = stopTable.byStopId(stopTime1.stopId());
-      final Optional<GtfsStop> stop2 = stopTable.byStopId(stopTime2.stopId());
-      if (stop1.isEmpty() || stop2.isEmpty()) {
-        // Broken reference is reported in another rule.
-        return;
+      double speedKph = getSpeedKphBetweenStops(distanceKm, start, end);
+
+      if (speedKph > maxSpeedKph) {
+        final Optional<GtfsStop> stop1 = stopTable.byStopId(start.stopId());
+        final Optional<GtfsStop> stop2 = stopTable.byStopId(end.stopId());
+        // This should always evaluate to true since we check whether both stops exist
+        // in `getDistanceAndSpeed`; this is just here as a precaution.
+        if (stop1.isPresent() && stop2.isPresent()) {
+          // Issue one notice for each trip.
+          for (TripAndStopTimes trip : trips) {
+            noticeContainer.addValidationNotice(
+                new FastTravelBetweenConsecutiveStopsNotice(
+                    trip.getTrip(), start, stop1.get(), end, stop2.get(), speedKph, distanceKm));
+          }
+        }
       }
-      // Issue one notice per each trip.
-      for (TripAndStopTimes trip : trips) {
-        noticeContainer.addValidationNotice(
-            new FastTravelBetweenConsecutiveStopsNotice(
-                trip.getTrip(),
-                trip.getStopTimes().get(i),
-                stop1.get(),
-                trip.getStopTimes().get(i + 1),
-                stop2.get(),
-                speedKph,
-                distanceKm));
-      }
+
+      start = end;
     }
   }
 
@@ -340,21 +366,68 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
    *
    * <p>The speed threshold depends on route type:
    *
-   * <pre>
-   * | Route type | Description | Threshold, km/h |
-   * |------------|-------------|-----------------|
-   * | 0          | Light rail  | 100             |
-   * | 1          | Subway      | 150             |
-   * | 2          | Rail        | 500             |
-   * | 3          | Bus         | 150             |
-   * | 4          | Ferry       |  80             |
-   * | 5          | Cable tram  |  30             |
-   * | 6          | Aerial lift |  50             |
-   * | 7          | Funicular   |  50             |
-   * | 11         | Trolleybus  | 150             |
-   * | 12         | Monorail    | 150             |
-   * | -          | Unknown     | 200             |
-   * </pre>
+   * <table style="width: auto; table-layout: auto;">
+   *      <tr>
+   *        <th>Route type</th>
+   *        <th>Description</th>
+   *        <th>Threshold, km/h</th>
+   *      </tr>
+   *      <tr>
+   *        <td>0</td>
+   *        <td>Light rail</td>
+   *        <td>100</td>
+   *      </tr>
+   *      <tr>
+   *        <td>1</td>
+   *        <td>Subway</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>2</td>
+   *        <td>Rail</td>
+   *        <td>500</td>
+   *      </tr>
+   *      <tr>
+   *        <td>3</td>
+   *        <td>Bus</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>4</td>
+   *        <td>Ferry</td>
+   *        <td>80</td>
+   *      </tr>
+   *      <tr>
+   *        <td>5</td>
+   *        <td>Cable tram</td>
+   *        <td>30</td>
+   *      </tr>
+   *      <tr>
+   *        <td>6</td>
+   *        <td>Aerial lift</td>
+   *        <td>50</td>
+   *      </tr>
+   *      <tr>
+   *        <td>7</td>
+   *        <td>Funicular</td>
+   *        <td>50</td>
+   *      </tr>
+   *      <tr>
+   *        <td>11</td>
+   *        <td>Trolleybus</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>12</td>
+   *        <td>Monorail</td>
+   *        <td>150</td>
+   *      </tr>
+   *      <tr>
+   *        <td>-</td>
+   *        <td>Unknown</td>
+   *        <td>200</td>
+   *      </tr>
+   *    </table>
    */
   @GtfsValidationNotice(
       severity = WARNING,
@@ -365,11 +438,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
           }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+      urls = {})
   static class FastTravelBetweenConsecutiveStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */
@@ -460,12 +529,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
             GtfsStopSchema.class,
             GtfsStopTimeSchema.class,
             GtfsTripSchema.class
-          }),
-      urls = {
-        @UrlRef(
-            label = "Original Python validator implementation",
-            url = "https://github.com/google/transitfeed")
-      })
+          }))
   static class FastTravelBetweenFarStopsNotice extends ValidationNotice {
 
     /** The row number of the problematic trip. */
