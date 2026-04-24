@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import java.util.Comparator;
 import java.util.List;
@@ -95,7 +95,7 @@ public class TripHeadsignValidator extends FileValidator {
    * is heading to a stop it has already passed.
    */
   @GtfsValidationNotice(
-      severity = WARNING,
+      severity = INFO,
       files = @FileRefs({GtfsTripSchema.class, GtfsStopTimeSchema.class, GtfsStopSchema.class}))
   static class TripHeadsignMatchesIntermediateStopNotice extends ValidationNotice {
 
