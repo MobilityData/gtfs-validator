@@ -6,6 +6,7 @@ on:
 
 jobs:
   fetch-and-create-pr:
+    if: github.repository_owner == 'MobilityData'
     runs-on: ubuntu-latest
 
     steps:
