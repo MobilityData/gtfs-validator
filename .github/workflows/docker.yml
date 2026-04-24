@@ -2,10 +2,9 @@ name: Docker image
 
 on:
   push:
-    branches: [ master, feat/multiple-docker-platforms ]
+    branches: [ master ]
   release:
     types: [ prereleased, released ]
-  workflow_dispatch:
 
 env:
   java_version: '17'
