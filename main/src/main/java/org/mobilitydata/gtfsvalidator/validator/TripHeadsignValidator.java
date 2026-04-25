@@ -100,7 +100,7 @@ public class TripHeadsignValidator extends FileValidator {
   static class TripHeadsignMatchesIntermediateStopNotice extends ValidationNotice {
 
     /** The row number of the faulty record in `trips.txt`. */
-    private final int csvRowNumber;
+    private final long csvRowNumber;
 
     /** The id of the trip with the problematic headsign. */
     private final String tripId;
@@ -118,7 +118,7 @@ public class TripHeadsignValidator extends FileValidator {
     private final String stopId2;
 
     TripHeadsignMatchesIntermediateStopNotice(
-        int csvRowNumber,
+        long csvRowNumber,
         String tripId,
         String tripHeadsign,
         String stopId1,

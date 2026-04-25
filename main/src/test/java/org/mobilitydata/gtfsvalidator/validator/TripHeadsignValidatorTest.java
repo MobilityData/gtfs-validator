@@ -74,6 +74,44 @@ public class TripHeadsignValidatorTest {
   }
 
   @Test
+  public void multipleIntermediateStopsMatchingHeadsignShouldGenerateOneNoticeEach() {
+    // Both stop_a and stop_b share the same name as the headsign.  The validator checks every
+    // intermediate stop independently, so a separate notice should fire for each match.
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createTrip(1, "r1", "s1", "t0", "City Hall")),
+                ImmutableList.of(
+                    createStopTime(0, "t0", "stop_a", 1),
+                    createStopTime(0, "t0", "stop_b", 2),
+                    createStopTime(0, "t0", "stop_c", 3)),
+                ImmutableList.of(
+                    createStop("stop_a", "City Hall"),
+                    createStop("stop_b", "City Hall"),
+                    createStop("stop_c", "Central Station"))))
+        .containsExactly(
+            new TripHeadsignMatchesIntermediateStopNotice(
+                1, "t0", "City Hall", "stop_a", 1, "stop_c"),
+            new TripHeadsignMatchesIntermediateStopNotice(
+                1, "t0", "City Hall", "stop_b", 2, "stop_c"));
+  }
+
+  @Test
+  public void intermediateStopAbsentFromStopsTableShouldNotGenerateNotice() {
+    // When a stop_id referenced in stop_times.txt does not exist in stops.txt the validator's
+    // stopTable.byStopId() returns empty.  The broken foreign key is reported by a separate rule;
+    // this validator should simply skip the missing stop rather than crash or emit a false notice.
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createTrip(1, "r1", "s1", "t0", "Ghost Stop")),
+                ImmutableList.of(
+                    createStopTime(0, "t0", "stop_ghost", 1), createStopTime(0, "t0", "stop_b", 2)),
+                ImmutableList.of(
+                    // stop_ghost is intentionally absent from the stops table
+                    createStop("stop_b", "Central Station"))))
+        .isEmpty();
+  }
+
+  @Test
   public void headsignMatchingFirstStopOfMultiStopTripShouldGenerateNotice() {
     assertThat(
             generateNotices(
