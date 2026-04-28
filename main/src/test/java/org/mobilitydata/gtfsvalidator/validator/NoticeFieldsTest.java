@@ -231,6 +231,7 @@ public class NoticeFieldsTest {
             "transferCount",
             "tripCsvRowNumber",
             "tripFieldName",
+            "tripHeadsign",
             "tripId",
             "tripIdA",
             "tripIdB",
