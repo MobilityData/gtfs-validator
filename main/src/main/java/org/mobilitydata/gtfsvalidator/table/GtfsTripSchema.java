@@ -60,4 +60,8 @@ public interface GtfsTripSchema extends GtfsEntity {
   GtfsBikesAllowed bikesAllowed();
 
   GtfsCarsAllowed carsAllowed();
+
+  double safeDurationFactor();
+
+  double safeDurationOffset();
 }
