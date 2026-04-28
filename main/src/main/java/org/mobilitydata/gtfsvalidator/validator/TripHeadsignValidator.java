@@ -58,17 +58,12 @@ public class TripHeadsignValidator extends FileValidator {
         continue; // Not enough stops to have an intermediate stop
       }
 
-      // Sort by stop_sequence to find the true last stop
-      List<GtfsStopTime> sorted =
-          stopTimes.stream()
-              .sorted(Comparator.comparingInt(GtfsStopTime::stopSequence))
-              .collect(Collectors.toList());
-
-      String lastStopId = sorted.get(sorted.size() - 1).stopId();
+      // stopTimes are already sorted
+      String lastStopId = stopTimes.get(stopTimes.size() - 1).stopId();
 
       // Check all stops except the last
-      for (int i = 0; i < sorted.size() - 1; i++) {
-        GtfsStopTime intermediateStopTime = sorted.get(i);
+      for (int i = 0; i < stopTimes.size() - 1; i++) {
+        GtfsStopTime intermediateStopTime = stopTimes.get(i);
         String stopId = intermediateStopTime.stopId();
         Optional<GtfsStop> stop = stopTable.byStopId(stopId);
         if (stop.isPresent()
