@@ -2,10 +2,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
