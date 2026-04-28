@@ -27,6 +27,8 @@
       ]
     }
   ],
+  "newInfoNotices": [],
+  "droppedInfoNotices": [],
   "corruptedSources": {
     "sourceIdCount": 2,
     "corruptedSourcesCount": 0,
