@@ -129,6 +129,20 @@ public class TripHeadsignValidatorTest {
                 1, "t0", "Airport", "stop_a", 1, "stop_c"));
   }
 
+  @Test
+  public void circularTripsShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createTrip(1, "r1", "s1", "t0", "City Hall")),
+                ImmutableList.of(
+                    createStopTime(0, "t0", "stop_a", 1),
+                    createStopTime(0, "t0", "stop_b", 2),
+                    createStopTime(0, "t0", "stop_a", 3)),
+                ImmutableList.of(
+                    createStop("stop_a", "City Hall"), createStop("stop_b", "Airport"))))
+        .isEmpty();
+  }
+
   private static List<ValidationNotice> generateNotices(
       List<GtfsTrip> trips, List<GtfsStopTime> stopTimes, List<GtfsStop> stops) {
     NoticeContainer noticeContainer = new NoticeContainer();

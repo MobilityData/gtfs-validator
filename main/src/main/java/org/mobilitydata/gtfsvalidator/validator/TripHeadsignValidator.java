@@ -58,6 +58,10 @@ public class TripHeadsignValidator extends FileValidator {
 
       // stopTimes are already sorted
       String lastStopId = stopTimes.get(stopTimes.size() - 1).stopId();
+      //      Check if this is a circular trip
+      if (lastStopId == stopTimes.get(0).stopId()) {
+        return;
+      }
 
       // Check all stops except the last
       for (int i = 0; i < stopTimes.size() - 1; i++) {
