@@ -16,6 +16,8 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
+import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.outputcomparator.cli.ValidationReportComparator.Result;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
@@ -48,13 +50,23 @@ public class ValidationReportComparatorTest {
                 ImmutableList.of(
                     new MissingRequiredFileNotice("a.txt"), new MissingRequiredFileNotice("c.txt")),
                 ImmutableList.of(new MissingRecommendedFileNotice("b.txt"))),
+            // Drops an info notice (unknown_file) and adds a different info notice
+            // (unknown_column).
+            constructBeforeAndAfterReports(
+                "feed-id-d",
+                ImmutableList.of(new UnknownFileNotice("old.txt")),
+                ImmutableList.of(new UnknownColumnNotice("f.txt", "col", 1))),
             // A "corrupted" source directory with no feeds.
             new File(reportsDir.getRoot(), "feed-id-c"));
 
     // Note that we don't include feed-id-c here.
     SourceUrlContainer sourceUrlContainer =
         new SourceUrlContainer(
-            ImmutableMap.of("feed-id-a", "url-a", "feed-id-b", "url-b", "feed-id-c", "url-c"));
+            ImmutableMap.of(
+                "feed-id-a", "url-a",
+                "feed-id-b", "url-b",
+                "feed-id-c", "url-c",
+                "feed-id-d", "url-d"));
 
     ValidationReportComparator comparator = new ValidationReportComparator();
     Result result = comparator.compareValidationRuns(args, reportDirs, sourceUrlContainer);
@@ -77,9 +89,17 @@ public class ValidationReportComparatorTest {
         .containsExactly(
             new ChangedNotice("missing_recommended_file")
                 .addAffectedSource(AffectedSource.create("feed-id-a", "url-a", 1)));
+    assertThat(report.newInfoNotices())
+        .containsExactly(
+            new ChangedNotice("unknown_column")
+                .addAffectedSource(AffectedSource.create("feed-id-d", "url-d", 1)));
+    assertThat(report.droppedInfoNotices())
+        .containsExactly(
+            new ChangedNotice("unknown_file")
+                .addAffectedSource(AffectedSource.create("feed-id-d", "url-d", 1)));
 
     CorruptedSources corruptedSources = report.corruptedSources();
-    assertThat(corruptedSources.sourceIdCount()).isEqualTo(3);
+    assertThat(corruptedSources.sourceIdCount()).isEqualTo(4);
     assertThat(corruptedSources.corruptedSourcesCount()).isEqualTo(1);
     assertThat(corruptedSources.corruptedSources()).containsExactly("feed-id-c");
   }
@@ -129,6 +149,14 @@ public class ValidationReportComparatorTest {
                 + "</details>\n"
                 + "<details>\n"
                 + "<summary><strong>Dropped Warnings</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>\n"
+                + "<details>\n"
+                + "<summary><strong>New Info Notices</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
+                + "<p>No changes were detected due to the code change.</p>\n"
+                + "</details>\n"
+                + "<details>\n"
+                + "<summary><strong>Dropped Info Notices</strong> (0 out of 2 datasets, ~0%) ✅</summary>\n"
                 + "<p>No changes were detected due to the code change.</p>\n"
                 + "</details>\n"
                 + "\n"
@@ -326,6 +354,62 @@ public class ValidationReportComparatorTest {
     Result result = comparator.compareValidationRuns(args, reportDirs, constructSourceUrls());
 
     // 1 dropped warning notice is enough to invalidate one dataset, for an invalid dataset
+    // threshold of 50%.
+    assertThat(result.failure()).isTrue();
+  }
+
+  @Test
+  public void addedInfoNotice_aboveThresholds_failure() throws Exception {
+    Arguments args = defaultArgs();
+    args.setNewErrorThreshold(1);
+    args.setPercentInvalidDatasetsThreshold(25);
+
+    List<File> reportDirs =
+        ImmutableList.of(
+            constructBeforeAndAfterReports(
+                "feed-id-a",
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt")),
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt"))),
+            // We have a single additional info notice in feed b.
+            constructBeforeAndAfterReports(
+                "feed-id-b", ImmutableList.of(), ImmutableList.of(new UnknownFileNotice("x.txt"))));
+
+    ValidationReportComparator comparator = new ValidationReportComparator();
+    Result result = comparator.compareValidationRuns(args, reportDirs, constructSourceUrls());
+
+    // 1 additional info notice is enough to invalidate one dataset, for an invalid dataset
+    // threshold of 50%.
+    assertThat(result.failure()).isTrue();
+
+    assertThat(result.report().newInfoNotices())
+        .containsExactly(
+            new ChangedNotice("unknown_file")
+                .addAffectedSource(AffectedSource.create("feed-id-b", "url", 1)));
+    assertThat(result.report().droppedInfoNotices()).isEmpty();
+    assertThat(result.report().newErrors()).isEmpty();
+    assertThat(result.report().newWarnings()).isEmpty();
+  }
+
+  @Test
+  public void droppedInfoNotice_aboveThresholds_failure() throws Exception {
+    Arguments args = defaultArgs();
+    args.setNewErrorThreshold(1);
+    args.setPercentInvalidDatasetsThreshold(25);
+
+    List<File> reportDirs =
+        ImmutableList.of(
+            constructBeforeAndAfterReports(
+                "feed-id-a",
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt")),
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt"))),
+            // We have a single dropped info notice in feed b.
+            constructBeforeAndAfterReports(
+                "feed-id-b", ImmutableList.of(new UnknownFileNotice("x.txt")), ImmutableList.of()));
+
+    ValidationReportComparator comparator = new ValidationReportComparator();
+    Result result = comparator.compareValidationRuns(args, reportDirs, constructSourceUrls());
+
+    // 1 dropped info notice is enough to invalidate one dataset, for an invalid dataset
     // threshold of 50%.
     assertThat(result.failure()).isTrue();
   }
