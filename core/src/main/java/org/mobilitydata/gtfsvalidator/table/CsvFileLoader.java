@@ -117,7 +117,6 @@ public final class CsvFileLoader extends TableLoader {
         }
         if (rowNotices.hasValidationErrors()) {
           logger.atWarning().log("Invalid row in %s: %s", gtfsFilename, row);
-          // hasUnparsableRows = true;
         } else if (validRowLength) {
           GtfsEntity entity = builder.build();
           ValidatorUtil.invokeSingleEntityValidators(
