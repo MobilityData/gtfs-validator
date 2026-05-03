@@ -21,6 +21,8 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
@@ -60,7 +62,12 @@ public class CsvFile implements Iterable<CsvRow> {
 
     // Only UTF-8 is supported according to GTFS reference. We may add optional support for other
     // encodings later.
-    final BOMInputStream bomInputStream = new BOMInputStream(inputStream, ByteOrderMark.UTF_8);
+    final BOMInputStream bomInputStream;
+    try {
+      bomInputStream = new BOMInputStream(inputStream, ByteOrderMark.UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
     final CharsetDecoder decoder =
         StandardCharsets.UTF_8
             .newDecoder()
