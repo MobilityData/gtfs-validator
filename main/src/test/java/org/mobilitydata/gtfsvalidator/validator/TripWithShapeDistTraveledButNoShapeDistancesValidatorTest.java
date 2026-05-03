@@ -98,49 +98,36 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
             ImmutableList.of(
-                createStopTime(1, "trip1", 1, 0.0),
-                createStopTime(2, "trip1", 2, 100.0)),
-            ImmutableList.of(
-                createShape(1, "shape1", 1, 0.0),
-                createShape(2, "shape1", 2, 100.0)));
+                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
+            ImmutableList.of(createShape(1, "shape1", 1, 0.0), createShape(2, "shape1", 2, 100.0)));
 
     assertThat(notices).isEmpty();
   }
 
-  /**
-   * Stop times have shape_dist_traveled but the shape has none — a notice should be generated.
-   */
+  /** Stop times have shape_dist_traveled but the shape has none — a notice should be generated. */
   @Test
   public void stopTimesHaveDistTraveledButShapeDoesNot_generatesNotice() {
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
             ImmutableList.of(
-                createStopTime(1, "trip1", 1, 0.0),
-                createStopTime(2, "trip1", 2, 100.0)),
-            ImmutableList.of(
-                createShape(1, "shape1", 1, null),
-                createShape(2, "shape1", 2, null)));
+                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
+            ImmutableList.of(createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, null)));
 
     assertThat(notices).hasSize(1);
     assertThat(notices.get(0))
         .isInstanceOf(TripWithShapeDistTraveledButNoShapeDistancesNotice.class);
   }
 
-  /**
-   * Stop times have no shape_dist_traveled and neither does the shape — no notice expected.
-   */
+  /** Stop times have no shape_dist_traveled and neither does the shape — no notice expected. */
   @Test
   public void neitherStopTimesNorShapeHaveDistTraveled_noNotice() {
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
             ImmutableList.of(
-                createStopTime(1, "trip1", 1, null),
-                createStopTime(2, "trip1", 2, null)),
-            ImmutableList.of(
-                createShape(1, "shape1", 1, null),
-                createShape(2, "shape1", 2, null)));
+                createStopTime(1, "trip1", 1, null), createStopTime(2, "trip1", 2, null)),
+            ImmutableList.of(createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, null)));
 
     assertThat(notices).isEmpty();
   }
@@ -155,8 +142,7 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", null)),
             ImmutableList.of(
-                createStopTime(1, "trip1", 1, 0.0),
-                createStopTime(2, "trip1", 2, 100.0)),
+                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
             ImmutableList.of());
 
     assertThat(notices).isEmpty();
@@ -172,25 +158,19 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
             ImmutableList.of(
-                createStopTime(1, "trip1", 1, 0.0),
-                createStopTime(2, "trip1", 2, 100.0)),
+                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
             ImmutableList.of(
-                createShape(1, "shape1", 1, null),
-                createShape(2, "shape1", 2, 100.0)));
+                createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, 100.0)));
 
     assertThat(notices).isEmpty();
   }
 
-  /**
-   * Multiple trips: one has the mismatch, the other does not — only one notice expected.
-   */
+  /** Multiple trips: one has the mismatch, the other does not — only one notice expected. */
   @Test
   public void multipleTrips_onlyMismatchedTripGeneratesNotice() {
     List<ValidationNotice> notices =
         generateNotices(
-            ImmutableList.of(
-                createTrip(1, "trip1", "shape1"),
-                createTrip(2, "trip2", "shape2")),
+            ImmutableList.of(createTrip(1, "trip1", "shape1"), createTrip(2, "trip2", "shape2")),
             ImmutableList.of(
                 // trip1 stop times have dist, shape1 does not → notice
                 createStopTime(1, "trip1", 1, 0.0),

@@ -64,12 +64,15 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
 
   @Override
   public boolean shouldCallValidate() {
-    // Only run when stop_times.txt actually contains a shape_dist_traveled column.
-    return stopTimeTable.hasColumn(GtfsStopTime.SHAPE_DIST_TRAVELED_FIELD_NAME);
+    return stopTimeTable != null
+        && stopTimeTable.hasColumn(GtfsStopTime.SHAPE_DIST_TRAVELED_FIELD_NAME);
   }
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    if (tripTable == null || stopTimeTable == null || shapeTable == null) {
+      return;
+    }
     for (List<GtfsStopTime> stopTimesForTrip :
         Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
 
@@ -94,8 +97,7 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
         // Missing shape is reported by a foreign-key rule; skip here.
         continue;
       }
-      boolean shapeHasDistTraveled =
-          shapePoints.stream().anyMatch(GtfsShape::hasShapeDistTraveled);
+      boolean shapeHasDistTraveled = shapePoints.stream().anyMatch(GtfsShape::hasShapeDistTraveled);
       if (!shapeHasDistTraveled) {
         // Find the first stop time that carries shape_dist_traveled for the notice context.
         GtfsStopTime firstStopTimeWithDist =
@@ -106,10 +108,7 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
 
         noticeContainer.addValidationNotice(
             new TripWithShapeDistTraveledButNoShapeDistancesNotice(
-                trip.csvRowNumber(),
-                tripId,
-                trip.shapeId(),
-                firstStopTimeWithDist.csvRowNumber()));
+                trip.csvRowNumber(), tripId, trip.shapeId(), firstStopTimeWithDist.csvRowNumber()));
       }
     }
   }
