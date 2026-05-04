@@ -21,7 +21,7 @@ public class MissingShapesFileValidatorTest {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
       if (rows == -1) {
-        break;
+        return null;
       }
       shapes.add(new GtfsShape.Builder().setCsvRowNumber(i + 1).setShapeId("s" + i).build());
     }
