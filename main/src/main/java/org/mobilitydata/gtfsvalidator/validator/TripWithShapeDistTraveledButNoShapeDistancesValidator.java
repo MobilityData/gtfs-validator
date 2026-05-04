@@ -15,7 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import com.google.common.collect.Multimaps;
 import java.util.List;
@@ -135,7 +135,7 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
    * the notice; this is a representative row rather than an exhaustive list.
    */
   @GtfsValidationNotice(
-      severity = WARNING,
+      severity = INFO,
       files =
           @FileRefs({
             GtfsTripSchema.class,
