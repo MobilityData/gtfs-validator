@@ -83,7 +83,7 @@ public class MissingShapesFileValidatorTest {
   public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            createShapeTable(null),
+            createShapeTable(0),
             createStopTimesTable(1, null, null),
             createLocationGroupsTable(0, null, null));
     long missingRecommendedFileNoticesCount =
