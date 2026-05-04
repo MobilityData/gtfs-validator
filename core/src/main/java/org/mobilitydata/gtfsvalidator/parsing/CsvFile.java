@@ -16,13 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.parsing;
 
+import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
@@ -65,8 +64,8 @@ public class CsvFile implements Iterable<CsvRow> {
     final BOMInputStream bomInputStream;
     try {
       bomInputStream = new BOMInputStream(inputStream, ByteOrderMark.UTF_8);
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
+    } catch (Exception e) {
+      throw new TextParsingException(null, e.getMessage(), e);
     }
     final CharsetDecoder decoder =
         StandardCharsets.UTF_8
