@@ -20,6 +20,9 @@ public class MissingShapesFileValidatorTest {
   private static List<GtfsShape> createShapeTable(int rows) {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
+      if (rows == -1) {
+        break;
+      }
       shapes.add(new GtfsShape.Builder().setCsvRowNumber(i + 1).setShapeId("s" + i).build());
     }
     return shapes;
