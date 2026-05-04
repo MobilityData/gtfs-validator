@@ -1,20 +1,13 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
-import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
-
 import javax.inject.Inject;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsTripSchema;
 
 /**
  * Validates that the feed has either a `shapes.txt` file, or uses zone-based DRT or fixed-stops
@@ -41,7 +34,6 @@ public class MissingShapesFileValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     Boolean missingShapes = shapeTable.isMissingFile();
-
     if (!missingShapes) {
       return;
     }
@@ -49,7 +41,7 @@ public class MissingShapesFileValidator extends FileValidator {
     Boolean hasLocationId = stopTimeTable.hasColumn("location_id");
     Boolean hasLocationGroupId = stopTimeTable.hasColumn("location_group_id");
     Boolean hasLocationGroupsRecord =
-          !locationGroupsTable.isMissingFile() && locationGroupsTable.entityCount() > 0;
+        !locationGroupsTable.isMissingFile() && locationGroupsTable.entityCount() > 0;
     // Detect DRT usage from the data, not just from column presence.
     boolean hasLocationIdInData = false;
     boolean hasLocationGroupIdInData = false;
@@ -69,10 +61,9 @@ public class MissingShapesFileValidator extends FileValidator {
     // and also not have a record in location_groups.txt and not have a trip in stop_times.txt that
     // references location_group_id (required for Fixed-Stop DRT)?
     if (missingShapes && !hasLocationId && !hasLocationGroupsRecord && !hasLocationGroupId) {
-        noticeContainer.addValidationNotice(
-            new MissingRecommendedFileNotice("shapes.txt"));
-        // This is a feed-level warning; emit it at most once.
-        return;
+      noticeContainer.addValidationNotice(new MissingRecommendedFileNotice("shapes.txt"));
+      // This is a feed-level warning; emit it at most once.
+      return;
     }
   }
 }

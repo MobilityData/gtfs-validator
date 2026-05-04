@@ -14,7 +14,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 public class MissingShapesFileValidatorTest {
 
@@ -65,10 +64,7 @@ public class MissingShapesFileValidatorTest {
             createStopTimesTable(1, "a", null),
             createLocationGroupsTable(1, "b", "testgroup"));
     boolean found =
-        notices.stream()
-            .anyMatch(
-                notice ->
-                    notice instanceof MissingRecommendedFileNotice);
+        notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
   }
 
@@ -81,10 +77,7 @@ public class MissingShapesFileValidatorTest {
             createStopTimesTable(1, null, "c"),
             createLocationGroupsTable(1, "d", "t3stgroup"));
     boolean found =
-        notices.stream()
-            .anyMatch(
-                notice ->
-                    notice instanceof MissingRecommendedFileNotice);
+        notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
   }
 
@@ -92,14 +85,9 @@ public class MissingShapesFileValidatorTest {
   public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            createStopTimesTable(1, null, null),
-            createLocationGroupsTable(0, null, null));
+            createStopTimesTable(1, null, null), createLocationGroupsTable(0, null, null));
     long missingRecommendedFileNoticesCount =
-        notices.stream()
-            .filter(
-                notice ->
-                    notice instanceof MissingRecommendedFileNotice)
-            .count();
+        notices.stream().filter(notice -> notice instanceof MissingRecommendedFileNotice).count();
     assertThat(missingRecommendedFileNoticesCount).isAtLeast(1);
   }
 
