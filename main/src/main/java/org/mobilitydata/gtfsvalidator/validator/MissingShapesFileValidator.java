@@ -72,7 +72,7 @@ public class MissingShapesFileValidator extends FileValidator {
         noticeContainer.addValidationNotice(
             new MissingRecommendedFileNotice("shapes.txt"));
         // This is a feed-level warning; emit it at most once.
-        break;
+        return;
     }
   }
 }
