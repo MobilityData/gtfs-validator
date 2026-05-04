@@ -41,6 +41,11 @@ public class MissingShapesFileValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     Boolean missingShapes = shapeTable.isMissingFile();
+
+    if (!missingShapes) {
+      return;
+    }
+
     Boolean hasLocationId = stopTimeTable.hasColumn("location_id");
     Boolean hasLocationGroupId = stopTimeTable.hasColumn("location_group_id");
     Boolean hasLocationGroupsRecord =
@@ -64,12 +69,10 @@ public class MissingShapesFileValidator extends FileValidator {
     // and also not have a record in location_groups.txt and not have a trip in stop_times.txt that
     // references location_group_id (required for Fixed-Stop DRT)?
     if (missingShapes && !hasLocationId && !hasLocationGroupsRecord && !hasLocationGroupId) {
-      for (GtfsStopTime stopTime : stopTimeTable.getEntities()) {
         noticeContainer.addValidationNotice(
             new MissingRecommendedFileNotice("shapes.txt"));
         // This is a feed-level warning; emit it at most once.
         break;
-      }
     }
   }
 }
