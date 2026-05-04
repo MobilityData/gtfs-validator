@@ -60,7 +60,6 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
-            GtfsShapeTableContainer.forStatus(null),
             createStopTimesTable(1, "a", null),
             createLocationGroupsTable(1, "b", "testgroup"));
     boolean found =
@@ -73,7 +72,6 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
-            GtfsShapeTableContainer.forStatus(null),
             createStopTimesTable(1, null, "c"),
             createLocationGroupsTable(1, "d", "t3stgroup"));
     boolean found =
@@ -85,7 +83,9 @@ public class MissingShapesFileValidatorTest {
   public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            createStopTimesTable(1, null, null), createLocationGroupsTable(0, null, null));
+            createShapeTable(null),
+            createStopTimesTable(1, null, null),
+            createLocationGroupsTable(0, null, null));
     long missingRecommendedFileNoticesCount =
         notices.stream().filter(notice -> notice instanceof MissingRecommendedFileNotice).count();
     assertThat(missingRecommendedFileNoticesCount).isAtLeast(1);
@@ -93,7 +93,6 @@ public class MissingShapesFileValidatorTest {
 
   private static List<ValidationNotice> generateNotices(
       List<GtfsShape> shapes,
-      GtfsShapeTableContainer shapeContainer,
       List<GtfsStopTime> stopTimes,
       List<GtfsLocationGroups> locationGroups) {
     NoticeContainer noticeContainer = new NoticeContainer();
