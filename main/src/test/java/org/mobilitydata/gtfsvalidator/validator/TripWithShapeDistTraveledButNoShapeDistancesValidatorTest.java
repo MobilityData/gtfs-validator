@@ -35,6 +35,10 @@ import org.mobilitydata.gtfsvalidator.validator.TripWithShapeDistTraveledButNoSh
 @RunWith(JUnit4.class)
 public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
 
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
   private static GtfsTrip createTrip(int csvRowNumber, String tripId, String shapeId) {
     GtfsTrip.Builder builder =
         new GtfsTrip.Builder()
@@ -88,12 +92,16 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
     return noticeContainer.getValidationNotices();
   }
 
+  // ---------------------------------------------------------------------------
+  // Tests — happy paths (no notice expected)
+  // ---------------------------------------------------------------------------
+
   /**
-   * Stop times have shape_dist_traveled and the shape also has shape_dist_traveled — no notice
-   * expected.
+   * All stop times and all shape points carry shape_dist_traveled — perfectly consistent data, no
+   * notice expected.
    */
   @Test
-  public void stopTimesAndShapeBothHaveDistTraveled_noNotice() {
+  public void stopTimesAndShapeAllHaveDistTraveled_noNotice() {
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
@@ -104,22 +112,10 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
     assertThat(notices).isEmpty();
   }
 
-  /** Stop times have shape_dist_traveled but the shape has none — a notice should be generated. */
-  @Test
-  public void stopTimesHaveDistTraveledButShapeDoesNot_generatesNotice() {
-    List<ValidationNotice> notices =
-        generateNotices(
-            ImmutableList.of(createTrip(1, "trip1", "shape1")),
-            ImmutableList.of(
-                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
-            ImmutableList.of(createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, null)));
-
-    assertThat(notices).hasSize(1);
-    assertThat(notices.get(0))
-        .isInstanceOf(TripWithShapeDistTraveledButNoShapeDistancesNotice.class);
-  }
-
-  /** Stop times have no shape_dist_traveled and neither does the shape — no notice expected. */
+  /**
+   * No stop times carry shape_dist_traveled and neither do the shape points — nothing to validate,
+   * no notice expected.
+   */
   @Test
   public void neitherStopTimesNorShapeHaveDistTraveled_noNotice() {
     List<ValidationNotice> notices =
@@ -133,8 +129,8 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
   }
 
   /**
-   * Trip has no shape_id — even if stop times have shape_dist_traveled, no notice expected because
-   * there is no shape to compare against.
+   * The trip has no shape_id — even though stop times carry shape_dist_traveled there is no shape
+   * to compare against, so no notice is expected.
    */
   @Test
   public void tripWithNoShapeId_noNotice() {
@@ -148,44 +144,92 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidatorTest {
     assertThat(notices).isEmpty();
   }
 
+  // ---------------------------------------------------------------------------
+  // Tests — notice-generating cases
+  // ---------------------------------------------------------------------------
+
   /**
-   * Only some shape points have shape_dist_traveled — since at least one shape point has a value,
-   * no notice should be generated.
+   * Stop times have shape_dist_traveled but none of the shape points do — the shape distances are
+   * entirely absent, so a notice must be generated.
    */
   @Test
-  public void someShapePointsHaveDistTraveled_noNotice() {
+  public void stopTimesHaveDistTraveledButShapeHasNone_generatesNotice() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(createTrip(1, "trip1", "shape1")),
+            ImmutableList.of(
+                createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
+            ImmutableList.of(createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, null)));
+
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0))
+        .isInstanceOf(TripWithShapeDistTraveledButNoShapeDistancesNotice.class);
+  }
+
+  /**
+   * Stop times have shape_dist_traveled and the shape is only partially populated (some points have
+   * a value, others do not). Partial population is treated as non-compliant because consumers
+   * cannot reliably interpolate positions from an incomplete distance sequence.
+   */
+  @Test
+  public void stopTimesHaveDistTraveledAndShapeIsPartiallyPopulated_generatesNotice() {
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1")),
             ImmutableList.of(
                 createStopTime(1, "trip1", 1, 0.0), createStopTime(2, "trip1", 2, 100.0)),
             ImmutableList.of(
-                createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, 100.0)));
+                // One point has a value, one does not — partial population.
+                createShape(1, "shape1", 1, 0.0), createShape(2, "shape1", 2, null)));
 
-    assertThat(notices).isEmpty();
+    assertThat(notices).hasSize(1);
+    assertThat(notices.get(0))
+        .isInstanceOf(TripWithShapeDistTraveledButNoShapeDistancesNotice.class);
   }
 
-  /** Multiple trips: one has the mismatch, the other does not — only one notice expected. */
+  /**
+   * Multiple trips: trip1's shape has no distances (notice expected), trip2's shape has all
+   * distances (no notice). Exactly one notice should be generated.
+   */
   @Test
   public void multipleTrips_onlyMismatchedTripGeneratesNotice() {
     List<ValidationNotice> notices =
         generateNotices(
             ImmutableList.of(createTrip(1, "trip1", "shape1"), createTrip(2, "trip2", "shape2")),
             ImmutableList.of(
-                // trip1 stop times have dist, shape1 does not → notice
                 createStopTime(1, "trip1", 1, 0.0),
                 createStopTime(2, "trip1", 2, 50.0),
-                // trip2 stop times have dist, shape2 also does → no notice
                 createStopTime(3, "trip2", 1, 0.0),
                 createStopTime(4, "trip2", 2, 50.0)),
             ImmutableList.of(
+                // shape1: no distances → notice for trip1
                 createShape(1, "shape1", 1, null),
                 createShape(2, "shape1", 2, null),
+                // shape2: all distances present → no notice for trip2
                 createShape(3, "shape2", 1, 0.0),
                 createShape(4, "shape2", 2, 50.0)));
 
     assertThat(notices).hasSize(1);
-    assertThat(notices.get(0))
-        .isInstanceOf(TripWithShapeDistTraveledButNoShapeDistancesNotice.class);
+    TripWithShapeDistTraveledButNoShapeDistancesNotice notice =
+        (TripWithShapeDistTraveledButNoShapeDistancesNotice) notices.get(0);
+  }
+
+  /**
+   * The notice should reference the row number of the first stop time that carries a
+   * shape_dist_traveled value (row 2 here, since the first stop time has no distance).
+   */
+  @Test
+  public void noticeReferencesFirstStopTimeWithDist() {
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(createTrip(1, "trip1", "shape1")),
+            ImmutableList.of(
+                // Row 1: no distance; Row 2: has distance — notice should point to row 2.
+                createStopTime(1, "trip1", 1, null), createStopTime(2, "trip1", 2, 50.0)),
+            ImmutableList.of(createShape(1, "shape1", 1, null), createShape(2, "shape1", 2, null)));
+
+    assertThat(notices).hasSize(1);
+    TripWithShapeDistTraveledButNoShapeDistancesNotice notice =
+        (TripWithShapeDistTraveledButNoShapeDistancesNotice) notices.get(0);
   }
 }
