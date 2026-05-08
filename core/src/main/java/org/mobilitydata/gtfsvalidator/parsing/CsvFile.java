@@ -63,10 +63,11 @@ public class CsvFile implements Iterable<CsvRow> {
     // encodings later.
     final BOMInputStream bomInputStream;
     try {
-      bomInputStream = BOMInputStream.builder()
-          .setInputStream(inputStream)
-          .setByteOrderMarks(ByteOrderMark.UTF_8)
-          .get();
+      bomInputStream =
+          BOMInputStream.builder()
+              .setInputStream(inputStream)
+              .setByteOrderMarks(ByteOrderMark.UTF_8)
+              .get();
     } catch (Exception e) {
       throw new TextParsingException(null, e.getMessage(), e);
     }
