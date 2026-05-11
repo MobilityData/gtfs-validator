@@ -340,7 +340,7 @@ public class ValidationRunner {
 
     // Existing file-based output. At this point, stdoutOutput is false and
     // validate() guarantees that an output directory is configured.
-    Path outputDir = config.outputDirectory().get();
+    Path outputDir = config.outputDirectory();
     if (!Files.exists(outputDir)) {
       try {
         Files.createDirectories(outputDir);

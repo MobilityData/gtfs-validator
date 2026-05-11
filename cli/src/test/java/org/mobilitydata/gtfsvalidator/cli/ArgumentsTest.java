@@ -45,7 +45,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
@@ -72,7 +72,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
-    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("au"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
@@ -95,7 +95,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.validationReportFileName()).matches("report.json");
@@ -131,7 +131,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(new URI("http://host/gtfs.zip"));
-    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(4);
     assertThat(config.storageDirectory()).hasValue(Path.of("/tmp/storage"));
@@ -152,7 +152,7 @@ public class ArgumentsTest {
     new JCommander(underTest).parse(commandLineArgumentAsStringArray);
     ValidationRunnerConfig config = underTest.toConfig();
     assertThat(config.gtfsSource()).isEqualTo(toFileUri("/tmp/gtfs.zip"));
-    assertThat(config.outputDirectory()).hasValue(Path.of("/tmp/output"));
+    assertThat(config.outputDirectory()).isEqualTo(Path.of("/tmp/output"));
     assertThat(config.countryCode()).isEqualTo(CountryCode.forStringOrUnknown("ca"));
     assertThat(config.numThreads()).isEqualTo(1);
   }

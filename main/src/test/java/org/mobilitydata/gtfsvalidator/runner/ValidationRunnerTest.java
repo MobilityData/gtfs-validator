@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -19,7 +18,7 @@ public class ValidationRunnerTest {
   private static ValidationRunnerConfig buildConfig(String gtfsDirectory) {
     ValidationRunnerConfig.Builder config = ValidationRunnerConfig.builder();
     config.setGtfsSource(Path.of(gtfsDirectory).toUri());
-    config.setOutputDirectory(Optional.of(Path.of("")));
+    config.setOutputDirectory(Path.of(""));
     config.setNumThreads(1);
     config.setCountryCode(CountryCode.forStringOrUnknown(""));
     config.setStdoutOutput(false);
@@ -52,7 +51,7 @@ public class ValidationRunnerTest {
     ValidationRunnerConfig config =
         ValidationRunnerConfig.builder()
             .setGtfsSource(Path.of("/tmp/nonexistent.zip").toUri())
-            .setOutputDirectory(Optional.of(Path.of("out")))
+            .setOutputDirectory(Path.of("out"))
             .build();
 
     assertFalse(config.stdoutOutput());

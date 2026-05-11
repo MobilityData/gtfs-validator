@@ -18,9 +18,9 @@ class ValidationDisplay {
       handleError();
     }
 
-    Path reportPath = config.htmlReportPath().orElse(null);
+    Path reportPath = config.htmlReportPath();
     if (status == ValidationRunner.Status.SYSTEM_ERRORS) {
-      reportPath = config.systemErrorsReportPath().orElse(null);
+      reportPath = config.systemErrorsReportPath();
     }
 
     // Handle missing report path explicitly instead of letting null reach browse().
