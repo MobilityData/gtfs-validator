@@ -22,12 +22,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
+import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
 
@@ -36,6 +41,8 @@ import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
  * directory.
  */
 public abstract class GtfsInput implements Closeable {
+  public static final String invalidCompressionMessage =
+      "A GTFS ZIP file must be compressed in a valid format in order for the validator to open it.";
   public static final String invalidInputMessage =
       "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
 
@@ -46,9 +53,10 @@ public abstract class GtfsInput implements Closeable {
    * @param noticeContainer
    * @return the {@code GtfsInput} created after processing the GTFS archive
    * @throws IOException any IO exception that occurred during loading
+   * @throws ZipException if file has improper or nonexistent compression
    */
   public static GtfsInput createFromPath(Path path, NoticeContainer noticeContainer)
-      throws IOException {
+      throws IOException, ZipException {
     if (!Files.exists(path)) {
       throw new FileNotFoundException(path.toString());
     }
@@ -65,6 +73,15 @@ public abstract class GtfsInput implements Closeable {
 
     if (hasSubfolderWithGtfsFile(path)) {
       noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
+    }
+
+    Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+    while (entries.hasMoreElements()) {
+      ZipArchiveEntry entry = entries.nextElement();
+      // If the file was created using STORE (method 0), we can't properly extract it.
+      if (entry.getMethod() == 0) {
+        throw new ZipException(GtfsInput.invalidCompressionMessage);
+      }
     }
     return new GtfsZipFileInput(zipFile, fileName);
   }
@@ -139,18 +156,30 @@ public abstract class GtfsInput implements Closeable {
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
+   * @throws ZipException if file has improper or nonexistent compression
    */
   public static GtfsInput createFromUrlInMemory(
       URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
-      throws IOException, URISyntaxException {
+      throws IOException, URISyntaxException, ZipException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
-      File zipFile = new File(sourceUrl.toString());
-      String fileName = zipFile.getName().replace(".zip", "");
+      ZipFile zipFileInput = new ZipFile(sourceUrl.toString().replace(".zip", ""));
+      String fileName = sourceUrl.toString().replace(".zip", "");
       if (containsGtfsFileInSubfolder(
           new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
         noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
       }
+
+      Enumeration<ZipArchiveEntry> entries = zipFileInput.getEntries();
+      while (entries.hasMoreElements()) {
+        ZipArchiveEntry entry = entries.nextElement();
+        // If the file was created using STORE (method 0), we can't properly extract it.
+        if (entry.getMethod() == 0) {
+        noticeContainer.addSystemError(new IOError(new ZipException(GtfsInput.invalidCompressionMessage)));
+        }
+      }
+      zipFileInput.close();
+
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
     }
