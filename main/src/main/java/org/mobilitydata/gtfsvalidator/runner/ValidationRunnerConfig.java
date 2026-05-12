@@ -29,8 +29,7 @@ public abstract class ValidationRunnerConfig {
   public abstract URI gtfsSource();
 
   // The directory where all validation reports will be written.
-  // Optional when using stdout mode.
-  public abstract Optional<Path> outputDirectory();
+  public abstract Path outputDirectory();
 
   // An optional storage directory to be used when downloading a GTFS feed
   // from an external URL.
@@ -40,14 +39,14 @@ public abstract class ValidationRunnerConfig {
 
   public abstract String htmlReportFileName();
 
-  public Optional<Path> htmlReportPath() {
-    return outputDirectory().map(dir -> dir.resolve(htmlReportFileName()));
+  public Path htmlReportPath() {
+    return outputDirectory().resolve(htmlReportFileName());
   }
 
   public abstract String systemErrorsReportFileName();
 
-  public Optional<Path> systemErrorsReportPath() {
-    return outputDirectory().map(dir -> dir.resolve(systemErrorsReportFileName()));
+  public Path systemErrorsReportPath() {
+    return outputDirectory().resolve(systemErrorsReportFileName());
   }
 
   // Determines the number of parallel threads of execution used during
@@ -88,7 +87,7 @@ public abstract class ValidationRunnerConfig {
   public abstract static class Builder {
     public abstract Builder setGtfsSource(URI gtfsSource);
 
-    public abstract Builder setOutputDirectory(Optional<Path> outputDirectory);
+    public abstract Builder setOutputDirectory(Path outputDirectory);
 
     public abstract Builder setStorageDirectory(Path storageDirectory);
 

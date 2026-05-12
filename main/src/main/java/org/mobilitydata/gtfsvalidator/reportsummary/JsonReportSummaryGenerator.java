@@ -31,8 +31,8 @@ public class JsonReportSummaryGenerator {
             date,
             config != null ? config.gtfsSource().toString() : null,
             config != null ? config.numThreads() : 0,
-            config != null && config.outputDirectory().isPresent()
-                ? config.outputDirectory().get().toString()
+            config != null && !config.stdoutOutput() && config.outputDirectory() != null
+                ? config.outputDirectory().toString()
                 : null,
             config != null && !config.stdoutOutput() ? config.systemErrorsReportFileName() : null,
             config != null && !config.stdoutOutput() ? config.validationReportFileName() : null,

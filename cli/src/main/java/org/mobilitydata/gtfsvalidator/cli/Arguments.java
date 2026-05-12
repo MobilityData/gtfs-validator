@@ -23,7 +23,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -126,10 +125,10 @@ public class Arguments {
       }
     }
     if (outputBase != null) {
-      builder.setOutputDirectory(Optional.of(Path.of(outputBase)));
+      builder.setOutputDirectory(Path.of(outputBase));
     } else if (stdoutOutput) {
-      // When using stdout, no output directory is needed
-      builder.setOutputDirectory(Optional.empty());
+      // When using stdout, output directory is not written to, but the API requires it.
+      builder.setOutputDirectory(Path.of("."));
     }
     if (countryCode != null) {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
