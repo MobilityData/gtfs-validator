@@ -17,12 +17,15 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.FluentLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -114,6 +117,14 @@ public class Arguments {
       description = "Output JSON report to stdout instead of writing to files (conflicts with -o)")
   private boolean stdoutOutput = false;
 
+  @Parameter(
+      names = {"--http_header"},
+      description =
+          "Custom HTTP header to send when downloading a GTFS feed from a URL, in the format"
+              + " 'Name: Value'. May be repeated to set multiple headers. A 'User-Agent' header"
+              + " overrides the default validator User-Agent.")
+  private List<String> httpHeaders = new ArrayList<>();
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -149,7 +160,18 @@ public class Arguments {
     builder.setPrettyJson(pretty);
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
     builder.setStdoutOutput(stdoutOutput);
+    builder.setHttpHeaders(parseHttpHeaders(httpHeaders));
     return builder.build();
+  }
+
+  private static ImmutableMap<String, String> parseHttpHeaders(List<String> rawHeaders) {
+    ImmutableMap.Builder<String, String> map = ImmutableMap.builder();
+    for (String raw : rawHeaders) {
+      int colon = raw.indexOf(':');
+      // validate() already guarantees colon > 0 before toConfig() is called.
+      map.put(raw.substring(0, colon).trim(), raw.substring(colon + 1).trim());
+    }
+    return map.build();
   }
 
   public String getOutputBase() {
@@ -210,6 +232,14 @@ public class Arguments {
     if (outputBase == null && !stdoutOutput) {
       logger.atSevere().log("Must provide either --output_base or --stdout");
       return false;
+    }
+
+    for (String raw : httpHeaders) {
+      int colon = raw.indexOf(':');
+      if (colon <= 0) {
+        logger.atSevere().log("Invalid --http_header value (expected 'Name: Value'): %s", raw);
+        return false;
+      }
     }
 
     return true;
