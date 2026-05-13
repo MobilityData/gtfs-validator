@@ -41,7 +41,6 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   String fareProductName();
 
   @Required
-  @NonNegative
   @CurrencyAmount(currencyField = "currency")
   BigDecimal amount();
 
