@@ -41,9 +41,7 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assertTrue(
-        config.outputDirectory().isPresent()
-            && mockOutputPath.equals(config.outputDirectory().get()));
+    assertTrue(mockOutputPath.equals(config.outputDirectory()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -63,9 +61,7 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assertTrue(
-        config.outputDirectory().isPresent()
-            && mockOutputPath.equals(config.outputDirectory().get()));
+    assertTrue(mockOutputPath.equals(config.outputDirectory()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -90,9 +86,7 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assertTrue(
-        config.outputDirectory().isPresent()
-            && mockOutputPath.equals(config.outputDirectory().get()));
+    assertTrue(mockOutputPath.equals(config.outputDirectory()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 
@@ -119,9 +113,7 @@ public class ValidationHandlerTest {
     verify(runner, times(1)).run(configCaptor.capture());
     var config = configCaptor.getValue();
     assert config.gtfsSource().equals(feedFileURI);
-    assertTrue(
-        config.outputDirectory().isPresent()
-            && mockOutputPath.equals(config.outputDirectory().get()));
+    assertTrue(mockOutputPath.equals(config.outputDirectory()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
 }

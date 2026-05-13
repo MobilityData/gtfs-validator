@@ -35,7 +35,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -388,7 +387,7 @@ public class GtfsValidatorApp extends JFrame {
     if (outputDirectory.isBlank()) {
       throw new IllegalStateException("outputDirectoryField is blank");
     }
-    config.setOutputDirectory(Optional.of(Path.of(outputDirectory)));
+    config.setOutputDirectory(Path.of(outputDirectory));
 
     Object numThreads = numThreadsSpinner.getValue();
     if (numThreads instanceof Integer) {
