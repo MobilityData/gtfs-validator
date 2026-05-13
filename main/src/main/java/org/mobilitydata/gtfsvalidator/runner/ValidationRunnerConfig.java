@@ -83,7 +83,7 @@ public abstract class ValidationRunnerConfig {
         .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
         .setDateForValidation(LocalDate.now())
         .setSkipValidatorUpdate(false)
-        .setStdoutOutput(false);
+        .setStdoutOutput(false)
         .setQuietLogs(false);
   }
 
