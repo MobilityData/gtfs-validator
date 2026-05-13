@@ -69,6 +69,9 @@ public abstract class ValidationRunnerConfig {
   // If true, output JSON report to stdout instead of writing to files
   public abstract boolean stdoutOutput();
 
+  // If true, the validation runner will not print informational logging messages
+  public abstract boolean quietLogs();
+
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
@@ -81,6 +84,7 @@ public abstract class ValidationRunnerConfig {
         .setDateForValidation(LocalDate.now())
         .setSkipValidatorUpdate(false)
         .setStdoutOutput(false);
+        .setQuietLogs(false);
   }
 
   @AutoValue.Builder
@@ -108,6 +112,8 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
 
     public abstract Builder setStdoutOutput(boolean stdoutOutput);
+
+    public abstract Builder setQuietLogs(boolean quietLogs);
 
     public abstract ValidationRunnerConfig build();
   }
