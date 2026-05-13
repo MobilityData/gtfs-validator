@@ -114,6 +114,11 @@ public class Arguments {
       description = "Output JSON report to stdout instead of writing to files (conflicts with -o)")
   private boolean stdoutOutput = false;
 
+  @Parameter(
+      names = {"-q", "--quiet"},
+      description = "Silences non-critical log messages when running validator")
+  private boolean quiet = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -149,6 +154,7 @@ public class Arguments {
     builder.setPrettyJson(pretty);
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
     builder.setStdoutOutput(stdoutOutput);
+    builder.setQuietLogs(quiet);
     return builder.build();
   }
 
@@ -170,6 +176,10 @@ public class Arguments {
 
   public boolean getStdoutOutput() {
     return stdoutOutput;
+  }
+
+  public boolean getQuietLogs() {
+    return quiet;
   }
 
   /**
