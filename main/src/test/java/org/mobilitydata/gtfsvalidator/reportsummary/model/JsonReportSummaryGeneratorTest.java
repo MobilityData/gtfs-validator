@@ -47,6 +47,7 @@ public class JsonReportSummaryGeneratorTest {
     builder.setValidationReportFileName("some_report_filename");
     builder.setDateForValidation(LocalDate.parse("2020-01-02"));
     builder.setStdoutOutput(false);
+    builder.setQuietLogs(false);
 
     return builder.build();
   }
