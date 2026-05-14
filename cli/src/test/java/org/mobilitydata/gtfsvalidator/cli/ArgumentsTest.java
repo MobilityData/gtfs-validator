@@ -352,6 +352,21 @@ public class ArgumentsTest {
   }
 
   @Test
+  public void httpHeader_duplicateKeyKeepsLast() throws URISyntaxException {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "Authorization: Bearer first",
+      "--http_header", "Authorization: Bearer second"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    assertTrue(underTest.validate());
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders()).isEqualTo(ImmutableMap.of("Authorization", "Bearer second"));
+  }
+
+  @Test
   public void httpHeader_valueOnlyNoColen_isNotValid() {
     // Reproduces the reported bug: user pastes just the credential value without "Name: "
     String[] args = {

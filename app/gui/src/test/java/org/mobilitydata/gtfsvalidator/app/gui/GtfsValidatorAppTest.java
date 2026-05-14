@@ -128,6 +128,14 @@ public class GtfsValidatorAppTest {
   }
 
   @Test
+  public void testParseHttpHeaders_duplicateKeyKeepsLast() {
+    ImmutableMap<String, String> result =
+        GtfsValidatorApp.parseHttpHeaders(
+            "Authorization: Bearer first\nAuthorization: Bearer second");
+    assertThat(result).isEqualTo(ImmutableMap.of("Authorization", "Bearer second"));
+  }
+
+  @Test
   public void testParseHttpHeaders_valueContainsColon() {
     ImmutableMap<String, String> result =
         GtfsValidatorApp.parseHttpHeaders("X-Endpoint: http://trace.example.com/id");

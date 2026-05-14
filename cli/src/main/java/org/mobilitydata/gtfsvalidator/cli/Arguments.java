@@ -165,13 +165,15 @@ public class Arguments {
   }
 
   private static ImmutableMap<String, String> parseHttpHeaders(List<String> rawHeaders) {
-    ImmutableMap.Builder<String, String> map = ImmutableMap.builder();
+    // Use LinkedHashMap so duplicate header names keep the last value (last-wins semantics)
+    // rather than throwing, which is a more forgiving user experience.
+    java.util.LinkedHashMap<String, String> map = new java.util.LinkedHashMap<>();
     for (String raw : rawHeaders) {
       int colon = raw.indexOf(':');
       // validate() already guarantees colon > 0 before toConfig() is called.
       map.put(raw.substring(0, colon).trim(), raw.substring(colon + 1).trim());
     }
-    return map.build();
+    return ImmutableMap.copyOf(map);
   }
 
   public String getOutputBase() {

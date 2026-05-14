@@ -484,7 +484,9 @@ public class GtfsValidatorApp extends JFrame {
    * <p>Callers must ensure the text is valid via {@link #validateHttpHeadersText} first.
    */
   static ImmutableMap<String, String> parseHttpHeaders(String text) {
-    ImmutableMap.Builder<String, String> map = ImmutableMap.builder();
+    // Use LinkedHashMap so duplicate header names keep the last value (last-wins semantics)
+    // rather than throwing, which is a more forgiving user experience.
+    java.util.LinkedHashMap<String, String> map = new java.util.LinkedHashMap<>();
     for (String line : text.split("\n")) {
       if (line.isBlank()) {
         continue;
@@ -492,7 +494,7 @@ public class GtfsValidatorApp extends JFrame {
       int colon = line.indexOf(':');
       map.put(line.substring(0, colon).trim(), line.substring(colon + 1).trim());
     }
-    return map.build();
+    return ImmutableMap.copyOf(map);
   }
 
   private static Font createBoldFont() {
