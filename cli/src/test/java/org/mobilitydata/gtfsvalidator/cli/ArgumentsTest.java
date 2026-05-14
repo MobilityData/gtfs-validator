@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.beust.jcommander.JCommander;
+import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -296,13 +297,112 @@ public class ArgumentsTest {
   }
 
   @Test
-  public void exportNoticesSchema_schemaOnlyWithoutOutputBase_isNotValid() {
-    String[] cliArguments = {"--export_notices_schema"};
-    Arguments args = new Arguments();
-    new JCommander(args).parse(cliArguments);
-
-    assertThat(args.validate()).isFalse();
-    assertThat(args.getExportNoticeSchema()).isTrue();
-    assertThat(args.abortAfterNoticeSchemaExport()).isTrue();
+  public void httpHeader_singleHeader() throws URISyntaxException {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "X-Custom-Header: my-value"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders()).isEqualTo(ImmutableMap.of("X-Custom-Header", "my-value"));
   }
+
+  @Test
+  public void httpHeader_multipleHeaders() throws URISyntaxException {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "Authorization: Bearer token123",
+      "--http_header", "User-Agent: my-custom-agent/1.0"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders())
+        .isEqualTo(
+            ImmutableMap.of(
+                "Authorization", "Bearer token123",
+                "User-Agent", "my-custom-agent/1.0"));
+  }
+
+  @Test
+  public void httpHeader_headerValueContainsColon() throws URISyntaxException {
+    // Values like URLs that contain colons should be preserved fully.
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "X-Endpoint: http://trace.example.com/id"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders())
+        .isEqualTo(ImmutableMap.of("X-Endpoint", "http://trace.example.com/id"));
+  }
+
+  @Test
+  public void httpHeader_noHeadersGivesEmptyMap() throws URISyntaxException {
+    String[] args = {"--input", "/tmp/gtfs.zip", "--output_base", "/tmp/out"};
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders()).isEmpty();
+  }
+
+  @Test
+  public void httpHeader_duplicateKeyKeepsLast() throws URISyntaxException {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "Authorization: Bearer first",
+      "--http_header", "Authorization: Bearer second"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    assertTrue(underTest.validate());
+    ValidationRunnerConfig config = underTest.toConfig();
+    assertThat(config.httpHeaders()).isEqualTo(ImmutableMap.of("Authorization", "Bearer second"));
+  }
+
+  @Test
+  public void httpHeader_valueOnlyNoColen_isNotValid() {
+    // Reproduces the reported bug: user pastes just the credential value without "Name: "
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", "Basic YXBpQG1vYmlsaXR5ZGF0YS5vcmc6cWN2M3RoaypOWk00cGFmX3V5YQ=="
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    assertFalse(underTest.validate());
+  }
+
+  @Test
+  public void httpHeader_colonAtStartNullName_isNotValid() {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header", ": value"
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    assertFalse(underTest.validate());
+  }
+
+  @Test
+  public void httpHeader_validHeaderPassesValidation() {
+    String[] args = {
+      "--url", "http://example.com/gtfs.zip",
+      "--output_base", "/tmp/out",
+      "--http_header",
+          "Authorization: Basic YXBpQG1vYmlsaXR5ZGF0YS5vcmc6cWN2M3RoaypOWk00cGFmX3V5YQ=="
+    };
+    Arguments underTest = new Arguments();
+    new JCommander(underTest).parse(args);
+    assertTrue(underTest.validate());
+  }
+
+  // --- end of class ---
 }

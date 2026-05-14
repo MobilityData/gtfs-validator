@@ -121,7 +121,7 @@ public class StorageHelper {
             blobInfo, 1, TimeUnit.HOURS, Storage.SignUrlOption.httpMethod(HttpMethod.POST));
     try (WriteChannel writer = storage.writer(signedURL)) {
       OutputStream outputStream = Channels.newOutputStream(writer);
-      HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion);
+      HttpGetUtil.loadFromUrl(new URL(url), outputStream, validatorVersion, Map.of());
     }
   }
 

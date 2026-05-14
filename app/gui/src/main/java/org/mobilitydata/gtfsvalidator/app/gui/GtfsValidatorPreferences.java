@@ -15,6 +15,7 @@ public class GtfsValidatorPreferences {
   private static final String KEY_OUTPUT_DIRECTORY = "output_directory";
   private static final String KEY_NUM_THREADS = "num_threads";
   private static final String KEY_COUNTRY_CODE = "country_code";
+  private static final String KEY_HTTP_HEADERS = "http_headers";
 
   private final Preferences prefs;
 
@@ -27,6 +28,9 @@ public class GtfsValidatorPreferences {
     loadPathSetting(KEY_OUTPUT_DIRECTORY, app::setOutputDirectory);
     loadIntSetting(KEY_NUM_THREADS, app::setNumThreads);
     loadStringSetting(KEY_COUNTRY_CODE, app::setCountryCode);
+    // HTTP headers are intentionally NOT loaded and any previously stored value is deleted to
+    // avoid leaking credentials (tokens, passwords) across sessions.
+    prefs.remove(KEY_HTTP_HEADERS);
   }
 
   public void savePreferences(GtfsValidatorApp app) {
@@ -34,6 +38,7 @@ public class GtfsValidatorPreferences {
     saveStringSetting(app::getOutputDirectory, KEY_OUTPUT_DIRECTORY);
     saveIntSetting(app::getNumThreads, KEY_NUM_THREADS);
     saveStringSetting(app::getCountryCode, KEY_COUNTRY_CODE);
+    // HTTP headers are intentionally NOT saved — they may contain credentials.
   }
 
   private void loadStringSetting(String key, Consumer<String> setter) {

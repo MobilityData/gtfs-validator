@@ -401,13 +401,15 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer, validatorVersion);
+      return GtfsInput.createFromUrlInMemory(
+          source.toURL(), noticeContainer, validatorVersion, config.httpHeaders());
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),
           config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
           noticeContainer,
-          validatorVersion);
+          validatorVersion,
+          config.httpHeaders());
     }
   }
 }
