@@ -183,8 +183,8 @@ public class FeedMetadata {
    *     "Zone-Based Demand Responsive Transit" feature.
    * @return true if at least one trip with only location_id is found, false otherwise.
    */
-  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
-    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+  public static <E extends GtfsEntityContainer> boolean hasAtLeastOneTripWithOnlyLocationId(E extendedTable, FeedContainer feedContainer) {
+    var optionalStopTimeTable = extendedTable.getTableForFilename(GtfsStopTime.FILENAME);
     if (optionalStopTimeTable.isPresent()) {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
@@ -206,8 +206,8 @@ public class FeedMetadata {
    *     "Fixed-Stops Demand Responsive Transit" feature.
    * @return true if at least one trip with only location_group_id is found, false otherwise.
    */
-  private boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
-    var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
+  public static <E extends GtfsEntityContainer> boolean hasAtLeastOneTripWithOnlyLocationGroupId(E extendedTable, GtfsFeedContainer feedContainer) {
+    var optionalStopTimeTable = extendedTable.getTableForFilename(GtfsStopTime.FILENAME);
     if (optionalStopTimeTable.isPresent()) {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
         if (entity instanceof GtfsStopTime) {
@@ -791,9 +791,9 @@ public class FeedMetadata {
     }
   }
 
-  private boolean hasAtLeastOneRecordInFile(
-      GtfsFeedContainer feedContainer, String featureFilename) {
-    var table = feedContainer.getTableForFilename(featureFilename);
+  public static <E extends GtfsEntityContainer> boolean hasAtLeastOneRecordInFile(
+      E extendedTable, GtfsFeedContainer feedContainer, String featureFilename) {
+    var table = extendedTable.getTableForFilename(featureFilename);
     return table.isPresent() && table.get().entityCount() > 0;
   }
 
