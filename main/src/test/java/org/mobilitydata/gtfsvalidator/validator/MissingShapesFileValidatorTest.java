@@ -2,8 +2,8 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.util.ArrayList;
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
@@ -15,18 +15,16 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 
-
 public class MissingShapesFileValidatorTest {
 
   private static GtfsFeedContainer createFeedContainer(
-    List<GtfsShape> shapes,
-    List<GtfsLocationGroups> locationGroups) {
-  NoticeContainer noticeContainer = new NoticeContainer();
-  return new GtfsFeedContainer(
-      ImmutableList.of(
-          GtfsShapeTableContainer.forEntities(shapes, noticeContainer),
-          GtfsLocationGroupsTableContainer.forEntities(locationGroups, noticeContainer)));
-}
+      List<GtfsShape> shapes, List<GtfsLocationGroups> locationGroups) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    return new GtfsFeedContainer(
+        ImmutableList.of(
+            GtfsShapeTableContainer.forEntities(shapes, noticeContainer),
+            GtfsLocationGroupsTableContainer.forEntities(locationGroups, noticeContainer)));
+  }
 
   private static List<GtfsShape> createShapeTable(int rows) {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
@@ -59,7 +57,8 @@ public class MissingShapesFileValidatorTest {
         generateNotices(
             createShapeTable(1),
             createLocationGroupsTable(1, "b", "testgroup"),
-            createFeedContainer(createShapeTable(1), createLocationGroupsTable(1, "b", "testgroup")));
+            createFeedContainer(
+                createShapeTable(1), createLocationGroupsTable(1, "b", "testgroup")));
     boolean found =
         notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
@@ -71,7 +70,8 @@ public class MissingShapesFileValidatorTest {
         generateNotices(
             createShapeTable(1),
             createLocationGroupsTable(1, "d", "t3stgroup"),
-            createFeedContainer(createShapeTable(1), createLocationGroupsTable(1, "d", "t3stgroup")));
+            createFeedContainer(
+                createShapeTable(1), createLocationGroupsTable(1, "d", "t3stgroup")));
     boolean found =
         notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
