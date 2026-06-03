@@ -8,13 +8,12 @@ import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroups;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 
 public class MissingShapesFileValidatorTest {
 
