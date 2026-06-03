@@ -14,6 +14,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 
 public class MissingShapesFileValidatorTest {
 
@@ -96,13 +97,13 @@ public class MissingShapesFileValidatorTest {
 
   private static List<ValidationNotice> generateNotices(
       List<GtfsShape> shapes,
-      List<GtfsStopTime> stopTimes,
-      List<GtfsLocationGroups> locationGroups) {
+      List<GtfsLocationGroups> locationGroups,
+      GtfsFeedContainer feedContainer) {
     NoticeContainer noticeContainer = new NoticeContainer();
     new MissingShapesFileValidator(
             GtfsShapeTableContainer.forEntities(shapes, noticeContainer),
-            GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer),
-            GtfsLocationGroupsTableContainer.forEntities(locationGroups, noticeContainer))
+            GtfsLocationGroupsTableContainer.forEntities(locationGroups, noticeContainer),
+            feedContainer)
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
