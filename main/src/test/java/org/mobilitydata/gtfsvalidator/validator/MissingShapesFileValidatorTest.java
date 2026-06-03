@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import java.util.ArrayList;
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
@@ -13,9 +14,19 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroups;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
-import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
+
 
 public class MissingShapesFileValidatorTest {
+
+  private static GtfsFeedContainer createFeedContainer(
+    List<GtfsShape> shapes,
+    List<GtfsLocationGroups> locationGroups) {
+  NoticeContainer noticeContainer = new NoticeContainer();
+  return new GtfsFeedContainer(
+      ImmutableList.of(
+          GtfsShapeTableContainer.forEntities(shapes, noticeContainer),
+          GtfsLocationGroupsTableContainer.forEntities(locationGroups, noticeContainer)));
+}
 
   private static List<GtfsShape> createShapeTable(int rows) {
     ArrayList<GtfsShape> shapes = new ArrayList<>();
@@ -26,22 +37,6 @@ public class MissingShapesFileValidatorTest {
       shapes.add(new GtfsShape.Builder().setCsvRowNumber(i + 1).setShapeId("s" + i).build());
     }
     return shapes;
-  }
-
-  private static List<GtfsStopTime> createStopTimesTable(
-      int rows, String locationGroupId, String locationId) {
-    ArrayList<GtfsStopTime> stopTimes = new ArrayList<>();
-    for (int i = 0; i < rows; i++) {
-      stopTimes.add(
-          new GtfsStopTime.Builder()
-              .setCsvRowNumber(i + 1)
-              .setLocationGroupId(locationGroupId)
-              .setLocationId(locationId)
-              .setTripId(locationGroupId)
-              .setStopSequence(i + 1)
-              .build());
-    }
-    return stopTimes;
   }
 
   private static List<GtfsLocationGroups> createLocationGroupsTable(
@@ -63,8 +58,8 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
-            createStopTimesTable(1, "a", null),
-            createLocationGroupsTable(1, "b", "testgroup"));
+            createLocationGroupsTable(1, "b", "testgroup"),
+            createFeedContainer(createShapeTable(1), createLocationGroupsTable(1, "b", "testgroup")));
     boolean found =
         notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
@@ -75,8 +70,8 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(1),
-            createStopTimesTable(1, null, "c"),
-            createLocationGroupsTable(1, "d", "t3stgroup"));
+            createLocationGroupsTable(1, "d", "t3stgroup"),
+            createFeedContainer(createShapeTable(1), createLocationGroupsTable(1, "d", "t3stgroup")));
     boolean found =
         notices.stream().anyMatch(notice -> notice instanceof MissingRecommendedFileNotice);
     assertThat(found).isFalse();
@@ -87,8 +82,8 @@ public class MissingShapesFileValidatorTest {
     List<ValidationNotice> notices =
         generateNotices(
             createShapeTable(-1),
-            createStopTimesTable(1, null, null),
-            createLocationGroupsTable(0, null, null));
+            createLocationGroupsTable(0, null, null),
+            createFeedContainer(createShapeTable(-1), createLocationGroupsTable(0, null, null)));
     long missingRecommendedFileNoticesCount =
         notices.stream().filter(notice -> notice instanceof MissingRecommendedFileNotice).count();
     assertThat(missingRecommendedFileNoticesCount).isAtLeast(1);
