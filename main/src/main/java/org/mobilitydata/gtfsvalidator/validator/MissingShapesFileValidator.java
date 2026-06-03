@@ -37,7 +37,7 @@ public class MissingShapesFileValidator extends FileValidator {
     Boolean missingShapes = shapeTable == null || shapeTable.isMissingFile();
     boolean hasZoneBasedDrt = FeedMetadata.hasAtLeastOneTripWithOnlyLocationId(feedContainer);
     boolean hasFixedStopsDrt =
-        FeedMetadata.hasAtLeastOneRecordInFile(feedContainer, locationGroups.FILENAME)
+        FeedMetadata.hasAtLeastOneRecordInFile(feedContainer, "location_groups.txt")
             && FeedMetadata.hasAtLeastOneTripWithOnlyLocationGroupId(feedContainer);
 
     // Do we NOT have: a shapes.txt file and the required fields for Zone-Based DRT,
