@@ -249,6 +249,17 @@ public class ArgumentsTest {
   }
 
   @Test
+  public void exportNoticesSchema_schemaOnlyWithoutOutputBase_isNotValid() {
+    String[] cliArguments = {"--export_notices_schema"};
+    Arguments args = new Arguments();
+    new JCommander(args).parse(cliArguments);
+
+    assertThat(args.validate()).isFalse();
+    assertThat(args.getExportNoticeSchema()).isTrue();
+    assertThat(args.abortAfterNoticeSchemaExport()).isTrue();
+  }
+
+  @Test
   public void exportNoticesSchema_schemaAndValidation() {
     String[] cliArguments = {
       "--export_notices_schema", "--input", "input value", "--output_base", "output value"
