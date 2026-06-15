@@ -78,7 +78,7 @@ public class MissingShapesFileValidatorTest {
   public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            createShapeTable.forStatus(TableStatus.MISSING_FILE),
+            createShapeTable(TableStatus.MISSING_FILE),
             createLocationGroupsTable(0, null, null),
             createFeedContainer(createShapeTable(-1), createLocationGroupsTable(0, null, null)));
     long missingRecommendedFileNoticesCount =
