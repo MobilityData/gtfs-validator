@@ -78,7 +78,7 @@ public class MissingShapesFileValidatorTest {
   public void testNoShapesFileAndNoDrtPresent() {
     List<ValidationNotice> notices =
         generateNotices(
-            GtfsShapeTableContainer shapeTable = GtfsShapeTableContainer.forStatus(TableStatus.MISSING_FILE);,
+            GtfsShapeTableContainer shapeTable = GtfsShapeTableContainer.forStatus(TableStatus.MISSING_FILE),
             createLocationGroupsTable(0, null, null),
             createFeedContainer(createShapeTable(-1), createLocationGroupsTable(0, null, null)));
     long missingRecommendedFileNoticesCount =
