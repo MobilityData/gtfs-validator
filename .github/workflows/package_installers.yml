@@ -183,7 +183,7 @@ jobs:
         if: github.event_name == 'prerelease' || github.event_name == 'release'
         env:
           OS_NAME: '${{ matrix.os }}'
-        uses: actions/github-script@v2
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
