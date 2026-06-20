@@ -80,7 +80,8 @@ public class MissingShapesFileValidatorTest {
     // Create containers where shapes.txt is missing and location_groups is empty
     var shapeContainer = GtfsShapeTableContainer.forStatus(TableStatus.MISSING_FILE);
     var locationGroupsContainer =
-        GtfsLocationGroupsTableContainer.forEntities(createLocationGroupsTable(0, null, null), new NoticeContainer());
+        GtfsLocationGroupsTableContainer.forEntities(
+            createLocationGroupsTable(0, null, null), new NoticeContainer());
     GtfsFeedContainer feedContainer = createFeedContainer(shapeContainer, locationGroupsContainer);
 
     List<ValidationNotice> notices =
@@ -91,7 +92,8 @@ public class MissingShapesFileValidatorTest {
   }
 
   private static GtfsFeedContainer createFeedContainer(
-      GtfsShapeTableContainer shapeContainer, GtfsLocationGroupsTableContainer locationGroupsContainer) {
+      GtfsShapeTableContainer shapeContainer,
+      GtfsLocationGroupsTableContainer locationGroupsContainer) {
     return new GtfsFeedContainer(ImmutableList.of(shapeContainer, locationGroupsContainer));
   }
 
@@ -100,7 +102,8 @@ public class MissingShapesFileValidatorTest {
       GtfsLocationGroupsTableContainer locationGroups,
       GtfsFeedContainer feedContainer) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new MissingShapesFileValidator(shapeTable, locationGroups, feedContainer).validate(noticeContainer);
+    new MissingShapesFileValidator(shapeTable, locationGroups, feedContainer)
+        .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
 
