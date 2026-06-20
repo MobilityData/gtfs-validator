@@ -40,10 +40,10 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
  * from trips.txt:
  *
  * <ol>
- *   <li>Service window extends past feed period: the feed validity period should cover every
- *       service window. A {@link ServiceWindowExtendsPastFeedPeriodNotice} is emitted once per
- *       service whose active date range extends outside the feed validity period, summarizing how
- *       many days fall before feed_start_date or after feed_end_date.
+ *   <li>Service window outside feed period: the feed validity period should cover every service
+ *       window. A {@link ServiceWindowOutsideFeedPeriodNotice} is emitted once per service whose
+ *       active date range extends outside the feed validity period, summarizing how many days fall
+ *       before feed_start_date or after feed_end_date.
  *   <li>Feed valid beyond total service window: the feed validity period should not extend far
  *       beyond the total service window. A {@link FeedValidBeyondTotalServiceWindowNotice} is
  *       emitted when the feed start/end date exceeds the total service window bounds by more than
@@ -53,7 +53,7 @@ import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
  *       strictly after today's date.
  * </ol>
  *
- * <p>Generated notices: {@link ServiceWindowExtendsPastFeedPeriodNotice}, {@link
+ * <p>Generated notices: {@link ServiceWindowOutsideFeedPeriodNotice}, {@link
  * FeedValidBeyondTotalServiceWindowNotice}, {@link FutureCalendarNotice}.
  */
 @GtfsValidator
@@ -149,7 +149,7 @@ public class FeedServiceWindowValidator extends FileValidator {
   }
 
   /**
-   * Emits a {@link ServiceWindowExtendsPastFeedPeriodNotice} if the service active window extends
+   * Emits a {@link ServiceWindowOutsideFeedPeriodNotice} if the service active window extends
    * outside the feed validity period.
    */
   private static void checkServiceWindow(
@@ -170,7 +170,7 @@ public class FeedServiceWindowValidator extends FileValidator {
 
     if (daysBeforeFeedStart > 0 || daysAfterFeedEnd > 0) {
       noticeContainer.addValidationNotice(
-          new ServiceWindowExtendsPastFeedPeriodNotice(
+          new ServiceWindowOutsideFeedPeriodNotice(
               serviceId,
               serviceStart.toString(),
               serviceEnd.toString(),
@@ -196,7 +196,7 @@ public class FeedServiceWindowValidator extends FileValidator {
             GtfsCalendarDateSchema.class,
             GtfsFeedInfoSchema.class
           }))
-  static class ServiceWindowExtendsPastFeedPeriodNotice extends ValidationNotice {
+  static class ServiceWindowOutsideFeedPeriodNotice extends ValidationNotice {
 
     /** The service_id whose active window extends outside the feed validity period. */
     private final String serviceId;
@@ -213,7 +213,7 @@ public class FeedServiceWindowValidator extends FileValidator {
     /** Number of days the service window extends after feed_end_date (0 if none). */
     private final long daysAfterFeedEnd;
 
-    ServiceWindowExtendsPastFeedPeriodNotice(
+    ServiceWindowOutsideFeedPeriodNotice(
         String serviceId,
         String serviceWindowStart,
         String serviceWindowEnd,

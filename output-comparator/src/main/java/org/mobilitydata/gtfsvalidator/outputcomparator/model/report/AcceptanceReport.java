@@ -15,6 +15,10 @@ public abstract class AcceptanceReport {
 
   public abstract List<ChangedNotice> droppedWarnings();
 
+  public abstract List<ChangedNotice> newInfoNotices();
+
+  public abstract List<ChangedNotice> droppedInfoNotices();
+
   public abstract CorruptedSources corruptedSources();
 
   public abstract List<ValidationPerformance> validationPerformance();
@@ -24,6 +28,8 @@ public abstract class AcceptanceReport {
       List<ChangedNotice> droppedErrors,
       List<ChangedNotice> newWarnings,
       List<ChangedNotice> droppedWarnings,
+      List<ChangedNotice> newInfoNotices,
+      List<ChangedNotice> droppedInfoNotices,
       CorruptedSources corruptedSources,
       List<ValidationPerformance> validationPerformance) {
     return new AutoValue_AcceptanceReport(
@@ -31,6 +37,8 @@ public abstract class AcceptanceReport {
         droppedErrors,
         newWarnings,
         droppedWarnings,
+        newInfoNotices,
+        droppedInfoNotices,
         corruptedSources,
         validationPerformance);
   }

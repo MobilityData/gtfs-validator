@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.runner;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -29,8 +30,7 @@ public abstract class ValidationRunnerConfig {
   public abstract URI gtfsSource();
 
   // The directory where all validation reports will be written.
-  // Optional when using stdout mode.
-  public abstract Optional<Path> outputDirectory();
+  public abstract Path outputDirectory();
 
   // An optional storage directory to be used when downloading a GTFS feed
   // from an external URL.
@@ -40,14 +40,14 @@ public abstract class ValidationRunnerConfig {
 
   public abstract String htmlReportFileName();
 
-  public Optional<Path> htmlReportPath() {
-    return outputDirectory().map(dir -> dir.resolve(htmlReportFileName()));
+  public Path htmlReportPath() {
+    return outputDirectory().resolve(htmlReportFileName());
   }
 
   public abstract String systemErrorsReportFileName();
 
-  public Optional<Path> systemErrorsReportPath() {
-    return outputDirectory().map(dir -> dir.resolve(systemErrorsReportFileName()));
+  public Path systemErrorsReportPath() {
+    return outputDirectory().resolve(systemErrorsReportFileName());
   }
 
   // Determines the number of parallel threads of execution used during
@@ -70,6 +70,10 @@ public abstract class ValidationRunnerConfig {
   // If true, output JSON report to stdout instead of writing to files
   public abstract boolean stdoutOutput();
 
+  // Custom HTTP headers to include when downloading a GTFS feed from a URL.
+  // A "User-Agent" entry overrides the default validator User-Agent.
+  public abstract ImmutableMap<String, String> httpHeaders();
+
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
@@ -81,14 +85,15 @@ public abstract class ValidationRunnerConfig {
         .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
         .setDateForValidation(LocalDate.now())
         .setSkipValidatorUpdate(false)
-        .setStdoutOutput(false);
+        .setStdoutOutput(false)
+        .setHttpHeaders(ImmutableMap.of());
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setGtfsSource(URI gtfsSource);
 
-    public abstract Builder setOutputDirectory(Optional<Path> outputDirectory);
+    public abstract Builder setOutputDirectory(Path outputDirectory);
 
     public abstract Builder setStorageDirectory(Path storageDirectory);
 
@@ -109,6 +114,8 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
 
     public abstract Builder setStdoutOutput(boolean stdoutOutput);
+
+    public abstract Builder setHttpHeaders(ImmutableMap<String, String> httpHeaders);
 
     public abstract ValidationRunnerConfig build();
   }

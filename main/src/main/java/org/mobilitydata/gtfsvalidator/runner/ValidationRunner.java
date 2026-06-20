@@ -340,7 +340,7 @@ public class ValidationRunner {
 
     // Existing file-based output. At this point, stdoutOutput is false and
     // validate() guarantees that an output directory is configured.
-    Path outputDir = config.outputDirectory().get();
+    Path outputDir = config.outputDirectory();
     if (!Files.exists(outputDir)) {
       try {
         Files.createDirectories(outputDir);
@@ -401,13 +401,15 @@ public class ValidationRunner {
     }
 
     if (config.storageDirectory().isEmpty()) {
-      return GtfsInput.createFromUrlInMemory(source.toURL(), noticeContainer, validatorVersion);
+      return GtfsInput.createFromUrlInMemory(
+          source.toURL(), noticeContainer, validatorVersion, config.httpHeaders());
     } else {
       return GtfsInput.createFromUrl(
           source.toURL(),
           config.storageDirectory().get().resolve(GTFS_ZIP_FILENAME),
           noticeContainer,
-          validatorVersion);
+          validatorVersion,
+          config.httpHeaders());
     }
   }
 }

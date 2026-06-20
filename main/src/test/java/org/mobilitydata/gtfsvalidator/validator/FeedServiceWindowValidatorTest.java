@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
 import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.FeedValidBeyondTotalServiceWindowNotice;
 import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.FutureCalendarNotice;
-import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.ServiceWindowExtendsPastFeedPeriodNotice;
+import org.mobilitydata.gtfsvalidator.validator.FeedServiceWindowValidator.ServiceWindowOutsideFeedPeriodNotice;
 
 public class FeedServiceWindowValidatorTest {
 
@@ -250,7 +250,7 @@ public class FeedServiceWindowValidatorTest {
   }
 
   // ---------------------------------------------------------------------------
-  // ServiceWindowExtendsPastFeedPeriodNotice
+  // ServiceWindowOutsideFeedPeriodNotice
   // ---------------------------------------------------------------------------
 
   @Test
@@ -265,7 +265,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1"));
 
     assertThat(notices).hasSize(1);
-    assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
+    assertThat(notices.get(0)).isInstanceOf(ServiceWindowOutsideFeedPeriodNotice.class);
   }
 
   @Test
@@ -279,7 +279,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1"));
 
     assertThat(notices).hasSize(1);
-    assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
+    assertThat(notices.get(0)).isInstanceOf(ServiceWindowOutsideFeedPeriodNotice.class);
   }
 
   @Test
@@ -293,7 +293,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1"));
 
     assertThat(notices).hasSize(1);
-    assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
+    assertThat(notices.get(0)).isInstanceOf(ServiceWindowOutsideFeedPeriodNotice.class);
   }
 
   @Test
@@ -309,7 +309,7 @@ public class FeedServiceWindowValidatorTest {
             ImmutableList.of("s1", "s2"));
 
     assertThat(notices).hasSize(1);
-    assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
+    assertThat(notices.get(0)).isInstanceOf(ServiceWindowOutsideFeedPeriodNotice.class);
   }
 
   @Test
@@ -339,9 +339,9 @@ public class FeedServiceWindowValidatorTest {
             "20240131",
             ImmutableList.of("s1"));
 
-    // ServiceWindowExtendsPastFeedPeriodNotice + FeedValidBeyondTotalServiceWindowNotice.
+    // ServiceWindowOutsideFeedPeriodNotice + FeedValidBeyondTotalServiceWindowNotice.
     assertThat(notices).hasSize(2);
-    assertThat(notices.get(0)).isInstanceOf(ServiceWindowExtendsPastFeedPeriodNotice.class);
+    assertThat(notices.get(0)).isInstanceOf(ServiceWindowOutsideFeedPeriodNotice.class);
     assertThat(notices.get(1)).isInstanceOf(FeedValidBeyondTotalServiceWindowNotice.class);
   }
 

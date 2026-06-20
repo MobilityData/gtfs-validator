@@ -15,6 +15,7 @@
  */
 package org.mobilitydata.gtfsvalidator.app.gui;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.FluentLogger;
 import java.awt.Color;
 import java.awt.Component;
@@ -35,7 +36,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -46,7 +46,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -79,6 +81,8 @@ public class GtfsValidatorApp extends JFrame {
 
   private final JSpinner numThreadsSpinner = new JSpinner();
   private final JTextField countryCodeField = new JTextField("", 3);
+  private final JTextArea httpHeadersField = new JTextArea(4, TEXT_FIELD_COLUMN_WIDTH);
+  private final JLabel httpHeadersErrorLabel = new JLabel();
 
   private final MonitoredValidationRunner validationRunner;
   private final ValidationDisplay validationDisplay;
@@ -128,6 +132,17 @@ public class GtfsValidatorApp extends JFrame {
 
   public String getCountryCode() {
     return countryCodeField.getText();
+  }
+
+  public void setHttpHeaders(String httpHeaders) {
+    httpHeadersField.setText(httpHeaders);
+  }
+
+  /**
+   * Returns the raw text from the HTTP headers field (newline-separated {@code Name: Value} lines).
+   */
+  public String getHttpHeaders() {
+    return httpHeadersField.getText();
   }
 
   void addPreValidationCallback(Runnable callback) {
@@ -292,6 +307,34 @@ public class GtfsValidatorApp extends JFrame {
     fieldConstraints.gridy = 1;
     panel.add(countryCodeField, fieldConstraints);
 
+    // HTTP Headers — spans both columns so the text area gets full width
+    GridBagConstraints fullRowConstraints = new GridBagConstraints();
+    fullRowConstraints.gridx = 0;
+    fullRowConstraints.gridwidth = 2;
+    fullRowConstraints.anchor = GridBagConstraints.NORTHWEST;
+    fullRowConstraints.fill = GridBagConstraints.HORIZONTAL;
+    fullRowConstraints.weightx = 1.0;
+
+    fullRowConstraints.gridy = 2;
+    panel.add(new JLabel(bundle.getString("http_headers")), fullRowConstraints);
+
+    httpHeadersField.setLineWrap(false);
+    JScrollPane headersScrollPane = new JScrollPane(httpHeadersField);
+    fullRowConstraints.gridy = 3;
+    panel.add(headersScrollPane, fullRowConstraints);
+
+    httpHeadersErrorLabel.setForeground(Color.RED);
+    httpHeadersErrorLabel.setVisible(false);
+    fullRowConstraints.gridy = 4;
+    panel.add(httpHeadersErrorLabel, fullRowConstraints);
+
+    fullRowConstraints.gridy = 5;
+    panel.add(new JLabel(bundle.getString("http_headers_description")), fullRowConstraints);
+
+    httpHeadersField
+        .getDocument()
+        .addDocumentListener(documentChangeListener(this::updateValidationButtonStatus));
+
     advancedOptionsPanel.setVisible(false);
   }
 
@@ -343,6 +386,13 @@ public class GtfsValidatorApp extends JFrame {
   }
 
   private void updateValidationButtonStatus() {
+    String headerError = validateHttpHeadersText(httpHeadersField.getText());
+    if (headerError != null) {
+      httpHeadersErrorLabel.setText(headerError);
+      httpHeadersErrorLabel.setVisible(true);
+    } else {
+      httpHeadersErrorLabel.setVisible(false);
+    }
     validateButton.setEnabled(isValidationReadyToRun());
   }
 
@@ -351,6 +401,9 @@ public class GtfsValidatorApp extends JFrame {
       return false;
     }
     if (outputDirectoryField.getText().isBlank()) {
+      return false;
+    }
+    if (validateHttpHeadersText(httpHeadersField.getText()) != null) {
       return false;
     }
     return true;
@@ -374,7 +427,7 @@ public class GtfsValidatorApp extends JFrame {
     config.setPrettyJson(true);
     config.setStdoutOutput(false);
 
-    String gtfsInput = gtfsInputField.getText();
+    String gtfsInput = gtfsInputField.getText().strip();
     if (gtfsInput.isBlank()) {
       throw new IllegalStateException("gtfsInputField is blank");
     }
@@ -384,11 +437,11 @@ public class GtfsValidatorApp extends JFrame {
       config.setGtfsSource(Path.of(gtfsInput).toUri());
     }
 
-    String outputDirectory = outputDirectoryField.getText();
+    String outputDirectory = outputDirectoryField.getText().strip();
     if (outputDirectory.isBlank()) {
       throw new IllegalStateException("outputDirectoryField is blank");
     }
-    config.setOutputDirectory(Optional.of(Path.of(outputDirectory)));
+    config.setOutputDirectory(Path.of(outputDirectory));
 
     Object numThreads = numThreadsSpinner.getValue();
     if (numThreads instanceof Integer) {
@@ -400,7 +453,48 @@ public class GtfsValidatorApp extends JFrame {
       config.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
     }
 
+    config.setHttpHeaders(parseHttpHeaders(httpHeadersField.getText()));
+
     return config.build();
+  }
+
+  /**
+   * Validates newline-separated {@code Name: Value} header lines.
+   *
+   * @return {@code null} if all lines are valid, or a human-readable error message for the first
+   *     invalid line.
+   */
+  static String validateHttpHeadersText(String text) {
+    for (String line : text.split("\n")) {
+      if (line.isBlank()) {
+        continue;
+      }
+      int colon = line.indexOf(':');
+      if (colon <= 0) {
+        return "Invalid header (expected \u201cName: Value\u201d): " + line.trim();
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Parses newline-separated {@code Name: Value} header lines into an {@link ImmutableMap}. Blank
+   * lines are skipped. Colons inside the value are preserved.
+   *
+   * <p>Callers must ensure the text is valid via {@link #validateHttpHeadersText} first.
+   */
+  static ImmutableMap<String, String> parseHttpHeaders(String text) {
+    // Use LinkedHashMap so duplicate header names keep the last value (last-wins semantics)
+    // rather than throwing, which is a more forgiving user experience.
+    java.util.LinkedHashMap<String, String> map = new java.util.LinkedHashMap<>();
+    for (String line : text.split("\n")) {
+      if (line.isBlank()) {
+        continue;
+      }
+      int colon = line.indexOf(':');
+      map.put(line.substring(0, colon).trim(), line.substring(colon + 1).trim());
+    }
+    return ImmutableMap.copyOf(map);
   }
 
   private static Font createBoldFont() {

@@ -3,6 +3,8 @@
   "droppedErrors": [],
   "newWarnings": [],
   "droppedWarnings": [],
+  "newInfoNotices": [],
+  "droppedInfoNotices": [],
   "corruptedSources": {
     "sourceIdCount": 1,
     "corruptedSourcesCount": 0,

@@ -23,6 +23,7 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -112,12 +113,17 @@ public abstract class GtfsInput implements Closeable {
    * @param targetPath the path to store the downloaded GTFS archive
    * @param noticeContainer
    * @param validatorVersion
+   * @param httpHeaders additional HTTP headers; a {@code "User-Agent"} entry overrides the default
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if GTFS archive cannot be stored at the specified location
    * @throws URISyntaxException if URL is malformed
    */
   public static GtfsInput createFromUrl(
-      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer, String validatorVersion)
+      URL sourceUrl,
+      Path targetPath,
+      NoticeContainer noticeContainer,
+      String validatorVersion,
+      Map<String, String> httpHeaders)
       throws IOException, URISyntaxException {
     // getParent() may return null if there is no parent, so call toAbsolutePath() first.
     Path targetDirectory = targetPath.toAbsolutePath().getParent();
@@ -125,9 +131,23 @@ public abstract class GtfsInput implements Closeable {
       Files.createDirectories(targetDirectory);
     }
     try (OutputStream outputStream = Files.newOutputStream(targetPath)) {
-      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion, httpHeaders);
     }
     return createFromPath(targetPath, noticeContainer);
+  }
+
+  /**
+   * Creates a specific GtfsInput to read a GTFS ZIP archive from the given URL, using the default
+   * validator User-Agent.
+   *
+   * @deprecated Use {@link #createFromUrl(URL, Path, NoticeContainer, String, Map)} to support
+   *     custom HTTP headers.
+   */
+  @Deprecated
+  public static GtfsInput createFromUrl(
+      URL sourceUrl, Path targetPath, NoticeContainer noticeContainer, String validatorVersion)
+      throws IOException, URISyntaxException {
+    return createFromUrl(sourceUrl, targetPath, noticeContainer, validatorVersion, Map.of());
   }
 
   /**
@@ -136,15 +156,20 @@ public abstract class GtfsInput implements Closeable {
    *
    * @param sourceUrl the fully qualified URL to download of the resource to download
    * @param noticeContainer
+   * @param validatorVersion
+   * @param httpHeaders additional HTTP headers; a {@code "User-Agent"} entry overrides the default
    * @return the {@code GtfsInput} created after download of the GTFS archive
    * @throws IOException if no file could not be found at the specified location
    * @throws URISyntaxException if URL is malformed
    */
   public static GtfsInput createFromUrlInMemory(
-      URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
+      URL sourceUrl,
+      NoticeContainer noticeContainer,
+      String validatorVersion,
+      Map<String, String> httpHeaders)
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion);
+      HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion, httpHeaders);
       File zipFile = new File(sourceUrl.toString());
       String fileName = zipFile.getName().replace(".zip", "");
       if (containsGtfsFileInSubfolder(
@@ -154,6 +179,20 @@ public abstract class GtfsInput implements Closeable {
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
     }
+  }
+
+  /**
+   * Creates a specific GtfsInput to read data from the given URL, using the default validator
+   * User-Agent. The loaded ZIP file is kept in memory.
+   *
+   * @deprecated Use {@link #createFromUrlInMemory(URL, NoticeContainer, String, Map)} to support
+   *     custom HTTP headers.
+   */
+  @Deprecated
+  public static GtfsInput createFromUrlInMemory(
+      URL sourceUrl, NoticeContainer noticeContainer, String validatorVersion)
+      throws IOException, URISyntaxException {
+    return createFromUrlInMemory(sourceUrl, noticeContainer, validatorVersion, Map.of());
   }
 
   /**

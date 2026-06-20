@@ -17,13 +17,15 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.Parameter;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.FluentLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 
@@ -115,6 +117,14 @@ public class Arguments {
       description = "Output JSON report to stdout instead of writing to files (conflicts with -o)")
   private boolean stdoutOutput = false;
 
+  @Parameter(
+      names = {"--http_header"},
+      description =
+          "Custom HTTP header to send when downloading a GTFS feed from a URL, in the format"
+              + " 'Name: Value'. May be repeated to set multiple headers. A 'User-Agent' header"
+              + " overrides the default validator User-Agent.")
+  private List<String> httpHeaders = new ArrayList<>();
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -126,10 +136,10 @@ public class Arguments {
       }
     }
     if (outputBase != null) {
-      builder.setOutputDirectory(Optional.of(Path.of(outputBase)));
+      builder.setOutputDirectory(Path.of(outputBase));
     } else if (stdoutOutput) {
-      // When using stdout, no output directory is needed
-      builder.setOutputDirectory(Optional.empty());
+      // When using stdout, output directory is not written to, but the API requires it.
+      builder.setOutputDirectory(Path.of("."));
     }
     if (countryCode != null) {
       builder.setCountryCode(CountryCode.forStringOrUnknown(countryCode));
@@ -150,7 +160,20 @@ public class Arguments {
     builder.setPrettyJson(pretty);
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
     builder.setStdoutOutput(stdoutOutput);
+    builder.setHttpHeaders(parseHttpHeaders(httpHeaders));
     return builder.build();
+  }
+
+  private static ImmutableMap<String, String> parseHttpHeaders(List<String> rawHeaders) {
+    // Use LinkedHashMap so duplicate header names keep the last value (last-wins semantics)
+    // rather than throwing, which is a more forgiving user experience.
+    java.util.LinkedHashMap<String, String> map = new java.util.LinkedHashMap<>();
+    for (String raw : rawHeaders) {
+      int colon = raw.indexOf(':');
+      // validate() already guarantees colon > 0 before toConfig() is called.
+      map.put(raw.substring(0, colon).trim(), raw.substring(colon + 1).trim());
+    }
+    return ImmutableMap.copyOf(map);
   }
 
   public String getOutputBase() {
@@ -211,6 +234,14 @@ public class Arguments {
     if (outputBase == null && !stdoutOutput) {
       logger.atSevere().log("Must provide either --output_base or --stdout");
       return false;
+    }
+
+    for (String raw : httpHeaders) {
+      int colon = raw.indexOf(':');
+      if (colon <= 0) {
+        logger.atSevere().log("Invalid --http_header value (expected 'Name: Value'): %s", raw);
+        return false;
+      }
     }
 
     return true;
