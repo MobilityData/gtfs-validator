@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -46,7 +46,7 @@ jobs:
         with:
           fetch-depth: 0 # need full clone so `./gradlew currentVersion` can search parents for older tags when needed
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -121,7 +121,7 @@ jobs:
         with:
           fetch-depth: 0 # need full clone so `./gradlew currentVersion` can search parents for older tags when needed
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}

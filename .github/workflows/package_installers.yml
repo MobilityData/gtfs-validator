@@ -41,7 +41,7 @@ jobs:
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
@@ -51,7 +51,7 @@ jobs:
         run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           # We need a recent version of Java with jpackage included.
           java-version: ${{ env.java_version }}
@@ -75,7 +75,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${MACOS_CI_KEYCHAIN_PWD}" build.keychain
 
       - name: "Package GUI app installer with Gradle"
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: Run Gradle GUI packaging command on push or release
         run: ./gradlew jpackage -Psign-app=${{github.event_name == 'push' || github.event_name == 'release'}}
 
@@ -134,27 +134,27 @@ jobs:
 
       - name: Package cli and gui app jars with Gradle
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Produce shadowJar
         run: ./gradlew shadowJar
 
       - name: Persist cli app jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: "gtfs-validator-cli-${{ env.SHORT_SHA }}.zip"
           path: cli/build/libs/gtfs-validator-*-cli.jar
 
       - name: Persist gui app jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: "gtfs-validator-gui-${{ env.SHORT_SHA }}.zip"
           path: app/gui/build/libs/gui-*-all.jar
 
       - name: "Upload Installer"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Installer - ${{matrix.os}}
           path: |
