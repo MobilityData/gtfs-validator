@@ -32,7 +32,7 @@ jobs:
         run: echo "The version extracted from github.ref is ${{ steps.get_version.outputs.version }}"
 
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
