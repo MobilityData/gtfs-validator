@@ -28,7 +28,8 @@
 | `-p`       | `--pretty`                    | Optional               | Pretty JSON validation report. If specified, the JSON validation report will be printed using JSON Pretty print. This does not impact data parsing.                                                                                                           |
 | `--stdout` | `--stdout`                    | Optional               | Output JSON report to stdout instead of writing to files. Use with `-i` or `-u` but not with `-o`. Enables piping to tools like `jq`.                                                                                                                          |
 | `-d`       | `--date`                      | Optional               | The date used to validate the feed for time-based rules, e.g feed_expiration_30_days, in ISO_LOCAL_DATE format like '2001-01-30'. By default, the current date is used.                                                                                       |
-| `-svu`     | `--skip_validator_update`     | Optional               | Skip GTFS version validation update check. If specified, the GTFS version validation will be skipped. By default, the GTFS version validation will be performed.                                                                                              |                                              
+| `-svu`     | `--skip_validator_update`     | Optional               | Skip GTFS version validation update check. If specified, the GTFS version validation will be skipped. By default, the GTFS version validation will be performed.                                                                                              |
+| *(none)*   | `--http_header`               | Optional               | Custom HTTP header to send when downloading a GTFS feed from a URL, in the format `Name: Value`. May be repeated to set multiple headers. A `User-Agent` header overrides the default validator User-Agent (e.g. `--http_header "Authorization: Bearer token"`). Only used with `-u` / `--url`. |
 
 ⚠️ Note that exactly one of the following options must be provided: `--url` or `--input`.
 
@@ -61,6 +62,29 @@ java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/outp
  1. Download the GTFS feed at the URL `https://url/to/dataset.zip` and name it `input.zip`  
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
 Please note that since downloading will take time, we recommend validating repeatedly on a local file.
+
+### with custom HTTP headers
+
+Use `--http_header` to send custom headers when downloading a feed from a URL. The flag can be repeated for multiple headers.
+
+Override the default `User-Agent`:
+```
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/output/path --http_header "User-Agent: my-app/2.0 (contact@example.com)"
+```
+
+Add an authorization token:
+```
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/output/path --http_header "Authorization: Bearer <token>"
+```
+
+Combine multiple headers:
+```
+java -jar gtfs-validator-v2.0.jar -u https://url/to/dataset.zip -o relative/output/path \
+  --http_header "User-Agent: my-app/2.0" \
+  --http_header "X-Trace-Id: abc123"
+```
+
+⚠️ Note that `--http_header` is only used when downloading from a URL (`-u`/`--url`). It has no effect with `-i`/`--input`.
 
 ## via stdout output (for scripting and piping)
 

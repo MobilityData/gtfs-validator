@@ -25,6 +25,7 @@ mainClassName = 'org.mobilitydata.gtfsvalidator.app.gui.Main'
 dependencies {
     implementation project(':core')
     implementation project(':main')
+    implementation libs.guava
     implementation libs.flogger
     implementation libs.flogger.system.backend
     testImplementation libs.junit
