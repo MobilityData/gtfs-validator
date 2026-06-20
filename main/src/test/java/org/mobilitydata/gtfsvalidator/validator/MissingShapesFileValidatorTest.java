@@ -14,6 +14,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroups;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationGroupsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 
 public class MissingShapesFileValidatorTest {
 
@@ -76,14 +77,31 @@ public class MissingShapesFileValidatorTest {
 
   @Test
   public void testNoShapesFileAndNoDrtPresent() {
+    // Create containers where shapes.txt is missing and location_groups is empty
+    var shapeContainer = GtfsShapeTableContainer.forStatus(TableStatus.MISSING_FILE);
+    var locationGroupsContainer =
+        GtfsLocationGroupsTableContainer.forEntities(createLocationGroupsTable(0, null, null), new NoticeContainer());
+    GtfsFeedContainer feedContainer = createFeedContainer(shapeContainer, locationGroupsContainer);
+
     List<ValidationNotice> notices =
-        generateNotices(
-            createShapeTable(TableStatus.MISSING_FILE),
-            createLocationGroupsTable(0, null, null),
-            createFeedContainer(createShapeTable(-1), createLocationGroupsTable(0, null, null)));
+        generateNotices(shapeContainer, locationGroupsContainer, feedContainer);
     long missingRecommendedFileNoticesCount =
         notices.stream().filter(notice -> notice instanceof MissingRecommendedFileNotice).count();
     assertThat(missingRecommendedFileNoticesCount).isAtLeast(1);
+  }
+
+  private static GtfsFeedContainer createFeedContainer(
+      GtfsShapeTableContainer shapeContainer, GtfsLocationGroupsTableContainer locationGroupsContainer) {
+    return new GtfsFeedContainer(ImmutableList.of(shapeContainer, locationGroupsContainer));
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      GtfsShapeTableContainer shapeTable,
+      GtfsLocationGroupsTableContainer locationGroups,
+      GtfsFeedContainer feedContainer) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new MissingShapesFileValidator(shapeTable, locationGroups, feedContainer).validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
   }
 
   private static List<ValidationNotice> generateNotices(
