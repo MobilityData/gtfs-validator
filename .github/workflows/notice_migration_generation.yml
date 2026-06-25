@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup Python ${{ env.python_version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.python_version }}
           cache: 'pip'
@@ -67,7 +67,7 @@ jobs:
           path: web/client/static/rules.json
 
       - name: Download all workflow artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
 
       - name: Validate download
         run: ls -la rules*
