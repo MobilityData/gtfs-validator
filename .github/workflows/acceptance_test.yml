@@ -138,12 +138,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Download .jar file from master branch
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: gtfs-validator-master
           path: gtfs-validator-master
       - name: Download latest changes .jar file from previous job
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: gtfs-validator-snapshot
           path: gtfs-validator-snapshot
@@ -179,15 +179,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Download comparator .jar file from previous job
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: comparator-snapshot
       - name: Retrieve reports from previous job
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: reports_all
       - name: Retrieve gtfs latest versions from previous job
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: datasets_metadata
       - name: Generate acceptance report test
