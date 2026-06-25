@@ -9,7 +9,13 @@ import java.util.List;
 public class MemoryUsageRegister {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
-  private static MemoryUsageRegister instance = new MemoryUsageRegister();
+  // Thread-confined register: a validation runs entirely on the single thread
+  // that invokes ValidationRunner.run (the @MemoryMonitor-annotated entry points
+  // and the manual snapshots all execute on it), so giving each thread its own
+  // register isolates concurrent validations with no locking and no cross-run
+  // clearRegistry()/append contamination. Fixes #2168.
+  private static final ThreadLocal<MemoryUsageRegister> INSTANCE =
+      ThreadLocal.withInitial(MemoryUsageRegister::new);
   private final Runtime runtime;
   private List<MemoryUsage> registry = new ArrayList<>();
 
@@ -18,10 +24,11 @@ public class MemoryUsageRegister {
   }
 
   /**
-   * @return the singleton instance of the memory usage register.
+   * @return the memory usage register for the calling thread. Each thread gets its own register so
+   *     that concurrent validations do not share state.
    */
   public static MemoryUsageRegister getInstance() {
-    return instance;
+    return INSTANCE.get();
   }
 
   /**
