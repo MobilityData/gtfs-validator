@@ -34,7 +34,8 @@ public class MissingShapesFileValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
 
-    Boolean missingShapes = shapeTable.isMissingFile() || shapeTable.isEmpty();
+    Boolean missingShapes =
+        shapeTable == null || shapeTable.isMissingFile() || shapeTable.getEntities().isEmpty();
     boolean hasZoneBasedDrt = FeedMetadata.hasAtLeastOneTripWithOnlyLocationId(feedContainer);
     boolean hasFixedStopsDrt =
         FeedMetadata.hasAtLeastOneRecordInFile(feedContainer, "location_groups.txt")
