@@ -183,7 +183,7 @@ public class FeedMetadata {
    *     "Zone-Based Demand Responsive Transit" feature.
    * @return true if at least one trip with only location_id is found, false otherwise.
    */
-  private boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
+  public static boolean hasAtLeastOneTripWithOnlyLocationId(GtfsFeedContainer feedContainer) {
     var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
     if (optionalStopTimeTable.isPresent()) {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
@@ -206,7 +206,7 @@ public class FeedMetadata {
    *     "Fixed-Stops Demand Responsive Transit" feature.
    * @return true if at least one trip with only location_group_id is found, false otherwise.
    */
-  private boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
+  public static boolean hasAtLeastOneTripWithOnlyLocationGroupId(GtfsFeedContainer feedContainer) {
     var optionalStopTimeTable = feedContainer.getTableForFilename(GtfsStopTime.FILENAME);
     if (optionalStopTimeTable.isPresent()) {
       for (GtfsEntity entity : optionalStopTimeTable.get().getEntities()) {
@@ -791,7 +791,7 @@ public class FeedMetadata {
     }
   }
 
-  private boolean hasAtLeastOneRecordInFile(
+  public static boolean hasAtLeastOneRecordInFile(
       GtfsFeedContainer feedContainer, String featureFilename) {
     var table = feedContainer.getTableForFilename(featureFilename);
     return table.isPresent() && table.get().entityCount() > 0;
