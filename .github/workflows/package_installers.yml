@@ -205,7 +205,7 @@ jobs:
             
               console.log('Uploading', file);
 
-              await github.repos.uploadReleaseAsset({
+              await github.rest.repos.uploadReleaseAsset({
                 owner, repo,
                 release_id: context.payload.release.id,
                 name: `Installer ${os}.${extension}`,
