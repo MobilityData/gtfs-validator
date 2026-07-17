@@ -12,16 +12,16 @@ jobs:
     steps:
 
       - name: Checkout master of gtfs-validator repo
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v6
         with:
           ref: master
           fetch-depth: 0
           token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }} 
 
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3.8.1
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: '16.x'
+          node-version: '24.x'
 
       - name: Install Node.js dependencies
         run: npm install @actions/github
