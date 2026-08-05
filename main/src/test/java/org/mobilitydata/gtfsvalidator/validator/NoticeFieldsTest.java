@@ -144,6 +144,7 @@ public class NoticeFieldsTest {
             "match2",
             "matchCount",
             "maxShapeDistanceTraveled",
+            "maxSlope",
             "maxTripDistanceTraveled",
             "message",
             "minServiceStartDate",
