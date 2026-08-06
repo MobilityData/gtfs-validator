@@ -70,7 +70,41 @@ public class PathwayModeFieldsValidatorTest {
 
   @Test
   public void walkwayWithoutTraversalTime_yieldsNoNotice() {
-    assertThat(validationNoticesFor(pathway(GtfsPathwayMode.WALKWAY).build())).isEmpty();
+    assertThat(validationNoticesFor(pathway(GtfsPathwayMode.WALKWAY).setLength(12.0).build()))
+        .isEmpty();
+  }
+
+  // length is recommended for walkways, fare gates and exit gates.
+
+  @Test
+  public void pathwaysRecommendingLengthWithoutLength_yieldNotice() {
+    for (GtfsPathwayMode mode :
+        List.of(GtfsPathwayMode.WALKWAY, GtfsPathwayMode.FARE_GATE, GtfsPathwayMode.EXIT_GATE)) {
+      assertThat(validationNoticesFor(pathway(mode).build()))
+          .containsExactly(new MissingRecommendedFieldNotice("pathways.txt", 2, "length"));
+    }
+  }
+
+  @Test
+  public void pathwaysRecommendingLengthWithLength_yieldNoNotice() {
+    for (GtfsPathwayMode mode :
+        List.of(GtfsPathwayMode.WALKWAY, GtfsPathwayMode.FARE_GATE, GtfsPathwayMode.EXIT_GATE)) {
+      assertThat(validationNoticesFor(pathway(mode).setLength(12.0).build())).isEmpty();
+    }
+  }
+
+  @Test
+  public void zeroLength_yieldsNoNotice() {
+    // Unlike max_slope, the spec gives no special meaning to a length of 0, so it counts as
+    // defined.
+    assertThat(validationNoticesFor(pathway(GtfsPathwayMode.WALKWAY).setLength(0.0).build()))
+        .isEmpty();
+  }
+
+  @Test
+  public void stairsWithoutLength_yieldsNoLengthNotice() {
+    assertThat(validationNoticesFor(pathway(GtfsPathwayMode.STAIRS).setStairCount(5).build()))
+        .doesNotContain(new MissingRecommendedFieldNotice("pathways.txt", 2, "length"));
   }
 
   // max_slope should only be used with walkways and moving sidewalks.
@@ -86,7 +120,9 @@ public class PathwayModeFieldsValidatorTest {
 
   @Test
   public void maxSlopeOnWalkwayOrMovingSidewalk_yieldsNoNotice() {
-    assertThat(validationNoticesFor(pathway(GtfsPathwayMode.WALKWAY).setMaxSlope(0.083).build()))
+    assertThat(
+            validationNoticesFor(
+                pathway(GtfsPathwayMode.WALKWAY).setMaxSlope(0.083).setLength(12.0).build()))
         .isEmpty();
     assertThat(
             validationNoticesFor(
@@ -108,7 +144,8 @@ public class PathwayModeFieldsValidatorTest {
   @Test
   public void negativeMaxSlopeOnDisallowedMode_yieldsNotice() {
     // A negative slope describes a downward pathway, so it is a real value.
-    GtfsPathway entity = pathway(GtfsPathwayMode.EXIT_GATE).setMaxSlope(-0.05).build();
+    GtfsPathway entity =
+        pathway(GtfsPathwayMode.EXIT_GATE).setMaxSlope(-0.05).setLength(12.0).build();
     assertThat(validationNoticesFor(entity))
         .containsExactly(
             new PathwayModeFieldsValidator.IrrelevantMaxSlopeSetForPathwayModeNotice(entity));

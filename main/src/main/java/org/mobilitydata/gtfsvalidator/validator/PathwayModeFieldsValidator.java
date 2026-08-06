@@ -16,6 +16,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsPathwaySchema;
  * Validates the pathway fields whose expectations depend on {@code pathway_mode}.
  *
  * <ul>
+ *   <li>{@code length} is recommended for walkways ({@code pathway_mode=1}), fare gates ({@code
+ *       pathway_mode=6}) and exit gates ({@code pathway_mode=7}).
  *   <li>{@code stair_count} is recommended for stairs ({@code pathway_mode=2}).
  *   <li>{@code traversal_time} is recommended for moving sidewalks ({@code pathway_mode=3}),
  *       escalators ({@code pathway_mode=4}) and elevators ({@code pathway_mode=5}).
@@ -33,6 +35,12 @@ public class PathwayModeFieldsValidator extends SingleEntityValidator<GtfsPathwa
   public void validate(GtfsPathway entity, NoticeContainer noticeContainer) {
     GtfsPathwayMode pathwayMode = entity.pathwayMode();
 
+    if (recommendsLength(pathwayMode) && !entity.hasLength()) {
+      noticeContainer.addValidationNotice(
+          new MissingRecommendedFieldNotice(
+              GtfsPathway.FILENAME, entity.csvRowNumber(), GtfsPathway.LENGTH_FIELD_NAME));
+    }
+
     if (pathwayMode == GtfsPathwayMode.STAIRS && !entity.hasStairCount()) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
@@ -49,6 +57,17 @@ public class PathwayModeFieldsValidator extends SingleEntityValidator<GtfsPathwa
     // carries no more meaning than leaving the field out and is not worth reporting.
     if (!allowsMaxSlope(pathwayMode) && entity.hasMaxSlope() && entity.maxSlope() != 0) {
       noticeContainer.addValidationNotice(new IrrelevantMaxSlopeSetForPathwayModeNotice(entity));
+    }
+  }
+
+  private static boolean recommendsLength(GtfsPathwayMode pathwayMode) {
+    switch (pathwayMode) {
+      case WALKWAY:
+      case FARE_GATE:
+      case EXIT_GATE:
+        return true;
+      default:
+        return false;
     }
   }
 
