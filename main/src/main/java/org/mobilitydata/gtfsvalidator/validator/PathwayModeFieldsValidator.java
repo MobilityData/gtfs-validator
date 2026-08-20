@@ -35,6 +35,13 @@ public class PathwayModeFieldsValidator extends SingleEntityValidator<GtfsPathwa
   public void validate(GtfsPathway entity, NoticeContainer noticeContainer) {
     GtfsPathwayMode pathwayMode = entity.pathwayMode();
 
+    // A missing or unusable pathway_mode is already reported by the parser. Without a usable mode
+    // there is nothing to check these fields against, so reporting on them here would only add
+    // noise.
+    if (pathwayMode == GtfsPathwayMode.UNRECOGNIZED) {
+      return;
+    }
+
     if (recommendsLength(pathwayMode) && !entity.hasLength()) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(

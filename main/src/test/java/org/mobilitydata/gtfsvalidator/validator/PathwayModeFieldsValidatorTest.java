@@ -151,6 +151,35 @@ public class PathwayModeFieldsValidatorTest {
             new PathwayModeFieldsValidator.IrrelevantMaxSlopeSetForPathwayModeNotice(entity));
   }
 
+  // An unusable pathway_mode is reported by the parser, so this validator stays quiet.
+
+  @Test
+  public void maxSlopeOnUnrecognizedMode_yieldsNoNotice() {
+    GtfsPathway entity =
+        new GtfsPathway.Builder()
+            .setCsvRowNumber(2)
+            .setPathwayId("pathway1")
+            .setFromStopId("stop1")
+            .setToStopId("stop2")
+            .setPathwayMode(9)
+            .setMaxSlope(0.083)
+            .build();
+    assertThat(validationNoticesFor(entity)).isEmpty();
+  }
+
+  @Test
+  public void maxSlopeWithoutPathwayMode_yieldsNoNotice() {
+    GtfsPathway entity =
+        new GtfsPathway.Builder()
+            .setCsvRowNumber(2)
+            .setPathwayId("pathway1")
+            .setFromStopId("stop1")
+            .setToStopId("stop2")
+            .setMaxSlope(0.083)
+            .build();
+    assertThat(validationNoticesFor(entity)).isEmpty();
+  }
+
   private static GtfsPathway.Builder pathway(GtfsPathwayMode pathwayMode) {
     return new GtfsPathway.Builder()
         .setCsvRowNumber(2)
