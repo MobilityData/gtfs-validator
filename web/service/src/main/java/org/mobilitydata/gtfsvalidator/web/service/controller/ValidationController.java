@@ -60,9 +60,16 @@ public class ValidationController {
     URL uploadUrl = null;
     try {
       if (body != null) {
-        if (!Strings.isNullOrEmpty(body.getCountryCode())) {
-          storageHelper.saveJobMetadata(new JobMetadata(jobId, body.getCountryCode()));
+        String originalGtfsSource =
+            !Strings.isNullOrEmpty(body.getUrl()) ? body.getUrl() : body.getFilename();
+
+        if (!Strings.isNullOrEmpty(body.getCountryCode())
+            || !Strings.isNullOrEmpty(originalGtfsSource)) {
+          storageHelper.saveJobMetadata(
+              new JobMetadata(
+                  jobId, Strings.nullToEmpty(body.getCountryCode()), originalGtfsSource));
         }
+
         if (!Strings.isNullOrEmpty(body.getUrl())) {
           var validatorVersion = versionResolver.resolveCurrentVersion();
           storageHelper.saveJobFileFromUrl(jobId, body.getUrl(), validatorVersion.orElse(null));
@@ -118,7 +125,9 @@ public class ValidationController {
 
       var fileName = jobData.getFileName();
 
-      var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
+      var jobMetadata = storageHelper.getJobMetadata(jobId);
+      var countryCode = jobMetadata.getCountryCode();
+      var originalGtfsSource = jobMetadata.getOriginalGtfsSource();
 
       // copy the file from GCS to a temp directory
       tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
@@ -126,7 +135,7 @@ public class ValidationController {
       outputPath = storageHelper.createOutputFolderForJob(jobId);
       try {
         // extracts feed files from zip to temp output directory, validates
-        validationHandler.validateFeed(tempFile, outputPath, countryCode);
+        validationHandler.validateFeed(tempFile, outputPath, countryCode, originalGtfsSource);
         storageHelper.writeExecutionResultFile(new ExecutionResult("success"), outputPath);
       } catch (Exception exc) {
         logger.error("Error", exc);
