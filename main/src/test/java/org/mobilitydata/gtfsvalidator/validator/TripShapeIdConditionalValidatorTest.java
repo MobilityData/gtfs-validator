@@ -110,6 +110,22 @@ public class TripShapeIdConditionalValidatorTest {
   }
 
   @Test
+  public void oneOverridingStopTimeWithContinuousBehaviorShouldGenerateNotice() {
+    // Every stop time overrides the route, but one of them overrides it to a continuous value, so
+    // the trip still needs a shape.
+    List<ValidationNotice> notices =
+        generateNotices(
+            List.of(route().setContinuousPickup(0).build()),
+            List.of(trip().build()),
+            List.of(
+                stopTime(4).setContinuousPickup(1).build(),
+                stopTime(5).setContinuousPickup(1).build(),
+                stopTime(6).setContinuousPickup(2).build(),
+                stopTime(7).setContinuousPickup(1).build()));
+    assertThat(notices).containsExactly(expectedNotice());
+  }
+
+  @Test
   public void noContinuousBehaviorShouldNotGenerateNotice() {
     List<ValidationNotice> notices =
         generateNotices(
