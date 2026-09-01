@@ -52,6 +52,8 @@ import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.notice.PointNearOriginNotice;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
+import org.mobilitydata.gtfsvalidator.notice.RecommendedFileEmptyNotice;
+import org.mobilitydata.gtfsvalidator.notice.RequiredFileEmptyNotice;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInValidatorError;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndRangeEqualNotice;
@@ -103,10 +105,12 @@ public class NoticeReferenceTest {
           MalformedJsonNotice.class,
           MissingRecommendedFieldNotice.class,
           MissingRecommendedFileNotice.class,
+          RecommendedFileEmptyNotice.class,
           MissingRequiredColumnNotice.class,
           MissingRequiredElementNotice.class,
           MissingRequiredFieldNotice.class,
           MissingRequiredFileNotice.class,
+          RequiredFileEmptyNotice.class,
           MixedCaseRecommendedFieldNotice.class,
           MoreThanOneEntityNotice.class,
           NewLineInValueNotice.class,
