@@ -139,6 +139,70 @@ public class CsvTableLoaderTest {
   }
 
   @Test
+  public void malformedCrCrLfLineEndingProducesNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of());
+
+    InputStream inputStream = toInputStream("id,code\r\r\n" + "s1,value\r\r\n");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(validationNoticeTypes(loaderNotices)).contains(InvalidLineEndingNotice.class);
+  }
+
+  @Test
+  public void loneCrLineEndingProducesNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\r" + "s1,value\r");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(validationNoticeTypes(loaderNotices)).contains(InvalidLineEndingNotice.class);
+  }
+
+  @Test
+  public void validLfLineEndingDoesNotProduceNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of());
+
+    InputStream inputStream = toInputStream("id,code\n" + "s1,value\n");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(validationNoticeTypes(loaderNotices)).doesNotContain(InvalidLineEndingNotice.class);
+  }
+
+  @Test
+  public void validCrLfLineEndingDoesNotProduceNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of());
+
+    InputStream inputStream = toInputStream("id,code\r\n" + "s1,value\r\n");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(validationNoticeTypes(loaderNotices)).doesNotContain(InvalidLineEndingNotice.class);
+  }
+
+  @Test
   public void missingRequiredField() {
     var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     when(testTableDescriptor.getColumns())

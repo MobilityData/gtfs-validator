@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidLineEndingNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
@@ -92,6 +93,7 @@ public class NoticeReferenceTest {
           InvalidFloatNotice.class,
           InvalidGeometryNotice.class,
           InvalidInputFilesInSubfolderNotice.class,
+          InvalidLineEndingNotice.class,
           InvalidIntegerNotice.class,
           InvalidLanguageCodeNotice.class,
           InvalidPhoneNumberNotice.class,
