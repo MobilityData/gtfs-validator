@@ -41,7 +41,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   private final ListMultimap<Class<? extends GtfsEntity>, Class<? extends SingleEntityValidator<?>>>
       singleEntityValidators;
   private final ListMultimap<
-          Class<? extends GtfsEntityContainer<?, ?>>, Class<? extends FileValidator>>
+          Class<? extends GtfsEntityContainer<?>>, Class<? extends FileValidator>>
       singleFileValidators;
   private final List<Class<? extends FileValidator>> multiFileValidators;
 
@@ -116,7 +116,7 @@ public class DefaultValidatorProvider implements ValidatorProvider {
   @SuppressWarnings("unchecked")
   public <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsEntityContainer<T, D> table,
+          GtfsEntityContainer<T> table,
           Multimap<GtfsFeedLoader.SkippedValidatorReason, Class<?>> skippedValidators) {
     List<FileValidator> validators = new ArrayList<>();
     for (Class<? extends FileValidator> validatorClass :

@@ -63,7 +63,7 @@ public interface ValidatorProvider {
    */
   <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsEntityContainer<T, D> table,
+          GtfsEntityContainer<T> table,
           Multimap<SkippedValidatorReason, Class<?>> skippedValidators);
 
   /**

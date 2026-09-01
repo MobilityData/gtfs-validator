@@ -40,7 +40,7 @@ public final class CsvFileLoader extends TableLoader {
   private final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   @Override
-  public GtfsEntityContainer<?, ?> load(
+  public GtfsEntityContainer<?> load(
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream csvInputStream,
