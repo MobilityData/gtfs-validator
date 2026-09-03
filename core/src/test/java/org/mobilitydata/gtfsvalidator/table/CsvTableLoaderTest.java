@@ -140,32 +140,9 @@ public class CsvTableLoaderTest {
   }
 
   @Test
-  public void headersOnlyRecommendedFile() {
-    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
-    when(testTableDescriptor.isRequired()).thenReturn(false);
-    when(testTableDescriptor.isRecommended()).thenReturn(true);
-    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
-    when(validatorProvider.createSingleFileValidators(
-            ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(List.of());
-
-    InputStream inputStream = toInputStream("id,code\n");
-
-    var loadedContainer =
-        CsvFileLoader.getInstance()
-            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
-
-    assertThat(loaderNotices.getValidationNotices())
-        .containsExactly(new RecommendedFileEmptyNotice("filename.txt"));
-    assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
-    assertThat(loadedContainer.getEntities()).isEmpty();
-  }
-
-  @Test
   public void headersOnlyOptionalFile() {
     var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     when(testTableDescriptor.isRequired()).thenReturn(false);
-    when(testTableDescriptor.isRecommended()).thenReturn(false);
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
     when(validatorProvider.createSingleFileValidators(
             ArgumentMatchers.any(), ArgumentMatchers.any()))
