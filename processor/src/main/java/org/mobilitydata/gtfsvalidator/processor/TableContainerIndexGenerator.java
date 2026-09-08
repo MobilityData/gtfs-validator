@@ -83,6 +83,34 @@ class TableContainerIndexGenerator {
     }
   }
 
+  /**
+   * Returns the primary key field on whose sorted index duplicate keys can be detected, if any.
+   *
+   * <p>A table qualifies when its primary key is made of exactly two fields, one of them annotated
+   * with {@code @Index} and the other one being the sequence the index is sorted by. In that case
+   * two entities share a primary key only if they sit next to each other in a sorted group of that
+   * index, so scanning the groups detects duplicates without the map keyed on the composite key,
+   * which costs about 60 bytes per row. Those are exactly the tables where that matters:
+   * stop_times.txt and shapes.txt, which hold millions of rows on a large feed.
+   *
+   * <p>Every other table with a composite primary key keeps the map: they are small, and the
+   * map-based detection is simpler.
+   */
+  private Optional<GtfsFieldDescriptor> resolveSortedGroupIndexField() {
+    if (fileDescriptor.singleRow() || fileDescriptor.primaryKeys().size() != 2) {
+      return Optional.empty();
+    }
+    for (GtfsFieldDescriptor primaryKey : fileDescriptor.primaryKeys()) {
+      Optional<GtfsFieldDescriptor> sequenceField = resolveSequenceField(primaryKey);
+      if (fileDescriptor.indices().contains(primaryKey)
+          && sequenceField.isPresent()
+          && sequenceField.get().javaType().getKind().isPrimitive()) {
+        return Optional.of(primaryKey);
+      }
+    }
+    return Optional.empty();
+  }
+
   private Optional<GtfsFieldDescriptor> resolveSequenceField(GtfsFieldDescriptor indexField) {
     if (indexField.primaryKey().isPresent()) {
       for (GtfsFieldDescriptor field : fileDescriptor.primaryKeys()) {
@@ -156,15 +184,76 @@ class TableContainerIndexGenerator {
             .build());
   }
 
-  private static void addMapByCompositeKey(TypeSpec.Builder typeSpec, TypeName entityTypeName) {
+  private void addMapByCompositeKey(TypeSpec.Builder typeSpec, TypeName entityTypeName) {
     // Field: Map<CompositeKey, EntityType?> byCompositeKeyMap;
     TypeName keyMapType =
         ParameterizedTypeName.get(
             ClassName.get(Map.class), ClassName.get("", "CompositeKey"), entityTypeName);
+    if (resolveSortedGroupIndexField().isEmpty()) {
+      typeSpec.addField(
+          FieldSpec.builder(keyMapType, BY_COMPOSITE_KEY_MAP_FIELD_NAME, Modifier.PRIVATE)
+              .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
+              .build());
+      return;
+    }
+    if (!hasTranslationRecordId()) {
+      // Nothing reads the map: duplicate keys are detected on the sorted index groups and this
+      // table does not support translation lookups.
+      return;
+    }
     typeSpec.addField(
         FieldSpec.builder(keyMapType, BY_COMPOSITE_KEY_MAP_FIELD_NAME, Modifier.PRIVATE)
-            .initializer("new $T<>()", ParameterizedTypeName.get(HashMap.class))
+            .addAnnotation(Nullable.class)
+            .addJavadoc("Built on first use, see {@link #$L()}.\n", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
             .build());
+    typeSpec.addMethod(generateByCompositeKeyMapMethod(keyMapType, entityTypeName));
+  }
+
+  /**
+   * Generates the accessor that builds {@code byCompositeKeyMap} on first use.
+   *
+   * <p>This is only generated for the tables where duplicate keys are detected without the map (see
+   * {@link #resolveSortedGroupIndexField()}), so that the map is paid for only by the feeds that
+   * actually translate the file.
+   */
+  private MethodSpec generateByCompositeKeyMapMethod(TypeName keyMapType, TypeName entityTypeName) {
+    return MethodSpec.methodBuilder(BY_COMPOSITE_KEY_MAP_FIELD_NAME)
+        .addModifiers(Modifier.PRIVATE, Modifier.SYNCHRONIZED)
+        .returns(keyMapType)
+        .addJavadoc(
+            "Returns the entities keyed on their composite primary key, building the map on first"
+                + " use.\n"
+                + "\n"
+                + "<p>One entry per row costs about 60 bytes, which is too much for a table with"
+                + " millions of rows, and only translation lookups need it. It is therefore built"
+                + " lazily, and synchronized because multi-file validators may run on several"
+                + " threads.\n")
+        .beginControlFlow("if ($L == null)", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
+        .addStatement("$T map = new $T<>()", keyMapType, ParameterizedTypeName.get(HashMap.class))
+        .beginControlFlow("for ($T entity : entities)", entityTypeName)
+        // putIfAbsent: as when the map was filled while detecting duplicates, the first entity
+        // with a given key wins.
+        .addStatement(
+            "map.putIfAbsent(CompositeKey.builder()\n$L\n.build(), entity)",
+            compositeKeyBuilderSetters("entity"))
+        .endControlFlow()
+        .addStatement("$L = map", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
+        .endControlFlow()
+        .addStatement("return $L", BY_COMPOSITE_KEY_MAP_FIELD_NAME)
+        .build();
+  }
+
+  /** Returns the {@code CompositeKey.Builder} setters filled from the given entity variable. */
+  private CodeBlock compositeKeyBuilderSetters(String entityVariable) {
+    return fileDescriptor.primaryKeys().stream()
+        .map(
+            (field) ->
+                CodeBlock.of(
+                    ".$L($L.$L())",
+                    FieldNameConverter.setterMethodName(field.name()),
+                    entityVariable,
+                    field.name()))
+        .collect(CodeBlock.joining("\n"));
   }
 
   private FieldSpec generateKeyColumnNames() {
@@ -196,6 +285,13 @@ class TableContainerIndexGenerator {
         .returns(ParameterizedTypeName.get(ImmutableList.class, String.class))
         .addStatement("return $L", KEY_COLUMN_NAMES_FIELD_NAME)
         .build();
+  }
+
+  /** Returns how to read the composite key map: the field itself, or the lazy accessor. */
+  private String byCompositeKeyMapAccessor() {
+    return resolveSortedGroupIndexField().isEmpty()
+        ? BY_COMPOSITE_KEY_MAP_FIELD_NAME
+        : BY_COMPOSITE_KEY_MAP_FIELD_NAME + "()";
   }
 
   private boolean hasTranslationRecordId() {
@@ -249,7 +345,7 @@ class TableContainerIndexGenerator {
           .beginControlFlow("try")
           .addStatement(
               "return Optional.ofNullable($L.getOrDefault(CompositeKey.builder()\n$L.\nbuild(), null))",
-              BY_COMPOSITE_KEY_MAP_FIELD_NAME,
+              byCompositeKeyMapAccessor(),
               CodeBlock.join(keyBuilderSetters, "\n"))
           .nextControlFlow("catch (NumberFormatException ex)")
           .addStatement("return Optional.empty()")
@@ -281,6 +377,7 @@ class TableContainerIndexGenerator {
 
   private MethodSpec generateSetupIndicesMethod() {
     TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    Optional<GtfsFieldDescriptor> sortedGroupIndexField = resolveSortedGroupIndexField();
     MethodSpec.Builder method =
         MethodSpec.methodBuilder("setupIndices")
             .addModifiers(Modifier.PRIVATE)
@@ -294,19 +391,12 @@ class TableContainerIndexGenerator {
               "noticeContainer.addValidationNotice(new $T(gtfsFilename(), entities.size()))",
               MoreThanOneEntityNotice.class)
           .endControlFlow();
-    } else if (fileDescriptor.hasMultiColumnPrimaryKey()) {
+    } else if (fileDescriptor.hasMultiColumnPrimaryKey() && sortedGroupIndexField.isEmpty()) {
       method
           .beginControlFlow("for ($T newEntity : entities)", gtfsEntityType)
           .addStatement(
               "CompositeKey key = CompositeKey.builder()\n$L\n.build()",
-              fileDescriptor.primaryKeys().stream()
-                  .map(
-                      (field) ->
-                          CodeBlock.of(
-                              ".$L(newEntity.$L())",
-                              FieldNameConverter.setterMethodName(field.name()),
-                              field.name()))
-                  .collect(CodeBlock.joining("\n")))
+              compositeKeyBuilderSetters("newEntity"))
           .addStatement(
               "$T oldEntity = $L.getOrDefault(key, null)",
               classNames.entityImplementationTypeName(),
@@ -373,7 +463,65 @@ class TableContainerIndexGenerator {
         }
       }
     }
+
+    sortedGroupIndexField.ifPresent(
+        (indexField) -> addSortedGroupDuplicateDetection(method, indexField));
     return method.build();
+  }
+
+  /**
+   * Emits the detection of duplicate primary keys by a scan of the sorted groups of an index.
+   *
+   * <p>Runs after the index has been filled and sorted: entities sharing a primary key are then
+   * adjacent inside a group, since the groups are keyed on one key field and sorted on the other.
+   * See {@link #resolveSortedGroupIndexField()} for why this is worth the extra code.
+   */
+  private void addSortedGroupDuplicateDetection(
+      MethodSpec.Builder method, GtfsFieldDescriptor indexField) {
+    TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    GtfsFieldDescriptor sequenceField = resolveSequenceField(indexField).get();
+    String sequence = sequenceField.name();
+    TypeName sequenceBoxedType = TypeName.get(sequenceField.javaType()).box();
+    method
+        .addComment("Entities are visited in the order they were loaded, and each one is looked up")
+        .addComment("in its own group of the index sorted above: the leftmost entity of the group")
+        .addComment("with the same sequence is the first one holding that primary key, so any")
+        .addComment("other entity is a duplicate of it. This reports exactly what the map keyed on")
+        .addComment("the composite key reported, without holding one entry per row.")
+        .beginControlFlow("for ($T entity : entities)", gtfsEntityType)
+        .addStatement(
+            "List<$T> sortedGroup = $L.get(entity.$L())",
+            gtfsEntityType,
+            byKeyMapName(indexField.name()),
+            indexField.name())
+        .addComment("Leftmost binary search: the group is sorted by " + sequence + ".")
+        .addStatement("int low = 0")
+        .addStatement("int high = sortedGroup.size()")
+        .beginControlFlow("while (low < high)")
+        .addStatement("int middle = (low + high) >>> 1")
+        .beginControlFlow(
+            "if ($T.compare(sortedGroup.get(middle).$L(), entity.$L()) < 0)",
+            sequenceBoxedType,
+            sequence,
+            sequence)
+        .addStatement("low = middle + 1")
+        .nextControlFlow("else")
+        .addStatement("high = middle")
+        .endControlFlow()
+        .endControlFlow()
+        .addStatement("$T firstEntity = sortedGroup.get(low)", gtfsEntityType)
+        .beginControlFlow("if (firstEntity == entity)")
+        .addStatement("continue")
+        .endControlFlow()
+        .addStatement(
+            "CompositeKey key = CompositeKey.builder()\n$L\n.build()",
+            compositeKeyBuilderSetters("firstEntity"))
+        .addStatement(
+            "noticeContainer.addValidationNotice(new $T(\n"
+                + "gtfsFilename(), firstEntity.csvRowNumber(), entity.csvRowNumber(),\n"
+                + "key.getDefinedKeys(firstEntity), key.getDefinedValues(firstEntity)))",
+            DuplicateKeyNotice.class)
+        .endControlFlow();
   }
 
   private TypeSpec compositeKeyClass() {
