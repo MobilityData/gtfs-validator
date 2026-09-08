@@ -120,6 +120,46 @@ public class CsvTableLoaderTest {
   }
 
   @Test
+  public void headersOnlyRequiredFile() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of());
+
+    InputStream inputStream = toInputStream("id,code\n");
+
+    var loadedContainer =
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .containsExactly(new RequiredFileEmptyNotice("filename.txt"));
+    assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    assertThat(loadedContainer.getEntities()).isEmpty();
+  }
+
+  @Test
+  public void headersOnlyOptionalFile() {
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
+    when(testTableDescriptor.isRequired()).thenReturn(false);
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.createSingleFileValidators(
+            ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(List.of());
+
+    InputStream inputStream = toInputStream("id,code\n");
+
+    var loadedContainer =
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices()).isEmpty();
+    assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
+    assertThat(loadedContainer.getEntities()).isEmpty();
+  }
+
+  @Test
   public void parsableTableRows() {
     var testTableDescriptor = new GtfsTestTableDescriptor();
     when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
