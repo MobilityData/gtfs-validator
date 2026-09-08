@@ -35,6 +35,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTransferTableContainer;
  *   <li>{@link MissingRequiredFieldNotice} - {@code from_stop_id} is missing or {@code to_stop_id}
  *       is missing for all transfer types except for in-seat transfer types
  * </ul>
+ *
+ * <p>An empty {@code transfer_type} means a recommended transfer point, which is the same as {@code
+ * transfer_type=0}, so both stop ids are required for it as well.
  */
 @GtfsValidator
 public class TransferStopIdsConditionalValidator extends FileValidator {
@@ -49,9 +52,7 @@ public class TransferStopIdsConditionalValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     for (GtfsTransfer transfer : transfersContainer.getEntities()) {
-      if (transfer.hasTransferType()) {
-        validateTransferEntity(transfer, noticeContainer);
-      }
+      validateTransferEntity(transfer, noticeContainer);
     }
   }
 
