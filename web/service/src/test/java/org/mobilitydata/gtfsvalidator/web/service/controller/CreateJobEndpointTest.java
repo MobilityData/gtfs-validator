@@ -104,10 +104,36 @@ public class CreateJobEndpointTest {
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
-    // should not call saveJobMetadata
-    verify(storageHelper, times(0)).saveJobMetadata(any(JobMetadata.class));
+    // URL provenance must be persisted even when no country code is provided.
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    var jobMetadataJson = mapper.writeValueAsString(jobMetadataCaptor.getValue());
+    org.junit.jupiter.api.Assertions.assertTrue(
+        jobMetadataJson.contains("\"originalGtfsSource\":\"" + url + "\""));
     // should saveJobFileFromUrl
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+  }
+
+  @Test
+  public void createJobWithFilenameButNoCountryCodePersistsMetadata() throws Exception {
+    doReturn(new URL(testUploadUrl)).when(storageHelper).generateUniqueUploadUrl(testJobId);
+
+    String json = "{\"filename\":\"sample-feed.zip\"}";
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/create-job")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.jobId").value(testJobId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(testUploadUrl));
+
+    // Uploaded-file provenance must be persisted even when no country code is provided.
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    var jobMetadataJson = mapper.writeValueAsString(jobMetadataCaptor.getValue());
+    org.junit.jupiter.api.Assertions.assertTrue(
+        jobMetadataJson.contains("\"originalGtfsSource\":\"sample-feed.zip\""));
+    verify(storageHelper, times(0)).saveJobFileFromUrl(anyString(), anyString(), anyString());
   }
 
   @Test

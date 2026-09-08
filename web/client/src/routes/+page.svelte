@@ -21,6 +21,7 @@
    * @typedef CreateJobParameters
    * @type {object}
    * @property {string=} url - job source url.
+   * @property {string=} filename - original uploaded filename.
    * @property {string} countryCode - country code.
    */
 
@@ -206,9 +207,8 @@
       addError('Please include a file to validate.');
     }
   }
-
-  /** @param {string=} url **/
-  function createJob(url) {
+  /** @param {string=} url @param {string=} filename **/
+  function createJob(url, filename) {
     updateStatus('authorizing');
     jobInProgress = false; // stop any ongoing polling loops
     jobId = '_waiting_';
@@ -221,6 +221,10 @@
 
       if (url) {
         data.url = url;
+      }
+
+      if (filename) {
+        data.filename = filename;
       }
 
       const xhr = new XMLHttpRequest();
@@ -344,11 +348,12 @@
   async function generateReport(source) {
     // if source is a URL, pass it to createJob
     const url = typeof source === 'string' ? source : undefined;
+    const filename = source instanceof File ? source.name : undefined;
 
     // get a job id from the server
     let job
     try {
-      job = await createJob(url);
+      job = await createJob(url, filename);
     } catch (error) {
       addError( typeof error === 'string'? error : generalValidationErrorMessage);
       statusModal.close();
