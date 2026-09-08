@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
 /**
  * A field contains a wrong language code.
  *
- * <p>Language codes must follow <a href="http://www.rfc-editor.org/rfc/bcp/bcp47.txt">IETF BCP
+ * <p>Language codes must follow <a href="https://www.rfc-editor.org/info/rfc5646/">IETF BCP
  * 47</a>.
  *
  * <p>Example: `en` for English, `en-US` for American English or `de` for German.
