@@ -45,7 +45,12 @@ public final class ResolvedNotice<T extends Notice> {
    * @return the key used to group notices per type and severity: code + ordinal of severity level.
    */
   public String getMappingKey() {
-    return context.getCode() + getSeverityLevel().ordinal();
+    return mappingKey(context.getCode(), getSeverityLevel());
+  }
+
+  /** Returns the key under which notices of the given code and severity level are grouped. */
+  static String mappingKey(String code, SeverityLevel severityLevel) {
+    return code + severityLevel.ordinal();
   }
 
   @Override
