@@ -157,9 +157,17 @@ public class ValidationRunner {
             .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
     MemoryUsageRegister.getInstance().registerMemoryUsage(after);
 
+    // Everything the reports need from the feed container has now been extracted, so the reference
+    // is dropped before generating them. Report generation is itself allocation heavy (JSON trees,
+    // notice views, output buffers) and the container holds every loaded entity: keeping both alive
+    // makes the memory peak the sum of the two phases instead of the larger of the two. On a large
+    // feed the container alone is over a gigabyte.
+    String tableTotals = feedContainer.tableTotalsText();
+    feedContainer = null;
+
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(feedMetadata, feedContainer, feedLoader, config);
+    printSummary(feedMetadata, tableTotals, feedLoader, config);
     return Status.SUCCESS;
   }
 
@@ -168,10 +176,35 @@ public class ValidationRunner {
    *
    * @param feedMetadata the {@code FeedMetadata}
    * @param feedContainer the {@code GtfsFeedContainer}
+   * @deprecated Use {@link #printSummary(FeedMetadata, String, GtfsFeedLoader,
+   *     ValidationRunnerConfig)}, which does not require the feed container to be kept in memory
+   *     while reports are generated.
    */
+  @Deprecated
   public static void printSummary(
       FeedMetadata feedMetadata,
       GtfsFeedContainer feedContainer,
+      GtfsFeedLoader loader,
+      ValidationRunnerConfig config) {
+    // The container is only read for the table totals, and the new overload returns before
+    // using them in stdout mode: a caller passing no container in that mode kept working.
+    printSummary(
+        feedMetadata,
+        feedContainer == null ? null : feedContainer.tableTotalsText(),
+        loader,
+        config);
+  }
+
+  /**
+   * Prints validation metadata.
+   *
+   * @param feedMetadata the {@code FeedMetadata}
+   * @param tableTotals the per-table entity counts, as returned by {@link
+   *     GtfsFeedContainer#tableTotalsText()}
+   */
+  public static void printSummary(
+      FeedMetadata feedMetadata,
+      String tableTotals,
       GtfsFeedLoader loader,
       ValidationRunnerConfig config) {
     // Skip summary output when using stdout mode to avoid interfering with JSON output
@@ -249,7 +282,7 @@ public class ValidationRunner {
     }
 
     logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
-    logger.atInfo().log(feedContainer.tableTotalsText());
+    logger.atInfo().log(tableTotals);
   }
 
   /**
