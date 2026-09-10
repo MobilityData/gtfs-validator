@@ -335,12 +335,13 @@
         </thead>
         <tbody>
         <span th:each="noticesBySeverityLevel: ${summary.noticesMap}">
-            <span th:each="noticesByCode: ${noticesBySeverityLevel.value}">
+            <span th:each="noticesByCode: ${noticesBySeverityLevel.value}"
+                  th:with="totalForCode=${summary.getNoticeCountForCode(noticesBySeverityLevel.key, noticesByCode.key)}">
                 <tr class="notice">
                     <td th:text="${noticesByCode.key}" />
                     <td th:class="${noticesBySeverityLevel.key.toString().toLowerCase()}"
                         th:text="${noticesBySeverityLevel.key}" />
-                    <td th:text="${noticesByCode.value.size}" />
+                    <td th:text="${totalForCode}" />
                 </tr>
                 <tr class="description">
                     <td colspan="4">
@@ -350,7 +351,7 @@
                             <p> You can see more about this notice <a
                                     th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key} + '-rule'}">here</a>.
                             </p>
-                             <p th:if="${noticesByCode.value.size > 50}">Only the first 50 of <span th:text="${noticesByCode.value.size}"></span> affected records are displayed below.</p>
+                             <p th:if="${totalForCode > summary.maxNoticesPerCode}">Only the first <span th:text="${summary.maxNoticesPerCode}"></span> of <span th:text="${totalForCode}"></span> affected records are displayed below.</p>
                             <table>
                                 <thead>
                                     <tr>
@@ -365,7 +366,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="notice, iterStat : ${noticesByCode.value}" th:if="${iterStat.index < 50}">
+                                    <tr th:each="notice : ${noticesByCode.value}">
                                         <th:block th:each="field: ${uniqueFieldsByCode[noticesByCode.key]}">
                                             <td th:text="${notice.getFields().contains(field) ? notice.getValueForField(field) : 'N/A'}" />
                                         </th:block>
