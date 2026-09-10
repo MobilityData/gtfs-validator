@@ -12,11 +12,25 @@ echo "Executing in directory = $(pwd)"
 
 zipfile=${subproject}.${version}.zip
 
-pushd build/local-repo
-zip -qr ${zipfile} *
+# Ensure jq is available if later used by callers; not strictly required here but helpful to surface missing deps early.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "Warning: jq not found. Some scripts expect jq for JSON parsing. Continue if you're sure it's not needed."
+fi
 
-bearer_token=$(echo "$MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:$MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD" | base64)
+pushd build/local-repo >/dev/null
+zip -qr "${zipfile}" *
 
+# Build Authorization header: prefer an explicit bearer token, otherwise fall back to Basic auth built from username/password
+if [ -n "${MAVEN_CENTRAL_PORTAL_BEARER_TOKEN:-}" ]; then
+  auth_header="Authorization: Bearer ${MAVEN_CENTRAL_PORTAL_BEARER_TOKEN}"
+elif [ -n "${MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:-}" ] && [ -n "${MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD:-}" ]; then
+  basic_token=$(echo -n "${MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME}:${MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD}" | base64 | tr -d '\n')
+  auth_header="Authorization: Basic ${basic_token}"
+else
+  echo "Error: No credentials found. Set MAVEN_CENTRAL_PORTAL_BEARER_TOKEN or MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME and MAVEN_CENTRAL_PORTAL_TOKEN_PASSWORD."
+  popd >/dev/null || true
+  exit 1
+fi
 
 # Upload to maven central.
 # publishingType=USER_MANAGED means that the artefacts will be uploaded and verified, but not yet published.
@@ -24,12 +38,8 @@ bearer_token=$(echo "$MAVEN_CENTRAL_PORTAL_TOKEN_USERNAME:$MAVEN_CENTRAL_PORTAL_
 # From this page you can examine the list of artefacts, and either drop them or release them.
 # If you want to remove that step, use publishingType=AUTOMATIC below, that will publish directly.
 # Note that once published you cannot remove or alter the artifacts.
-answer=$(curl --request POST \
-  --verbose \
-  --header "Authorization: Bearer ${bearer_token}" \
-  --form bundle="@${zipfile}" \
-  'https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED')
+answer=$(curl --request POST --silent --show-error --header "${auth_header}" --form bundle="@${zipfile}" 'https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED')
 
 echo "curl request answer: $answer"
 
-popd
+popd >/dev/null
