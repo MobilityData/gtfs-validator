@@ -38,6 +38,7 @@ public interface GtfsTransferSchema extends GtfsEntity {
   @Index
   GtfsTransferType transferType();
 
+  @ConditionallyRequired
   @NonNegative
   int minTransferTime();
 
