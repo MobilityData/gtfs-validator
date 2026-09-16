@@ -29,6 +29,13 @@ public abstract class ValidationRunnerConfig {
   // The GTFS input, as a URI to a local file or an external URL.
   public abstract URI gtfsSource();
 
+  // The original human-readable GTFS source, when different from gtfsSource.
+  public abstract Optional<String> originalGtfsSource();
+
+  public String getDisplayGtfsSource() {
+    return originalGtfsSource().orElse(gtfsSource().toString());
+  }
+
   // The directory where all validation reports will be written.
   public abstract Path outputDirectory();
 
@@ -92,6 +99,8 @@ public abstract class ValidationRunnerConfig {
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setGtfsSource(URI gtfsSource);
+
+    public abstract Builder setOriginalGtfsSource(Optional<String> originalGtfsSource);
 
     public abstract Builder setOutputDirectory(Path outputDirectory);
 

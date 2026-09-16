@@ -41,7 +41,7 @@ public class RunValidatorEndpointTest {
   @BeforeEach
   public void setUp() throws Exception {
     testJobId = "123";
-    jobMetaData = new JobMetadata(testJobId, "US");
+    jobMetaData = new JobMetadata(testJobId, "US", "sample-feed.zip");
     mockFeedFile = mock(File.class);
     mockOutputPath = mock(Path.class);
     mockOutputPathToFile = mock(File.class);
@@ -97,7 +97,11 @@ public class RunValidatorEndpointTest {
     // verify that the validationHandler is called with the downloaded feed file, output path, and
     // country code
     verify(validationHandler, times(1))
-        .validateFeed(mockFeedFile, mockOutputPath, jobMetaData.getCountryCode());
+        .validateFeed(
+            mockFeedFile,
+            mockOutputPath,
+            jobMetaData.getCountryCode(),
+            jobMetaData.getOriginalGtfsSource());
 
     // verify that the validation output files are uploaded to storage
     verify(storageHelper, times(1)).uploadFilesToStorage(testJobId, mockOutputPath);
@@ -123,7 +127,8 @@ public class RunValidatorEndpointTest {
         .andExpect(MockMvcResultMatchers.status().is5xxServerError());
 
     // should not have attempted validation
-    verify(validationHandler, times(0)).validateFeed(any(File.class), any(Path.class), anyString());
+    verify(validationHandler, times(0))
+        .validateFeed(any(File.class), any(Path.class), anyString(), anyString());
 
     // should not have uploaded to storage
     verify(storageHelper, times(0)).uploadFilesToStorage(anyString(), any(Path.class));
@@ -137,7 +142,7 @@ public class RunValidatorEndpointTest {
   public void runValidatorValidateFeedFailure() throws Exception {
     doThrow(new Exception())
         .when(validationHandler)
-        .validateFeed(any(File.class), any(Path.class), anyString());
+        .validateFeed(any(File.class), any(Path.class), anyString(), anyString());
 
     doReturn(mockFeedFile)
         .when(storageHelper)
@@ -151,5 +156,29 @@ public class RunValidatorEndpointTest {
         .andExpect(MockMvcResultMatchers.status().isOk());
 
     assertTrue(executionResultIsError());
+  }
+
+  @Test
+  public void runValidatorForwardsOriginalGtfsSource() throws Exception {
+    doReturn(mockFeedFile)
+        .when(storageHelper)
+        .downloadFeedFileFromStorage(anyString(), anyString());
+
+    doReturn(true).when(mockFeedFile).exists();
+    doReturn(true).when(mockOutputPathToFile).exists();
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/run-validator")
+                .content(mapper.writeValueAsString(pubSubMessage))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+    verify(validationHandler, times(1))
+        .validateFeed(
+            mockFeedFile,
+            mockOutputPath,
+            jobMetaData.getCountryCode(),
+            jobMetaData.getOriginalGtfsSource());
   }
 }
