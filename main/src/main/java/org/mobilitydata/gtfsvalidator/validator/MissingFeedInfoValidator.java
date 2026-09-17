@@ -41,7 +41,7 @@ public class MissingFeedInfoValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    if (feedInfoTable.isMissingFile()) {
+    if (feedInfoTable.isMissingFile() || feedInfoTable.getEntities().isEmpty()) {
       if (translationTable.isMissingFile()) {
         noticeContainer.addValidationNotice(
             new MissingRecommendedFileNotice(GtfsFeedInfo.FILENAME));
