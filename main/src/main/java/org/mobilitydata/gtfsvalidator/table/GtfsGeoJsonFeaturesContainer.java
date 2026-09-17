@@ -27,8 +27,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
  * Container for GeoJSON features. Contrarily to the csv containers, this class is not auto
  * generated since we have only one such class.
  */
-public class GtfsGeoJsonFeaturesContainer
-    extends GtfsEntityContainer<GtfsGeoJsonFeature, GtfsGeoJsonFileDescriptor> {
+public class GtfsGeoJsonFeaturesContainer extends GtfsEntityContainer<GtfsGeoJsonFeature> {
 
   private final Map<String, GtfsGeoJsonFeature> byLocationIdMap = new HashMap<>();
 

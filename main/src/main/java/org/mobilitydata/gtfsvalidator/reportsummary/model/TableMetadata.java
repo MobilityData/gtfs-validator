@@ -15,7 +15,7 @@ public class TableMetadata {
     this.entityCount = entityCount;
   }
 
-  public static TableMetadata from(GtfsEntityContainer<?, ?> table) {
+  public static TableMetadata from(GtfsEntityContainer<?> table) {
     return new TableMetadata(table.gtfsFilename(), table.getTableStatus(), table.entityCount());
   }
 

@@ -47,7 +47,7 @@ public abstract class TableLoader {
 
   protected <T extends GtfsEntity, D extends GtfsTableDescriptor>
       List<FileValidator> createSingleFileValidators(
-          GtfsEntityContainer<T, D> table, ValidatorProvider validatorProvider) {
+          GtfsEntityContainer<T> table, ValidatorProvider validatorProvider) {
 
     return validatorProvider.createSingleFileValidators(table, skippedValidators);
   }

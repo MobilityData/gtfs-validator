@@ -132,7 +132,7 @@ public class GtfsFeedLoader {
         loaderCallables.add(
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
-              GtfsEntityContainer<?, ?> tableContainer;
+              GtfsEntityContainer<?> tableContainer;
               // The descriptor knows what loader to use to load the file
               TableLoader tableLoader = tableDescriptor.getTableLoader();
               tableLoader.setSkippedValidators(skippedValidators);
@@ -159,7 +159,7 @@ public class GtfsFeedLoader {
             });
       }
     }
-    ArrayList<GtfsEntityContainer<?, ?>> tableContainers = new ArrayList<>();
+    ArrayList<GtfsEntityContainer<?>> tableContainers = new ArrayList<>();
     tableContainers.ensureCapacity(tableDescriptors.size());
     for (GtfsFileDescriptor<?> tableDescriptor : remainingDescriptors.values()) {
       TableLoader tableLoader = tableDescriptor.getTableLoader();
@@ -193,7 +193,7 @@ public class GtfsFeedLoader {
       NoticeContainer noticeContainer,
       ExecutorService exec,
       List<Callable<TableAndNoticeContainers>> loaderCallables,
-      ArrayList<GtfsEntityContainer<?, ?>> tableContainers)
+      ArrayList<GtfsEntityContainer<?>> tableContainers)
       throws InterruptedException {
     for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
       try {
