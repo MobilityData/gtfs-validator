@@ -38,6 +38,7 @@ public interface GtfsTripSchema extends GtfsEntity {
   String serviceId();
 
   @MixedCase
+  @Recommended
   String tripHeadsign();
 
   @MixedCase
