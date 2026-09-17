@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.FluentLogger;
 import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParserSettings;
+import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidLineEndingNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
@@ -55,7 +58,9 @@ public final class CsvFileLoader extends TableLoader {
         Optional<Integer> maxCharsPerColumn = tableDescriptor.maxCharsPerColumn();
         settings.setMaxCharsPerColumn(maxCharsPerColumn.get());
       }
-      csvFile = new CsvFile(csvInputStream, gtfsFilename, settings);
+      LineEndingCheckingInputStream checkedInputStream =
+          new LineEndingCheckingInputStream(csvInputStream, noticeContainer, gtfsFilename);
+      csvFile = new CsvFile(checkedInputStream, gtfsFilename, settings);
     } catch (TextParsingException e) {
       noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
       return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
@@ -141,6 +146,81 @@ public final class CsvFileLoader extends TableLoader {
     ValidatorUtil.invokeSingleFileValidators(
         createSingleFileValidators(table, validatorProvider), noticeContainer);
     return table;
+  }
+
+  private static final class LineEndingCheckingInputStream extends FilterInputStream {
+    private int pendingCarriageReturns = 0;
+    private boolean invalidLineEndingFound = false;
+    private boolean finished = false;
+    private final NoticeContainer noticeContainer;
+    private final String filename;
+
+    LineEndingCheckingInputStream(
+        InputStream inputStream, NoticeContainer noticeContainer, String filename) {
+      super(inputStream);
+      this.noticeContainer = noticeContainer;
+      this.filename = filename;
+    }
+
+    private void inspect(int value) {
+      if (value == '\r') {
+        pendingCarriageReturns++;
+        return;
+      }
+
+      if (value == '\n') {
+        if (pendingCarriageReturns > 1) {
+          invalidLineEndingFound = true;
+        }
+        pendingCarriageReturns = 0;
+        return;
+      }
+
+      if (pendingCarriageReturns > 0) {
+        invalidLineEndingFound = true;
+        pendingCarriageReturns = 0;
+      }
+    }
+
+    private void finishInspection() {
+      if (finished) {
+        return;
+      }
+      finished = true;
+
+      if (pendingCarriageReturns > 0) {
+        invalidLineEndingFound = true;
+      }
+
+      if (invalidLineEndingFound) {
+        noticeContainer.addValidationNotice(new InvalidLineEndingNotice(filename));
+      }
+    }
+
+    @Override
+    public int read() throws IOException {
+      int value = in.read();
+      if (value == -1) {
+        finishInspection();
+      } else {
+        inspect(value);
+      }
+      return value;
+    }
+
+    @Override
+    public int read(byte[] bytes, int offset, int length) throws IOException {
+      int count = in.read(bytes, offset, length);
+      if (count == -1) {
+        finishInspection();
+        return -1;
+      }
+
+      for (int i = offset; i < offset + count; i++) {
+        inspect(bytes[i] & 0xff);
+      }
+      return count;
+    }
   }
 
   private NoticeContainer validateHeaders(
