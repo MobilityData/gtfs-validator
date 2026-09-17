@@ -10,10 +10,16 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * case letters).
  *
  * <p>This field contains customer-facing text and should use Mixed Case (upper and lower case
- * letters) to ensure good readability when displayed to riders. Avoid the use of abbreviations
- * throughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name
- * (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader
- * software and voice user interfaces.
+ * letters) to ensure good readability when displayed to riders. The validator splits the field
+ * value into letter-only tokens at non-letter characters. For values with multiple relevant tokens,
+ * at least one token should contain both upper and lower case letters. A single multi-character
+ * token consisting only of lowercase letters also triggers this notice. As a result, the check
+ * applies to individual text tokens rather than simply checking whether the complete field value
+ * contains both upper and lower case letters.
+ *
+ * <p>Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is
+ * called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for
+ * accessibility by screen reader software and voice user interfaces.
  *
  * <table style="table-layout:auto; width:auto;">
  *   <caption>Good examples:</caption>
