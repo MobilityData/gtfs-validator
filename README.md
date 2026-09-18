@@ -205,6 +205,8 @@ In order to avoid sudden changes in the validation output that might declare pre
 # Projects based on this validator
 [CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/data-infra/tree/main/jobs/gtfs-schedule-validator) - A thin wrapper around MobilityData/gtfs-validator.
 
+[GTFS Scorecard](https://github.com/ChelseaKR/gtfs-scorecard) - Runs this validator on a daily schedule against 2,400+ public GTFS feed records and turns its notices into plain-language grades and prioritized fixes for small transit agencies. Also ships a GitHub Action that checks a feed before it is published.
+
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
