@@ -37,8 +37,16 @@ public final class ValidatorUtil {
    */
   public static <T extends GtfsEntity> void invokeSingleEntityValidators(
       T entity, List<SingleEntityValidator<T>> validators, NoticeContainer noticeContainer) {
-    for (SingleEntityValidator<T> validator : validators) {
-      safeValidate(c -> validator.validate(entity, c), validator.getClass(), noticeContainer);
+    // This runs once per entity per validator, millions of times on a large feed, so the validators
+    // are invoked directly rather than through safeValidate: a lambda capturing the entity would be
+    // allocated on every call.
+    for (int i = 0, size = validators.size(); i < size; ++i) {
+      SingleEntityValidator<T> validator = validators.get(i);
+      try {
+        validator.validate(entity, noticeContainer);
+      } catch (RuntimeException exception) {
+        logRuntimeException(exception, validator.getClass(), noticeContainer);
+      }
     }
   }
 
@@ -73,11 +81,17 @@ public final class ValidatorUtil {
     try {
       validate.accept(noticeContainer);
     } catch (RuntimeException e) {
-      logger.atSevere().withCause(e).log(
-          "Runtime exception in validator %s", validatorClass.getCanonicalName());
-      noticeContainer.addSystemError(
-          new RuntimeExceptionInValidatorError(validatorClass.getCanonicalName(), e));
+      logRuntimeException(e, validatorClass, noticeContainer);
     }
+  }
+
+  /** Logs an exception raised by a validator and stores it as a system error. */
+  private static void logRuntimeException(
+      RuntimeException exception, Class<?> validatorClass, NoticeContainer noticeContainer) {
+    logger.atSevere().withCause(exception).log(
+        "Runtime exception in validator %s", validatorClass.getCanonicalName());
+    noticeContainer.addSystemError(
+        new RuntimeExceptionInValidatorError(validatorClass.getCanonicalName(), exception));
   }
 
   private ValidatorUtil() {}

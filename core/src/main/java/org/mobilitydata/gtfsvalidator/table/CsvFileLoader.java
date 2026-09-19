@@ -95,12 +95,15 @@ public final class CsvFileLoader extends TableLoader {
     final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
         createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
 
+    // One container reused for every row instead of one per row: on a file with millions of rows
+    // that is a few million containers, each with its own lists and map, of pure garbage.
+    final NoticeContainer rowNotices = new NoticeContainer();
     try {
       for (CsvRow row : csvFile) {
         if (row.getRowNumber() % 200000 == 0) {
           logger.atInfo().log("Reading %s, row %d", gtfsFilename, row.getRowNumber());
         }
-        NoticeContainer rowNotices = new NoticeContainer();
+        rowNotices.reset();
         rowParser.setRow(row, rowNotices);
         if (!rowParser.checkRowNumber()) {
           hasUnparsableRows = true;
