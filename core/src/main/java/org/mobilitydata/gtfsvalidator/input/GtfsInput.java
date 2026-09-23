@@ -37,9 +37,6 @@ import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
  * directory.
  */
 public abstract class GtfsInput implements Closeable {
-  public static final String invalidInputMessage =
-      "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
-
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
