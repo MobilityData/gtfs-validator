@@ -13,7 +13,11 @@ public class InvalidLineEndingNotice extends ValidationNotice {
   /** The name of the file containing an invalid line ending. */
   private final String filename;
 
-  public InvalidLineEndingNotice(String filename) {
+  /** The 1-based line number containing the first invalid line ending. */
+  private final long rowNumber;
+
+  public InvalidLineEndingNotice(String filename, long rowNumber) {
     this.filename = filename;
+    this.rowNumber = rowNumber;
   }
 }

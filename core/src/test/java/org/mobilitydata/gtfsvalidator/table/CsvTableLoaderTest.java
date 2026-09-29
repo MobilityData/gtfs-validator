@@ -147,12 +147,47 @@ public class CsvTableLoaderTest {
             ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(List.of());
 
-    InputStream inputStream = toInputStream("id,code\r\r\n" + "s1,value\r\r\n");
+    InputStream inputStream = toInputStream("id,code\n" + "s1,value\r\r\n");
 
     CsvFileLoader.getInstance()
         .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertThat(validationNoticeTypes(loaderNotices)).contains(InvalidLineEndingNotice.class);
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 2));
+  }
+
+  @Test
+  public void malformedCrCrLfIsReportedWhenInvalidHeaderStopsBeforeEof() {
+    var testTableDescriptor = mock(GtfsTableDescriptor.class);
+    when(testTableDescriptor.gtfsFilename()).thenReturn("filename");
+    when(testTableDescriptor.getColumns()).thenReturn(ImmutableList.of());
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS))
+        .thenReturn(mockContainer);
+
+    ValidationNotice headerValidationNotice = new EmptyColumnNameNotice("filename", 0);
+    TableHeaderValidator tableHeaderValidator =
+        new TableHeaderValidator() {
+          @Override
+          public void validate(
+              String filename,
+              CsvHeader actualHeader,
+              Set<String> supportedHeaders,
+              Set<String> requiredHeaders,
+              NoticeContainer noticeContainer) {
+            noticeContainer.addValidationNotice(headerValidationNotice);
+          }
+        };
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(tableHeaderValidator);
+
+    String payload = "invalid_header\r\r\n" + "x".repeat(1024 * 1024 + 1);
+    InputStream inputStream = toInputStream(payload);
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename", 1));
+    assertThat(loaderNotices.getValidationNotices()).contains(headerValidationNotice);
   }
 
   @Test

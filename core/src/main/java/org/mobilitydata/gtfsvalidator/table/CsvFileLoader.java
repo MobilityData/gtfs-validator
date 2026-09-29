@@ -51,106 +51,115 @@ public final class CsvFileLoader extends TableLoader {
     GtfsTableDescriptor tableDescriptor = (GtfsTableDescriptor) fileDescriptor;
     final String gtfsFilename = tableDescriptor.gtfsFilename();
 
-    CsvFile csvFile;
-    try {
-      CsvParserSettings settings = CsvFile.createDefaultParserSettings();
-      if (tableDescriptor.maxCharsPerColumn().isPresent()) {
-        Optional<Integer> maxCharsPerColumn = tableDescriptor.maxCharsPerColumn();
-        settings.setMaxCharsPerColumn(maxCharsPerColumn.get());
-      }
-      LineEndingCheckingInputStream checkedInputStream =
-          new LineEndingCheckingInputStream(csvInputStream, noticeContainer, gtfsFilename);
-      csvFile = new CsvFile(checkedInputStream, gtfsFilename, settings);
-    } catch (TextParsingException e) {
-      noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
-      return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
-    }
-    if (csvFile.isEmpty()) {
-      noticeContainer.addValidationNotice(new EmptyFileNotice(gtfsFilename));
-      return tableDescriptor.createContainerForInvalidStatus(TableStatus.EMPTY_FILE);
-    }
-    final CsvHeader header = csvFile.getHeader();
-    final ImmutableList<GtfsColumnDescriptor> columnDescriptors = tableDescriptor.getColumns();
-    final NoticeContainer headerNotices =
-        validateHeaders(validatorProvider, gtfsFilename, header, columnDescriptors);
-    noticeContainer.addAll(headerNotices);
-    if (headerNotices.hasValidationErrors()) {
-      return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
-    }
-    final int nColumns = columnDescriptors.size();
-    final ImmutableMap<String, GtfsFieldLoader> fieldLoadersMap = tableDescriptor.getFieldLoaders();
-    final int[] columnIndices = new int[nColumns];
-    final GtfsFieldLoader[] fieldLoaders = new GtfsFieldLoader[nColumns];
-    final FieldCache[] fieldCaches = new FieldCache[nColumns];
-    for (int i = 0; i < nColumns; ++i) {
-      GtfsColumnDescriptor columnDescriptor = columnDescriptors.get(i);
-      String columnName = columnDescriptor.columnName();
-      columnIndices[i] = header.getColumnIndex(columnName);
-      fieldLoaders[i] = fieldLoadersMap.get(columnName);
-      if (columnDescriptor.isCached()) {
-        // FieldCache is a generic type. However, info about generics is eliminated at runtime.
-        fieldCaches[i] = new FieldCache();
-      }
-    }
-    final GtfsEntityBuilder builder = tableDescriptor.createEntityBuilder();
-    final RowParser rowParser =
-        new RowParser(gtfsFilename, header, validatorProvider.getFieldValidator());
-    final List<GtfsEntity> entities = new ArrayList<>();
-    boolean hasUnparsableRows = false;
-    final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
-        createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
+    LineEndingCheckingInputStream checkedInputStream =
+        new LineEndingCheckingInputStream(csvInputStream, noticeContainer, gtfsFilename);
 
     try {
-      for (CsvRow row : csvFile) {
-        if (row.getRowNumber() % 200000 == 0) {
-          logger.atInfo().log("Reading %s, row %d", gtfsFilename, row.getRowNumber());
+      CsvFile csvFile;
+      try {
+        CsvParserSettings settings = CsvFile.createDefaultParserSettings();
+        if (tableDescriptor.maxCharsPerColumn().isPresent()) {
+          Optional<Integer> maxCharsPerColumn = tableDescriptor.maxCharsPerColumn();
+          settings.setMaxCharsPerColumn(maxCharsPerColumn.get());
         }
-        NoticeContainer rowNotices = new NoticeContainer();
-        rowParser.setRow(row, rowNotices);
-        if (!rowParser.checkRowNumber()) {
-          hasUnparsableRows = true;
-          break;
+        csvFile = new CsvFile(checkedInputStream, gtfsFilename, settings);
+      } catch (TextParsingException e) {
+        noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
+        return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
+      }
+      if (csvFile.isEmpty()) {
+        noticeContainer.addValidationNotice(new EmptyFileNotice(gtfsFilename));
+        return tableDescriptor.createContainerForInvalidStatus(TableStatus.EMPTY_FILE);
+      }
+      final CsvHeader header = csvFile.getHeader();
+      final ImmutableList<GtfsColumnDescriptor> columnDescriptors = tableDescriptor.getColumns();
+      final NoticeContainer headerNotices =
+          validateHeaders(validatorProvider, gtfsFilename, header, columnDescriptors);
+      noticeContainer.addAll(headerNotices);
+      if (headerNotices.hasValidationErrors()) {
+        return tableDescriptor.createContainerForInvalidStatus(TableStatus.INVALID_HEADERS);
+      }
+      final int nColumns = columnDescriptors.size();
+      final ImmutableMap<String, GtfsFieldLoader> fieldLoadersMap =
+          tableDescriptor.getFieldLoaders();
+      final int[] columnIndices = new int[nColumns];
+      final GtfsFieldLoader[] fieldLoaders = new GtfsFieldLoader[nColumns];
+      final FieldCache[] fieldCaches = new FieldCache[nColumns];
+      for (int i = 0; i < nColumns; ++i) {
+        GtfsColumnDescriptor columnDescriptor = columnDescriptors.get(i);
+        String columnName = columnDescriptor.columnName();
+        columnIndices[i] = header.getColumnIndex(columnName);
+        fieldLoaders[i] = fieldLoadersMap.get(columnName);
+        if (columnDescriptor.isCached()) {
+          // FieldCache is a generic type. However, info about generics is eliminated at runtime.
+          fieldCaches[i] = new FieldCache();
         }
-        final boolean validRowLength = rowParser.checkRowLength();
-        if (validRowLength) {
-          builder.clear();
-          builder.setCsvRowNumber(rowParser.getRowNumber());
-          for (int i = 0; i < nColumns; ++i) {
-            fieldLoaders[i].load(
-                rowParser, columnIndices[i], columnDescriptors.get(i), fieldCaches[i], builder);
+      }
+      final GtfsEntityBuilder builder = tableDescriptor.createEntityBuilder();
+      final RowParser rowParser =
+          new RowParser(gtfsFilename, header, validatorProvider.getFieldValidator());
+      final List<GtfsEntity> entities = new ArrayList<>();
+      boolean hasUnparsableRows = false;
+      final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
+          createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
+
+      try {
+        for (CsvRow row : csvFile) {
+          if (row.getRowNumber() % 200000 == 0) {
+            logger.atInfo().log("Reading %s, row %d", gtfsFilename, row.getRowNumber());
           }
+          NoticeContainer rowNotices = new NoticeContainer();
+          rowParser.setRow(row, rowNotices);
+          if (!rowParser.checkRowNumber()) {
+            hasUnparsableRows = true;
+            break;
+          }
+          final boolean validRowLength = rowParser.checkRowLength();
+          if (validRowLength) {
+            builder.clear();
+            builder.setCsvRowNumber(rowParser.getRowNumber());
+            for (int i = 0; i < nColumns; ++i) {
+              fieldLoaders[i].load(
+                  rowParser, columnIndices[i], columnDescriptors.get(i), fieldCaches[i], builder);
+            }
+          }
+          if (rowNotices.hasValidationErrors()) {
+            hasUnparsableRows = true;
+          } else if (validRowLength) {
+            GtfsEntity entity = builder.build();
+            ValidatorUtil.invokeSingleEntityValidators(
+                entity, singleEntityValidators, noticeContainer);
+            entities.add(entity);
+          }
+          noticeContainer.addAll(rowNotices);
         }
-        if (rowNotices.hasValidationErrors()) {
-          hasUnparsableRows = true;
-        } else if (validRowLength) {
-          GtfsEntity entity = builder.build();
-          ValidatorUtil.invokeSingleEntityValidators(
-              entity, singleEntityValidators, noticeContainer);
-          entities.add(entity);
-        }
-        noticeContainer.addAll(rowNotices);
+      } catch (TextParsingException e) {
+        noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
+        return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
+      } finally {
+        logFieldCacheStats(gtfsFilename, fieldCaches, columnDescriptors);
       }
-    } catch (TextParsingException e) {
-      noticeContainer.addValidationNotice(new CsvParsingFailedNotice(gtfsFilename, e));
-      return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
-    } finally {
-      logFieldCacheStats(gtfsFilename, fieldCaches, columnDescriptors);
-    }
-    if (hasUnparsableRows) {
-      logger.atSevere().log("Failed to parse some rows in %s", gtfsFilename);
-      return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
-    }
-    GtfsTableContainer table =
-        tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
+      if (hasUnparsableRows) {
+        logger.atSevere().log("Failed to parse some rows in %s", gtfsFilename);
+        return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
+      }
+      GtfsTableContainer table =
+          tableDescriptor.createContainerForHeaderAndEntities(header, entities, noticeContainer);
 
-    ValidatorUtil.invokeSingleFileValidators(
-        createSingleFileValidators(table, validatorProvider), noticeContainer);
-    return table;
+      ValidatorUtil.invokeSingleFileValidators(
+          createSingleFileValidators(table, validatorProvider), noticeContainer);
+      return table;
+    } finally {
+      checkedInputStream.finishInspection();
+    }
   }
 
   private static final class LineEndingCheckingInputStream extends FilterInputStream {
     private int pendingCarriageReturns = 0;
+    private long currentLineNumber = 1;
+    private long firstInvalidLineNumber = -1;
     private boolean invalidLineEndingFound = false;
+    private boolean sawEof = false;
     private boolean finished = false;
     private final NoticeContainer noticeContainer;
     private final String filename;
@@ -162,6 +171,13 @@ public final class CsvFileLoader extends TableLoader {
       this.filename = filename;
     }
 
+    private void markInvalidLineEnding() {
+      invalidLineEndingFound = true;
+      if (firstInvalidLineNumber < 0) {
+        firstInvalidLineNumber = currentLineNumber;
+      }
+    }
+
     private void inspect(int value) {
       if (value == '\r') {
         pendingCarriageReturns++;
@@ -170,14 +186,15 @@ public final class CsvFileLoader extends TableLoader {
 
       if (value == '\n') {
         if (pendingCarriageReturns > 1) {
-          invalidLineEndingFound = true;
+          markInvalidLineEnding();
         }
         pendingCarriageReturns = 0;
+        currentLineNumber++;
         return;
       }
 
       if (pendingCarriageReturns > 0) {
-        invalidLineEndingFound = true;
+        markInvalidLineEnding();
         pendingCarriageReturns = 0;
       }
     }
@@ -188,12 +205,13 @@ public final class CsvFileLoader extends TableLoader {
       }
       finished = true;
 
-      if (pendingCarriageReturns > 0) {
-        invalidLineEndingFound = true;
+      if (sawEof && pendingCarriageReturns > 0) {
+        markInvalidLineEnding();
       }
 
       if (invalidLineEndingFound) {
-        noticeContainer.addValidationNotice(new InvalidLineEndingNotice(filename));
+        noticeContainer.addValidationNotice(
+            new InvalidLineEndingNotice(filename, firstInvalidLineNumber));
       }
     }
 
@@ -201,7 +219,7 @@ public final class CsvFileLoader extends TableLoader {
     public int read() throws IOException {
       int value = in.read();
       if (value == -1) {
-        finishInspection();
+        sawEof = true;
       } else {
         inspect(value);
       }
@@ -212,7 +230,7 @@ public final class CsvFileLoader extends TableLoader {
     public int read(byte[] bytes, int offset, int length) throws IOException {
       int count = in.read(bytes, offset, length);
       if (count == -1) {
-        finishInspection();
+        sawEof = true;
         return -1;
       }
 
@@ -220,6 +238,24 @@ public final class CsvFileLoader extends TableLoader {
         inspect(bytes[i] & 0xff);
       }
       return count;
+    }
+
+    @Override
+    public long skip(long n) throws IOException {
+      if (n <= 0) {
+        return 0;
+      }
+
+      byte[] buffer = new byte[(int) Math.min(n, 8192L)];
+      long skipped = 0;
+      while (skipped < n) {
+        int count = read(buffer, 0, (int) Math.min(buffer.length, n - skipped));
+        if (count == -1) {
+          break;
+        }
+        skipped += count;
+      }
+      return skipped;
     }
   }
 
