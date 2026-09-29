@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
  *
  * <pre>{@code
  * @Inject
- * public ServiceGapValidator(ServiceIntervalCache cache) {
+ * public ServiceSpreadValidator(ServiceIntervalCache cache) {
  *   this.cache = cache;
  * }
  * }</pre>

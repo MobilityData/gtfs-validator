@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -49,15 +50,40 @@ public class HttpGetUtil {
    * @param sourceUrl the fully qualified URL
    * @param outputStream the output stream
    * @param validatorVersion the version of the validator
+   * @param extraHeaders additional HTTP headers to send; a {@code "User-Agent"} entry overrides the
+   *     default validator User-Agent
    */
-  public static void loadFromUrl(URL sourceUrl, OutputStream outputStream, String validatorVersion)
+  public static void loadFromUrl(
+      URL sourceUrl,
+      OutputStream outputStream,
+      String validatorVersion,
+      Map<String, String> extraHeaders)
       throws IOException, URISyntaxException {
     try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
       HttpGet request = new HttpGet(sourceUrl.toString());
+      // Apply default User-Agent first, then let extraHeaders override any header including it.
       request.addHeader("User-Agent", getUserAgent(validatorVersion));
+      for (Map.Entry<String, String> entry : extraHeaders.entrySet()) {
+        request.setHeader(entry.getKey(), entry.getValue());
+      }
       try (CloseableHttpResponse response = httpClient.execute(request)) {
         response.getEntity().writeTo(outputStream);
       }
     }
+  }
+
+  /**
+   * Downloads data from network using the default validator User-Agent.
+   *
+   * @param sourceUrl the fully qualified URL
+   * @param outputStream the output stream
+   * @param validatorVersion the version of the validator
+   * @deprecated Use {@link #loadFromUrl(URL, OutputStream, String, Map)} to support custom HTTP
+   *     headers.
+   */
+  @Deprecated
+  public static void loadFromUrl(URL sourceUrl, OutputStream outputStream, String validatorVersion)
+      throws IOException, URISyntaxException {
+    loadFromUrl(sourceUrl, outputStream, validatorVersion, Map.of());
   }
 }

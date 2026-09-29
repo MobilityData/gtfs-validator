@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.parsing;
 
+import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.BufferedReader;
@@ -60,7 +61,16 @@ public class CsvFile implements Iterable<CsvRow> {
 
     // Only UTF-8 is supported according to GTFS reference. We may add optional support for other
     // encodings later.
-    final BOMInputStream bomInputStream = new BOMInputStream(inputStream, ByteOrderMark.UTF_8);
+    final BOMInputStream bomInputStream;
+    try {
+      bomInputStream =
+          BOMInputStream.builder()
+              .setInputStream(inputStream)
+              .setByteOrderMarks(ByteOrderMark.UTF_8)
+              .get();
+    } catch (Exception e) {
+      throw new TextParsingException(null, e.getMessage(), e);
+    }
     final CharsetDecoder decoder =
         StandardCharsets.UTF_8
             .newDecoder()

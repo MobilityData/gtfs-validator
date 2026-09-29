@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.runner;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 import java.net.URI;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -66,6 +67,13 @@ public abstract class ValidationRunnerConfig {
   // If true, the validator will not check for a new validator version
   public abstract boolean skipValidatorUpdate();
 
+  // If true, output JSON report to stdout instead of writing to files
+  public abstract boolean stdoutOutput();
+
+  // Custom HTTP headers to include when downloading a GTFS feed from a URL.
+  // A "User-Agent" entry overrides the default validator User-Agent.
+  public abstract ImmutableMap<String, String> httpHeaders();
+
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
@@ -76,7 +84,9 @@ public abstract class ValidationRunnerConfig {
         .setPrettyJson(false)
         .setCountryCode(CountryCode.forStringOrUnknown(CountryCode.ZZ))
         .setDateForValidation(LocalDate.now())
-        .setSkipValidatorUpdate(false);
+        .setSkipValidatorUpdate(false)
+        .setStdoutOutput(false)
+        .setHttpHeaders(ImmutableMap.of());
   }
 
   @AutoValue.Builder
@@ -102,6 +112,10 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setPrettyJson(boolean prettyJson);
 
     public abstract Builder setSkipValidatorUpdate(boolean skipValidatorUpdate);
+
+    public abstract Builder setStdoutOutput(boolean stdoutOutput);
+
+    public abstract Builder setHttpHeaders(ImmutableMap<String, String> httpHeaders);
 
     public abstract ValidationRunnerConfig build();
   }

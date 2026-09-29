@@ -75,6 +75,8 @@
     }
   ],
   "droppedWarnings": [],
+  "newInfoNotices": [],
+  "droppedInfoNotices": [],
   "corruptedSources": {
     "sourceIdCount": 3,
     "corruptedSourcesCount": 0,

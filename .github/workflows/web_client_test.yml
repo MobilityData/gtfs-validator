@@ -7,7 +7,7 @@ on:
         - 'web/client/**'
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: "24"
 
 jobs:
   cypress-run:
@@ -15,9 +15,9 @@ jobs:
     name: Cypress e2e tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -32,13 +32,13 @@ jobs:
           wait-on: "npx wait-on --timeout 2000 http://127.0.0.1:5173"
           working-directory: web/client
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: cypress-screenshots
           path: web/client/cypress/screenshots
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: cypress-videos

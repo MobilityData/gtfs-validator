@@ -57,6 +57,16 @@ public class ValidationReportComparator {
             SeverityLevel.WARNING,
             args.getNewErrorThreshold(),
             args.getPercentInvalidDatasetsThreshold());
+    ChangedNoticesCollector newInfoNotices =
+        new ChangedNoticesCollector(
+            SeverityLevel.INFO,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
+    ChangedNoticesCollector droppedInfoNotices =
+        new ChangedNoticesCollector(
+            SeverityLevel.INFO,
+            args.getNewErrorThreshold(),
+            args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
     OutOfMemorySourcesCollector oomSources = new OutOfMemorySourcesCollector();
@@ -135,6 +145,9 @@ public class ValidationReportComparator {
       droppedErrors.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
       newWarnings.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
       droppedWarnings.compareValidationReports(sourceId, sourceUrl, latestReport, referenceReport);
+      newInfoNotices.compareValidationReports(sourceId, sourceUrl, referenceReport, latestReport);
+      droppedInfoNotices.compareValidationReports(
+          sourceId, sourceUrl, latestReport, referenceReport);
       validationPerformanceCollector.compareValidationReports(
           sourceId, referenceReport, latestReport);
     }
@@ -145,6 +158,8 @@ public class ValidationReportComparator {
             droppedErrors.getChangedNotices(),
             newWarnings.getChangedNotices(),
             droppedWarnings.getChangedNotices(),
+            newInfoNotices.getChangedNotices(),
+            droppedInfoNotices.getChangedNotices(),
             corruptedSources.toReport(),
             validationPerformanceCollector.toReport());
 
@@ -153,6 +168,8 @@ public class ValidationReportComparator {
             || droppedErrors.isAboveThreshold()
             || newWarnings.isAboveThreshold()
             || droppedWarnings.isAboveThreshold()
+            || newInfoNotices.isAboveThreshold()
+            || droppedInfoNotices.isAboveThreshold()
             || corruptedSources.isAboveThreshold();
 
     String reportSummaryString =
@@ -162,6 +179,8 @@ public class ValidationReportComparator {
             droppedErrors,
             newWarnings,
             droppedWarnings,
+            newInfoNotices,
+            droppedInfoNotices,
             corruptedSources,
             oomSources,
             validationPerformanceCollector,
@@ -220,6 +239,8 @@ public class ValidationReportComparator {
       ChangedNoticesCollector droppedErrors,
       ChangedNoticesCollector newWarnings,
       ChangedNoticesCollector droppedWarnings,
+      ChangedNoticesCollector newInfoNotices,
+      ChangedNoticesCollector droppedInfoNotices,
       CorruptedSourcesCollector corruptedSources,
       OutOfMemorySourcesCollector oomSources,
       ValidationPerformanceCollector validationPerformanceCollector,
@@ -247,7 +268,9 @@ public class ValidationReportComparator {
     b.append(newErrors.generateLogString("New Errors")).append('\n');
     b.append(droppedErrors.generateLogString("Dropped Errors")).append('\n');
     b.append(newWarnings.generateLogString("New Warnings")).append('\n');
-    b.append(droppedWarnings.generateLogString("Dropped Warnings")).append("\n\n");
+    b.append(droppedWarnings.generateLogString("Dropped Warnings")).append('\n');
+    b.append(newInfoNotices.generateLogString("New Info Notices")).append('\n');
+    b.append(droppedInfoNotices.generateLogString("Dropped Info Notices")).append("\n\n");
     b.append(corruptedSources.generateLogString()).append("\n").append("\n");
     b.append(oomSources.generateLogString()).append("\n").append("\n");
     b.append(validationPerformanceCollector.generateLogString()).append("\n");

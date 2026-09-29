@@ -56,4 +56,26 @@ public class GtfsValidatorPreferencesTest {
       assertThat(dest.getCountryCode()).isEqualTo("CA");
     }
   }
+
+  @Test
+  public void testHttpHeadersAreNotPersisted() {
+    // Headers must not survive a save/load cycle (security: they may contain credentials).
+    {
+      GtfsValidatorApp source = new GtfsValidatorApp(runner, display);
+      source.setGtfsSource("http://gtfs.org/gtfs.zip");
+      source.setOutputDirectory(Path.of("/tmp/gtfs"));
+      source.setHttpHeaders("Authorization: Bearer secret-token");
+
+      GtfsValidatorPreferences prefs = new GtfsValidatorPreferences();
+      prefs.savePreferences(source);
+    }
+
+    {
+      GtfsValidatorPreferences prefs = new GtfsValidatorPreferences();
+      GtfsValidatorApp dest = new GtfsValidatorApp(runner, display);
+      prefs.loadPreferences(dest);
+
+      assertThat(dest.getHttpHeaders()).isEmpty();
+    }
+  }
 }

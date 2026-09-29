@@ -38,6 +38,7 @@ public interface GtfsTripSchema extends GtfsEntity {
   String serviceId();
 
   @MixedCase
+  @Recommended
   String tripHeadsign();
 
   @MixedCase
@@ -60,4 +61,8 @@ public interface GtfsTripSchema extends GtfsEntity {
   GtfsBikesAllowed bikesAllowed();
 
   GtfsCarsAllowed carsAllowed();
+
+  double safeDurationFactor();
+
+  double safeDurationOffset();
 }

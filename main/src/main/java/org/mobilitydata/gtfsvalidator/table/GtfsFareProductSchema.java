@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Index;
-import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
@@ -41,7 +40,6 @@ public interface GtfsFareProductSchema extends GtfsEntity {
   String fareProductName();
 
   @Required
-  @NonNegative
   @CurrencyAmount(currencyField = "currency")
   BigDecimal amount();
 
