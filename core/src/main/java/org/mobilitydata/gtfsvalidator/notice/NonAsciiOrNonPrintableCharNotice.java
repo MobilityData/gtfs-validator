@@ -34,17 +34,17 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
   /** Row number of the faulty record. */
   private final int csvRowNumber;
 
-  /** Name of the column where the error occurred. */
-  private final String columnName;
+  /** Faulty record's field name. */
+  private final String fieldName;
 
   /** Faulty value. */
   private final String fieldValue;
 
   public NonAsciiOrNonPrintableCharNotice(
-      String filename, int csvRowNumber, String columnName, String fieldValue) {
+      String filename, int csvRowNumber, String fieldName, String fieldValue) {
     this.filename = filename;
     this.csvRowNumber = csvRowNumber;
-    this.columnName = columnName;
+    this.fieldName = fieldName;
     this.fieldValue = fieldValue;
   }
 }
