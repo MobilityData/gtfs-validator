@@ -94,4 +94,42 @@ public class TransferStopIdsConditionalValidatorTest {
       noticeContainer.getValidationNotices().clear();
     }
   }
+
+  /**
+   * This test is used to verify that the validator generates a notice when the stop ids are missing
+   * and the {@code transfer_type} is empty, which is a recommended transfer point.
+   */
+  @Test
+  public void testTransferMissingStopIdsEmptyTransferType() {
+    GtfsTransferTableContainer gtfsTransferTableContainer =
+        GtfsTransferTableContainer.forEntities(
+            ImmutableList.of(new GtfsTransfer.Builder().build()), noticeContainer);
+
+    new TransferStopIdsConditionalValidator(gtfsTransferTableContainer).validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices())
+        .containsExactlyElementsIn(
+            Arrays.asList(
+                new MissingRequiredFieldNotice(
+                    GtfsTransfer.FILENAME, 0, GtfsTransfer.FROM_STOP_ID_FIELD_NAME),
+                new MissingRequiredFieldNotice(
+                    GtfsTransfer.FILENAME, 0, GtfsTransfer.TO_STOP_ID_FIELD_NAME)));
+  }
+
+  /**
+   * This test is used to verify that the validator does not generate a notice when the stop ids are
+   * present and the {@code transfer_type} is empty.
+   */
+  @Test
+  public void testTransferStopIdsPresentEmptyTransferTypeNoNotice() {
+    GtfsTransferTableContainer gtfsTransferTableContainer =
+        GtfsTransferTableContainer.forEntities(
+            ImmutableList.of(
+                new GtfsTransfer.Builder().setFromStopId("stop1").setToStopId("stop2").build()),
+            noticeContainer);
+
+    new TransferStopIdsConditionalValidator(gtfsTransferTableContainer).validate(noticeContainer);
+
+    assertThat(noticeContainer.getValidationNotices()).isEmpty();
+  }
 }
