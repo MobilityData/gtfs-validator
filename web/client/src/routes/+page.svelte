@@ -207,6 +207,7 @@
       addError('Please include a file to validate.');
     }
   }
+
   /** @param {string=} url @param {string=} filename **/
   function createJob(url, filename) {
     updateStatus('authorizing');

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import io.sentry.Sentry;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -49,6 +50,30 @@ public class ValidationController {
   @Autowired private VersionResolver versionResolver;
 
   /**
+   * Removes URL user-info credentials before persisting source provenance. Preserves the remaining
+   * raw URL components without re-encoding them.
+   */
+  private static String sanitizeSourceUrl(String sourceUrl) {
+    URI uri = URI.create(sourceUrl);
+    String authority = uri.getRawAuthority();
+
+    if (uri.getRawUserInfo() == null || authority == null) {
+      return sourceUrl;
+    }
+
+    int authorityStart = sourceUrl.indexOf("://") + 3;
+    if (authorityStart < 3) {
+      throw new IllegalArgumentException("Source URL must contain an authority");
+    }
+
+    int credentialsEnd = authority.lastIndexOf('@') + 1;
+
+    return sourceUrl.substring(0, authorityStart)
+        + authority.substring(credentialsEnd)
+        + sourceUrl.substring(authorityStart + authority.length());
+  }
+
+  /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
    * from the url and saved to GCS. If no url is provided, a unique url is generated for the client
    * to upload the GTFS file.
@@ -61,7 +86,9 @@ public class ValidationController {
     try {
       if (body != null) {
         String originalGtfsSource =
-            !Strings.isNullOrEmpty(body.getUrl()) ? body.getUrl() : body.getFilename();
+            !Strings.isNullOrEmpty(body.getUrl())
+                ? sanitizeSourceUrl(body.getUrl())
+                : body.getFilename();
 
         if (!Strings.isNullOrEmpty(body.getCountryCode())
             || !Strings.isNullOrEmpty(originalGtfsSource)) {

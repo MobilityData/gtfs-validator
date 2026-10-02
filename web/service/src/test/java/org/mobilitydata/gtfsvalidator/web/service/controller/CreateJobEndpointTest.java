@@ -137,6 +137,24 @@ public class CreateJobEndpointTest {
   }
 
   @Test
+  public void createJobWithCredentialsSanitizesStoredUrlButPreservesDownloadUrl() throws Exception {
+    String url = "https://reader:secret@myfilehost.com/myfile.zip?version=2";
+    String expectedSource = "https://myfilehost.com/myfile.zip?version=2";
+    var request = new CreateJobRequest(null, url);
+
+    makeCreateJobRequestAndCheckResult(request, testJobId, null);
+
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    var metadata = jobMetadataCaptor.getValue();
+
+    org.junit.jupiter.api.Assertions.assertEquals(expectedSource, metadata.getOriginalGtfsSource());
+    org.junit.jupiter.api.Assertions.assertFalse(
+        metadata.getOriginalGtfsSource().contains("secret"));
+
+    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+  }
+
+  @Test
   public void createJobWithUrlAndCountryCode() throws Exception {
     doReturn(testJobId).when(storageHelper).createNewJobId();
     String url = "http://myfilehost.com/myfile.zip";
