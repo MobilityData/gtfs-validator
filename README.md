@@ -205,6 +205,8 @@ In order to avoid sudden changes in the validation output that might declare pre
 # Projects based on this validator
 [CalTrans California Integrated Travel Project (Cal-ITP) GTFS Validator API](https://github.com/cal-itp/data-infra/tree/main/jobs/gtfs-schedule-validator) - A thin wrapper around MobilityData/gtfs-validator.
 
+[gtfs-validator-metrics-service](https://github.com/mobidata-bw/gtfs-validator-metrics-service) - A thin wrapper that exposes GTFS validation results as Prometheus/OpenTelemetry metrics.
+
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
