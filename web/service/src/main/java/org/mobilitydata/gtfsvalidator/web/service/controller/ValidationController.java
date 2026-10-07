@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import io.sentry.Sentry;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -49,6 +50,41 @@ public class ValidationController {
   @Autowired private VersionResolver versionResolver;
 
   /**
+   * Removes URL user-info credentials and query parameters before persisting source provenance.
+   * Falls back to the original source if sanitization cannot be completed safely.
+   */
+  private static String sanitizeSourceUrl(String sourceUrl) {
+    try {
+      URI uri = URI.create(sourceUrl);
+      String authority = uri.getRawAuthority();
+
+      if (authority == null || uri.getScheme() == null) {
+        return sourceUrl;
+      }
+
+      if (uri.getRawUserInfo() != null) {
+        int credentialsEnd = authority.lastIndexOf('@') + 1;
+        authority = authority.substring(credentialsEnd);
+      }
+
+      StringBuilder sanitized =
+          new StringBuilder().append(uri.getScheme()).append("://").append(authority);
+
+      if (uri.getRawPath() != null) {
+        sanitized.append(uri.getRawPath());
+      }
+
+      if (uri.getRawFragment() != null) {
+        sanitized.append('#').append(uri.getRawFragment());
+      }
+
+      return sanitized.toString();
+    } catch (IllegalArgumentException exception) {
+      return sourceUrl;
+    }
+  }
+
+  /**
    * Creates a new job id and returns it to the client. If a url is provided, the file is downloaded
    * from the url and saved to GCS. If no url is provided, a unique url is generated for the client
    * to upload the GTFS file.
@@ -60,9 +96,18 @@ public class ValidationController {
     URL uploadUrl = null;
     try {
       if (body != null) {
-        if (!Strings.isNullOrEmpty(body.getCountryCode())) {
-          storageHelper.saveJobMetadata(new JobMetadata(jobId, body.getCountryCode()));
+        String originalGtfsSource =
+            !Strings.isNullOrEmpty(body.getUrl())
+                ? sanitizeSourceUrl(body.getUrl())
+                : body.getFilename();
+
+        if (!Strings.isNullOrEmpty(body.getCountryCode())
+            || !Strings.isNullOrEmpty(originalGtfsSource)) {
+          storageHelper.saveJobMetadata(
+              new JobMetadata(
+                  jobId, Strings.nullToEmpty(body.getCountryCode()), originalGtfsSource));
         }
+
         if (!Strings.isNullOrEmpty(body.getUrl())) {
           var validatorVersion = versionResolver.resolveCurrentVersion();
           storageHelper.saveJobFileFromUrl(jobId, body.getUrl(), validatorVersion.orElse(null));
@@ -118,7 +163,9 @@ public class ValidationController {
 
       var fileName = jobData.getFileName();
 
-      var countryCode = storageHelper.getJobMetadata(jobId).getCountryCode();
+      var jobMetadata = storageHelper.getJobMetadata(jobId);
+      var countryCode = jobMetadata.getCountryCode();
+      var originalGtfsSource = jobMetadata.getOriginalGtfsSource();
 
       // copy the file from GCS to a temp directory
       tempFile = storageHelper.downloadFeedFileFromStorage(jobId, fileName);
@@ -126,7 +173,7 @@ public class ValidationController {
       outputPath = storageHelper.createOutputFolderForJob(jobId);
       try {
         // extracts feed files from zip to temp output directory, validates
-        validationHandler.validateFeed(tempFile, outputPath, countryCode);
+        validationHandler.validateFeed(tempFile, outputPath, countryCode, originalGtfsSource);
         storageHelper.writeExecutionResultFile(new ExecutionResult("success"), outputPath);
       } catch (Exception exc) {
         logger.error("Error", exc);

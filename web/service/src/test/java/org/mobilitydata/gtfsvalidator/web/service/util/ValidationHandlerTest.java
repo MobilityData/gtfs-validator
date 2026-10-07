@@ -116,4 +116,24 @@ public class ValidationHandlerTest {
     assertTrue(mockOutputPath.equals(config.outputDirectory()));
     assert config.countryCode().equals(CountryCode.forStringOrUnknown(countryCode));
   }
+
+  @Test
+  public void validateFeedPreservesOperationalSourceAndOriginalGtfsSource() throws Exception {
+    var handler = new ValidationHandler(runner);
+    Path mockOutputPath = mock(Path.class);
+    File mockFeedFile = mock(File.class);
+    URI feedFileURI = URI.create("file://fake/path/to.zip");
+
+    doReturn(feedFileURI).when(mockFeedFile).toURI();
+    doReturn(ValidationRunner.Status.SUCCESS).when(runner).run(any(ValidationRunnerConfig.class));
+
+    handler.validateFeed(mockFeedFile, mockOutputPath, "US", "sample-feed.zip");
+
+    verify(runner, times(1)).run(configCaptor.capture());
+
+    ValidationRunnerConfig config = configCaptor.getValue();
+
+    assertEquals(feedFileURI, config.gtfsSource());
+    assertEquals(java.util.Optional.of("sample-feed.zip"), config.originalGtfsSource());
+  }
 }

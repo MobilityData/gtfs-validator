@@ -149,6 +149,30 @@ public class JsonReportSummaryGeneratorTest {
   }
 
   @Test
+  public void reportUsesOriginalGtfsSourceWhenAvailable() throws Exception {
+    ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
+    builder.setCountryCode(CountryCode.forStringOrUnknown("GB"));
+    builder.setGtfsSource(new URI("some_dataset_filename"));
+    builder.setOriginalGtfsSource(Optional.of("sample-feed.zip"));
+    builder.setHtmlReportFileName("some_html_filename");
+    builder.setOutputDirectory(Path.of("some_output_directory"));
+    builder.setNumThreads(1);
+    builder.setPrettyJson(true);
+    builder.setSystemErrorsReportFileName("some_error_filename");
+    builder.setValidationReportFileName("some_report_filename");
+    builder.setDateForValidation(LocalDate.parse("2020-01-02"));
+    builder.setStdoutOutput(false);
+
+    JsonReportSummaryGenerator summaryGenerator =
+        new JsonReportSummaryGenerator(null, builder.build(), versionInfo, "now");
+
+    assertEquals("sample-feed.zip", summaryGenerator.gtfsInput);
+    assertEquals(
+        "sample-feed.zip",
+        gson.toJsonTree(summaryGenerator.summary).getAsJsonObject().get("gtfsInput").getAsString());
+  }
+
+  @Test
   public void withFeedMetadataNoConfigTest() throws Exception {
 
     FeedMetadata feedMetadata = generateFeedMetaData();

@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.web.service.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -74,6 +75,25 @@ public class StorageHelperTest {
     assertEquals(expectedBlobId, blobIdCaptor.getValue());
 
     assertEquals(expectedJson, mapper.writeValueAsString(actualJobMetadata));
+  }
+
+  @Test
+  public void testGetOldJobMetadataWithoutOriginalGtfsSource() throws Exception {
+
+    StorageHelper storageHelper = new StorageHelper(storage, null);
+
+    String testJobId = UUID.randomUUID().toString();
+    String oldMetadataJson = "{\"jobId\":\"" + testJobId + "\",\"countryCode\":\"US\"}";
+
+    Blob mockBlob = mock(Blob.class);
+    when(storage.get(any(BlobId.class))).thenReturn(mockBlob);
+    when(mockBlob.getContent()).thenReturn(oldMetadataJson.getBytes());
+
+    JobMetadata actualJobMetadata = storageHelper.getJobMetadata(testJobId);
+
+    assertEquals(testJobId, actualJobMetadata.getJobId());
+    assertEquals("US", actualJobMetadata.getCountryCode());
+    assertNull(actualJobMetadata.getOriginalGtfsSource());
   }
 
   @Test

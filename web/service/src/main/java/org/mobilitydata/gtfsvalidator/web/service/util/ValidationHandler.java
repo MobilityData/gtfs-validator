@@ -29,9 +29,19 @@ public class ValidationHandler {
    */
   public void validateFeed(@NonNull File feedFile, @NonNull Path outputPath, String countryCode)
       throws Exception {
+    validateFeed(feedFile, outputPath, countryCode, null);
+  }
+
+  public void validateFeed(
+      @NonNull File feedFile,
+      @NonNull Path outputPath,
+      String countryCode,
+      String originalGtfsSource)
+      throws Exception {
     var configBuilder =
         ValidationRunnerConfig.builder()
             .setGtfsSource(feedFile.toURI())
+            .setOriginalGtfsSource(java.util.Optional.ofNullable(originalGtfsSource))
             .setOutputDirectory(outputPath)
             .setStdoutOutput(false)
             .setSkipValidatorUpdate(
