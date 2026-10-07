@@ -137,9 +137,10 @@ public class CreateJobEndpointTest {
   }
 
   @Test
-  public void createJobWithCredentialsSanitizesStoredUrlButPreservesDownloadUrl() throws Exception {
+  public void createJobWithCredentialsAndQuerySanitizesStoredUrlButPreservesDownloadUrl()
+      throws Exception {
     String url = "https://reader:secret@myfilehost.com/myfile.zip?version=2";
-    String expectedSource = "https://myfilehost.com/myfile.zip?version=2";
+    String expectedSource = "https://myfilehost.com/myfile.zip";
     var request = new CreateJobRequest(null, url);
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
@@ -150,6 +151,37 @@ public class CreateJobEndpointTest {
     org.junit.jupiter.api.Assertions.assertEquals(expectedSource, metadata.getOriginalGtfsSource());
     org.junit.jupiter.api.Assertions.assertFalse(
         metadata.getOriginalGtfsSource().contains("secret"));
+    org.junit.jupiter.api.Assertions.assertFalse(
+        metadata.getOriginalGtfsSource().contains("version=2"));
+
+    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+  }
+
+  @Test
+  public void createJobWithQueryOnlyDropsQueryFromStoredUrl() throws Exception {
+    String url = "https://api.wmata.com/gtfs/bus-gtfs-static.zip?api_key=secret";
+    String expectedSource = "https://api.wmata.com/gtfs/bus-gtfs-static.zip";
+    var request = new CreateJobRequest(null, url);
+
+    makeCreateJobRequestAndCheckResult(request, testJobId, null);
+
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    org.junit.jupiter.api.Assertions.assertEquals(
+        expectedSource, jobMetadataCaptor.getValue().getOriginalGtfsSource());
+
+    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+  }
+
+  @Test
+  public void createJobWithUnparseableUrlFallsBackToOriginalSource() throws Exception {
+    String url = "https://myfilehost.com/%";
+    var request = new CreateJobRequest(null, url);
+
+    makeCreateJobRequestAndCheckResult(request, testJobId, null);
+
+    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
+    org.junit.jupiter.api.Assertions.assertEquals(
+        url, jobMetadataCaptor.getValue().getOriginalGtfsSource());
 
     verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
   }

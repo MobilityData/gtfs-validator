@@ -50,27 +50,38 @@ public class ValidationController {
   @Autowired private VersionResolver versionResolver;
 
   /**
-   * Removes URL user-info credentials before persisting source provenance. Preserves the remaining
-   * raw URL components without re-encoding them.
+   * Removes URL user-info credentials and query parameters before persisting source provenance.
+   * Falls back to the original source if sanitization cannot be completed safely.
    */
   private static String sanitizeSourceUrl(String sourceUrl) {
-    URI uri = URI.create(sourceUrl);
-    String authority = uri.getRawAuthority();
+    try {
+      URI uri = URI.create(sourceUrl);
+      String authority = uri.getRawAuthority();
 
-    if (uri.getRawUserInfo() == null || authority == null) {
+      if (authority == null || uri.getScheme() == null) {
+        return sourceUrl;
+      }
+
+      if (uri.getRawUserInfo() != null) {
+        int credentialsEnd = authority.lastIndexOf('@') + 1;
+        authority = authority.substring(credentialsEnd);
+      }
+
+      StringBuilder sanitized =
+          new StringBuilder().append(uri.getScheme()).append("://").append(authority);
+
+      if (uri.getRawPath() != null) {
+        sanitized.append(uri.getRawPath());
+      }
+
+      if (uri.getRawFragment() != null) {
+        sanitized.append('#').append(uri.getRawFragment());
+      }
+
+      return sanitized.toString();
+    } catch (IllegalArgumentException exception) {
       return sourceUrl;
     }
-
-    int authorityStart = sourceUrl.indexOf("://") + 3;
-    if (authorityStart < 3) {
-      throw new IllegalArgumentException("Source URL must contain an authority");
-    }
-
-    int credentialsEnd = authority.lastIndexOf('@') + 1;
-
-    return sourceUrl.substring(0, authorityStart)
-        + authority.substring(credentialsEnd)
-        + sourceUrl.substring(authorityStart + authority.length());
   }
 
   /**
