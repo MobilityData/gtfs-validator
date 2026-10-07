@@ -8,15 +8,13 @@ import java.util.Optional;
  * entities
  *
  * @param <T> The entity for this container (e.g. GtfsCalendarDate or GtfsGeoJsonFeature )
- * @param <D> The descriptor for the file for the container (e.g. GtfsCalendarDateTableDescriptor or
- *     GtfsGeoJsonFileDescriptor)
  */
-public abstract class GtfsEntityContainer<T extends GtfsEntity, D extends GtfsFileDescriptor> {
+public abstract class GtfsEntityContainer<T extends GtfsEntity> {
 
-  private final D descriptor;
+  private final GtfsFileDescriptor descriptor;
   private final TableStatus tableStatus;
 
-  public GtfsEntityContainer(D descriptor, TableStatus tableStatus) {
+  public GtfsEntityContainer(GtfsFileDescriptor descriptor, TableStatus tableStatus) {
     this.tableStatus = tableStatus;
     this.descriptor = descriptor;
   }
@@ -25,7 +23,7 @@ public abstract class GtfsEntityContainer<T extends GtfsEntity, D extends GtfsFi
     return tableStatus;
   }
 
-  public D getDescriptor() {
+  public GtfsFileDescriptor getDescriptor() {
     return descriptor;
   }
 
