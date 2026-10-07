@@ -19,10 +19,19 @@ public class TooManyConsecutiveStopTimesWithSameTimeValidatorTest {
 
   private static GtfsStopTime createStopTime(
       int csvRowNumber, int stopSequence, Integer arrivalSeconds, Integer departureSeconds) {
+    return createStopTime(TRIP_ID, csvRowNumber, stopSequence, arrivalSeconds, departureSeconds);
+  }
+
+  private static GtfsStopTime createStopTime(
+      String tripId,
+      int csvRowNumber,
+      int stopSequence,
+      Integer arrivalSeconds,
+      Integer departureSeconds) {
     GtfsStopTime.Builder builder =
         new GtfsStopTime.Builder()
             .setCsvRowNumber(csvRowNumber)
-            .setTripId(TRIP_ID)
+            .setTripId(tripId)
             .setStopSequence(stopSequence)
             .setStopId("stop-" + stopSequence);
 
@@ -144,25 +153,17 @@ public class TooManyConsecutiveStopTimesWithSameTimeValidatorTest {
   }
 
   @Test
-  public void separateTripsShouldBeEvaluatedIndependently() {
+  public void sameTimesAcrossSeparateTripsShouldNotGenerateNotice() {
     NoticeContainer noticeContainer = new NoticeContainer();
 
     List<GtfsStopTime> stopTimes =
         ImmutableList.of(
-            new GtfsStopTime.Builder()
-                .setCsvRowNumber(2)
-                .setTripId("trip-a")
-                .setStopSequence(1)
-                .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(3600))
-                .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(3600))
-                .build(),
-            new GtfsStopTime.Builder()
-                .setCsvRowNumber(3)
-                .setTripId("trip-b")
-                .setStopSequence(1)
-                .setArrivalTime(GtfsTime.fromSecondsSinceMidnight(3600))
-                .setDepartureTime(GtfsTime.fromSecondsSinceMidnight(3600))
-                .build());
+            createStopTime("trip-a", 2, 1, 3600, 3600),
+            createStopTime("trip-a", 3, 2, 3600, 3600),
+            createStopTime("trip-a", 4, 3, 3600, 3600),
+            createStopTime("trip-a", 5, 4, 3600, 3600),
+            createStopTime("trip-a", 6, 5, 3600, 3600),
+            createStopTime("trip-b", 7, 1, 3600, 3600));
 
     new TooManyConsecutiveStopTimesWithSameTimeValidator(
             GtfsStopTimeTableContainer.forEntities(stopTimes, noticeContainer))
