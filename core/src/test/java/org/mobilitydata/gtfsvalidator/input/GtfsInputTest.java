@@ -43,6 +43,10 @@ public class GtfsInputTest {
       "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
           + "valid_zip_sample.zip";
 
+  // A ZIP file with compression level ("STORE" method).
+  private static final String ZIP_STORE_METHOD_URL =
+      "https://files.mobilitydatabase.org/mdb-485/mdb-485-202501090054/mdb-485-202501090054.zip";
+
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
   NoticeContainer noticeContainer = new NoticeContainer();
 
@@ -114,5 +118,13 @@ public class GtfsInputTest {
     assertThrows(
         IOException.class,
         () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer, "1.0.1"));
+  }
+
+  @Test
+  public void createFromUrlInMemory_zipWithStoredMethod_success()
+      throws IOException, URISyntaxException {
+    // This will throw if we don't handle ZIP files with compression
+    // level 0 ("STORE" level) properly.
+    GtfsInput.createFromUrlInMemory(new URL(ZIP_STORE_METHOD_URL), noticeContainer, "1.0.1");
   }
 }
