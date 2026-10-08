@@ -182,6 +182,19 @@ public class NoticeContainerTest {
   }
 
   @Test
+  public void getNoticeCount_countsDroppedNoticesToo() {
+    NoticeContainer container = new NoticeContainer(1_000, 2, 2);
+    for (int i = 0; i < 10; i++) {
+      container.addValidationNotice(new StringFieldNotice("value"));
+    }
+
+    assertThat(container.getValidationNotices()).hasSize(2);
+    assertThat(container.getNoticeCount("string_field", SeverityLevel.ERROR)).isEqualTo(10);
+    assertThat(container.getNoticeCount("string_field", SeverityLevel.WARNING)).isEqualTo(0);
+    assertThat(container.getNoticeCount("unknown_file", SeverityLevel.INFO)).isEqualTo(0);
+  }
+
+  @Test
   public void exportNotices_shouldReflectTheTotalNumberOfNoticesAndContexts() {
     NoticeContainer container = new NoticeContainer(26, 8, 3);
     for (int i = 0; i < 55; i++) {
