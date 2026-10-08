@@ -200,7 +200,10 @@ subprojects {
                 // But since the dependsOn is within the conditional, the dependency is not created for release versions
                 // so the publish in that case is never executed.
                 if (version.toString().endsWith('SNAPSHOT')) {
-                    dependsOn tasks.publish
+                    exec {
+                        workingDir project.projectDir
+                        commandLine 'bash', "${project.rootDir}/scripts/snapshot_management.sh", project.name, project.version
+                    }
                 }
                 doFirst {
                     if (!version.toString().endsWith('SNAPSHOT')) {
