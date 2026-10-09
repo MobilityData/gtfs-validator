@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -58,9 +59,9 @@ public class TripHeadsignValidator extends FileValidator {
 
       // stopTimes are already sorted
       String lastStopId = stopTimes.get(stopTimes.size() - 1).stopId();
-      //      Check if this is a circular trip
-      if (lastStopId == stopTimes.get(0).stopId()) {
-        return;
+      // Skip circular trips without stopping validation of later trips.
+      if (Objects.equals(lastStopId, stopTimes.get(0).stopId())) {
+        continue;
       }
 
       // Check all stops except the last

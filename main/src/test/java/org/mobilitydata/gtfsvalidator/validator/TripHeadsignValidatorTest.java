@@ -143,6 +143,43 @@ public class TripHeadsignValidatorTest {
         .isEmpty();
   }
 
+  @Test
+  public void circularTripShouldNotSuppressNoticesFromLaterTrips() {
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    createTrip(1, "r1", "s1", "t_loop", "City Hall"),
+                    createTrip(2, "r1", "s1", "t_later", "City Hall")),
+                ImmutableList.of(
+                    createStopTime(0, "t_loop", "stop_a", 1),
+                    createStopTime(0, "t_loop", "stop_b", 2),
+                    createStopTime(0, "t_loop", "stop_a", 3),
+                    createStopTime(0, "t_later", "stop_a", 1),
+                    createStopTime(0, "t_later", "stop_b", 2),
+                    createStopTime(0, "t_later", "stop_c", 3)),
+                ImmutableList.of(
+                    createStop("stop_a", "Airport"),
+                    createStop("stop_b", "City Hall"),
+                    createStop("stop_c", "Central Station"))))
+        .containsExactly(
+            new TripHeadsignMatchesIntermediateStopNotice(
+                2, "t_later", "City Hall", "stop_b", 2, "stop_c"));
+  }
+
+  @Test
+  public void circularTripWithEqualButDistinctStopIdsShouldNotGenerateNotice() {
+    assertThat(
+            generateNotices(
+                ImmutableList.of(createTrip(1, "r1", "s1", "t_loop", "City Hall")),
+                ImmutableList.of(
+                    createStopTime(0, "t_loop", new String("stop_a"), 1),
+                    createStopTime(0, "t_loop", "stop_b", 2),
+                    createStopTime(0, "t_loop", new String("stop_a"), 3)),
+                ImmutableList.of(
+                    createStop("stop_a", "Airport"), createStop("stop_b", "City Hall"))))
+        .isEmpty();
+  }
+
   private static List<ValidationNotice> generateNotices(
       List<GtfsTrip> trips, List<GtfsStopTime> stopTimes, List<GtfsStop> stops) {
     NoticeContainer noticeContainer = new NoticeContainer();
