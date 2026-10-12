@@ -173,17 +173,38 @@ public class CreateJobEndpointTest {
   }
 
   @Test
-  public void createJobWithUnparseableUrlFallsBackToOriginalSource() throws Exception {
+  public void createJobWithMalformedUrlDoesNotExposeCredentials() throws Exception {
+    String[] urls = {
+      "https://host/feed{1}.zip?api_key=SECRET", "https://host/feed.zip?name=a|b&api_key=SECRET"
+    };
+
+    for (String url : urls) {
+      org.mockito.Mockito.reset(storageHelper);
+      doReturn(testJobId).when(storageHelper).createNewJobId();
+
+      var request = new CreateJobRequest("US", url);
+      makeCreateJobRequestAndCheckResult(request, testJobId, null);
+
+      verify(storageHelper).saveJobMetadata(jobMetadataCaptor.capture());
+      org.junit.jupiter.api.Assertions.assertNull(
+          jobMetadataCaptor.getValue().getOriginalGtfsSource());
+
+      verify(storageHelper).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+    }
+  }
+
+  @Test
+  public void createJobWithUnparseableUrlOmitsUnsafeProvenance() throws Exception {
     String url = "https://myfilehost.com/%";
-    var request = new CreateJobRequest(null, url);
+    var request = new CreateJobRequest("US", url);
 
     makeCreateJobRequestAndCheckResult(request, testJobId, null);
 
-    verify(storageHelper, times(1)).saveJobMetadata(jobMetadataCaptor.capture());
-    org.junit.jupiter.api.Assertions.assertEquals(
-        url, jobMetadataCaptor.getValue().getOriginalGtfsSource());
+    verify(storageHelper).saveJobMetadata(jobMetadataCaptor.capture());
+    org.junit.jupiter.api.Assertions.assertNull(
+        jobMetadataCaptor.getValue().getOriginalGtfsSource());
 
-    verify(storageHelper, times(1)).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
+    verify(storageHelper).saveJobFileFromUrl(testJobId, url, VALIDATOR_TEST_VERSION);
   }
 
   @Test

@@ -51,7 +51,7 @@ public class ValidationController {
 
   /**
    * Removes URL user-info credentials and query parameters before persisting source provenance.
-   * Falls back to the original source if sanitization cannot be completed safely.
+   * Returns null if sanitization fails, preventing disclosure of credentials.
    */
   private static String sanitizeSourceUrl(String sourceUrl) {
     try {
@@ -59,7 +59,7 @@ public class ValidationController {
       String authority = uri.getRawAuthority();
 
       if (authority == null || uri.getScheme() == null) {
-        return sourceUrl;
+        return null;
       }
 
       if (uri.getRawUserInfo() != null) {
@@ -80,7 +80,7 @@ public class ValidationController {
 
       return sanitized.toString();
     } catch (IllegalArgumentException exception) {
-      return sourceUrl;
+      return null;
     }
   }
 
