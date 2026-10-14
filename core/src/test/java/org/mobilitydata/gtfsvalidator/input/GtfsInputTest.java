@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -75,6 +77,37 @@ public class GtfsInputTest {
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath(), noticeContainer)) {
       assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
+  }
+
+  @Test
+  public void hasSubfolderWithGtfsFile_detectsGtfsFileInSubfolder() throws IOException {
+    assertTrue(GtfsInput.hasSubfolderWithGtfsFile(writeZip("subfolder.zip", "sub/stops.txt")));
+    assertFalse(GtfsInput.hasSubfolderWithGtfsFile(writeZip("flat.zip", "stops.txt")));
+    assertFalse(GtfsInput.hasSubfolderWithGtfsFile(writeZip("other.zip", "sub/readme.md")));
+  }
+
+  /**
+   * The archive is only read to look for a subfolder, and the stream that reads it must be closed.
+   * Deleting a file that is still open fails on Windows, which is where this assertion bites.
+   */
+  @Test
+  public void hasSubfolderWithGtfsFile_releasesTheArchive() throws IOException {
+    Path zipFile = writeZip("archived.zip", "sub/stops.txt");
+
+    GtfsInput.hasSubfolderWithGtfsFile(zipFile);
+
+    assertTrue(Files.deleteIfExists(zipFile));
+  }
+
+  private Path writeZip(String zipName, String... entryNames) throws IOException {
+    File zipFile = tmpDir.newFile(zipName);
+    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
+      for (String entryName : entryNames) {
+        out.putNextEntry(new ZipEntry(entryName));
+        out.closeEntry();
+      }
+    }
+    return zipFile.toPath();
   }
 
   @Test

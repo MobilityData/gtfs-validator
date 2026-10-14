@@ -21,9 +21,13 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.SkippedValidat
 import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -328,9 +332,32 @@ public class ValidationRunner {
     }
 
     if (config.stdoutOutput()) {
-      // Output JSON to stdout
+      // Output JSON to stdout. The report is serialized straight to the stream: on a feed with
+      // many notices, holding it as a String and then as its byte array costs several times its
+      // size, at the point where the heap is already at its peak. Gson appends every token on its
+      // own, and each append to System.out is synchronized and encoded separately, so the output
+      // is buffered and handed to System.out in large chunks, which keeps its encoding.
       try {
-        System.out.println(gson.toJson(jsonReport));
+        Writer out =
+            new BufferedWriter(
+                new Writer() {
+                  @Override
+                  public void write(char[] c, int off, int len) {
+                    System.out.append(CharBuffer.wrap(c, off, len));
+                  }
+
+                  @Override
+                  public void flush() {
+                    System.out.flush();
+                  }
+
+                  @Override
+                  public void close() {}
+                },
+                1 << 16);
+        gson.toJson(jsonReport, out);
+        out.write(System.lineSeparator());
+        out.flush();
       } catch (Exception ex) {
         logger.atSevere().withCause(ex).log("Error creating JSON report");
       }
@@ -351,10 +378,10 @@ public class ValidationRunner {
     boolean is_different_date = !now.toLocalDate().equals(config.dateForValidation());
 
     HtmlReportGenerator htmlGenerator = new HtmlReportGenerator();
-    try {
-      Files.write(
-          outputDir.resolve(config.validationReportFileName()),
-          gson.toJson(jsonReport).getBytes(StandardCharsets.UTF_8));
+    try (Writer writer =
+        Files.newBufferedWriter(
+            outputDir.resolve(config.validationReportFileName()), StandardCharsets.UTF_8)) {
+      gson.toJson(jsonReport, writer);
     } catch (Exception ex) {
       logger.atSevere().withCause(ex).log("Error creating JSON report");
     }
@@ -368,10 +395,14 @@ public class ValidationRunner {
           outputDir.resolve(config.htmlReportFileName()),
           date,
           is_different_date);
-      Files.write(
-          outputDir.resolve(config.systemErrorsReportFileName()),
-          gson.toJson(noticeContainer.exportSystemErrors()).getBytes(StandardCharsets.UTF_8));
-    } catch (IOException e) {
+      try (Writer writer =
+          Files.newBufferedWriter(
+              outputDir.resolve(config.systemErrorsReportFileName()), StandardCharsets.UTF_8)) {
+        gson.toJson(noticeContainer.exportSystemErrors(), writer);
+      }
+      // Gson reports a failing writer as a JsonIOException, so it is caught here alongside the
+      // IOException the file operations themselves throw.
+    } catch (IOException | JsonIOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
   }
