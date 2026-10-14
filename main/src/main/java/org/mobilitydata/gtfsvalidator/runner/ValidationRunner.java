@@ -22,10 +22,12 @@ import com.google.common.flogger.FluentLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -332,11 +334,30 @@ public class ValidationRunner {
     if (config.stdoutOutput()) {
       // Output JSON to stdout. The report is serialized straight to the stream: on a feed with
       // many notices, holding it as a String and then as its byte array costs several times its
-      // size, at the point where the heap is already at its peak.
+      // size, at the point where the heap is already at its peak. Gson appends every token on its
+      // own, and each append to System.out is synchronized and encoded separately, so the output
+      // is buffered and handed to System.out in large chunks, which keeps its encoding.
       try {
-        gson.toJson(jsonReport, System.out);
-        System.out.println();
-        System.out.flush();
+        Writer out =
+            new BufferedWriter(
+                new Writer() {
+                  @Override
+                  public void write(char[] c, int off, int len) {
+                    System.out.append(CharBuffer.wrap(c, off, len));
+                  }
+
+                  @Override
+                  public void flush() {
+                    System.out.flush();
+                  }
+
+                  @Override
+                  public void close() {}
+                },
+                1 << 16);
+        gson.toJson(jsonReport, out);
+        out.write(System.lineSeparator());
+        out.flush();
       } catch (Exception ex) {
         logger.atSevere().withCause(ex).log("Error creating JSON report");
       }

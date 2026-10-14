@@ -7,9 +7,12 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -101,6 +104,54 @@ public class ValidationRunnerTest {
                 outputDirectory.resolve(config.systemErrorsReportFileName()),
                 StandardCharsets.UTF_8))
         .isEqualTo(new Gson().toJson(noticeContainer.exportSystemErrors()));
+  }
+
+  /**
+   * The report is buffered on its way to stdout, so this covers a report larger than the buffer,
+   * the trailing newline, and the encoding of System.out.
+   */
+  @Test
+  public void exportReport_stdoutOutput_writesTheWholeJsonReport() {
+    String filename = "stazioné.txt";
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(Path.of("feed.zip").toUri())
+            .setOutputDirectory(Path.of("."))
+            .setCountryCode(CountryCode.forStringOrUnknown(""))
+            .setStdoutOutput(true)
+            .build();
+    NoticeContainer noticeContainer = new NoticeContainer();
+    for (int i = 1; i <= 1_000; i++) {
+      noticeContainer.addValidationNotice(
+          new MissingRequiredFieldNotice(filename, i, String.format("field_%04d", i)));
+    }
+
+    ByteArrayOutputStream stdout = new ByteArrayOutputStream();
+    PrintStream originalStdout = System.out;
+    System.setOut(new PrintStream(stdout, true, StandardCharsets.UTF_8));
+    try {
+      ValidationRunner.exportReport(
+          FeedMetadata.from(
+              new GtfsFeedContainer(ImmutableList.of()), ImmutableSet.of("stop_times.txt")),
+          noticeContainer,
+          config,
+          VersionInfo.empty());
+    } finally {
+      System.setOut(originalStdout);
+    }
+
+    String output = stdout.toString(StandardCharsets.UTF_8);
+    assertThat(output.length()).isGreaterThan(1 << 16);
+    assertThat(output).endsWith("}" + System.lineSeparator());
+    JsonObject notice =
+        JsonParser.parseString(output)
+            .getAsJsonObject()
+            .getAsJsonArray("notices")
+            .get(0)
+            .getAsJsonObject();
+    assertThat(notice.get("totalNotices").getAsInt()).isEqualTo(1_000);
+    assertThat(notice.getAsJsonArray("sampleNotices")).hasSize(1_000);
+    assertThat(output).contains(filename);
   }
 
   @Test
