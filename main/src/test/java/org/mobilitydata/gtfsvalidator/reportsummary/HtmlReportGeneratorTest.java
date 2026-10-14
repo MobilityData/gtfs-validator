@@ -61,7 +61,28 @@ public class HtmlReportGeneratorTest {
     assertThat(noticeContainer.getValidationNotices()).hasSize(100);
     assertThat(report).contains("300 notices reported ( 300 errors, 0 warnings, 0 infos)");
     assertThat(report).contains("missing_required_field ERROR 300");
-    assertThat(report).contains("Only the first 50 of 300 affected records are displayed below.");
+    assertThat(report).contains("300 affected records, up to 50 are displayed below.");
+  }
+
+  /**
+   * Once the container reached its limit on the total number of notices, a code can have fewer
+   * retained notices than the report lists, so the page must not claim to list the first 50.
+   */
+  @Test
+  public void generateReport_listsFewerRecordsWhenTheTotalLimitWasReached() throws IOException {
+    NoticeContainer noticeContainer = new NoticeContainer(10, 100, 100);
+    for (int i = 1; i <= 300; i++) {
+      noticeContainer.addValidationNotice(
+          new MissingRequiredFieldNotice("test.txt", i, String.format("field_%03d", i)));
+    }
+
+    String report = visibleText(generateReport(noticeContainer));
+
+    assertThat(noticeContainer.getValidationNotices()).hasSize(10);
+    assertThat(report).contains("missing_required_field ERROR 300");
+    assertThat(report).contains("300 affected records, up to 50 are displayed below.");
+    assertThat(report).contains("field_010");
+    assertThat(report).doesNotContain("field_011");
   }
 
   /** Strips the markup so that assertions read like the rendered page. */

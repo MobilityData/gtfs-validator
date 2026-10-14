@@ -28,7 +28,7 @@ public class ReportSummary {
   private final Map<SeverityLevel, Long> severityCounts;
   private final Map<SeverityLevel, Map<String, List<NoticeView>>> noticesMap;
   private final Map<SeverityLevel, Map<String, Integer>> noticeCountPerSeverityAndCode;
-  private final int noticeCount;
+  private final long noticeCount;
   private final VersionInfo versionInfo;
 
   public ReportSummary(NoticeContainer container, VersionInfo versionInfo) {
@@ -48,7 +48,7 @@ public class ReportSummary {
     // The counts come from the container rather than from the notices above, which are only the
     // ones the container retained. The report must show how many notices the feed actually
     // produced, the same number the JSON report exports as totalNotices.
-    int total = 0;
+    long total = 0;
     for (Map.Entry<SeverityLevel, Map<String, List<NoticeView>>> bySeverity :
         noticesMap.entrySet()) {
       SeverityLevel severityLevel = bySeverity.getKey();
@@ -95,7 +95,7 @@ public class ReportSummary {
    *
    * @return the total count of notices.
    */
-  public int getNoticeCount() {
+  public long getNoticeCount() {
     return noticeCount;
   }
 
