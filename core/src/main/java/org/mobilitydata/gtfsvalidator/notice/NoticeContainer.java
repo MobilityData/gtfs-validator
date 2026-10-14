@@ -174,6 +174,18 @@ public class NoticeContainer {
     return validationNotices;
   }
 
+  /**
+   * Returns how many notices of the given code and severity were added to this container.
+   *
+   * <p>This counts every notice the container was given, including the ones it did not retain, and
+   * is the number the validation report exports as {@code totalNotices}. It is therefore what a
+   * report should show, rather than the size of {@link #getResolvedValidationNotices()}.
+   */
+  public int getNoticeCount(String code, SeverityLevel severityLevel) {
+    return noticesCountPerTypeAndSeverity.getOrDefault(
+        ResolvedNotice.mappingKey(code, severityLevel), 0);
+  }
+
   /** Returns a list of all validation notices in the container. */
   public List<ValidationNotice> getValidationNotices() {
     return Lists.transform(validationNotices, ResolvedNotice::getContext);
