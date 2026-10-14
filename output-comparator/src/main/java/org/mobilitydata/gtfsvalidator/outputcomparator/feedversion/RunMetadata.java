@@ -27,8 +27,10 @@ import java.util.TreeMap;
  * <p>{@code sourceId} identifies the publisher/feed independently of a particular ZIP URL. The
  * loader must include every result-affecting option in {@code validationOptions}, and must verify
  * the four digests, the report summary, the validator exit status, and system errors before
- * asserting evidence. This value object does no file I/O and cannot independently prove a caller's
- * attestation.
+ * asserting evidence. A caller may also include canonical runtime facts (for example OS and
+ * architecture) in the option map when its reproducibility policy requires them to match; this API
+ * does not discover those facts. This value object does no file I/O and cannot independently prove
+ * a caller's attestation.
  */
 public record RunMetadata(
     String sourceId,

@@ -2,6 +2,10 @@
 
 A tool to compare validation reports produced by the [gtfs-validator](https://www.github.com/MobilityData/gtfs-validator).
 
+The proposed library API for comparing two feed publications under a fixed validator method is
+documented in [Feed version comparison API](FEED_VERSION_COMPARISON.md), with executable synthetic
+examples and the boundary for connecting content or semantic results.
+
 # Introduction
 This is a command-line tool written in Java that performs the following steps:
 1. loads validation reports from disk;
