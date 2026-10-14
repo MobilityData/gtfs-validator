@@ -351,7 +351,7 @@
                             <p> You can see more about this notice <a
                                     th:href="@{'https://gtfs-validator.mobilitydata.org/rules.html#' + ${noticesByCode.key} + '-rule'}">here</a>.
                             </p>
-                             <p th:if="${totalForCode > summary.maxNoticesPerCode}">Only the first <span th:text="${summary.maxNoticesPerCode}"></span> of <span th:text="${totalForCode}"></span> affected records are displayed below.</p>
+                             <p th:if="${totalForCode > summary.maxNoticesPerCode}"><span th:text="${totalForCode}"></span> affected records, up to <span th:text="${summary.maxNoticesPerCode}"></span> are displayed below.</p>
                             <table>
                                 <thead>
                                     <tr>
