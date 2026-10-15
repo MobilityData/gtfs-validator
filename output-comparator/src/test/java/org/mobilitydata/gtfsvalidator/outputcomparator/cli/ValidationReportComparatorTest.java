@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -459,11 +460,15 @@ public class ValidationReportComparatorTest {
     assertThat(result.reportSummary()).contains("1 dataset(s) experienced an OutOfMemoryError.");
     assertThat(result.reportSummary()).contains("| feed-id-a | ✅ | ⚠️ |");
     assertThat(result.report().droppedErrors()).isEmpty();
-    assertThat(result.report().corruptedSources().corruptedSources()).containsExactly("feed-id-a");
+    assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
+    assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
   }
 
   @Test
   public void outOfMemoryErrorWithoutReport_isReported() throws Exception {
+    // The script only runs on the Linux runners of the acceptance tests, and bash on Windows
+    // runners cannot be relied on to handle Windows paths.
+    Assume.assumeFalse(System.getProperty("os.name").startsWith("Windows"));
     Arguments args = defaultArgs();
     // The reference JVM died of an OutOfMemoryError before writing its reports, and
     // scripts/write_oom_system_errors.sh wrote the system errors report.
@@ -487,7 +492,8 @@ public class ValidationReportComparatorTest {
             .compareValidationRuns(args, ImmutableList.of(reportDir), constructSourceUrls());
 
     assertThat(result.reportSummary()).contains("| feed-id-a | ⚠️ | ✅ |");
-    assertThat(result.report().corruptedSources().corruptedSources()).containsExactly("feed-id-a");
+    assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
+    assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
   }
 
   private static Arguments defaultArgs() {

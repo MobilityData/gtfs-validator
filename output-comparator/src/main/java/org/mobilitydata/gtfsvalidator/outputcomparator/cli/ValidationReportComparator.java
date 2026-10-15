@@ -81,7 +81,6 @@ public class ValidationReportComparator {
       if (!sourceUrlContainer.hasSourceId(sourceId)) {
         continue;
       }
-      corruptedSources.addSource();
       String sourceUrl = sourceUrlContainer.getUrlForSourceId(sourceId);
 
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
@@ -91,13 +90,16 @@ public class ValidationReportComparator {
       ValidationReport referenceSystemErrors = getValidationReportIfExists(referenceErrorsPath);
       ValidationReport latestSystemErrors = getValidationReportIfExists(latestErrorsPath);
 
-      // Checked first because an OutOfMemoryError can leave the reports missing, empty or
-      // partial, and each of those cases is skipped below as a corrupted source.
+      // A validation that ran out of memory leaves missing or partial reports and an unreliable
+      // validation time, so these datasets are only listed in the out of memory check and left
+      // out of every other check and statistic, including the corrupted sources count.
       boolean refOom = hasOutOfMemoryError(referenceSystemErrors);
       boolean latestOom = hasOutOfMemoryError(latestSystemErrors);
       if (refOom || latestOom) {
         oomSources.addOomSource(sourceId, refOom, latestOom);
+        continue;
       }
+      corruptedSources.addSource();
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
@@ -133,14 +135,6 @@ public class ValidationReportComparator {
         continue;
       }
       if (hasSystemErrors(latestReport, latestSystemErrors)) {
-        corruptedSources.addCorruptedSource(
-            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
-        continue;
-      }
-
-      // An OutOfMemoryError in a validation thread still produces a report with the notices found
-      // so far. Comparing such partial results would show spurious dropped notices.
-      if (refOom || latestOom) {
         corruptedSources.addCorruptedSource(
             sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
         continue;
