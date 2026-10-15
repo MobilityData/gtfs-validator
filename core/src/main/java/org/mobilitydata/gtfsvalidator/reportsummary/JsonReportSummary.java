@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsReportSummary;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 
 /**
  * Summary of the validation report. Each field in this class needs to be documented with Javadoc.
@@ -73,6 +74,14 @@ public class JsonReportSummary {
    */
   public final List<MemoryUsage> memoryUsageRecords;
 
+  /**
+   * Performance metrics of the validation: wall-clock time per phase, CPU time, allocated bytes,
+   * peak heap after garbage collection and garbage collection activity. These values are used
+   * internally to compare the performance of validator versions, and they can change in future
+   * versions.
+   */
+  public final ValidationPerformanceMetrics performanceMetrics;
+
   /** Number of entities in the feed. */
   @SerializedName("counts")
   public final JsonReportCounts jsonReportCounts;
@@ -100,6 +109,7 @@ public class JsonReportSummary {
       Set<String> files,
       Double validationTimeSeconds,
       List<MemoryUsage> memoryUsageRecords,
+      ValidationPerformanceMetrics performanceMetrics,
       JsonReportCounts jsonReportCounts,
       List<String> gtfsFeatures) {
     this.validatorVersion = validatorVersion;
@@ -117,6 +127,7 @@ public class JsonReportSummary {
     this.files = files;
     this.validationTimeSeconds = validationTimeSeconds;
     this.memoryUsageRecords = memoryUsageRecords;
+    this.performanceMetrics = performanceMetrics;
     this.jsonReportCounts = jsonReportCounts;
     this.gtfsFeatures = gtfsFeatures;
   }

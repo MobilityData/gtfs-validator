@@ -165,13 +165,7 @@ public class ValidationReportComparatorTest {
                 + "### 💾 Out of Memory Check\n"
                 + "No datasets experienced an OutOfMemoryError.\n\n\n"
                 + "### ⏱️ Performance Assessment\n\n"
-                + "<details>\n"
-                + "<summary><strong>📈 Validation Time</strong></summary>\n"
-                + "<p>Assess the performance in terms of seconds taken for the validation process.</p>\n"
-                + "\n"
-                + "| Time Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
-                + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-                + "</details>\n\n\n");
+                + "No performance data to compare.\n\n");
   }
 
   @Test

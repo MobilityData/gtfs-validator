@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportCounts;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportFeedInfo;
@@ -32,6 +33,8 @@ public class FeedMetadata {
   public double validationTimeSeconds;
 
   public List<MemoryUsage> memoryUsageRecords;
+
+  public ValidationPerformanceMetrics performanceMetrics;
 
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =

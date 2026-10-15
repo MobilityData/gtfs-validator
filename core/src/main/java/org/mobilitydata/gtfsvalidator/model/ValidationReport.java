@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.io.ValidationReportDeserializer;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 
 /**
  * Used to (de)serialize a {@code NoticeContainer}. This represents a validation report as a list of
@@ -47,6 +48,7 @@ public class ValidationReport {
   private final Set<NoticeReport> notices;
   private final Double validationTimeSeconds;
   private List<MemoryUsage> memoryUsageRecords;
+  private final ValidationPerformanceMetrics performanceMetrics;
 
   /**
    * Public constructor needed for deserialization by {@code ValidationReportDeserializer}. Only
@@ -69,9 +71,26 @@ public class ValidationReport {
       Set<NoticeReport> noticeReports,
       Double validationTimeSeconds,
       List<MemoryUsage> memoryUsageRecords) {
+    this(noticeReports, validationTimeSeconds, memoryUsageRecords, null);
+  }
+
+  /**
+   * Public constructor needed for deserialization by {@code ValidationReportDeserializer}.
+   *
+   * @param noticeReports set of {@code NoticeReport}s
+   * @param validationTimeSeconds the time taken to validate the GTFS dataset
+   * @param memoryUsageRecords the memory snapshots taken during the validation
+   * @param performanceMetrics the performance metrics of the validation
+   */
+  public ValidationReport(
+      Set<NoticeReport> noticeReports,
+      Double validationTimeSeconds,
+      List<MemoryUsage> memoryUsageRecords,
+      ValidationPerformanceMetrics performanceMetrics) {
     this.notices = Collections.unmodifiableSet(noticeReports);
     this.validationTimeSeconds = validationTimeSeconds;
     this.memoryUsageRecords = memoryUsageRecords;
+    this.performanceMetrics = performanceMetrics;
   }
 
   /**
@@ -97,6 +116,10 @@ public class ValidationReport {
 
   public List<MemoryUsage> getMemoryUsageRecords() {
     return memoryUsageRecords;
+  }
+
+  public ValidationPerformanceMetrics getPerformanceMetrics() {
+    return performanceMetrics;
   }
 
   /**
