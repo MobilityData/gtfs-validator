@@ -47,8 +47,18 @@ do
          snapshot_source=(--url "$URL")
          master_source=(--url "$URL")
       fi;
-      run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
-      run_validator gtfs-validator-master reference "${master_source[@]}"
+      # Whichever validator runs first on a feed is slightly slower, which biased every
+      # performance comparison against the snapshot when it always ran first. Alternating the
+      # order per feed cancels that out across the datasets. The order comes from a checksum of
+      # the feed ID so that a feed always runs in the same order across runs.
+      if (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 2 == 0 ));
+      then
+         run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+         run_validator gtfs-validator-master reference "${master_source[@]}"
+      else
+         run_validator gtfs-validator-master reference "${master_source[@]}"
+         run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+      fi;
       rm -rf "$feed_dir"
    else
       run_validator gtfs-validator-snapshot latest --url "$URL"
