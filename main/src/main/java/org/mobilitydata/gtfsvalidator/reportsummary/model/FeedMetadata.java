@@ -32,7 +32,10 @@ public class FeedMetadata {
 
   public double validationTimeSeconds;
 
-  public List<MemoryUsage> memoryUsageRecords;
+  /**
+   * @deprecated Use {@link #performanceMetrics} instead. Will be removed in the next major version.
+   */
+  @Deprecated public List<MemoryUsage> memoryUsageRecords;
 
   public ValidationPerformanceMetrics performanceMetrics;
 

@@ -71,8 +71,10 @@ public class JsonReportSummary {
    * performance metrics, and it can change in future versions. <a
    * href="https://github.com/MobilityData/gtfs-validator/pull/1963#issuecomment-2635037575"
    * target="_blank">Example of internal use</a>.
+   *
+   * @deprecated Use {@link #performanceMetrics} instead. Will be removed in the next major version.
    */
-  public final List<MemoryUsage> memoryUsageRecords;
+  @Deprecated public final List<MemoryUsage> memoryUsageRecords;
 
   /**
    * Performance metrics of the validation: wall-clock time per phase, CPU time, allocated bytes,

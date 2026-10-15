@@ -114,6 +114,11 @@ public class ValidationReport {
     return validationTimeSeconds;
   }
 
+  /**
+   * @deprecated Use {@link #getPerformanceMetrics()} instead. Will be removed in the next major
+   *     version.
+   */
+  @Deprecated
   public List<MemoryUsage> getMemoryUsageRecords() {
     return memoryUsageRecords;
   }
