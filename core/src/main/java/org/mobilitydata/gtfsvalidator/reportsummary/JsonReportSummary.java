@@ -93,6 +93,49 @@ public class JsonReportSummary {
    */
   public final List<String> gtfsFeatures;
 
+  /**
+   * Creates a summary without performance metrics. Kept so that code built against earlier versions
+   * of the validator still compiles.
+   */
+  public JsonReportSummary(
+      String validatorVersion,
+      String validatedAt,
+      String gtfsInput,
+      int threads,
+      String outputDirectory,
+      String systemErrorsReportName,
+      String validationReportName,
+      String htmlReportName,
+      String countryCode,
+      String dateForValidation,
+      JsonReportFeedInfo feedInfo,
+      List<JsonReportAgencyMetadata> agencies,
+      Set<String> files,
+      Double validationTimeSeconds,
+      List<MemoryUsage> memoryUsageRecords,
+      JsonReportCounts jsonReportCounts,
+      List<String> gtfsFeatures) {
+    this(
+        validatorVersion,
+        validatedAt,
+        gtfsInput,
+        threads,
+        outputDirectory,
+        systemErrorsReportName,
+        validationReportName,
+        htmlReportName,
+        countryCode,
+        dateForValidation,
+        feedInfo,
+        agencies,
+        files,
+        validationTimeSeconds,
+        memoryUsageRecords,
+        null,
+        jsonReportCounts,
+        gtfsFeatures);
+  }
+
   public JsonReportSummary(
       String validatorVersion,
       String validatedAt,
