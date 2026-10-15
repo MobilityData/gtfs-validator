@@ -42,8 +42,9 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
-import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceTracker;
 import org.mobilitydata.gtfsvalidator.reportsummary.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReport;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
@@ -79,7 +80,6 @@ public class ValidationRunner {
     this.versionResolver = versionResolver;
   }
 
-  @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
     // Suppress logging when using stdout mode to avoid interfering with JSON output
     if (config.stdoutOutput()) {
@@ -113,6 +113,9 @@ public class ValidationRunner {
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
 
+    // Loads the tracker before the timer starts: its one-time setup would otherwise add a fixed
+    // cost to every validation time, which shows as a regression on small feeds.
+    ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
@@ -129,7 +132,13 @@ public class ValidationRunner {
       logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e));
     }
+    // Started after reading the input so that the download time of URL sources does not distort
+    // the metrics; the input time is still reported as its own phase.
+    performanceTracker.start();
+    performanceTracker.recordPhase(
+        ValidationPerformanceMetrics.PHASE_INPUT, System.nanoTime() - startNanos);
     if (gtfsInput == null) {
+      performanceTracker.stop();
       exportReport(null, noticeContainer, config, versionInfo);
       if (!noticeContainer.getSystemErrors().isEmpty()) {
         return Status.SYSTEM_ERRORS;
@@ -149,13 +158,19 @@ public class ValidationRunner {
               validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
     } catch (InterruptedException e) {
       logger.atSevere().withCause(e).log("Validation was interrupted");
+      performanceTracker.stop();
       return Status.EXCEPTION;
     }
-    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-    closeGtfsInput(gtfsInput, noticeContainer);
+    FeedMetadata feedMetadata;
+    try (var phase =
+        performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_FEED_METADATA)) {
+      feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
+      closeGtfsInput(gtfsInput, noticeContainer);
+    }
 
     //    Performance metrics
     feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+    feedMetadata.performanceMetrics = performanceTracker.stop();
     var after =
         MemoryUsageRegister.getInstance()
             .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
@@ -253,6 +268,9 @@ public class ValidationRunner {
     }
 
     logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
+    if (feedMetadata.performanceMetrics != null) {
+      logger.atInfo().log(feedMetadata.performanceMetrics.humanReadablePrint());
+    }
     logger.atInfo().log(feedContainer.tableTotalsText());
   }
 
