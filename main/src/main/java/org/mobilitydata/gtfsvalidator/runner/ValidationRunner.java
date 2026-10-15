@@ -113,6 +113,9 @@ public class ValidationRunner {
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
 
+    // Loads the tracker before the timer starts: its one-time setup would otherwise add a fixed
+    // cost to every validation time, which shows as a regression on small feeds.
+    ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
@@ -129,7 +132,6 @@ public class ValidationRunner {
       logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e));
     }
-    ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     // Started after reading the input so that the download time of URL sources does not distort
     // the metrics; the input time is still reported as its own phase.
     performanceTracker.start();

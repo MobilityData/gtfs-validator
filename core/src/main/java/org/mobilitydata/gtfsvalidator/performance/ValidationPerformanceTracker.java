@@ -10,11 +10,11 @@ import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
@@ -40,9 +40,20 @@ public class ValidationPerformanceTracker {
   /** Trackers between {@link #start()} and {@link #stop()}, notified of every collection. */
   private static final Set<ValidationPerformanceTracker> ACTIVE = ConcurrentHashMap.newKeySet();
 
-  private static final AtomicBoolean GC_LISTENER_INSTALLED = new AtomicBoolean();
-
   private static final double NANOS_PER_SECOND = 1e9;
+
+  // Looking up the platform beans and installing the GC listener costs about 10 ms or more in a
+  // fresh JVM. Doing it once, when the class is loaded, lets callers pay that cost before they
+  // start
+  // timing; see ValidationRunner.run.
+  private static final ThreadMXBean THREAD_BEAN = ManagementFactory.getThreadMXBean();
+  private static final OperatingSystemMXBean OS_BEAN = ManagementFactory.getOperatingSystemMXBean();
+  private static final List<GarbageCollectorMXBean> GC_BEANS =
+      ManagementFactory.getGarbageCollectorMXBeans();
+
+  static {
+    installGcListener();
+  }
 
   private final Map<String, Long> phaseNanos = Collections.synchronizedMap(new LinkedHashMap<>());
   private final LongAdder taskCpuNanos = new LongAdder();
@@ -78,7 +89,6 @@ public class ValidationPerformanceTracker {
     startProcessCpuNanos = processCpuNanos();
     startGcCount = gcCount();
     startGcMillis = gcMillis();
-    installGcListener();
     ACTIVE.add(this);
   }
 
@@ -173,17 +183,15 @@ public class ValidationPerformanceTracker {
   }
 
   private static long currentThreadCpuNanos() {
-    ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-    if (!threadBean.isCurrentThreadCpuTimeSupported()) {
+    if (!THREAD_BEAN.isCurrentThreadCpuTimeSupported()) {
       return -1;
     }
-    return threadBean.getCurrentThreadCpuTime();
+    return THREAD_BEAN.getCurrentThreadCpuTime();
   }
 
   private static long currentThreadAllocatedBytes() {
-    ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
-    if (threadBean instanceof com.sun.management.ThreadMXBean) {
-      com.sun.management.ThreadMXBean sunThreadBean = (com.sun.management.ThreadMXBean) threadBean;
+    if (THREAD_BEAN instanceof com.sun.management.ThreadMXBean) {
+      com.sun.management.ThreadMXBean sunThreadBean = (com.sun.management.ThreadMXBean) THREAD_BEAN;
       if (sunThreadBean.isThreadAllocatedMemorySupported()
           && sunThreadBean.isThreadAllocatedMemoryEnabled()) {
         return sunThreadBean.getCurrentThreadAllocatedBytes();
@@ -193,16 +201,15 @@ public class ValidationPerformanceTracker {
   }
 
   private static long processCpuNanos() {
-    OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-    if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-      return ((com.sun.management.OperatingSystemMXBean) osBean).getProcessCpuTime();
+    if (OS_BEAN instanceof com.sun.management.OperatingSystemMXBean) {
+      return ((com.sun.management.OperatingSystemMXBean) OS_BEAN).getProcessCpuTime();
     }
     return -1;
   }
 
   private static long gcCount() {
     long total = 0;
-    for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
+    for (GarbageCollectorMXBean gcBean : GC_BEANS) {
       long count = gcBean.getCollectionCount();
       if (count < 0) {
         return -1;
@@ -214,7 +221,7 @@ public class ValidationPerformanceTracker {
 
   private static long gcMillis() {
     long total = 0;
-    for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
+    for (GarbageCollectorMXBean gcBean : GC_BEANS) {
       long millis = gcBean.getCollectionTime();
       if (millis < 0) {
         return -1;
@@ -225,14 +232,11 @@ public class ValidationPerformanceTracker {
   }
 
   /**
-   * Installs, once per JVM, a listener that reports the heap occupancy after every collection to
-   * the active trackers. Notifications are delivered asynchronously, so a collection that ends
-   * right before {@link #stop()} may be missed.
+   * Installs a listener that reports the heap occupancy after every collection to the active
+   * trackers. Notifications are delivered asynchronously, so a collection that ends right before
+   * {@link #stop()} may be missed.
    */
   private static void installGcListener() {
-    if (!GC_LISTENER_INSTALLED.compareAndSet(false, true)) {
-      return;
-    }
     try {
       Set<String> heapPools =
           ManagementFactory.getMemoryPoolMXBeans().stream()
@@ -260,7 +264,7 @@ public class ValidationPerformanceTracker {
               tracker.peakHeapAfterGcBytes.accumulateAndGet(heapUsed, Math::max);
             }
           };
-      for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
+      for (GarbageCollectorMXBean gcBean : GC_BEANS) {
         if (gcBean instanceof NotificationEmitter) {
           ((NotificationEmitter) gcBean).addNotificationListener(listener, null, null);
         }
