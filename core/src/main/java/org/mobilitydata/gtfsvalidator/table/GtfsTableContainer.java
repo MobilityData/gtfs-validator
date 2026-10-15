@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
  * @param <D> subclass of {@code GtfsTableDescriptor}
  */
 public abstract class GtfsTableContainer<T extends GtfsEntity, D extends GtfsTableDescriptor>
-    extends GtfsEntityContainer<T, D> {
+    extends GtfsEntityContainer<T> {
 
   private final CsvHeader header;
 
