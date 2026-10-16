@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - 'web/service/**'
+      # Re-run the job when this workflow itself changes.
+      - '.github/workflows/web_svc_pr.yml'
   workflow_dispatch:
 
 env:
