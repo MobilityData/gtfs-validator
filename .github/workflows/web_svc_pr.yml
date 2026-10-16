@@ -1,16 +1,12 @@
 name: Web service CI
 
+# Manual only: run it from the Actions tab on a branch of this repository
+# (it needs the GCP secrets, which pull requests from forks do not get).
 on:
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'web/service/**'
-      # Re-run the job when this workflow itself changes.
-      - '.github/workflows/web_svc_pr.yml'
   workflow_dispatch:
 
 env:
+    NODE_VERSION: "20"
     java_version: '17'
     java_distribution: 'zulu'
 
@@ -19,6 +15,10 @@ jobs:
   web_ci:
     name: Build web service
     runs-on: ubuntu-latest
+
+    env:
+      ENV_NAME              : prd
+      CLOUDSDK_CORE_PROJECT : web-based-gtfs-validator
 
     steps:
 
@@ -36,7 +36,21 @@ jobs:
           # We use the zulu distribution, which is an OpenJDK distro.
           distribution: ${{ env.java_distribution }}
 
-      # No GCP login: tests and build do not need the deployment secrets, so
-      # this job also works on pull requests from forks.
-      - name: Test and build
-        run: ./gradlew ':web:service:build'
+      # for npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 390.0.0'
+
+      - name: run gradle tasks
+        shell: bash
+        run: |
+          ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
+          ./gradlew ':web:service:webTest' ':web:service:webBuild'
