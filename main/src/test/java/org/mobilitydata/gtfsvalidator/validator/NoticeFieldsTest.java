@@ -79,7 +79,6 @@ public class NoticeFieldsTest {
             "daysBeforeFeedStart",
             "departureTime",
             "departureTime1",
-            "distance",
             "distanceKm",
             "dropOffType",
             "endFieldName",

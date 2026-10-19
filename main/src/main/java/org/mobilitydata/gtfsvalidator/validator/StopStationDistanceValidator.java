@@ -103,7 +103,7 @@ public class StopStationDistanceValidator extends FileValidator {
         GtfsStop loc2 = locations.get(j);
         double distance = S2Earth.getDistanceMeters(loc1.stopLatLon(), loc2.stopLatLon());
         if (distance < DISTANCE_THRESHOLD_METERS) {
-          validatePair(loc1, loc2, distance, noticeContainer);
+          validatePair(loc1, loc2, noticeContainer);
         }
       }
     }
@@ -115,20 +115,19 @@ public class StopStationDistanceValidator extends FileValidator {
             || stop.locationType() == GtfsLocationType.STATION);
   }
 
-  private static void validatePair(
-      GtfsStop loc1, GtfsStop loc2, double distance, NoticeContainer noticeContainer) {
+  private static void validatePair(GtfsStop loc1, GtfsStop loc2, NoticeContainer noticeContainer) {
     if (loc1.locationType() == GtfsLocationType.STATION
         && loc2.locationType() == GtfsLocationType.STATION) {
-      noticeContainer.addValidationNotice(new StationsTooCloseNotice(loc1, loc2, distance));
+      noticeContainer.addValidationNotice(new StationsTooCloseNotice(loc1, loc2));
     } else if (loc1.locationType() == GtfsLocationType.STOP
         && loc2.locationType() == GtfsLocationType.STOP) {
-      noticeContainer.addValidationNotice(new StopsTooCloseNotice(loc1, loc2, distance));
+      noticeContainer.addValidationNotice(new StopsTooCloseNotice(loc1, loc2));
     } else {
       GtfsStop stop = loc1.locationType() == GtfsLocationType.STOP ? loc1 : loc2;
       GtfsStop station = loc1.locationType() == GtfsLocationType.STATION ? loc1 : loc2;
       if (!stop.parentStation().equals(station.stopId())) {
         noticeContainer.addValidationNotice(
-            new StopTooCloseToNonParentStationNotice(stop, station, distance));
+            new StopTooCloseToNonParentStationNotice(stop, station));
       }
     }
   }
@@ -159,17 +158,13 @@ public class StopStationDistanceValidator extends FileValidator {
     /** The `stops.stop_lon` of the second station. */
     private final double stopLon2;
 
-    /** Distance in meters between the stations. */
-    private final double distance;
-
-    StationsTooCloseNotice(GtfsStop station1, GtfsStop station2, double distance) {
+    StationsTooCloseNotice(GtfsStop station1, GtfsStop station2) {
       this.stopId1 = station1.stopId();
       this.stopLat1 = station1.stopLat();
       this.stopLon1 = station1.stopLon();
       this.stopId2 = station2.stopId();
       this.stopLat2 = station2.stopLat();
       this.stopLon2 = station2.stopLon();
-      this.distance = distance;
     }
   }
 
@@ -199,24 +194,22 @@ public class StopStationDistanceValidator extends FileValidator {
     /** The `stops.stop_lon` of the second stop. */
     private final double stopLon2;
 
-    /** Distance in meters between the stops. */
-    private final double distance;
-
-    StopsTooCloseNotice(GtfsStop stop1, GtfsStop stop2, double distance) {
+    StopsTooCloseNotice(GtfsStop stop1, GtfsStop stop2) {
       this.stopId1 = stop1.stopId();
       this.stopLat1 = stop1.stopLat();
       this.stopLon1 = stop1.stopLon();
       this.stopId2 = stop2.stopId();
       this.stopLat2 = stop2.stopLat();
       this.stopLon2 = stop2.stopLon();
-      this.distance = distance;
     }
   }
 
   /**
    * A stop is too close to a station that is not its parent station.
    *
-   * <p>They are less than 2m apart.
+   * <p>They are less than 2m apart. Potential reasons for this notice could be either a stop with
+   * incorrect coordinates, or a child stop of the station that does not have `parent_station`
+   * assigned.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class StopTooCloseToNonParentStationNotice extends ValidationNotice {
@@ -239,17 +232,13 @@ public class StopStationDistanceValidator extends FileValidator {
     /** The `stops.stop_lon` of the station. */
     private final double stationLon;
 
-    /** Distance in meters between the stop and the station. */
-    private final double distance;
-
-    StopTooCloseToNonParentStationNotice(GtfsStop stop, GtfsStop station, double distance) {
+    StopTooCloseToNonParentStationNotice(GtfsStop stop, GtfsStop station) {
       this.stopId = stop.stopId();
       this.stopLat = stop.stopLat();
       this.stopLon = stop.stopLon();
       this.stationId = station.stopId();
       this.stationLat = station.stopLat();
       this.stationLon = station.stopLon();
-      this.distance = distance;
     }
   }
 }
