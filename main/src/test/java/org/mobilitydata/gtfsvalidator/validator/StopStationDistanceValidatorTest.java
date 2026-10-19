@@ -75,9 +75,11 @@ public class StopStationDistanceValidatorTest {
         createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
     GtfsStop station2 =
         createLocation(3, "station2", GtfsLocationType.STATION, CLOSE_LAT, BASE_LON, null);
+    double expectedDistance =
+        S2Earth.getDistanceMeters(station1.stopLatLon(), station2.stopLatLon());
 
     assertThat(generateNotices(ImmutableList.of(station1, station2)))
-        .containsExactly(new StationsTooCloseNotice(station1, station2));
+        .containsExactly(new StationsTooCloseNotice(station1, station2, expectedDistance));
   }
 
   @Test
@@ -94,9 +96,10 @@ public class StopStationDistanceValidatorTest {
   public void stopsTooClose_generatesNotice() {
     GtfsStop stop1 = createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, null);
     GtfsStop stop2 = createLocation(3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, null);
+    double expectedDistance = S2Earth.getDistanceMeters(stop1.stopLatLon(), stop2.stopLatLon());
 
     assertThat(generateNotices(ImmutableList.of(stop1, stop2)))
-        .containsExactly(new StopsTooCloseNotice(stop1, stop2));
+        .containsExactly(new StopsTooCloseNotice(stop1, stop2, expectedDistance));
   }
 
   @Test
@@ -188,9 +191,11 @@ public class StopStationDistanceValidatorTest {
     GtfsStop closeStop =
         createLocation(202, "close_stop", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, null);
     stops.add(closeStop);
+    double expectedDistance =
+        S2Earth.getDistanceMeters(stops.get(0).stopLatLon(), closeStop.stopLatLon());
 
     assertThat(generateNotices(stops))
-        .containsExactly(new StopsTooCloseNotice(stops.get(0), closeStop));
+        .containsExactly(new StopsTooCloseNotice(stops.get(0), closeStop, expectedDistance));
   }
 
   @Test
@@ -201,11 +206,14 @@ public class StopStationDistanceValidatorTest {
         createLocation(3, "station2", GtfsLocationType.STATION, CLOSE_LAT, BASE_LON, null);
     GtfsStop stop1 =
         createLocation(4, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1");
-    double expectedDistance = S2Earth.getDistanceMeters(stop1.stopLatLon(), station2.stopLatLon());
+    double expectedStationDistance =
+        S2Earth.getDistanceMeters(station1.stopLatLon(), station2.stopLatLon());
+    double expectedStopStationDistance =
+        S2Earth.getDistanceMeters(stop1.stopLatLon(), station2.stopLatLon());
 
     assertThat(generateNotices(ImmutableList.of(station1, station2, stop1)))
         .containsExactly(
-            new StationsTooCloseNotice(station1, station2),
-            new StopTooCloseToNonParentStationNotice(stop1, station2, expectedDistance));
+            new StationsTooCloseNotice(station1, station2, expectedStationDistance),
+            new StopTooCloseToNonParentStationNotice(stop1, station2, expectedStopStationDistance));
   }
 }

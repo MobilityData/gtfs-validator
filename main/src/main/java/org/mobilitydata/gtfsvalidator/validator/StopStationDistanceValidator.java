@@ -119,10 +119,10 @@ public class StopStationDistanceValidator extends FileValidator {
       GtfsStop loc1, GtfsStop loc2, double distance, NoticeContainer noticeContainer) {
     if (loc1.locationType() == GtfsLocationType.STATION
         && loc2.locationType() == GtfsLocationType.STATION) {
-      noticeContainer.addValidationNotice(new StationsTooCloseNotice(loc1, loc2));
+      noticeContainer.addValidationNotice(new StationsTooCloseNotice(loc1, loc2, distance));
     } else if (loc1.locationType() == GtfsLocationType.STOP
         && loc2.locationType() == GtfsLocationType.STOP) {
-      noticeContainer.addValidationNotice(new StopsTooCloseNotice(loc1, loc2));
+      noticeContainer.addValidationNotice(new StopsTooCloseNotice(loc1, loc2, distance));
     } else {
       GtfsStop stop = loc1.locationType() == GtfsLocationType.STOP ? loc1 : loc2;
       GtfsStop station = loc1.locationType() == GtfsLocationType.STATION ? loc1 : loc2;
@@ -159,13 +159,17 @@ public class StopStationDistanceValidator extends FileValidator {
     /** The `stops.stop_lon` of the second station. */
     private final double stopLon2;
 
-    StationsTooCloseNotice(GtfsStop station1, GtfsStop station2) {
+    /** Distance in meters between the stations. */
+    private final double distance;
+
+    StationsTooCloseNotice(GtfsStop station1, GtfsStop station2, double distance) {
       this.stopId1 = station1.stopId();
       this.stopLat1 = station1.stopLat();
       this.stopLon1 = station1.stopLon();
       this.stopId2 = station2.stopId();
       this.stopLat2 = station2.stopLat();
       this.stopLon2 = station2.stopLon();
+      this.distance = distance;
     }
   }
 
@@ -195,13 +199,17 @@ public class StopStationDistanceValidator extends FileValidator {
     /** The `stops.stop_lon` of the second stop. */
     private final double stopLon2;
 
-    StopsTooCloseNotice(GtfsStop stop1, GtfsStop stop2) {
+    /** Distance in meters between the stops. */
+    private final double distance;
+
+    StopsTooCloseNotice(GtfsStop stop1, GtfsStop stop2, double distance) {
       this.stopId1 = stop1.stopId();
       this.stopLat1 = stop1.stopLat();
       this.stopLon1 = stop1.stopLon();
       this.stopId2 = stop2.stopId();
       this.stopLat2 = stop2.stopLat();
       this.stopLon2 = stop2.stopLon();
+      this.distance = distance;
     }
   }
 
