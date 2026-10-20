@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ResolvedNotice;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 
 /**
  * Used to (de)serialize a JSON validation report. This represents a validation report as a list of
@@ -42,6 +43,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
   private static final String SUMMARY_MEMBER_NAME = "summary";
   private static final String VALIDATION_TIME_MEMBER_NAME = "validationTimeSeconds";
   private static final String MEMORY_USAGE_RECORDS_MEMBER_NAME = "memoryUsageRecords";
+  private static final String PERFORMANCE_METRICS_MEMBER_NAME = "performanceMetrics";
 
   @Override
   public ValidationReport deserialize(
@@ -52,6 +54,7 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
     // since currently the report comparison is only on the notices and the validation time.
     Double validationTimeSeconds = null;
     List<MemoryUsage> memoryUsageRecords = null;
+    ValidationPerformanceMetrics performanceMetrics = null;
     if (rootObject.has(SUMMARY_MEMBER_NAME)) {
       JsonObject summaryObject = rootObject.getAsJsonObject(SUMMARY_MEMBER_NAME);
       if (summaryObject.has(VALIDATION_TIME_MEMBER_NAME)) {
@@ -65,12 +68,18 @@ public class ValidationReportDeserializer implements JsonDeserializer<Validation
           memoryUsageRecords.add(memoryUsage);
         }
       }
+      JsonElement performanceMetricsElement = summaryObject.get(PERFORMANCE_METRICS_MEMBER_NAME);
+      if (performanceMetricsElement != null && performanceMetricsElement.isJsonObject()) {
+        performanceMetrics =
+            Notice.GSON.fromJson(performanceMetricsElement, ValidationPerformanceMetrics.class);
+      }
     }
     JsonArray noticesArray = rootObject.getAsJsonArray(NOTICES_MEMBER_NAME);
     for (JsonElement childObject : noticesArray) {
       notices.add(Notice.GSON.fromJson(childObject, NoticeReport.class));
     }
-    return new ValidationReport(notices, validationTimeSeconds, memoryUsageRecords);
+    return new ValidationReport(
+        notices, validationTimeSeconds, memoryUsageRecords, performanceMetrics);
   }
 
   public static <T extends Notice> JsonObject serialize(
