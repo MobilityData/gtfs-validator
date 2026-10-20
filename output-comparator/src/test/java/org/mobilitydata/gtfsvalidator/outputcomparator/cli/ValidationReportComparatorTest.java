@@ -462,6 +462,8 @@ public class ValidationReportComparatorTest {
     assertThat(result.report().droppedErrors()).isEmpty();
     assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
     assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
+    // 1 latest out of memory source out of 1 = 100%, above the 25% threshold.
+    assertThat(result.failure()).isTrue();
   }
 
   @Test
@@ -494,6 +496,8 @@ public class ValidationReportComparatorTest {
     assertThat(result.reportSummary()).contains("| feed-id-a | ⚠️ | ✅ |");
     assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
     assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
+    // Only the reference ran out of memory, which is not a regression of the latest version.
+    assertThat(result.failure()).isFalse();
   }
 
   private static Arguments defaultArgs() {

@@ -70,7 +70,9 @@ public class ValidationReportComparator {
             args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
-    OutOfMemorySourcesCollector oomSources = new OutOfMemorySourcesCollector();
+    // Out of memory errors used to count as corrupted sources, so they share its threshold.
+    OutOfMemorySourcesCollector oomSources =
+        new OutOfMemorySourcesCollector(args.getPercentCorruptedSourcesThreshold());
     ValidationPerformanceCollector validationPerformanceCollector =
         new ValidationPerformanceCollector();
 
@@ -82,6 +84,7 @@ public class ValidationReportComparator {
         continue;
       }
       String sourceUrl = sourceUrlContainer.getUrlForSourceId(sourceId);
+      oomSources.addSource();
 
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path referenceErrorsPath = file.toPath().resolve(args.getReferenceSystemErrorsName());
@@ -169,7 +172,8 @@ public class ValidationReportComparator {
             || droppedWarnings.isAboveThreshold()
             || newInfoNotices.isAboveThreshold()
             || droppedInfoNotices.isAboveThreshold()
-            || corruptedSources.isAboveThreshold();
+            || corruptedSources.isAboveThreshold()
+            || oomSources.isAboveThreshold();
 
     String reportSummaryString =
         generateReportSummaryString(
