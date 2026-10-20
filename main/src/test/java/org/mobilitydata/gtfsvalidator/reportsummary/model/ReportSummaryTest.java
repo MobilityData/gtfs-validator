@@ -100,6 +100,44 @@ public class ReportSummaryTest {
         1);
   }
 
+  /**
+   * The counts must describe the feed, not what the container kept: a container that dropped
+   * notices past its retention limit still knows how many it was given, and the JSON report exports
+   * that number.
+   */
+  @Test
+  public void countsTest_areExactWhenTheContainerDroppedNotices() {
+    NoticeContainer noticeContainer = new NoticeContainer(1_000, 10, 10);
+    for (int i = 1; i <= 300; i++) {
+      noticeContainer.addValidationNotice(new MissingRequiredFieldNotice("test.txt", i, "field"));
+    }
+    for (int i = 1; i <= 40; i++) {
+      noticeContainer.addValidationNotice(new UnknownColumnNotice("test.txt", "unknown", i));
+    }
+    ReportSummary reportSummary = new ReportSummary(noticeContainer, VersionInfo.empty());
+
+    assertEquals(20, noticeContainer.getValidationNotices().size());
+    assertEquals(340, reportSummary.getNoticeCount());
+    assertEquals(300, reportSummary.getErrorCount());
+    assertEquals(40, reportSummary.getInfoCount());
+    assertEquals(0, reportSummary.getWarningCount());
+    assertEquals(
+        300,
+        reportSummary.getNoticeCountForCode(
+            SeverityLevel.ERROR, MISSING_REQUIRED_FIELD_NOTICE_CODE));
+    assertEquals(
+        40, reportSummary.getNoticeCountForCode(SeverityLevel.INFO, UNKNOWN_COLUMN_NOTICE_CODE));
+  }
+
+  @Test
+  public void noticeCountForCodeTest_unknownCode() {
+    assertEquals(0, generateReportSummary().getNoticeCountForCode(SeverityLevel.ERROR, "unknown"));
+    assertEquals(
+        0,
+        generateReportSummary()
+            .getNoticeCountForCode(SeverityLevel.INFO, MISSING_REQUIRED_FIELD_NOTICE_CODE));
+  }
+
   @Test
   public void testVersionPresent() {
     VersionInfo versionInfo = VersionInfo.create(Optional.of("1.2.3"), Optional.of("1.2.4"));

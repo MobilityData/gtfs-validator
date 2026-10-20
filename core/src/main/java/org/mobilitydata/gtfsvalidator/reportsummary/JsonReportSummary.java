@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsReportSummary;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 
 /**
  * Summary of the validation report. Each field in this class needs to be documented with Javadoc.
@@ -70,8 +71,18 @@ public class JsonReportSummary {
    * performance metrics, and it can change in future versions. <a
    * href="https://github.com/MobilityData/gtfs-validator/pull/1963#issuecomment-2635037575"
    * target="_blank">Example of internal use</a>.
+   *
+   * @deprecated Use {@link #performanceMetrics} instead. Will be removed in the next major version.
    */
-  public final List<MemoryUsage> memoryUsageRecords;
+  @Deprecated public final List<MemoryUsage> memoryUsageRecords;
+
+  /**
+   * Performance metrics of the validation: wall-clock time per phase, CPU time, allocated bytes,
+   * peak heap after garbage collection and garbage collection activity. These values are used
+   * internally to compare the performance of validator versions, and they can change in future
+   * versions.
+   */
+  public final ValidationPerformanceMetrics performanceMetrics;
 
   /** Number of entities in the feed. */
   @SerializedName("counts")
@@ -84,6 +95,10 @@ public class JsonReportSummary {
    */
   public final List<String> gtfsFeatures;
 
+  /**
+   * Creates a summary without performance metrics. Kept so that code built against earlier versions
+   * of the validator still compiles.
+   */
   public JsonReportSummary(
       String validatorVersion,
       String validatedAt,
@@ -102,6 +117,46 @@ public class JsonReportSummary {
       List<MemoryUsage> memoryUsageRecords,
       JsonReportCounts jsonReportCounts,
       List<String> gtfsFeatures) {
+    this(
+        validatorVersion,
+        validatedAt,
+        gtfsInput,
+        threads,
+        outputDirectory,
+        systemErrorsReportName,
+        validationReportName,
+        htmlReportName,
+        countryCode,
+        dateForValidation,
+        feedInfo,
+        agencies,
+        files,
+        validationTimeSeconds,
+        memoryUsageRecords,
+        null,
+        jsonReportCounts,
+        gtfsFeatures);
+  }
+
+  public JsonReportSummary(
+      String validatorVersion,
+      String validatedAt,
+      String gtfsInput,
+      int threads,
+      String outputDirectory,
+      String systemErrorsReportName,
+      String validationReportName,
+      String htmlReportName,
+      String countryCode,
+      String dateForValidation,
+      JsonReportFeedInfo feedInfo,
+      List<JsonReportAgencyMetadata> agencies,
+      Set<String> files,
+      Double validationTimeSeconds,
+      List<MemoryUsage> memoryUsageRecords,
+      ValidationPerformanceMetrics performanceMetrics,
+      JsonReportCounts jsonReportCounts,
+      List<String> gtfsFeatures) {
     this.validatorVersion = validatorVersion;
     this.validatedAt = validatedAt;
     this.gtfsInput = gtfsInput;
@@ -117,6 +172,7 @@ public class JsonReportSummary {
     this.files = files;
     this.validationTimeSeconds = validationTimeSeconds;
     this.memoryUsageRecords = memoryUsageRecords;
+    this.performanceMetrics = performanceMetrics;
     this.jsonReportCounts = jsonReportCounts;
     this.gtfsFeatures = gtfsFeatures;
   }
