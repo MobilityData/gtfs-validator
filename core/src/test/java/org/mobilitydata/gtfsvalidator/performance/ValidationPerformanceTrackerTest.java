@@ -80,6 +80,49 @@ public class ValidationPerformanceTrackerTest {
     assertThat(metrics.humanReadablePrint())
         .isEqualTo(
             "Performance: phases [loadTables: 1.500s] CPU: N/A Process CPU: 2.000s"
-                + " Allocated: 2.00 KiB Peak heap after GC: N/A GC: 3 collections in 0.250s");
+                + " Allocated: 2.00 KiB Peak heap after GC: N/A Peak live heap: N/A"
+                + " GC: 3 collections in 0.250s");
+  }
+
+  @Test
+  public void phaseClose_liveHeapDisabledByDefault_recordsNoLiveHeap() {
+    ValidationPerformanceTracker tracker = ValidationPerformanceTracker.getInstance();
+    tracker.start();
+    try (var phase = tracker.startPhase(ValidationPerformanceMetrics.PHASE_LOAD_TABLES)) {}
+    ValidationPerformanceMetrics metrics = tracker.stop();
+
+    assertThat(metrics.getLiveHeapAfterPhaseBytes()).isEmpty();
+    assertThat(metrics.getPeakLiveHeapBytes()).isNull();
+  }
+
+  @Test
+  public void recordLiveHeap_countsReachableData() {
+    ValidationPerformanceTracker tracker = ValidationPerformanceTracker.getInstance();
+    tracker.start();
+    sink = new byte[ALLOCATION_BYTES];
+    tracker.recordLiveHeap(ValidationPerformanceMetrics.PHASE_LOAD_TABLES);
+    tracker.recordLiveHeap(ValidationPerformanceMetrics.PHASE_MULTI_FILE_VALIDATORS);
+    ValidationPerformanceMetrics metrics = tracker.stop();
+    sink = null;
+
+    assertThat(metrics.getLiveHeapAfterPhaseBytes().keySet())
+        .containsExactly(
+            ValidationPerformanceMetrics.PHASE_LOAD_TABLES,
+            ValidationPerformanceMetrics.PHASE_MULTI_FILE_VALIDATORS)
+        .inOrder();
+    assertThat(metrics.getPeakLiveHeapBytes()).isAtLeast((long) ALLOCATION_BYTES);
+  }
+
+  @Test
+  public void start_clearsPreviousLiveHeap() {
+    ValidationPerformanceTracker tracker = ValidationPerformanceTracker.getInstance();
+    tracker.start();
+    tracker.recordLiveHeap("first");
+    tracker.stop();
+
+    tracker.start();
+    ValidationPerformanceMetrics metrics = tracker.stop();
+
+    assertThat(metrics.getLiveHeapAfterPhaseBytes()).isEmpty();
   }
 }
