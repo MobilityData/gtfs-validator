@@ -10,7 +10,7 @@ pyasn1-modules==0.4.1
 pyparsing==3.2.1
 python-dateutil==2.8.2
 pytz==2024.2
-requests==2.32.3
+requests==2.32.4
 rsa==4.9
 six==1.17.0
 urllib3==1.26.19
