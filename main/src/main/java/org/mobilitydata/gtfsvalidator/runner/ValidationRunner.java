@@ -135,42 +135,48 @@ public class ValidationRunner {
     // Started after reading the input so that the download time of URL sources does not distort
     // the metrics; the input time is still reported as its own phase.
     performanceTracker.start();
-    performanceTracker.recordPhase(
-        ValidationPerformanceMetrics.PHASE_INPUT, System.nanoTime() - startNanos);
-    if (gtfsInput == null) {
-      performanceTracker.stop();
-      exportReport(null, noticeContainer, config, versionInfo);
-      if (!noticeContainer.getSystemErrors().isEmpty()) {
-        return Status.SYSTEM_ERRORS;
-      } else {
+    FeedMetadata feedMetadata;
+    ValidationPerformanceMetrics performanceMetrics = null;
+    try {
+      performanceTracker.recordPhase(
+          ValidationPerformanceMetrics.PHASE_INPUT, System.nanoTime() - startNanos);
+      if (gtfsInput == null) {
+        exportReport(null, noticeContainer, config, versionInfo);
+        if (!noticeContainer.getSystemErrors().isEmpty()) {
+          return Status.SYSTEM_ERRORS;
+        } else {
+          return Status.EXCEPTION;
+        }
+      }
+      ValidationContext validationContext =
+          ValidationContext.builder()
+              .setCountryCode(config.countryCode())
+              .set(ServiceIntervalCache.class, new ServiceIntervalCache())
+              .setDateForValidation(new DateForValidation(config.dateForValidation()))
+              .build();
+      try {
+        feedContainer =
+            loadAndValidate(
+                validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+      } catch (InterruptedException e) {
+        logger.atSevere().withCause(e).log("Validation was interrupted");
         return Status.EXCEPTION;
       }
-    }
-    ValidationContext validationContext =
-        ValidationContext.builder()
-            .setCountryCode(config.countryCode())
-            .set(ServiceIntervalCache.class, new ServiceIntervalCache())
-            .setDateForValidation(new DateForValidation(config.dateForValidation()))
-            .build();
-    try {
-      feedContainer =
-          loadAndValidate(
-              validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
-    } catch (InterruptedException e) {
-      logger.atSevere().withCause(e).log("Validation was interrupted");
-      performanceTracker.stop();
-      return Status.EXCEPTION;
-    }
-    FeedMetadata feedMetadata;
-    try (var phase =
-        performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_FEED_METADATA)) {
-      feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-      closeGtfsInput(gtfsInput, noticeContainer);
-    }
+      try (var phase =
+          performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_FEED_METADATA)) {
+        feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
+        closeGtfsInput(gtfsInput, noticeContainer);
+      }
 
-    //    Performance metrics
-    feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
-    feedMetadata.performanceMetrics = performanceTracker.stop();
+      //    Performance metrics
+      feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+      performanceMetrics = performanceTracker.stop();
+      feedMetadata.performanceMetrics = performanceMetrics;
+    } finally {
+      if (performanceMetrics == null) {
+        performanceTracker.stop();
+      }
+    }
     var after =
         MemoryUsageRegister.getInstance()
             .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
