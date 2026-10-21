@@ -45,7 +45,8 @@ public class ValidationPerformanceCollector {
     WALL_TIME("Wall time", 0.05),
     CPU_TIME("CPU time", 0.05),
     ALLOCATED_MEMORY("Allocated memory", 0.01),
-    PEAK_HEAP_AFTER_GC("Peak heap after GC", 0.05);
+    PEAK_HEAP_AFTER_GC("Peak heap after GC", 0.05),
+    PEAK_LIVE_HEAP("Peak live heap", 0.02);
 
     final String label;
 
@@ -131,6 +132,8 @@ public class ValidationPerformanceCollector {
           Metric.PEAK_HEAP_AFTER_GC,
           reference.getPeakHeapAfterGcBytes(),
           latest.getPeakHeapAfterGcBytes());
+      dataset.put(
+          Metric.PEAK_LIVE_HEAP, reference.getPeakLiveHeapBytes(), latest.getPeakLiveHeapBytes());
     }
     datasets.add(dataset);
   }
