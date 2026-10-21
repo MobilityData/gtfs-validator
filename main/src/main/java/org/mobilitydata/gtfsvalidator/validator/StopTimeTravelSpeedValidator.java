@@ -86,7 +86,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     for (List<GtfsStopTime> stopTimes : stopTimeTable.byTripIdAsMap().values()) {
       tripTable
           .byTripId(stopTimes.get(0).tripId())
-          .map(trip -> new TripAndStopTimes(trip, stopTimes))
+          .map(trip -> new TripAndStopTimes(trip, stopTimeTable))
           .ifPresent(
               tripAndStopTimes -> tripsByHash.put(tripAndStopTimes.tripFprint(), tripAndStopTimes));
     }
@@ -106,16 +106,19 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
   }
 
-  /** A GTFS trip and all its stop times. */
+  /**
+   * A GTFS trip and all its stop times. Stop times are looked up on each call, so that they are not
+   * retained for every trip at once.
+   */
   private static class TripAndStopTimes {
 
     private final GtfsTrip trip;
 
-    private final List<GtfsStopTime> stopTimes;
+    private final GtfsStopTimeTableContainer stopTimeTable;
 
-    public TripAndStopTimes(GtfsTrip trip, List<GtfsStopTime> stopTimes) {
+    public TripAndStopTimes(GtfsTrip trip, GtfsStopTimeTableContainer stopTimeTable) {
       this.trip = trip;
-      this.stopTimes = stopTimes;
+      this.stopTimeTable = stopTimeTable;
     }
 
     public GtfsTrip getTrip() {
@@ -123,7 +126,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
     }
 
     public List<GtfsStopTime> getStopTimes() {
-      return stopTimes;
+      return stopTimeTable.byTripId(trip.tripId());
     }
 
     /**
@@ -131,6 +134,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
      * id, stop ids and arrival and departure times.
      */
     public long tripFprint() {
+      List<GtfsStopTime> stopTimes = getStopTimes();
       Hasher hasher =
           HASH_FUNCTION
               .newHasher()
