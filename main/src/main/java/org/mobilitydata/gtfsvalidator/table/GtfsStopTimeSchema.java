@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-@GtfsTable("stop_times.txt")
+@GtfsTable(value = "stop_times.txt", customContainer = true)
 @Required
 public interface GtfsStopTimeSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)

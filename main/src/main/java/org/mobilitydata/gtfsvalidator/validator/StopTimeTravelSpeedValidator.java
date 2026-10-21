@@ -83,7 +83,7 @@ public class StopTimeTravelSpeedValidator extends FileValidator {
   @Override
   public void validate(NoticeContainer noticeContainer) {
     final ListMultimap<Long, TripAndStopTimes> tripsByHash = ArrayListMultimap.create();
-    for (List<GtfsStopTime> stopTimes : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
+    for (List<GtfsStopTime> stopTimes : stopTimeTable.byTripIdAsMap().values()) {
       tripTable
           .byTripId(stopTimes.get(0).tripId())
           .map(trip -> new TripAndStopTimes(trip, stopTimes))
