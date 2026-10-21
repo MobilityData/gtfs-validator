@@ -28,6 +28,22 @@ public class ValidationPerformanceCollectorTest {
             phases, validationSeconds, validationSeconds, allocatedBytes, peakHeapBytes, 0L, 0.0));
   }
 
+  private static ValidationReport reportWithLiveHeap(long allocatedBytes, long liveHeapBytes) {
+    return new ValidationReport(
+        Collections.emptySet(),
+        1.0,
+        null,
+        new ValidationPerformanceMetrics(
+            Map.of(ValidationPerformanceMetrics.PHASE_LOAD_TABLES, 1.0),
+            Map.of(ValidationPerformanceMetrics.PHASE_LOAD_TABLES, liveHeapBytes),
+            1.0,
+            1.0,
+            allocatedBytes,
+            null,
+            0L,
+            0.0));
+  }
+
   private static ValidationReport legacyReport(double validationTimeSeconds) {
     return new ValidationReport(Collections.emptySet(), validationTimeSeconds, null);
   }
@@ -67,6 +83,27 @@ public class ValidationPerformanceCollectorTest {
     assertThat(log)
         .contains("| Allocated memory | < 2 s | 10 | +0.0% | +0.0% [+0.0%, +0.0%] | - |");
     assertThat(log).doesNotContain("No significant performance change detected.");
+  }
+
+  /**
+   * Small feeds never trigger a collection, so only the live heap can show a memory improvement on
+   * them, even when allocations slightly increase.
+   */
+  @Test
+  public void liveHeapImprovementWithoutCollections_isFlagged() {
+    ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
+    for (int i = 0; i < 10; i++) {
+      collector.compareValidationReports(
+          "feed-" + i,
+          reportWithLiveHeap(1_000_000, 100_000_000),
+          reportWithLiveHeap(1_020_000, 60_000_000));
+    }
+
+    String log = collector.generateLogString();
+
+    assertThat(log)
+        .contains("- Improvement **Peak live heap** for feeds of < 2 s: -40.0% [-40.0%, -40.0%]");
+    assertThat(log).contains("- Regression **Allocated memory** for feeds of < 2 s: +2.0%");
   }
 
   @Test
