@@ -7,6 +7,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -76,6 +77,12 @@ final class StopTimeStore extends AbstractList<GtfsStopTime> implements RandomAc
   private final List<String> tripIds = new ArrayList<>();
   private final Map<String, Integer> stopCodes = Maps.newHashMapWithExpectedSize(12);
   private final List<String> stopIds = new ArrayList<>();
+  // Time columns hold codes into the distinct times, so that rows share their GtfsTime objects.
+  @Nullable private Map<GtfsTime, Integer> timeCodes = new HashMap<>();
+  private final List<GtfsTime> times = new ArrayList<>();
+
+  private static final ThreadLocal<GtfsStopTime.Builder> BUILDER =
+      ThreadLocal.withInitial(GtfsStopTime.Builder::new);
 
   private int[] tripStart;
   private int[] tripRows;
@@ -150,21 +157,21 @@ final class StopTimeStore extends AbstractList<GtfsStopTime> implements RandomAc
     if (e.hasStopSequence()) p |= STOP_SEQUENCE;
     if (e.hasArrivalTime()) {
       p |= ARRIVAL_TIME;
-      arrivalTime[r] = e.arrivalTime().getSecondsSinceMidnight();
+      arrivalTime[r] = timeCode(e.arrivalTime());
     }
     if (e.hasDepartureTime()) {
       p |= DEPARTURE_TIME;
-      departureTime[r] = e.departureTime().getSecondsSinceMidnight();
+      departureTime[r] = timeCode(e.departureTime());
     }
     if (e.hasStartPickupDropOffWindow()) {
       p |= START_WINDOW;
       startWindow = ensure(startWindow);
-      startWindow[r] = e.startPickupDropOffWindow().getSecondsSinceMidnight();
+      startWindow[r] = timeCode(e.startPickupDropOffWindow());
     }
     if (e.hasEndPickupDropOffWindow()) {
       p |= END_WINDOW;
       endWindow = ensure(endWindow);
-      endWindow[r] = e.endPickupDropOffWindow().getSecondsSinceMidnight();
+      endWindow[r] = timeCode(e.endPickupDropOffWindow());
     }
     if (e.hasPickupType()) {
       p |= PICKUP_TYPE;
@@ -228,15 +235,16 @@ final class StopTimeStore extends AbstractList<GtfsStopTime> implements RandomAc
 
   private GtfsStopTime materialize(int r) {
     int p = present[r];
-    GtfsStopTime.Builder b = new GtfsStopTime.Builder();
+    GtfsStopTime.Builder b = BUILDER.get();
+    b.clear();
     b.setCsvRowNumber(csvRowNumber[r]);
     if ((p & TRIP_ID) != 0) b.setTripId(tripIds.get(trip[r]));
     if ((p & STOP_ID) != 0) b.setStopId(stopIds.get(stop[r]));
     if ((p & STOP_SEQUENCE) != 0) b.setStopSequence(stopSequence[r]);
-    if ((p & ARRIVAL_TIME) != 0) b.setArrivalTime(time(arrivalTime[r]));
-    if ((p & DEPARTURE_TIME) != 0) b.setDepartureTime(time(departureTime[r]));
-    if ((p & START_WINDOW) != 0) b.setStartPickupDropOffWindow(time(startWindow[r]));
-    if ((p & END_WINDOW) != 0) b.setEndPickupDropOffWindow(time(endWindow[r]));
+    if ((p & ARRIVAL_TIME) != 0) b.setArrivalTime(times.get(arrivalTime[r]));
+    if ((p & DEPARTURE_TIME) != 0) b.setDepartureTime(times.get(departureTime[r]));
+    if ((p & START_WINDOW) != 0) b.setStartPickupDropOffWindow(times.get(startWindow[r]));
+    if ((p & END_WINDOW) != 0) b.setEndPickupDropOffWindow(times.get(endWindow[r]));
     if ((p & PICKUP_TYPE) != 0) b.setPickupType((int) pickupType[r]);
     if ((p & DROP_OFF_TYPE) != 0) b.setDropOffType((int) dropOffType[r]);
     if ((p & CONTINUOUS_PICKUP) != 0) b.setContinuousPickup((int) continuousPickup[r]);
@@ -254,6 +262,7 @@ final class StopTimeStore extends AbstractList<GtfsStopTime> implements RandomAc
   /** Builds the indices and reports duplicate keys. Must be called once, after the last add. */
   void finish(String filename, NoticeContainer noticeContainer) {
     int n = size;
+    timeCodes = null;
     if (objects == null) {
       resize(n);
     }
@@ -420,8 +429,14 @@ final class StopTimeStore extends AbstractList<GtfsStopTime> implements RandomAc
     return c;
   }
 
-  private static GtfsTime time(int secondsSinceMidnight) {
-    return GtfsTime.fromSecondsSinceMidnight(secondsSinceMidnight);
+  private int timeCode(GtfsTime time) {
+    Integer c = timeCodes.get(time);
+    if (c == null) {
+      c = times.size();
+      timeCodes.put(time, c);
+      times.add(time);
+    }
+    return c;
   }
 
   private static String definedKeys(GtfsStopTime entity) {
