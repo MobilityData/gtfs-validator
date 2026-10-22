@@ -24,12 +24,13 @@ public class JsonReportSummaryGenerator {
       ValidationRunnerConfig config,
       VersionInfo versionInfo,
       String date) {
-    this.gtfsInput = config != null ? config.gtfsSource().toString() : null;
+    String displayGtfsSource = config != null ? config.getDisplayGtfsSource() : null;
+    this.gtfsInput = displayGtfsSource;
     this.summary =
         new JsonReportSummary(
             versionInfo.currentVersion().orElse(null),
             date,
-            config != null ? config.gtfsSource().toString() : null,
+            displayGtfsSource,
             config != null ? config.numThreads() : 0,
             config != null && !config.stdoutOutput() && config.outputDirectory() != null
                 ? config.outputDirectory().toString()
@@ -50,6 +51,7 @@ public class JsonReportSummaryGenerator {
             feedMetadata != null ? feedMetadata.getFilenames() : null,
             feedMetadata != null ? feedMetadata.validationTimeSeconds : null,
             feedMetadata != null ? feedMetadata.memoryUsageRecords : null,
+            feedMetadata != null ? feedMetadata.performanceMetrics : null,
             feedMetadata != null && feedMetadata.counts != null
                 ? new JsonReportCounts(feedMetadata.counts)
                 : null,
