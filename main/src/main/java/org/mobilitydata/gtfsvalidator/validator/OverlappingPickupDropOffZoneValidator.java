@@ -3,7 +3,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -35,8 +34,8 @@ public class OverlappingPickupDropOffZoneValidator extends FileValidator {
     }
 
     // Iterate through all stop times grouped by trip ID.
-    for (Map.Entry<String, Collection<GtfsStopTime>> entry :
-        stopTimeTableContainer.byTripIdMap().asMap().entrySet()) {
+    for (Map.Entry<String, List<GtfsStopTime>> entry :
+        stopTimeTableContainer.byTripIdAsMap().entrySet()) {
       List<GtfsStopTime> stopTimesForTrip = new ArrayList<>(entry.getValue());
 
       // Compare each pair of stop times within the same trip.
