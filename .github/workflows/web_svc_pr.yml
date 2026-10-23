@@ -1,11 +1,9 @@
 name: Web service CI
 
+# Manual only: run it from the Actions tab on a branch of this repository
+# (it needs the GCP secrets, which pull requests from forks do not get).
 on:
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'web/service/**'
+  workflow_dispatch:
 
 env:
     NODE_VERSION: "20"
