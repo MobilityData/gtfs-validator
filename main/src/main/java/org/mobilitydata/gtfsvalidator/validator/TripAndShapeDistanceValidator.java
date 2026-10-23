@@ -20,6 +20,9 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -55,6 +58,8 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    // Trips share shapes, so the farthest point of each shape is searched only once.
+    Map<String, Optional<GtfsShape>> maxShapeByShapeId = new HashMap<>();
     tripTable
         .getEntities()
         .forEach(
@@ -76,8 +81,12 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
               // Get max shape distance for trip
               GtfsShape maxShape =
-                  shapeTable.byShapeId(shapeId).stream()
-                      .max(Comparator.comparingDouble(GtfsShape::shapeDistTraveled))
+                  maxShapeByShapeId
+                      .computeIfAbsent(
+                          shapeId,
+                          id ->
+                              shapeTable.byShapeId(id).stream()
+                                  .max(Comparator.comparingDouble(GtfsShape::shapeDistTraveled)))
                       .orElse(null);
               if (maxShape == null) {
                 return;

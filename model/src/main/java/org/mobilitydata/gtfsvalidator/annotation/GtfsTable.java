@@ -48,4 +48,7 @@ public @interface GtfsTable {
    * for the CSV Parser.
    */
   int maxCharsPerColumn() default 0;
+
+  /** If true, the table container is hand-written instead of generated. */
+  boolean customContainer() default false;
 }

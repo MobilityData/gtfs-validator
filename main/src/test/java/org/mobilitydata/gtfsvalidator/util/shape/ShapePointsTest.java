@@ -16,11 +16,17 @@
 
 package org.mobilitydata.gtfsvalidator.util.shape;
 
+import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
+
 import com.google.common.collect.ImmutableList;
+import com.google.common.geometry.S2EdgeUtil;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.geometry.S2Point;
 import com.google.common.truth.Correspondence;
 import com.google.common.truth.Expect;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -195,5 +201,93 @@ public class ShapePointsTest {
         .containsExactly(
             new StopToShapeMatch(2, 0.0, 221.3, 0.8, toS2Point(47.3650083, 8.5256577)),
             new StopToShapeMatch(6, 0.0, 483.5, 0.8, toS2Point(47.3650140, 8.5256455)));
+  }
+
+  /** Skipping far segments must give exactly the matches of a scan over every segment. */
+  @Test
+  public void matchFromLocationAndMatchesFromLocation_sameAsFullScan() {
+    Random random = new Random(42);
+    for (int shape = 0; shape < 50; shape++) {
+      List<ShapePoint> points = new ArrayList<>();
+      List<S2Point> locations = new ArrayList<>();
+      double lat = 45.5;
+      double lng = -73.6;
+      double heading = random.nextDouble() * 2 * Math.PI;
+      for (int i = 0; i < 400; i++) {
+        // A random walk with turns, so that shapes come back near the same places.
+        heading += (random.nextDouble() - 0.5) * 1.5;
+        double step = 1e-4 + random.nextDouble() * 6e-4;
+        lat += step * Math.cos(heading);
+        lng += step * Math.sin(heading);
+        locations.add(S2LatLng.fromDegrees(lat, lng).toPoint());
+        points.add(new ShapePoint(0, 0, locations.get(i)));
+      }
+      ShapePoints shapePoints = new ShapePoints(points);
+      for (int stop = 0; stop < 100; stop++) {
+        S2LatLng near = new S2LatLng(locations.get(random.nextInt(locations.size())));
+        S2Point location =
+            S2LatLng.fromDegrees(
+                    near.latDegrees() + (random.nextDouble() - 0.5) * 0.02,
+                    near.lngDegrees() + (random.nextDouble() - 0.5) * 0.02)
+                .toPoint();
+        StopToShapeMatch closest = new StopToShapeMatch();
+        for (int i = 0; i + 1 < locations.size(); i++) {
+          S2Point point =
+              S2EdgeUtil.getClosestPoint(location, locations.get(i), locations.get(i + 1));
+          closest.keepBestMatch(point, getDistanceMeters(location, point), i);
+        }
+        StopToShapeMatch actualClosest = shapePoints.matchFromLocation(location);
+        expect.that(actualClosest.getIndex()).isEqualTo(closest.getIndex());
+        expect
+            .that(actualClosest.getGeoDistanceToShape())
+            .isEqualTo(closest.getGeoDistanceToShape());
+        expect.that(actualClosest.getLocation()).isEqualTo(closest.getLocation());
+        for (double maxDistance : new double[] {20, 100, 500}) {
+          List<StopToShapeMatch> expected = fullScanMatches(locations, location, maxDistance);
+          List<StopToShapeMatch> actual = shapePoints.matchesFromLocation(location, maxDistance);
+          expect.that(actual.size()).isEqualTo(expected.size());
+          for (int i = 0; i < Math.min(actual.size(), expected.size()); i++) {
+            expect.that(actual.get(i).getIndex()).isEqualTo(expected.get(i).getIndex());
+            expect
+                .that(actual.get(i).getGeoDistanceToShape())
+                .isEqualTo(expected.get(i).getGeoDistanceToShape());
+            expect.that(actual.get(i).getLocation()).isEqualTo(expected.get(i).getLocation());
+          }
+        }
+      }
+    }
+  }
+
+  /** The matching loop of ShapePoints.matchesFromLocation, without skipping any segment. */
+  private static List<StopToShapeMatch> fullScanMatches(
+      List<S2Point> points, S2Point location, double maxDistanceFromShape) {
+    List<StopToShapeMatch> matches = new ArrayList<>();
+    StopToShapeMatch localMatch = new StopToShapeMatch();
+    double distanceToEndOfPreviousSegment = Double.POSITIVE_INFINITY;
+    boolean previousSegmentGettingFurtherAway = false;
+    for (int i = 0; i + 1 < points.size(); ++i) {
+      S2Point left = points.get(i);
+      S2Point right = points.get(i + 1);
+      S2Point closestPoint = S2EdgeUtil.getClosestPoint(location, left, right);
+      double geoDistanceToShape = getDistanceMeters(location, closestPoint);
+      if (geoDistanceToShape <= maxDistanceFromShape) {
+        if (previousSegmentGettingFurtherAway
+            && geoDistanceToShape < distanceToEndOfPreviousSegment
+            && localMatch.hasBestMatch()) {
+          matches.add(new StopToShapeMatch(localMatch));
+          localMatch.clearBestMatch();
+        }
+        localMatch.keepBestMatch(closestPoint, geoDistanceToShape, i);
+      } else if (localMatch.hasBestMatch()) {
+        matches.add(new StopToShapeMatch(localMatch));
+        localMatch.clearBestMatch();
+      }
+      distanceToEndOfPreviousSegment = getDistanceMeters(location, right);
+      previousSegmentGettingFurtherAway = distanceToEndOfPreviousSegment > geoDistanceToShape;
+    }
+    if (localMatch.hasBestMatch()) {
+      matches.add(localMatch);
+    }
+    return matches;
   }
 }

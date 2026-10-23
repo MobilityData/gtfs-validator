@@ -111,6 +111,9 @@ public class TableDescriptorGenerator {
     typeSpec.addMethod(generateCreateContainerForInvalidStatusMethod());
     typeSpec.addMethod(generateCreateContainerForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateCreateEntityBuilderMethod());
+    if (fileDescriptor.customContainer()) {
+      typeSpec.addMethod(generateCreateEntityListMethod());
+    }
     typeSpec.addMethod(generateGetEntityClassMethod());
     typeSpec.addMethod(generateGetColumnsMethod());
     typeSpec.addMethod(generateGetFieldLoadersMethod());
@@ -162,6 +165,17 @@ public class TableDescriptorGenerator {
         .addModifiers(Modifier.PUBLIC)
         .returns(GtfsEntityBuilder.class)
         .addStatement("return new $T.Builder()", classNames.entityImplementationTypeName())
+        .build();
+  }
+
+  private MethodSpec generateCreateEntityListMethod() {
+    return MethodSpec.methodBuilder("createEntityList")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(
+            ParameterizedTypeName.get(
+                ClassName.get(List.class), classNames.entityImplementationTypeName()))
+        .addStatement("return $T.createEntityList()", classNames.tableContainerTypeName())
         .build();
   }
 
