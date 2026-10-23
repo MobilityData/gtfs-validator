@@ -29,6 +29,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -73,10 +75,28 @@ public abstract class Notice {
    * @return notice code, e.g., "foreign_key_violation".
    */
   public static String getCode(Class<?> noticeClass) {
+    // Read with get before computeIfAbsent: the latter locks the bin of an already cached
+    // class unless it happens to be the first entry of that bin, and this runs once per
+    // notice.
+    String cached = CODE_CACHE.get(noticeClass);
+    return cached != null ? cached : CODE_CACHE.computeIfAbsent(noticeClass, Notice::deriveCode);
+  }
+
+  private static String deriveCode(Class<?> noticeClass) {
     return CaseFormat.UPPER_CAMEL.to(
         CaseFormat.LOWER_UNDERSCORE,
         StringUtils.removeEnd(noticeClass.getSimpleName(), NOTICE_SUFFIX));
   }
+
+  /**
+   * Notice code per notice class.
+   *
+   * <p>The code only depends on the class, and deriving it builds several intermediate strings. It
+   * is looked up on every notice added to a container and again when notices are grouped, so it is
+   * cached. A plain {@code ConcurrentHashMap} is enough: notice classes are loaded once and live
+   * for the lifetime of the process, and it behaves the same on any runtime.
+   */
+  private static final Map<Class<?>, String> CODE_CACHE = new ConcurrentHashMap<>();
 
   @Override
   public boolean equals(Object o) {
