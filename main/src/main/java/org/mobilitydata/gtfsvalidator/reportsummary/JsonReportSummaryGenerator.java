@@ -51,6 +51,7 @@ public class JsonReportSummaryGenerator {
             feedMetadata != null ? feedMetadata.getFilenames() : null,
             feedMetadata != null ? feedMetadata.validationTimeSeconds : null,
             feedMetadata != null ? feedMetadata.memoryUsageRecords : null,
+            feedMetadata != null ? feedMetadata.performanceMetrics : null,
             feedMetadata != null && feedMetadata.counts != null
                 ? new JsonReportCounts(feedMetadata.counts)
                 : null,

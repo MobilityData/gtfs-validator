@@ -42,8 +42,9 @@ import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.URISyntaxError;
-import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceTracker;
 import org.mobilitydata.gtfsvalidator.reportsummary.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReport;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
@@ -79,7 +80,6 @@ public class ValidationRunner {
     this.versionResolver = versionResolver;
   }
 
-  @MemoryMonitor
   public Status run(ValidationRunnerConfig config) {
     // Suppress logging when using stdout mode to avoid interfering with JSON output
     if (config.stdoutOutput()) {
@@ -113,6 +113,9 @@ public class ValidationRunner {
     logger.atInfo().log("validation config:\n%s", config);
     logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
 
+    // Loads the tracker before the timer starts: its one-time setup would otherwise add a fixed
+    // cost to every validation time, which shows as a regression on small feeds.
+    ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     final long startNanos = System.nanoTime();
     // Input.
     feedLoader.setNumThreads(config.numThreads());
@@ -129,41 +132,67 @@ public class ValidationRunner {
       logger.atSevere().withCause(e).log("Syntax error in URI");
       noticeContainer.addSystemError(new URISyntaxError(e));
     }
-    if (gtfsInput == null) {
-      exportReport(null, noticeContainer, config, versionInfo);
-      if (!noticeContainer.getSystemErrors().isEmpty()) {
-        return Status.SYSTEM_ERRORS;
-      } else {
+    // Started after reading the input so that the download time of URL sources does not distort
+    // the metrics; the input time is still reported as its own phase.
+    performanceTracker.start();
+    FeedMetadata feedMetadata;
+    ValidationPerformanceMetrics performanceMetrics = null;
+    try {
+      performanceTracker.recordPhase(
+          ValidationPerformanceMetrics.PHASE_INPUT, System.nanoTime() - startNanos);
+      if (gtfsInput == null) {
+        exportReport(null, noticeContainer, config, versionInfo);
+        if (!noticeContainer.getSystemErrors().isEmpty()) {
+          return Status.SYSTEM_ERRORS;
+        } else {
+          return Status.EXCEPTION;
+        }
+      }
+      ValidationContext validationContext =
+          ValidationContext.builder()
+              .setCountryCode(config.countryCode())
+              .set(ServiceIntervalCache.class, new ServiceIntervalCache())
+              .setDateForValidation(new DateForValidation(config.dateForValidation()))
+              .build();
+      try {
+        feedContainer =
+            loadAndValidate(
+                validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
+      } catch (InterruptedException e) {
+        logger.atSevere().withCause(e).log("Validation was interrupted");
         return Status.EXCEPTION;
       }
-    }
-    ValidationContext validationContext =
-        ValidationContext.builder()
-            .setCountryCode(config.countryCode())
-            .set(ServiceIntervalCache.class, new ServiceIntervalCache())
-            .setDateForValidation(new DateForValidation(config.dateForValidation()))
-            .build();
-    try {
-      feedContainer =
-          loadAndValidate(
-              validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
-    } catch (InterruptedException e) {
-      logger.atSevere().withCause(e).log("Validation was interrupted");
-      return Status.EXCEPTION;
-    }
-    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
-    closeGtfsInput(gtfsInput, noticeContainer);
+      try (var phase =
+          performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_FEED_METADATA)) {
+        feedMetadata = FeedMetadata.from(feedContainer, gtfsInput.getFilenames());
+        closeGtfsInput(gtfsInput, noticeContainer);
+      }
 
-    //    Performance metrics
-    feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+      //    Performance metrics
+      feedMetadata.validationTimeSeconds = (System.nanoTime() - startNanos) / 1e9;
+      performanceMetrics = performanceTracker.stop();
+      feedMetadata.performanceMetrics = performanceMetrics;
+    } finally {
+      if (performanceMetrics == null) {
+        performanceTracker.stop();
+      }
+    }
     var after =
         MemoryUsageRegister.getInstance()
             .getMemoryUsageSnapshot("ValidationRunner.run", memoryBefore);
     MemoryUsageRegister.getInstance().registerMemoryUsage(after);
 
+    // Everything the reports need from the feed container has now been extracted, so the reference
+    // is dropped before generating them. Report generation is itself allocation heavy (JSON trees,
+    // notice views, output buffers) and the container holds every loaded entity: keeping both alive
+    // makes the memory peak the sum of the two phases instead of the larger of the two. On a large
+    // feed the container alone is over a gigabyte.
+    String tableTotals = feedContainer.tableTotalsText();
+    feedContainer = null;
+
     // Output
     exportReport(feedMetadata, noticeContainer, config, versionInfo);
-    printSummary(feedMetadata, feedContainer, feedLoader, config);
+    printSummary(feedMetadata, tableTotals, feedLoader, config);
     return Status.SUCCESS;
   }
 
@@ -172,10 +201,35 @@ public class ValidationRunner {
    *
    * @param feedMetadata the {@code FeedMetadata}
    * @param feedContainer the {@code GtfsFeedContainer}
+   * @deprecated Use {@link #printSummary(FeedMetadata, String, GtfsFeedLoader,
+   *     ValidationRunnerConfig)}, which does not require the feed container to be kept in memory
+   *     while reports are generated.
    */
+  @Deprecated
   public static void printSummary(
       FeedMetadata feedMetadata,
       GtfsFeedContainer feedContainer,
+      GtfsFeedLoader loader,
+      ValidationRunnerConfig config) {
+    // The container is only read for the table totals, and the new overload returns before
+    // using them in stdout mode: a caller passing no container in that mode kept working.
+    printSummary(
+        feedMetadata,
+        feedContainer == null ? null : feedContainer.tableTotalsText(),
+        loader,
+        config);
+  }
+
+  /**
+   * Prints validation metadata.
+   *
+   * @param feedMetadata the {@code FeedMetadata}
+   * @param tableTotals the per-table entity counts, as returned by {@link
+   *     GtfsFeedContainer#tableTotalsText()}
+   */
+  public static void printSummary(
+      FeedMetadata feedMetadata,
+      String tableTotals,
       GtfsFeedLoader loader,
       ValidationRunnerConfig config) {
     // Skip summary output when using stdout mode to avoid interfering with JSON output
@@ -253,7 +307,10 @@ public class ValidationRunner {
     }
 
     logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
-    logger.atInfo().log(feedContainer.tableTotalsText());
+    if (feedMetadata.performanceMetrics != null) {
+      logger.atInfo().log(feedMetadata.performanceMetrics.humanReadablePrint());
+    }
+    logger.atInfo().log(tableTotals);
   }
 
   /**

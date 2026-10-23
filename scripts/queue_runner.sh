@@ -2,6 +2,19 @@
 
 source "$(dirname "$0")/common.sh"
 
+oom_script="$(cd "$(dirname "$0")" && pwd)/write_oom_system_errors.sh"
+
+# Runs a validator jar on the current feed. If the JVM throws an OutOfMemoryError, even one that
+# ends the process before the validator writes its reports, the system errors report records it
+# so that the comparator reports the dataset as out of memory.
+run_validator() {
+   local jar_dir="$1"
+   local report_name="$2"
+   shift 2
+   local output_dir="$OUTPUT_BASE/output/$path_name"
+   java -Xmx12G -Xms8G -Dgtfsvalidator.performance.liveHeap=true "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
+}
+
 master="$1"
 raw_queue_string="${@:2}"
 IFS=" " read -a queue <<< $raw_queue_string
@@ -34,11 +47,21 @@ do
          snapshot_source=(--url "$URL")
          master_source=(--url "$URL")
       fi;
-      java -Xmx12G -Xms8G -jar gtfs-validator-snapshot/gtfs-validator*.jar "${snapshot_source[@]}" --output_base $OUTPUT_BASE/output/$path_name --validation_report_name latest.json --system_errors_report_name latest_errors.json --skip_validator_update
-      java -Xmx12G -Xms8G -jar gtfs-validator-master/gtfs-validator*.jar "${master_source[@]}" --output_base $OUTPUT_BASE/output/$path_name --validation_report_name reference.json --system_errors_report_name reference_errors.json --skip_validator_update
+      # Whichever validator runs first on a feed is slightly slower, which biased every
+      # performance comparison against the snapshot when it always ran first. Alternating the
+      # order per feed cancels that out across the datasets. The order comes from a checksum of
+      # the feed ID so that a feed always runs in the same order across runs.
+      if (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 2 == 0 ));
+      then
+         run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+         run_validator gtfs-validator-master reference "${master_source[@]}"
+      else
+         run_validator gtfs-validator-master reference "${master_source[@]}"
+         run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+      fi;
       rm -rf "$feed_dir"
    else
-      java -Xmx12G -Xms8G -jar gtfs-validator-snapshot/gtfs-validator*.jar --url "$URL" --output_base $OUTPUT_BASE/output/$path_name --validation_report_name latest.json --system_errors_report_name latest_errors.json --skip_validator_update
+      run_validator gtfs-validator-snapshot latest --url "$URL"
    fi;
    wait
 done
