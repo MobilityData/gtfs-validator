@@ -1,0 +1,3 @@
+stop_id,stop_name,stop_lat,stop_lon
+A,Test Stop A,0.0,0.0
+B,Test Stop B,0.0,0.001
