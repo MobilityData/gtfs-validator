@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MultimapBuilder;
@@ -35,8 +36,13 @@ import org.mobilitydata.gtfsvalidator.model.ValidationReport;
  * own NoticeContainer, and after execution is complete the results are merged.
  */
 public class NoticeContainer {
-  /** Limit on the amount notices of the same type and severity. */
-  private static final int MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY = 100_000;
+  /**
+   * Limit on the amount notices of the same type and severity.
+   *
+   * <p>Only {@code MAX_EXPORTS_PER_NOTICE_TYPE_AND_SEVERITY} notices per type and severity end up
+   * in a validation report, so retaining orders of magnitude more of them only costs memory.
+   */
+  @VisibleForTesting static final int MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY = 2_000;
 
   /**
    * Limit on the total amount of stored validation notices.
@@ -47,7 +53,7 @@ public class NoticeContainer {
    *
    * <p>Note that system errors are not limited since we don't expect to have a lot of them.
    */
-  private static final int MAX_TOTAL_VALIDATION_NOTICES = 10_000_000;
+  @VisibleForTesting static final int MAX_TOTAL_VALIDATION_NOTICES = 200_000;
 
   /** Limit on the amount of exported notices */
   private static final int MAX_EXPORTS_PER_NOTICE_TYPE_AND_SEVERITY = 1_000;
@@ -58,6 +64,16 @@ public class NoticeContainer {
   private final List<ResolvedNotice<ValidationNotice>> validationNotices = new ArrayList<>();
   private final List<ResolvedNotice<SystemError>> systemErrors = new ArrayList<>();
   private final Map<String, Integer> noticesCountPerTypeAndSeverity = new HashMap<>();
+
+  /**
+   * Amount of notices per type and severity actually kept in {@code validationNotices}.
+   *
+   * <p>This is deliberately separate from {@code noticesCountPerTypeAndSeverity}: the latter counts
+   * every notice ever added, including the ones dropped once a limit is reached, and is what the
+   * validation report exports as {@code totalNotices}.
+   */
+  private final Map<String, Integer> retainedNoticesCountPerTypeAndSeverity = new HashMap<>();
+
   private boolean hasValidationErrors = false;
   private boolean hasValidationWarnings = false;
 
@@ -106,12 +122,31 @@ public class NoticeContainer {
     }
 
     updateNoticeCount(resolved);
-    if (validationNotices.size() >= maxTotalValidationNotices
-        || noticesCountPerTypeAndSeverity.get(resolved.getMappingKey())
-            > maxValidationNoticesPerTypeAndSeverity) {
-      return;
+    if (canRetain(resolved)) {
+      validationNotices.add(resolved);
     }
-    validationNotices.add(resolved);
+  }
+
+  /**
+   * Tells whether the given notice fits in this container, and books the slot if it does.
+   *
+   * <p>This is the single place where the retention limits are enforced, so that notices added one
+   * by one and notices merged from another container are treated the same way.
+   */
+  private boolean canRetain(ResolvedNotice<?> notice) {
+    String mappingKey = notice.getMappingKey();
+    int retained = retainedNoticesCountPerTypeAndSeverity.getOrDefault(mappingKey, 0);
+    if (retained >= maxValidationNoticesPerTypeAndSeverity) {
+      return false;
+    }
+    // A notice type is described in the exported report only if at least one of its notices was
+    // retained, so the first notice of a type and severity is kept even once the total limit is
+    // reached: dropping it would hide the type, and its exact count, from the report entirely.
+    if (retained > 0 && validationNotices.size() >= maxTotalValidationNotices) {
+      return false;
+    }
+    retainedNoticesCountPerTypeAndSeverity.put(mappingKey, retained + 1);
+    return true;
   }
 
   public <T extends ValidationNotice> NoticeContainer addValidationNotices(Iterable<T> notices) {
@@ -142,22 +177,29 @@ public class NoticeContainer {
    * Adds all validation notices and system errors from another container.
    *
    * <p>This is useful for multithreaded validation: each thread has its own notice container which
-   * is merged into the global container when the thread finishes. Please note that the final {@code
-   * NoticeContainer} may contain more than the maximum amount of {@code ValidationNotice} allowed
-   * by {@code NoticeContainer#MAX_TOTAL_VALIDATION_NOTICES} and {@code
-   * NoticeContainer#MAX_VALIDATION_NOTICES_TYPE_AND_SEVERITY}.
+   * is merged into the global container when the thread finishes. It is also how row-by-row parsing
+   * notices reach the container of a table: {@code CsvFileLoader} merges one container per row.
+   *
+   * <p>The retention limits of this container are applied to the merged notices, so a feed where
+   * every row of a large file yields a notice cannot grow the container without bound. Notice
+   * counts are merged in full regardless of retention, so the {@code totalNotices} reported for
+   * each notice type stays exact.
    *
    * @param otherContainer a container to take the notices from
    */
   public void addAll(NoticeContainer otherContainer) {
-    validationNotices.addAll(otherContainer.validationNotices);
-    systemErrors.addAll(otherContainer.systemErrors);
-    hasValidationErrors |= otherContainer.hasValidationErrors;
-    hasValidationWarnings |= otherContainer.hasValidationWarnings;
     for (Entry<String, Integer> entry : otherContainer.noticesCountPerTypeAndSeverity.entrySet()) {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
       noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
     }
+    for (ResolvedNotice<ValidationNotice> notice : otherContainer.validationNotices) {
+      if (canRetain(notice)) {
+        validationNotices.add(notice);
+      }
+    }
+    systemErrors.addAll(otherContainer.systemErrors);
+    hasValidationErrors |= otherContainer.hasValidationErrors;
+    hasValidationWarnings |= otherContainer.hasValidationWarnings;
   }
 
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
