@@ -44,6 +44,7 @@ context('GTFS Validator - Confirm error messaging', () => {
       'POST',
       `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
+        expect(req.body.filename).to.equal('sample-feed.zip');
         req.reply({
           statusCode: 200,
           statusMessage: 'OK',
