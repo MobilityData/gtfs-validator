@@ -134,7 +134,7 @@ public class CsvTableLoaderTest {
             .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
-        .containsExactly(new RequiredFileEmptyNotice("filename.txt"));
+        .containsExactly(new EmptyRequiredFileNotice("filename.txt"));
     assertThat(loadedContainer.getTableStatus()).isEqualTo(TableStatus.PARSABLE_HEADERS_AND_ROWS);
     assertThat(loadedContainer.getEntities()).isEmpty();
   }

@@ -16,9 +16,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.mobilitydata.gtfsvalidator.notice.CsvParsingFailedNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidLineEndingNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.RequiredFileEmptyNotice;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
@@ -145,7 +145,7 @@ public final class CsvFileLoader extends TableLoader {
         return tableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS);
       }
       if (entities.isEmpty() && tableDescriptor.isRequired()) {
-        noticeContainer.addValidationNotice(new RequiredFileEmptyNotice(gtfsFilename));
+        noticeContainer.addValidationNotice(new EmptyRequiredFileNotice(gtfsFilename));
       }
 
       GtfsTableContainer table =

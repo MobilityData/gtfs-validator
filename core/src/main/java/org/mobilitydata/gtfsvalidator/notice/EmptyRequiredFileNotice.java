@@ -28,12 +28,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef
  * <p>Required GTFS files must contain data.
  */
 @GtfsValidationNotice(severity = ERROR, sections = @SectionRefs(FILE_REQUIREMENTS))
-public class RequiredFileEmptyNotice extends ValidationNotice {
+public class EmptyRequiredFileNotice extends ValidationNotice {
 
   /** The name of the faulty file. */
   private final String filename;
 
-  public RequiredFileEmptyNotice(String filename) {
+  public EmptyRequiredFileNotice(String filename) {
     this.filename = filename;
   }
 }
