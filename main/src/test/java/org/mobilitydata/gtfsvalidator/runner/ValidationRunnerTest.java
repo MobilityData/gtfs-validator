@@ -17,6 +17,12 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -27,7 +33,10 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInValidatorError;
 import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
 @RunWith(JUnit4.class)
@@ -64,6 +73,66 @@ public class ValidationRunnerTest {
     // InvalidPathException. This should catch issues such as #1158.
     assertThrows(
         FileNotFoundException.class, () -> ValidationRunner.createGtfsInput(config, "1.1.0"));
+  }
+
+  /**
+   * The feed container is released before reports are generated, so the summary is printed from the
+   * table totals captured beforehand. Both overloads must log exactly the same thing.
+   */
+  @Test
+  public void printSummary_tableTotalsOverload_logsSameOutputAsFeedContainerOverload() {
+    GtfsFeedContainer feedContainer =
+        new GtfsFeedContainer(
+            ImmutableList.<GtfsEntityContainer<?, ?>>of(
+                GtfsStopTimeTableContainer.forEntities(ImmutableList.of(), new NoticeContainer())));
+    FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, ImmutableSet.of());
+    feedMetadata.validationTimeSeconds = 1.5;
+    GtfsFeedLoader loader = new GtfsFeedLoader(ImmutableList.of());
+    ValidationRunnerConfig config = buildConfig("/tmp/nonexistent.zip");
+
+    List<String> fromTableTotals =
+        captureLoggedMessages(
+            () ->
+                ValidationRunner.printSummary(
+                    feedMetadata, feedContainer.tableTotalsText(), loader, config));
+    List<String> fromFeedContainer =
+        captureLoggedMessages(
+            () -> ValidationRunner.printSummary(feedMetadata, feedContainer, loader, config));
+
+    assertThat(fromTableTotals).contains("stop_times.txt\t0");
+    assertThat(fromFeedContainer).isEqualTo(fromTableTotals);
+  }
+
+  /** Captures the messages logged by {@link ValidationRunner} while {@code runnable} runs. */
+  private static List<String> captureLoggedMessages(Runnable runnable) {
+    List<String> messages = new ArrayList<>();
+    Handler handler =
+        new Handler() {
+          @Override
+          public void publish(LogRecord record) {
+            messages.add(record.getMessage());
+          }
+
+          @Override
+          public void flush() {}
+
+          @Override
+          public void close() {}
+        };
+    Logger logger = Logger.getLogger(ValidationRunner.class.getName());
+    Level previousLevel = logger.getLevel();
+    boolean previousUseParentHandlers = logger.getUseParentHandlers();
+    logger.setLevel(Level.INFO);
+    logger.setUseParentHandlers(false);
+    logger.addHandler(handler);
+    try {
+      runnable.run();
+    } finally {
+      logger.removeHandler(handler);
+      logger.setUseParentHandlers(previousUseParentHandlers);
+      logger.setLevel(previousLevel);
+    }
+    return messages;
   }
 
   /**

@@ -4,6 +4,7 @@ import com.google.common.flogger.FluentLogger;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
 import java.lang.management.OperatingSystemMXBean;
@@ -30,6 +31,12 @@ import javax.management.openmbean.CompositeData;
  * {@link #startPhase(String)}. Like {@link MemoryUsageRegister}, each thread gets its own tracker
  * so concurrent validations do not share counters; tasks capture the tracker of the thread that
  * created them.
+ *
+ * <p>When the system property {@value #LIVE_HEAP_PROPERTY} is {@code true}, the tracker also forces
+ * a garbage collection at the end of every phase and records the heap that is still in use. This
+ * measures the live data set of every feed, including small ones that never trigger a collection on
+ * their own, at the cost of one full collection per phase. It is meant for performance comparisons,
+ * not for production use.
  */
 public class ValidationPerformanceTracker {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
@@ -42,11 +49,17 @@ public class ValidationPerformanceTracker {
 
   private static final double NANOS_PER_SECOND = 1e9;
 
+  /** System property that enables the live heap measurement at the end of every phase. */
+  public static final String LIVE_HEAP_PROPERTY = "gtfsvalidator.performance.liveHeap";
+
+  private static final boolean LIVE_HEAP_ENABLED = Boolean.getBoolean(LIVE_HEAP_PROPERTY);
+
   // Looking up the platform beans and installing the GC listener costs about 10 ms or more in a
   // fresh JVM. Doing it once, when the class is loaded, lets callers pay that cost before they
   // start
   // timing; see ValidationRunner.run.
   private static final ThreadMXBean THREAD_BEAN = ManagementFactory.getThreadMXBean();
+  private static final MemoryMXBean MEMORY_BEAN = ManagementFactory.getMemoryMXBean();
   private static final OperatingSystemMXBean OS_BEAN = ManagementFactory.getOperatingSystemMXBean();
   private static final List<GarbageCollectorMXBean> GC_BEANS =
       ManagementFactory.getGarbageCollectorMXBeans();
@@ -56,6 +69,8 @@ public class ValidationPerformanceTracker {
   }
 
   private final Map<String, Long> phaseNanos = Collections.synchronizedMap(new LinkedHashMap<>());
+  private final Map<String, Long> liveHeapAfterPhaseBytes =
+      Collections.synchronizedMap(new LinkedHashMap<>());
   private final LongAdder taskCpuNanos = new LongAdder();
   private final LongAdder taskAllocatedBytes = new LongAdder();
   private final AtomicLong peakHeapAfterGcBytes = new AtomicLong(-1);
@@ -79,6 +94,7 @@ public class ValidationPerformanceTracker {
   /** Clears the previous measurements and starts measuring. */
   public void start() {
     phaseNanos.clear();
+    liveHeapAfterPhaseBytes.clear();
     taskCpuNanos.reset();
     taskAllocatedBytes.reset();
     peakHeapAfterGcBytes.set(-1);
@@ -109,9 +125,14 @@ public class ValidationPerformanceTracker {
     synchronized (phaseNanos) {
       phaseNanos.forEach((name, nanos) -> phaseSeconds.put(name, nanos / NANOS_PER_SECOND));
     }
+    Map<String, Long> liveHeap;
+    synchronized (liveHeapAfterPhaseBytes) {
+      liveHeap = new LinkedHashMap<>(liveHeapAfterPhaseBytes);
+    }
     long peak = peakHeapAfterGcBytes.get();
     return new ValidationPerformanceMetrics(
         phaseSeconds,
+        liveHeap,
         cpuTimeAvailable && threadCpuNanos >= 0 && startThreadCpuNanos >= 0
             ? (threadCpuNanos - startThreadCpuNanos + taskCpuNanos.sum()) / NANOS_PER_SECOND
             : null,
@@ -179,7 +200,21 @@ public class ValidationPerformanceTracker {
     @Override
     public void close() {
       recordPhase(name, System.nanoTime() - startNanos);
+      // After the phase time is recorded, so that the forced collection does not count in it.
+      if (LIVE_HEAP_ENABLED) {
+        recordLiveHeap(name);
+      }
     }
+  }
+
+  /**
+   * Forces a garbage collection and records the heap still in use under the given phase name. The
+   * largest value of phases with the same name is kept.
+   */
+  void recordLiveHeap(String phaseName) {
+    System.gc();
+    long used = MEMORY_BEAN.getHeapMemoryUsage().getUsed();
+    liveHeapAfterPhaseBytes.merge(phaseName, used, Math::max);
   }
 
   private static long currentThreadCpuNanos() {
