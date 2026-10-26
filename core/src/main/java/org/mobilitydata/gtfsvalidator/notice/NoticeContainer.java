@@ -71,8 +71,11 @@ public class NoticeContainer {
    * <p>This is deliberately separate from {@code noticesCountPerTypeAndSeverity}: the latter counts
    * every notice ever added, including the ones dropped once a limit is reached, and is what the
    * validation report exports as {@code totalNotices}.
+   *
+   * <p>It is created on first use: {@code CsvFileLoader} creates one container per row, and most of
+   * them never retain a notice.
    */
-  private final Map<String, Integer> retainedNoticesCountPerTypeAndSeverity = new HashMap<>();
+  private Map<String, Integer> retainedNoticesCountPerTypeAndSeverity;
 
   private boolean hasValidationErrors = false;
   private boolean hasValidationWarnings = false;
@@ -135,6 +138,9 @@ public class NoticeContainer {
    */
   private boolean canRetain(ResolvedNotice<?> notice) {
     String mappingKey = notice.getMappingKey();
+    if (retainedNoticesCountPerTypeAndSeverity == null) {
+      retainedNoticesCountPerTypeAndSeverity = new HashMap<>();
+    }
     int retained = retainedNoticesCountPerTypeAndSeverity.getOrDefault(mappingKey, 0);
     if (retained >= maxValidationNoticesPerTypeAndSeverity) {
       return false;
@@ -192,9 +198,11 @@ public class NoticeContainer {
       int count = noticesCountPerTypeAndSeverity.getOrDefault(entry.getKey(), 0);
       noticesCountPerTypeAndSeverity.put(entry.getKey(), count + entry.getValue());
     }
-    for (ResolvedNotice<ValidationNotice> notice : otherContainer.validationNotices) {
-      if (canRetain(notice)) {
-        validationNotices.add(notice);
+    if (!otherContainer.validationNotices.isEmpty()) {
+      for (ResolvedNotice<ValidationNotice> notice : otherContainer.validationNotices) {
+        if (canRetain(notice)) {
+          validationNotices.add(notice);
+        }
       }
     }
     systemErrors.addAll(otherContainer.systemErrors);
