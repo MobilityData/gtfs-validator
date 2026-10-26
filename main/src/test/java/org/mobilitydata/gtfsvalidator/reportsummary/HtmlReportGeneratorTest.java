@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.input.CountryCode;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.reportsummary.model.ReportSummary;
 import org.mobilitydata.gtfsvalidator.runner.ValidationRunnerConfig;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -40,6 +41,10 @@ import org.mobilitydata.gtfsvalidator.util.VersionInfo;
 
 @RunWith(JUnit4.class)
 public class HtmlReportGeneratorTest {
+
+  /** Number of notices per code the report lists, mirrors {@code ReportSummary}. */
+  private static final int MAX_NOTICES_PER_CODE =
+      new ReportSummary(new NoticeContainer(), VersionInfo.empty()).getMaxNoticesPerCode();
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -83,6 +88,47 @@ public class HtmlReportGeneratorTest {
     assertThat(report).contains("300 affected records, up to 50 are displayed below.");
     assertThat(report).contains("field_010");
     assertThat(report).doesNotContain("field_011");
+  }
+
+  /**
+   * A notice code with more occurrences than the report lists must still report its exact total,
+   * while only the listed occurrences appear in the table.
+   */
+  @Test
+  public void generateReport_listsAtMostMaxNoticesPerCodeButReportsExactTotal() throws IOException {
+    int noticeCount = 120;
+    NoticeContainer noticeContainer = new NoticeContainer();
+    for (int i = 1; i <= noticeCount; i++) {
+      noticeContainer.addValidationNotice(
+          new MissingRequiredFieldNotice("test.txt", i, String.format("field_%03d", i)));
+    }
+
+    String report = visibleText(generateReport(noticeContainer));
+
+    assertThat(report).contains("missing_required_field ERROR 120");
+    assertThat(report)
+        .contains("120 affected records, up to " + MAX_NOTICES_PER_CODE + " are displayed below.");
+    assertThat(report).contains("field_001");
+    assertThat(report).contains(String.format("field_%03d", MAX_NOTICES_PER_CODE));
+    assertThat(report).doesNotContain(String.format("field_%03d", MAX_NOTICES_PER_CODE + 1));
+    assertThat(report).doesNotContain("field_120");
+  }
+
+  @Test
+  public void generateReport_fewerNoticesThanTheLimit_listsThemAll() throws IOException {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    for (int i = 1; i <= 3; i++) {
+      noticeContainer.addValidationNotice(
+          new MissingRequiredFieldNotice("test.txt", i, String.format("field_%03d", i)));
+    }
+
+    String report = visibleText(generateReport(noticeContainer));
+
+    assertThat(report).doesNotContain("are displayed below");
+    assertThat(report).contains("missing_required_field ERROR 3");
+    assertThat(report).contains("field_001");
+    assertThat(report).contains("field_002");
+    assertThat(report).contains("field_003");
   }
 
   /** Strips the markup so that assertions read like the rendered page. */
