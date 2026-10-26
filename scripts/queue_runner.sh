@@ -6,13 +6,14 @@ oom_script="$(cd "$(dirname "$0")" && pwd)/write_oom_system_errors.sh"
 
 # Runs a validator jar on the current feed. If the JVM throws an OutOfMemoryError, even one that
 # ends the process before the validator writes its reports, the system errors report records it
-# so that the comparator reports the dataset as out of memory.
+# so that the comparator reports the dataset as out of memory. The JVM then exits: otherwise a
+# thread still running keeps it alive and the job hangs.
 run_validator() {
    local jar_dir="$1"
    local report_name="$2"
    shift 2
    local output_dir="$OUTPUT_BASE/output/$path_name"
-   java -Xmx12G -Xms8G -Dgtfsvalidator.performance.liveHeap=true "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
+   java -Xmx12G -Xms8G -Dgtfsvalidator.performance.liveHeap=true "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -XX:+ExitOnOutOfMemoryError -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
 }
 
 master="$1"
