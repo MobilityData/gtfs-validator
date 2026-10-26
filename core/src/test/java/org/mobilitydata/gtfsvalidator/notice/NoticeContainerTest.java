@@ -288,6 +288,18 @@ public class NoticeContainerTest {
     assertThat(container.getValidationNotices()).containsExactly(afterReset);
   }
 
+  /** Most rows yield no notice, so the row container is mostly reset before it retained any. */
+  @Test
+  public void reset_worksBeforeAnyNoticeWasRetained() {
+    NoticeContainer container = new NoticeContainer();
+
+    container.reset();
+    ValidationNotice notice = new MissingRequiredFileNotice("stops.txt");
+    container.addValidationNotice(notice);
+
+    assertThat(container.getValidationNotices()).containsExactly(notice);
+  }
+
   /**
    * A notice type is described in the exported report only if one of its notices was retained, so
    * reaching the total limit must not make a whole type disappear from the report.

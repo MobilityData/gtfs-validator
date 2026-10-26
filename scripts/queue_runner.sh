@@ -12,7 +12,7 @@ run_validator() {
    local report_name="$2"
    shift 2
    local output_dir="$OUTPUT_BASE/output/$path_name"
-   java -Xmx12G -Xms8G "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
+   java -Xmx12G -Xms8G -Dgtfsvalidator.performance.liveHeap=true "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
 }
 
 master="$1"
