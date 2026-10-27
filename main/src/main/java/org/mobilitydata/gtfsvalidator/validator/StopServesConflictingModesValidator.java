@@ -3,10 +3,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -94,10 +95,8 @@ public class StopServesConflictingModesValidator extends FileValidator {
         continue;
       }
 
-      Set<String> routeIds = new TreeSet<>();
-      // Keep route IDs and route types deterministically ordered.
-      Set<GtfsRouteType> routeTypes =
-          new TreeSet<>(Comparator.comparingInt(GtfsRouteType::getNumber));
+      Set<String> routeIds = new HashSet<>();
+      Set<GtfsRouteType> routeTypes = EnumSet.noneOf(GtfsRouteType.class);
       for (GtfsStopTime stopTime : stopTimes) {
         if (!stopTime.hasTripId() || stopTime.tripId().isEmpty()) {
           continue;
@@ -106,7 +105,11 @@ public class StopServesConflictingModesValidator extends FileValidator {
         if (trip.isEmpty() || !trip.get().hasRouteId() || trip.get().routeId().isEmpty()) {
           continue;
         }
-        Optional<GtfsRoute> route = routeTable.byRouteId(trip.get().routeId());
+        String routeId = trip.get().routeId();
+        if (routeIds.contains(routeId)) {
+          continue;
+        }
+        Optional<GtfsRoute> route = routeTable.byRouteId(routeId);
         // A missing route_type defaults to LIGHT_RAIL, so require the field first.
         if (route.isEmpty()
             || !route.get().hasRouteId()
@@ -123,11 +126,15 @@ public class StopServesConflictingModesValidator extends FileValidator {
       }
 
       if (hasConflictingModes(routeTypes)) {
+        // Sort only when a notice is emitted.
         noticeContainer.addValidationNotice(
             new StopServesConflictingModesNotice(
                 stop.stopId(),
-                String.join(", ", routeIds),
-                routeTypes.stream().map(GtfsRouteType::name).collect(Collectors.joining(", "))));
+                routeIds.stream().sorted().collect(Collectors.joining(", ")),
+                routeTypes.stream()
+                    .sorted(Comparator.comparingInt(GtfsRouteType::getNumber))
+                    .map(GtfsRouteType::name)
+                    .collect(Collectors.joining(", "))));
       }
     }
   }
