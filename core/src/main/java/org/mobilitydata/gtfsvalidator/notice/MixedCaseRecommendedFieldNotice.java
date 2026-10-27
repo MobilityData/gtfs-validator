@@ -16,8 +16,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *
  * <p>Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is
  * called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for
- * accessibility by screen reader software and voice user interfaces. Single all uppercased
- * values are acceptable eg: MAIN while single all lowercased values are not eg: main.
+ * accessibility by screen reader software and voice user interfaces. Single all uppercased values
+ * are acceptable eg: MAIN while single all lowercased values are not eg: main.
  *
  * <table style="table-layout:auto; width:auto;">
  *   <caption>Good examples:</caption>
