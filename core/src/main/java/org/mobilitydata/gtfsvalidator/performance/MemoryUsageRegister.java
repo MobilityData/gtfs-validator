@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** Register for memory usage snapshots. */
+/**
+ * Register for memory usage snapshots.
+ *
+ * @deprecated Replaced by {@link ValidationPerformanceTracker}, whose metrics do not depend on when
+ *     the garbage collector runs. Will be removed in the next major version.
+ */
+@Deprecated
 public class MemoryUsageRegister {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
