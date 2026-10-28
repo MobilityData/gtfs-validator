@@ -55,6 +55,14 @@ public class ValidationPerformanceMetrics {
    */
   private Long peakHeapAfterGcBytes;
 
+  /**
+   * Heap in use right after a forced garbage collection at the end of each phase, in bytes, in
+   * execution order. Unlike {@link #peakHeapAfterGcBytes}, it is measured on every feed whatever
+   * its size. It is empty unless the {@link ValidationPerformanceTracker#LIVE_HEAP_PROPERTY} system
+   * property is set.
+   */
+  private Map<String, Long> liveHeapAfterPhaseBytes;
+
   /** Number of garbage collections during the validation, process-wide. */
   private Long gcCount;
 
@@ -71,7 +79,30 @@ public class ValidationPerformanceMetrics {
       Long peakHeapAfterGcBytes,
       Long gcCount,
       Double gcTimeSeconds) {
+    this(
+        phaseWallTimeSeconds,
+        Collections.emptyMap(),
+        cpuTimeSeconds,
+        processCpuTimeSeconds,
+        allocatedBytes,
+        peakHeapAfterGcBytes,
+        gcCount,
+        gcTimeSeconds);
+  }
+
+  public ValidationPerformanceMetrics(
+      Map<String, Double> phaseWallTimeSeconds,
+      Map<String, Long> liveHeapAfterPhaseBytes,
+      Double cpuTimeSeconds,
+      Double processCpuTimeSeconds,
+      Long allocatedBytes,
+      Long peakHeapAfterGcBytes,
+      Long gcCount,
+      Double gcTimeSeconds) {
     this.phaseWallTimeSeconds = new LinkedHashMap<>(phaseWallTimeSeconds);
+    // Left null when empty so that reports without the measurement do not carry an empty object.
+    this.liveHeapAfterPhaseBytes =
+        liveHeapAfterPhaseBytes.isEmpty() ? null : new LinkedHashMap<>(liveHeapAfterPhaseBytes);
     this.cpuTimeSeconds = cpuTimeSeconds;
     this.processCpuTimeSeconds = processCpuTimeSeconds;
     this.allocatedBytes = allocatedBytes;
@@ -118,6 +149,21 @@ public class ValidationPerformanceMetrics {
     return peakHeapAfterGcBytes;
   }
 
+  public Map<String, Long> getLiveHeapAfterPhaseBytes() {
+    return liveHeapAfterPhaseBytes == null
+        ? Collections.emptyMap()
+        : Collections.unmodifiableMap(liveHeapAfterPhaseBytes);
+  }
+
+  /**
+   * Returns the largest heap in use after any phase, see {@link #getLiveHeapAfterPhaseBytes()}.
+   *
+   * @return the heap in bytes, or {@code null} if it was not measured.
+   */
+  public Long getPeakLiveHeapBytes() {
+    return getLiveHeapAfterPhaseBytes().values().stream().max(Long::compare).orElse(null);
+  }
+
   public Long getGcCount() {
     return gcCount;
   }
@@ -145,6 +191,9 @@ public class ValidationPerformanceMetrics {
     result
         .append(" Peak heap after GC: ")
         .append(MemoryUsage.convertToHumanReadableMemory(peakHeapAfterGcBytes));
+    result
+        .append(" Peak live heap: ")
+        .append(MemoryUsage.convertToHumanReadableMemory(getPeakLiveHeapBytes()));
     result.append(" GC: ").append(gcCount == null ? "N/A" : gcCount).append(" collections in ");
     result.append(formatSeconds(gcTimeSeconds));
     return result.toString();

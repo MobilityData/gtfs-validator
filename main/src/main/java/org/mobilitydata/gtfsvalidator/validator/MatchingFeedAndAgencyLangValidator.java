@@ -36,9 +36,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
  * <p>{@code agency.agency_lang} is optional, so it is acceptable to omit that field.
  *
  * <p>The default language may be multilingual for datasets with the original text in multiple
- * languages. In such cases, the {@code feed_lang} field should contain the language code {@code
- * mul} defined by the norm ISO 639-2. If {@code feed_lang} is not {@code mul} and does not match
- * with {@code agency_lang}, a notice should be generated.
+ * languages. In such cases, the {@code feed_lang} field should contain the BCP 47 language tag
+ * {@code mul}. GTFS language fields use IETF BCP 47 tags. If {@code feed_lang} is not {@code mul}
+ * and does not match with {@code agency_lang}, a notice should be generated.
  *
  * <p>References:
  *
@@ -95,9 +95,9 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator {
    * Mismatching feed and agency language fields.
    *
    * <p>Files `agency.txt` and `feed_info.txt` should define matching `agency.agency_lang` and
-   * `feed_info.feed_lang`. The default language may be multilingual for datasets with the original
-   * text in multiple languages. In such cases, the `feed_lang` field should contain the language
-   * code `mul` defined by the norm ISO 639-2.
+   * `feed_info.feed_lang`. Language codes follow IETF BCP 47. The default language may be
+   * multilingual for datasets with the original text in multiple languages. In such cases, the
+   * `feed_lang` field should contain the BCP 47 language tag `mul`.
    *
    * <pre>
    * - If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error.
