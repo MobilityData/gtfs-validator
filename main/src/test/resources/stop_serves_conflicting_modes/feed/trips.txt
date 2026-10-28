@@ -1,0 +1,5 @@
+route_id,service_id,trip_id
+bus,daily,bus-trip
+rail,daily,rail-trip
+tram,daily,tram-trip
+monorail,daily,monorail-trip

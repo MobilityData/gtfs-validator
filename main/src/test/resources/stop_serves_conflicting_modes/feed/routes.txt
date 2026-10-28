@@ -1,0 +1,5 @@
+route_id,agency_id,route_short_name,route_type
+bus,A,B,3
+rail,A,R,2
+tram,A,T,0
+monorail,A,M,12
