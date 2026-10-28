@@ -150,9 +150,74 @@ public class StopStationDistanceValidatorTest {
   public void missingCoordinates_noNotice() {
     GtfsStop stop1 = createLocation(2, "stop1", GtfsLocationType.STOP, null, BASE_LON, null);
     GtfsStop stop2 = createLocation(3, "stop2", GtfsLocationType.STOP, null, null, null);
-    GtfsStop stop3 = createLocation(4, "stop3", GtfsLocationType.STOP, 0.0, 0.0, null);
+    GtfsStop stop3 = createLocation(4, "stop3", GtfsLocationType.STOP, BASE_LAT, BASE_LON, null);
 
     assertThat(generateNotices(ImmutableList.of(stop1, stop2, stop3))).isEmpty();
+  }
+
+  @Test
+  public void pointsNearOrigin_noNotice() {
+    GtfsStop originStop1 = createLocation(2, "stop1", GtfsLocationType.STOP, 0.0, 0.0, null);
+    GtfsStop originStop2 = createLocation(3, "stop2", GtfsLocationType.STOP, 0.0, 0.0, null);
+    GtfsStop nearOriginStation1 =
+        createLocation(4, "station1", GtfsLocationType.STATION, 0.5, -0.5, null);
+    GtfsStop nearOriginStation2 =
+        createLocation(5, "station2", GtfsLocationType.STATION, 0.50001, -0.5, null);
+    GtfsStop boundaryStop = createLocation(6, "stop3", GtfsLocationType.STOP, 1.0, -1.0, null);
+    GtfsStop boundaryStation =
+        createLocation(7, "station3", GtfsLocationType.STATION, 1.0, -1.0, null);
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    originStop1,
+                    originStop2,
+                    nearOriginStation1,
+                    nearOriginStation2,
+                    boundaryStop,
+                    boundaryStation)))
+        .isEmpty();
+  }
+
+  @Test
+  public void pointsNearPole_noNotice() {
+    GtfsStop northPoleStop1 = createLocation(2, "stop1", GtfsLocationType.STOP, 89.5, 0.0, null);
+    GtfsStop northPoleStop2 =
+        createLocation(3, "stop2", GtfsLocationType.STOP, 89.500001, 0.0, null);
+    GtfsStop boundaryStation1 =
+        createLocation(4, "station1", GtfsLocationType.STATION, 89.0, 10.0, null);
+    GtfsStop boundaryStation2 =
+        createLocation(5, "station2", GtfsLocationType.STATION, 89.0, 10.0, null);
+    GtfsStop southPoleStop1 = createLocation(6, "stop3", GtfsLocationType.STOP, -89.5, 0.0, null);
+    GtfsStop southPoleStop2 =
+        createLocation(7, "stop4", GtfsLocationType.STOP, -89.500001, 0.0, null);
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    northPoleStop1,
+                    northPoleStop2,
+                    boundaryStation1,
+                    boundaryStation2,
+                    southPoleStop1,
+                    southPoleStop2)))
+        .isEmpty();
+  }
+
+  @Test
+  public void onlyOneCoordinateWithinOriginBound_generatesNotice() {
+    GtfsStop equatorStop1 = createLocation(2, "eq1", GtfsLocationType.STOP, 0.0, BASE_LON, null);
+    GtfsStop equatorStop2 =
+        createLocation(3, "eq2", GtfsLocationType.STOP, 0.00001, BASE_LON, null);
+    GtfsStop meridianStop1 = createLocation(4, "pm1", GtfsLocationType.STOP, BASE_LAT, 0.0, null);
+    GtfsStop meridianStop2 = createLocation(5, "pm2", GtfsLocationType.STOP, CLOSE_LAT, 0.0, null);
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(equatorStop1, equatorStop2, meridianStop1, meridianStop2)))
+        .containsExactly(
+            new StopsTooCloseNotice(equatorStop1, equatorStop2),
+            new StopsTooCloseNotice(meridianStop1, meridianStop2));
   }
 
   @Test
