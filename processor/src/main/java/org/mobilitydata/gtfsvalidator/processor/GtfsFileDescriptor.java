@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
 @AutoValue
 public abstract class GtfsFileDescriptor {
   public static Builder builder() {
-    return new AutoValue_GtfsFileDescriptor.Builder();
+    return new AutoValue_GtfsFileDescriptor.Builder().setCustomContainer(false);
   }
 
   // GTFS file name, e.g., "routes.txt".
@@ -47,6 +47,8 @@ public abstract class GtfsFileDescriptor {
   public abstract boolean singleRow();
 
   public abstract Optional<Integer> maxCharsPerColumn();
+
+  public abstract boolean customContainer();
 
   public abstract ImmutableList<GtfsFieldDescriptor> fields();
 
@@ -92,6 +94,8 @@ public abstract class GtfsFileDescriptor {
     public abstract Builder setSingleRow(boolean value);
 
     public abstract Builder setMaxCharsPerColumn(int maxCharsPerColumn);
+
+    public abstract Builder setCustomContainer(boolean value);
 
     public abstract ImmutableList.Builder<GtfsFieldDescriptor> fieldsBuilder();
 

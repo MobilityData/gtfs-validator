@@ -8,7 +8,6 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,7 +98,7 @@ public final class CsvFileLoader extends TableLoader {
       final GtfsEntityBuilder builder = tableDescriptor.createEntityBuilder();
       final RowParser rowParser =
           new RowParser(gtfsFilename, header, validatorProvider.getFieldValidator());
-      final List<GtfsEntity> entities = new ArrayList<>();
+      final List<GtfsEntity> entities = tableDescriptor.createEntityList();
       boolean hasUnparsableRows = false;
       final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
           createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);

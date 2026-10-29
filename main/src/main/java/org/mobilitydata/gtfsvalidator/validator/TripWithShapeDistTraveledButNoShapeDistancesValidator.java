@@ -17,7 +17,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
-import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -76,8 +75,7 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (List<GtfsStopTime> stopTimesForTrip :
-        Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
+    for (List<GtfsStopTime> stopTimesForTrip : stopTimeTable.byTripIdAsMap().values()) {
 
       // Find the first stop time that carries a shape_dist_traveled value.
       // If none exist there is nothing to check for this trip.
