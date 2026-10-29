@@ -40,6 +40,21 @@ public class NoticeTest {
   }
 
   @Test
+  public void getCode_isCachedPerNoticeClass() {
+    assertThat(Notice.getCode(StringFieldNotice.class))
+        .isSameInstanceAs(Notice.getCode(StringFieldNotice.class));
+    assertThat(Notice.getCode(OtherStringFieldNotice.class)).isEqualTo("other_string_field");
+  }
+
+  @Test
+  public void getMappingKey_isCodeAndSeverityOrdinal() {
+    assertThat(
+            new ResolvedNotice<>(new StringFieldNotice("value1"), SeverityLevel.WARNING)
+                .getMappingKey())
+        .isEqualTo("string_field" + SeverityLevel.WARNING.ordinal());
+  }
+
+  @Test
   public void toJsonTree() {
     JsonObject expected = new JsonObject();
     expected.addProperty("someField", "someValue");
