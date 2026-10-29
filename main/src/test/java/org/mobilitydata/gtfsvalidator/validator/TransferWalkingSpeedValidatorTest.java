@@ -47,6 +47,30 @@ public class TransferWalkingSpeedValidatorTest {
     assertThat(notices.getValidationNotices()).isEmpty();
   }
 
+  // U02: A transfer time of 55 seconds should produce a notice.
+  @Test
+  public void testTransferTimeJustBelowRequiredTimeProducesNotice() {
+    NoticeContainer notices = validateTransfer("A", "B", 55);
+
+    assertThat(notices.getValidationNotices()).hasSize(1);
+
+    JsonObject result = notices.getValidationNotices().get(0).toJsonTree().getAsJsonObject();
+
+    assertThat(result.get("minTransferTime").getAsInt()).isEqualTo(55);
+
+    assertThat(result.get("stopDistance").getAsDouble())
+        .isWithin(1e-6)
+        .of(EXPECTED_DISTANCE_METERS);
+  }
+
+  // U02: A transfer time of 56 seconds should not produce a notice.
+  @Test
+  public void testTransferTimeJustAboveRequiredTimeProducesNoNotice() {
+    NoticeContainer notices = validateTransfer("A", "B", 56);
+
+    assertThat(notices.getValidationNotices()).isEmpty();
+  }
+
   // U03: Zero distance and zero time should not trigger the rule.
   @Test
   public void testZeroDistanceAndZeroTimeProducesNoNotice() {

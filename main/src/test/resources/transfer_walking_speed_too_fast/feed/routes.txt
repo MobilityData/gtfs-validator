@@ -1,2 +1,0 @@
-route_id,agency_id,route_short_name,route_type
-R,AG,A5,3

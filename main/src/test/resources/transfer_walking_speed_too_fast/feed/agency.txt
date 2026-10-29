@@ -1,2 +1,0 @@
-agency_id,agency_name,agency_url,agency_timezone
-AG,A5 Example,https://example.com,Etc/UTC
