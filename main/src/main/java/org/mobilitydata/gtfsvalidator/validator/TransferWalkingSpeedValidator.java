@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Chajie Zhou
+ * Copyright 2026 MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,6 +110,8 @@ public class TransferWalkingSpeedValidator extends FileValidator {
    *
    * <p>The straight-line distance divided by 2 m/s exceeds `min_transfer_time`. This is a
    * data-quality heuristic rather than a required GTFS walking speed.
+   *
+   * <p>Straight-line distance ignores barriers, crossings, and platform-to-platform routing.
    */
   @GtfsValidationNotice(
       severity = INFO,
