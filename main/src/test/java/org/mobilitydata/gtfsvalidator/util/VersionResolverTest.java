@@ -111,6 +111,18 @@ public class VersionResolverTest {
   }
 
   @Test
+  public void resolveCurrentVersion_returnsSameVersionAcrossInstances() throws IOException {
+    String expectedVersion = System.getProperty("gtfsValidatorVersionForTest");
+    assertThat(expectedVersion).isNotEmpty();
+
+    VersionResolver first = new VersionResolver(ApplicationType.CLI);
+    VersionResolver second = new VersionResolver(ApplicationType.WEB);
+
+    assertThat(first.resolveCurrentVersion()).hasValue(expectedVersion);
+    assertThat(second.resolveCurrentVersion()).hasValue(expectedVersion);
+  }
+
+  @Test
   public void getVersionInfoWithTimeoutException_usesCurrentVersionFallback() {
     VersionResolver resolver =
         new VersionResolver(ApplicationType.CLI) {
