@@ -205,6 +205,7 @@ public class NoticeFieldsTest {
             "startPickupDropOffWindow1",
             "startPickupDropOffWindow2",
             "startValue",
+            "stationCsvRowNumber",
             "stationId",
             "stationLat",
             "stationLon",

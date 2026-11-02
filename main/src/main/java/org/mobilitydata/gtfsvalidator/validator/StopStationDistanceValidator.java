@@ -151,6 +151,9 @@ public class StopStationDistanceValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class StationsTooCloseNotice extends ValidationNotice {
 
+    /** The row number of the first station. */
+    private final int csvRowNumber1;
+
     /** The `stops.stop_id` of the first station. */
     private final String stopId1;
 
@@ -159,6 +162,9 @@ public class StopStationDistanceValidator extends FileValidator {
 
     /** The `stops.stop_lon` of the first station. */
     private final double stopLon1;
+
+    /** The row number of the second station. */
+    private final int csvRowNumber2;
 
     /** The `stops.stop_id` of the second station. */
     private final String stopId2;
@@ -170,9 +176,11 @@ public class StopStationDistanceValidator extends FileValidator {
     private final double stopLon2;
 
     StationsTooCloseNotice(GtfsStop station1, GtfsStop station2) {
+      this.csvRowNumber1 = station1.csvRowNumber();
       this.stopId1 = station1.stopId();
       this.stopLat1 = station1.stopLat();
       this.stopLon1 = station1.stopLon();
+      this.csvRowNumber2 = station2.csvRowNumber();
       this.stopId2 = station2.stopId();
       this.stopLat2 = station2.stopLat();
       this.stopLon2 = station2.stopLon();
@@ -187,6 +195,9 @@ public class StopStationDistanceValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class StopsTooCloseNotice extends ValidationNotice {
 
+    /** The row number of the first stop. */
+    private final int csvRowNumber1;
+
     /** The `stops.stop_id` of the first stop. */
     private final String stopId1;
 
@@ -195,6 +206,9 @@ public class StopStationDistanceValidator extends FileValidator {
 
     /** The `stops.stop_lon` of the first stop. */
     private final double stopLon1;
+
+    /** The row number of the second stop. */
+    private final int csvRowNumber2;
 
     /** The `stops.stop_id` of the second stop. */
     private final String stopId2;
@@ -206,9 +220,11 @@ public class StopStationDistanceValidator extends FileValidator {
     private final double stopLon2;
 
     StopsTooCloseNotice(GtfsStop stop1, GtfsStop stop2) {
+      this.csvRowNumber1 = stop1.csvRowNumber();
       this.stopId1 = stop1.stopId();
       this.stopLat1 = stop1.stopLat();
       this.stopLon1 = stop1.stopLon();
+      this.csvRowNumber2 = stop2.csvRowNumber();
       this.stopId2 = stop2.stopId();
       this.stopLat2 = stop2.stopLat();
       this.stopLon2 = stop2.stopLon();
@@ -225,6 +241,9 @@ public class StopStationDistanceValidator extends FileValidator {
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsStopSchema.class))
   static class StopTooCloseToNonParentStationNotice extends ValidationNotice {
 
+    /** The row number of the stop. */
+    private final int stopCsvRowNumber;
+
     /** The `stops.stop_id` of the stop. */
     private final String stopId;
 
@@ -233,6 +252,9 @@ public class StopStationDistanceValidator extends FileValidator {
 
     /** The `stops.stop_lon` of the stop. */
     private final double stopLon;
+
+    /** The row number of the station. */
+    private final int stationCsvRowNumber;
 
     /** The `stops.stop_id` of the station. */
     private final String stationId;
@@ -244,9 +266,11 @@ public class StopStationDistanceValidator extends FileValidator {
     private final double stationLon;
 
     StopTooCloseToNonParentStationNotice(GtfsStop stop, GtfsStop station) {
+      this.stopCsvRowNumber = stop.csvRowNumber();
       this.stopId = stop.stopId();
       this.stopLat = stop.stopLat();
       this.stopLon = stop.stopLon();
+      this.stationCsvRowNumber = station.csvRowNumber();
       this.stationId = station.stopId();
       this.stationLat = station.stopLat();
       this.stationLon = station.stopLon();

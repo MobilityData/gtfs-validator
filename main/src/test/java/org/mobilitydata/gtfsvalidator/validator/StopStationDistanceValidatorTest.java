@@ -269,4 +269,30 @@ public class StopStationDistanceValidatorTest {
             new StationsTooCloseNotice(station1, station2),
             new StopTooCloseToNonParentStationNotice(stop1, station2));
   }
+
+  @Test
+  public void noticesIncludeCsvRowNumbers() {
+    GtfsStop station1 =
+        createLocation(10, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
+    GtfsStop station2 =
+        createLocation(20, "station2", GtfsLocationType.STATION, CLOSE_LAT, BASE_LON, null);
+    GtfsStop stop1 = createLocation(30, "stop1", GtfsLocationType.STOP, FAR_LAT, BASE_LON, null);
+    GtfsStop stop2 =
+        createLocation(40, "stop2", GtfsLocationType.STOP, FAR_LAT + 0.00001, BASE_LON, null);
+    GtfsStop nonChildStop =
+        createLocation(50, "stop3", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "other_station");
+
+    String stationsJson = new StationsTooCloseNotice(station1, station2).toString();
+    assertThat(stationsJson).contains("\"csvRowNumber1\":10");
+    assertThat(stationsJson).contains("\"csvRowNumber2\":20");
+
+    String stopsJson = new StopsTooCloseNotice(stop1, stop2).toString();
+    assertThat(stopsJson).contains("\"csvRowNumber1\":30");
+    assertThat(stopsJson).contains("\"csvRowNumber2\":40");
+
+    String stopStationJson =
+        new StopTooCloseToNonParentStationNotice(nonChildStop, station1).toString();
+    assertThat(stopStationJson).contains("\"stopCsvRowNumber\":50");
+    assertThat(stopStationJson).contains("\"stationCsvRowNumber\":10");
+  }
 }
