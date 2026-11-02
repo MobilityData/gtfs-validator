@@ -107,7 +107,6 @@ public class TableColumnsGenerator {
     typeSpec.addMethod(generateAddChunkMethod());
     typeSpec.addMethod(generateSetMethod());
     typeSpec.addMethod(generateGetMethod(builderType));
-    typeSpec.addMethod(generateCompactMethod());
     typeSpec.addMethod(generateIndexCountMethod());
     typeSpec.addMethod(generateDictionaryMethod());
     typeSpec.addMethod(generateCodeAtMethod());
@@ -329,17 +328,6 @@ public class TableColumnsGenerator {
       ++fieldNumber;
     }
     return method.addStatement("return b.build()").build();
-  }
-
-  private MethodSpec generateCompactMethod() {
-    MethodSpec.Builder method =
-        MethodSpec.methodBuilder("compact")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC);
-    if (hasTimes()) {
-      method.addStatement("$L.compact()", TIMES);
-    }
-    return method.build();
   }
 
   private MethodSpec generateIndexCountMethod() {

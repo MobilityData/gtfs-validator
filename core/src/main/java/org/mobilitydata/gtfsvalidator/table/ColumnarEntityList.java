@@ -42,9 +42,6 @@ public final class ColumnarEntityList<T extends GtfsEntity> extends AbstractList
 
     T get(int row);
 
-    /** Releases what is only needed while rows are added. */
-    void compact();
-
     /** Number of indexed fields. */
     int indexCount();
 
@@ -129,7 +126,6 @@ public final class ColumnarEntityList<T extends GtfsEntity> extends AbstractList
   /** Builds the indices and reports duplicate keys. Must be called once, after the last add. */
   public void finish(String filename, NoticeContainer noticeContainer) {
     int n = size;
-    columns.compact();
     int indexCount = columns.indexCount();
     starts = new int[indexCount][];
     rows = new int[indexCount][];

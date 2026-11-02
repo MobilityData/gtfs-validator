@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 /**
  * Distinct values of a column. The code of a value is its position in order of first appearance, so
@@ -13,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public final class ColumnDictionary<V> {
   // Same initial capacity as ArrayListMultimap, so that values iterate in the same order.
-  @Nullable private Map<V, Integer> codes = Maps.newHashMapWithExpectedSize(12);
+  private final Map<V, Integer> codes = Maps.newHashMapWithExpectedSize(12);
   private final List<V> values = new ArrayList<>();
 
   /** Returns the code of the value, adding it if it is new. */
@@ -44,10 +43,5 @@ public final class ColumnDictionary<V> {
   /** Returns the code of each value. */
   public Map<V, Integer> codes() {
     return Collections.unmodifiableMap(codes);
-  }
-
-  /** Releases the codes by value. Afterwards, only {@link #value} and {@link #size} can be used. */
-  public void compact() {
-    codes = null;
   }
 }
