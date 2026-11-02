@@ -49,6 +49,6 @@ public @interface GtfsTable {
    */
   int maxCharsPerColumn() default 0;
 
-  /** If true, the table container is hand-written instead of generated. */
-  boolean customContainer() default false;
+  /** How rows are kept in memory. Large tables, such as "stop_times.txt", use columns. */
+  TableStorage storage() default TableStorage.OBJECTS;
 }

@@ -26,13 +26,14 @@ import java.util.stream.Collectors;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
+import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
 import org.mobilitydata.gtfsvalidator.annotation.TranslationRecordIdType;
 
 /** Describes a GTFS file (CSV table), e.g., "stops.txt". */
 @AutoValue
 public abstract class GtfsFileDescriptor {
   public static Builder builder() {
-    return new AutoValue_GtfsFileDescriptor.Builder().setCustomContainer(false);
+    return new AutoValue_GtfsFileDescriptor.Builder().setStorage(TableStorage.OBJECTS);
   }
 
   // GTFS file name, e.g., "routes.txt".
@@ -48,7 +49,7 @@ public abstract class GtfsFileDescriptor {
 
   public abstract Optional<Integer> maxCharsPerColumn();
 
-  public abstract boolean customContainer();
+  public abstract TableStorage storage();
 
   public abstract ImmutableList<GtfsFieldDescriptor> fields();
 
@@ -79,6 +80,30 @@ public abstract class GtfsFileDescriptor {
 
   public abstract ImmutableList<LatLonDescriptor> latLonFields();
 
+  /** Returns the primary key field with {@code isSequenceUsedForSorting = true}, if any. */
+  public Optional<GtfsFieldDescriptor> sequenceField() {
+    return primaryKeys().stream()
+        .filter((f) -> f.primaryKey().get().isSequenceUsedForSorting())
+        .findFirst();
+  }
+
+  /**
+   * Returns the position in {@link #indices()} of the index whose rows are sorted by {@link
+   * #sequenceField()}: an index on another primary key field. Returns -1 if there is none.
+   */
+  public int sequenceIndex() {
+    if (sequenceField().isEmpty()) {
+      return -1;
+    }
+    for (int i = 0; i < indices().size(); i++) {
+      GtfsFieldDescriptor index = indices().get(i);
+      if (index.primaryKey().isPresent() && !index.equals(sequenceField().get())) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setFilename(String value);
@@ -95,7 +120,7 @@ public abstract class GtfsFileDescriptor {
 
     public abstract Builder setMaxCharsPerColumn(int maxCharsPerColumn);
 
-    public abstract Builder setCustomContainer(boolean value);
+    public abstract Builder setStorage(TableStorage value);
 
     public abstract ImmutableList.Builder<GtfsFieldDescriptor> fieldsBuilder();
 
@@ -149,7 +174,35 @@ public abstract class GtfsFileDescriptor {
       validateIsSequenceUsedForSortingAnnotation();
       validateTranslationRecordTypeAnnotations();
 
-      return autoBuild();
+      GtfsFileDescriptor descriptor = autoBuild();
+      validateColumnarStorage(descriptor);
+      return descriptor;
+    }
+
+    private static void validateColumnarStorage(GtfsFileDescriptor descriptor) {
+      if (descriptor.storage() != TableStorage.COLUMNAR) {
+        return;
+      }
+      if (descriptor.singleRow()) {
+        throw new IllegalArgumentException(
+            descriptor.filename() + ": A single row table cannot use TableStorage.COLUMNAR");
+      }
+      if (descriptor.fields().size() > 64) {
+        throw new IllegalArgumentException(
+            descriptor.filename() + ": TableStorage.COLUMNAR supports at most 64 fields");
+      }
+      if (descriptor.primaryKeys().isEmpty()) {
+        return;
+      }
+      // Duplicate keys are found among the rows of the sequence index.
+      if (descriptor.primaryKeys().size() != 2
+          || descriptor.sequenceIndex() < 0
+          || descriptor.sequenceField().get().type() != FieldTypeEnum.INTEGER) {
+        throw new IllegalArgumentException(
+            descriptor.filename()
+                + ": With TableStorage.COLUMNAR, the primary key must be an @Index field and an"
+                + " integer field with @PrimaryKey(isSequenceUsedForSorting = true)");
+      }
     }
 
     private void validateIsSequenceUsedForSortingAnnotation() {

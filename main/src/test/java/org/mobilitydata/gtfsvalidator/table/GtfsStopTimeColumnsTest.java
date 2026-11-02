@@ -15,10 +15,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @RunWith(JUnit4.class)
-public class StopTimeStoreTest {
+public class GtfsStopTimeColumnsTest {
 
   private static GtfsStopTime stopTime(int row, String tripId, String stopId, int sequence) {
     return new GtfsStopTime.Builder()
@@ -78,14 +79,20 @@ public class StopTimeStoreTest {
   }
 
   private static List<List<Object>> fields(List<GtfsStopTime> stopTimes) {
-    return stopTimes.stream().map(StopTimeStoreTest::fields).collect(Collectors.toList());
+    return stopTimes.stream().map(GtfsStopTimeColumnsTest::fields).collect(Collectors.toList());
   }
 
-  private static StopTimeStore store(int threshold, List<GtfsStopTime> rows, NoticeContainer n) {
-    StopTimeStore store = new StopTimeStore(threshold);
-    store.addAll(rows);
-    store.finish(GtfsStopTime.FILENAME, n);
-    return store;
+  private static GtfsStopTimeTableContainer table(
+      int threshold, List<GtfsStopTime> rows, NoticeContainer n) {
+    ColumnarEntityList<GtfsStopTime> entities =
+        GtfsStopTimeTableContainer.createEntityList(threshold);
+    entities.addAll(rows);
+    return GtfsStopTimeTableContainer.forHeaderAndEntities(
+        new GtfsStopTimeTableDescriptor(), CsvHeader.EMPTY, entities, n);
+  }
+
+  private static ColumnarEntityList<GtfsStopTime> entities(GtfsStopTimeTableContainer table) {
+    return (ColumnarEntityList<GtfsStopTime>) table.getEntities();
   }
 
   @Test
@@ -98,15 +105,52 @@ public class StopTimeStoreTest {
               : new GtfsStopTime.Builder().setCsvRowNumber(i + 2).build());
     }
 
-    StopTimeStore columns = store(0, rows, new NoticeContainer());
+    GtfsStopTimeTableContainer table = table(0, rows, new NoticeContainer());
 
-    assertThat(columns.isColumnar()).isTrue();
-    assertThat(fields(columns)).isEqualTo(fields(rows));
+    assertThat(entities(table).isColumnar()).isTrue();
+    assertThat(fields(table.getEntities())).isEqualTo(fields(rows));
+  }
+
+  @Test
+  public void columns_spanManyChunks() {
+    // More than 16 chunks, so that the arrays of chunks grow too.
+    int n = 17 * ColumnarEntityList.CHUNK_SIZE + 5;
+    List<GtfsStopTime> rows = new ArrayList<>(n);
+    for (int i = 0; i < n; i++) {
+      GtfsStopTime.Builder builder =
+          new GtfsStopTime.Builder()
+              .setCsvRowNumber(i + 2)
+              .setTripId("t" + i / 10)
+              .setStopId("s" + i % 7)
+              .setStopSequence(i % 10);
+      // Only one chunk has headsigns, so the other chunks of that column are not allocated.
+      if (i / ColumnarEntityList.CHUNK_SIZE == 3) {
+        builder.setStopHeadsign("headsign");
+      }
+      rows.add(builder.build());
+    }
+
+    GtfsStopTimeTableContainer table = table(0, rows, new NoticeContainer());
+
+    assertThat(entities(table).isColumnar()).isTrue();
+    for (int i :
+        new int[] {
+          0,
+          ColumnarEntityList.CHUNK_SIZE - 1,
+          ColumnarEntityList.CHUNK_SIZE,
+          3 * ColumnarEntityList.CHUNK_SIZE + 1,
+          16 * ColumnarEntityList.CHUNK_SIZE,
+          n - 1
+        }) {
+      assertThat(fields(table.getEntities().get(i))).isEqualTo(fields(rows.get(i)));
+    }
+    assertThat(fields(table.byTripId("t" + (n - 1) / 10)))
+        .isEqualTo(fields(rows.subList((n - 1) / 10 * 10, n)));
   }
 
   @Test
   public void add_switchesToColumnsAtThreshold() {
-    StopTimeStore store = new StopTimeStore(3);
+    ColumnarEntityList<GtfsStopTime> store = GtfsStopTimeTableContainer.createEntityList(3);
     List<GtfsStopTime> rows = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
       rows.add(fullStopTime(i + 2));
@@ -139,7 +183,7 @@ public class StopTimeStoreTest {
     }
 
     for (int threshold : new int[] {0, Integer.MAX_VALUE}) {
-      StopTimeStore store = store(threshold, rows, new NoticeContainer());
+      GtfsStopTimeTableContainer store = table(threshold, rows, new NoticeContainer());
 
       assertThat(store.byTripIdAsMap().keySet())
           .containsExactlyElementsIn(byTrip.keySet())
@@ -160,8 +204,8 @@ public class StopTimeStoreTest {
 
   @Test
   public void byTripId_columns_returnsTheSameObjectOnEachGet() {
-    StopTimeStore store =
-        store(
+    GtfsStopTimeTableContainer store =
+        table(
             0, List.of(stopTime(2, "t", "s", 1), stopTime(3, "t", "s", 2)), new NoticeContainer());
 
     List<GtfsStopTime> trip = store.byTripId("t");
@@ -181,7 +225,7 @@ public class StopTimeStoreTest {
 
     for (int threshold : new int[] {0, Integer.MAX_VALUE}) {
       NoticeContainer notices = new NoticeContainer();
-      store(threshold, rows, notices);
+      table(threshold, rows, notices);
 
       assertThat(notices.getValidationNotices())
           .containsExactly(
@@ -192,16 +236,17 @@ public class StopTimeStoreTest {
   }
 
   @Test
-  public void byTripIdAndStopSequence_returnsFirstRowInFileOrder() {
+  public void byTranslationKey_returnsFirstRowInFileOrder() {
     List<GtfsStopTime> rows =
         List.of(stopTime(2, "t", "a", 2), stopTime(3, "t", "b", 1), stopTime(4, "t", "c", 1));
 
     for (int threshold : new int[] {0, Integer.MAX_VALUE}) {
-      StopTimeStore store = store(threshold, rows, new NoticeContainer());
+      GtfsStopTimeTableContainer store = table(threshold, rows, new NoticeContainer());
 
-      assertThat(store.byTripIdAndStopSequence("t", 1).get().stopId()).isEqualTo("b");
-      assertThat(store.byTripIdAndStopSequence("t", 3)).isEqualTo(Optional.empty());
-      assertThat(store.byTripIdAndStopSequence("x", 1)).isEqualTo(Optional.empty());
+      assertThat(store.byTranslationKey("t", "1").get().stopId()).isEqualTo("b");
+      assertThat(store.byTranslationKey("t", "3")).isEqualTo(Optional.empty());
+      assertThat(store.byTranslationKey("x", "1")).isEqualTo(Optional.empty());
+      assertThat(store.byTranslationKey("t", "one")).isEqualTo(Optional.empty());
     }
   }
 }
