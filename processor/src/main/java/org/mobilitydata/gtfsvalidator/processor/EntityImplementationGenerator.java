@@ -47,6 +47,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
+import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -265,6 +266,10 @@ public class EntityImplementationGenerator {
             .addJavadoc("Use {@link Builder} class to construct an object.")
             .build());
 
+    if (fileDescriptor.storage() == TableStorage.COLUMNAR) {
+      typeSpec.addMethod(generateColumnsConstructor());
+    }
+
     generateFilenameAndFieldNameConstants(typeSpec);
     addEntityOrBuilderFields(typeSpec);
     addDefaultValueFields(typeSpec);
@@ -292,6 +297,40 @@ public class EntityImplementationGenerator {
     typeSpec.addType(generateGtfsEntityBuilderClass());
 
     return typeSpec.build();
+  }
+
+  /**
+   * Constructor for the columns of a table with {@code storage = TableStorage.COLUMNAR}, which
+   * create an entity per row read without going through a builder. Absent fields must be given
+   * their default value.
+   */
+  private MethodSpec generateColumnsConstructor() {
+    MethodSpec.Builder method =
+        MethodSpec.constructorBuilder()
+            .addParameter(CSV_ROW_NUMBER_TYPE, CSV_ROW_NUMBER)
+            .addStatement("this.$L = $L", CSV_ROW_NUMBER, CSV_ROW_NUMBER);
+    int lastBitField = lastBitFieldNumber(fileDescriptor.fields().size());
+    for (int i = 0; i <= lastBitField; ++i) {
+      method.addParameter(int.class, bitFieldName(i));
+      if (lastBitField == 0) {
+        // A single bitField is the smallest integer type that holds the fields.
+        method.addStatement(
+            "this.$L = ($L) $L",
+            bitFieldName(i),
+            fileDescriptor.fields().size() <= 8
+                ? "byte"
+                : fileDescriptor.fields().size() <= 16 ? "short" : "int",
+            bitFieldName(i));
+      } else {
+        method.addStatement("this.$L = $L", bitFieldName(i), bitFieldName(i));
+      }
+    }
+    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      method
+          .addParameter(getClassFieldType(field), field.name())
+          .addStatement("this.$L = $L", field.name(), field.name());
+    }
+    return method.build();
   }
 
   private void generateFilenameAndFieldNameConstants(TypeSpec.Builder typeSpec) {
