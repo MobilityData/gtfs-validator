@@ -125,6 +125,11 @@ public class GtfsInputTest {
       throws IOException, URISyntaxException {
     // This will throw if we don't handle ZIP files with compression
     // level 0 ("STORE" level) properly.
-    GtfsInput.createFromUrlInMemory(new URL(ZIP_STORE_METHOD_URL), noticeContainer, "1.0.1");
+    try (GtfsInput underTest =
+        GtfsInput.createFromUrlInMemory(new URL(ZIP_STORE_METHOD_URL), noticeContainer, "1.0.1")) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+    } catch (Exception e) {
+      fail("Failed to load ZIP file: " + e.getMessage());
+    }
   }
 }
