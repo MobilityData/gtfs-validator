@@ -132,13 +132,13 @@ Adding or changing a field in the schema needs no other change. How the rows are
 
 - Each `@Index` is an array of row numbers instead of one map entry per row.
 - Up to 1 000 000 rows, rows are kept as entity objects.
-- Beyond that, rows are kept as primitive columns: indexed fields (`trip_id`, `stop_id`) as codes into a list of distinct values, times as codes into the distinct times, enums as bytes. Each column is split into chunks of 32 768 rows, so that it grows without copying and without arrays large enough to need contiguous heap regions; chunks of an optional column are only allocated where a row has a value. Entities are created when a validator reads them, and are not retained.
+- Beyond that, rows are kept as primitive columns: indexed fields (`trip_id`, `stop_id`) as codes into a list of distinct values, times as codes into the distinct times, enums as bytes. Each column is split into chunks of 32 768 rows, so that it grows without copying and without arrays large enough to need contiguous heap regions; chunks of an optional column are only allocated where a row has a value. When a validator reads a row, it gets a small `GtfsStopTime` that holds only the row number and reads each value from the columns when its getter is called. `GtfsStopTime` is therefore an abstract class for columnar tables; entities made by its builder keep their values in a private subclass.
 
 A columnar table must not be `singleRow`, must have at most 64 fields, and either no primary key or a primary key made of an `@Index` field and an integer field with `@PrimaryKey(isSequenceUsedForSorting = true)`, such as `(trip_id, stop_sequence)`.
 
 The container API is unchanged, except `byTripIdMap()` and `byStopIdMap()`, which now create every stop time at once and are deprecated: validators iterate trips with `byTripIdAsMap()`, which creates each trip's stop times when it is read.
 
-Columnar storage keeps much less in memory, at the cost of more allocation and CPU time, since objects are created on each read. On a 3 million row sample of a large feed, the live heap of the whole validation went from 1 718 MB to 1 365 MB, allocations went up by 21%.
+Columnar storage keeps much less in memory, at the cost of some CPU time, since a row is created on each read and its values are decoded on each call. On a 3 million row sample of a large feed, the live heap of the whole validation went from 1 718 MB to 1 365 MB, allocations went up by 21%.
 
 The threshold can be changed with `-Dgtfsvalidator.<table>.columnThreshold=<rows>`, e.g., `-Dgtfsvalidator.stopTimes.columnThreshold=0` to always use columns.
 

@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
@@ -52,6 +53,7 @@ public class TableColumnsGenerator {
   private static final String PRESENT = "present_";
   private static final String CHUNKS = "chunks_";
   private static final String TIMES = "times_";
+  private static final String ROW_CLASS = "Row";
 
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
@@ -106,6 +108,7 @@ public class TableColumnsGenerator {
     typeSpec.addMethod(generateSequenceMethod());
     typeSpec.addMethod(generateDefinedKeysMethod());
     typeSpec.addMethod(generateDefinedValuesMethod());
+    typeSpec.addType(generateRowClass());
     return typeSpec.build();
   }
 
@@ -295,35 +298,62 @@ public class TableColumnsGenerator {
   }
 
   private MethodSpec generateGetMethod() {
-    ClassName entityType = classNames.entityImplementationTypeName();
-    List<CodeBlock> arguments = new ArrayList<>();
-    arguments.add(CodeBlock.of("$L[c][i]", CSV_ROW_NUMBER));
-    if (presentType().equals(TypeName.LONG)) {
-      arguments.add(CodeBlock.of("(int) p"));
-      arguments.add(CodeBlock.of("(int) (p >>> 32)"));
-    } else {
-      arguments.add(CodeBlock.of("p"));
-    }
-    int fieldNumber = 0;
-    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-      arguments.add(
-          CodeBlock.of(
-              "(p & $L) != 0 ? $L : $T.$L",
-              mask(fieldNumber),
-              fromColumn(field),
-              entityType,
-              fieldDefaultName(field.name())));
-      ++fieldNumber;
-    }
     return MethodSpec.methodBuilder("get")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
         .addParameter(int.class, "row")
-        .returns(entityType)
-        .addCode(chunkOfRow())
-        .addStatement("$T p = $L[c][i]", presentLocalType(), PRESENT)
-        .addStatement("return new $T(\n$L)", entityType, CodeBlock.join(arguments, ",\n"))
+        .returns(classNames.entityImplementationTypeName())
+        .addStatement("return new $L(row)", ROW_CLASS)
         .build();
+  }
+
+  /** A row of the columns, which reads each value only when it is asked for. */
+  private TypeSpec generateRowClass() {
+    ClassName entityType = classNames.entityImplementationTypeName();
+    TypeSpec.Builder typeSpec =
+        TypeSpec.classBuilder(ROW_CLASS)
+            .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
+            .superclass(entityType)
+            .addField(int.class, "row", Modifier.PRIVATE, Modifier.FINAL)
+            .addMethod(
+                MethodSpec.constructorBuilder()
+                    .addParameter(int.class, "row")
+                    .addStatement("this.row = row")
+                    .build());
+    typeSpec.addMethod(
+        MethodSpec.methodBuilder("csvRowNumber")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(int.class)
+            .addStatement("return $L", rowOfColumn(CSV_ROW_NUMBER))
+            .build());
+    int fieldNumber = 0;
+    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      boolean isEnum = kind(field) == Kind.ENUM;
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder(
+                  isEnum ? getValueMethodName(field.name()) : getterMethodName(field.name()))
+              .addAnnotation(Override.class)
+              .addModifiers(Modifier.PUBLIC)
+              .returns(isEnum ? TypeName.INT : TypeName.get(field.javaType()))
+              .addCode(chunkOfRow())
+              .addStatement(
+                  "return ($L[c][i] & $L) != 0 ? $L : $L",
+                  PRESENT,
+                  mask(fieldNumber),
+                  fromColumn(field),
+                  fieldDefaultName(field.name()))
+              .build());
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder(hasMethodName(field.name()))
+              .addAnnotation(Override.class)
+              .addModifiers(Modifier.PUBLIC)
+              .returns(boolean.class)
+              .addStatement("return ($L & $L) != 0", rowOfColumn(PRESENT), mask(fieldNumber))
+              .build());
+      ++fieldNumber;
+    }
+    return typeSpec.build();
   }
 
   private MethodSpec generateIndexCountMethod() {
