@@ -52,7 +52,6 @@ public class CsvFile implements Iterable<CsvRow> {
     // Univocity reads on its own thread when several CPUs are available, which costs a thread and
     // two buffers of the input buffer size per open file.
     settings.setReadInputOnSeparateThread(false);
-    settings.setInputBufferSize(256 * 1024);
     return settings;
   }
 
