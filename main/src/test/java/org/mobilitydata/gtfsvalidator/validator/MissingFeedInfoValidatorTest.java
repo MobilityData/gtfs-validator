@@ -40,10 +40,30 @@ public class MissingFeedInfoValidatorTest {
   }
 
   @Test
-  public void feedInfoPresentShouldGenerateNoNotice() {
+  public void emptyFeedInfoTranslationTableNotPresent() {
     assertThat(
             generateNotices(
-                GtfsFeedInfoTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS),
+                GtfsFeedInfoTableContainer.forEntities(List.of(), new NoticeContainer()),
+                GtfsTranslationTableContainer.forStatus(TableStatus.MISSING_FILE)))
+        .containsExactly(new MissingRecommendedFileNotice(GtfsFeedInfo.FILENAME));
+  }
+
+  @Test
+  public void emptyFeedInfoWhenTranslationTableIsPresent() {
+    assertThat(
+            generateNotices(
+                GtfsFeedInfoTableContainer.forEntities(List.of(), new NoticeContainer()),
+                GtfsTranslationTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS)))
+        .containsExactly(new MissingRequiredFileNotice(GtfsFeedInfo.FILENAME));
+  }
+
+  @Test
+  public void feedInfoPresentShouldGenerateNoNotice() {
+    GtfsFeedInfo feedInfo = new GtfsFeedInfo.Builder().setCsvRowNumber(1).build();
+
+    assertThat(
+            generateNotices(
+                GtfsFeedInfoTableContainer.forEntities(List.of(feedInfo), new NoticeContainer()),
                 GtfsTranslationTableContainer.forStatus(TableStatus.PARSABLE_HEADERS_AND_ROWS)))
         .isEmpty();
   }
