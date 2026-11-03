@@ -40,8 +40,7 @@ public final class ValidatorUtil {
     // This runs once per entity per validator, millions of times on a large feed, so the validators
     // are invoked directly rather than through safeValidate: a lambda capturing the entity would be
     // allocated on every call.
-    for (int i = 0, size = validators.size(); i < size; ++i) {
-      SingleEntityValidator<T> validator = validators.get(i);
+    for (SingleEntityValidator<T> validator : validators) {
       try {
         validator.validate(entity, noticeContainer);
       } catch (RuntimeException exception) {
