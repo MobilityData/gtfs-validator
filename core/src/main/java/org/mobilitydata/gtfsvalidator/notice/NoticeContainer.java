@@ -72,8 +72,7 @@ public class NoticeContainer {
    * every notice ever added, including the ones dropped once a limit is reached, and is what the
    * validation report exports as {@code totalNotices}.
    *
-   * <p>It is created on first use: {@code CsvFileLoader} creates one container per row, and most of
-   * them never retain a notice.
+   * <p>It is created on first use, since most containers never retain a notice.
    */
   private Map<String, Integer> retainedNoticesCountPerTypeAndSeverity;
 
@@ -208,6 +207,25 @@ public class NoticeContainer {
     systemErrors.addAll(otherContainer.systemErrors);
     hasValidationErrors |= otherContainer.hasValidationErrors;
     hasValidationWarnings |= otherContainer.hasValidationWarnings;
+  }
+
+  /**
+   * Empties this container so that it can be used again.
+   *
+   * <p>This is meant for the row-by-row parsing loop, which merges one container per row into the
+   * container of the table: allocating a container per row of a file with millions of rows is a
+   * significant share of the garbage produced while loading a feed. {@link #addAll} copies the
+   * notices into the destination container, so resetting the source afterwards is safe.
+   */
+  public void reset() {
+    validationNotices.clear();
+    systemErrors.clear();
+    noticesCountPerTypeAndSeverity.clear();
+    if (retainedNoticesCountPerTypeAndSeverity != null) {
+      retainedNoticesCountPerTypeAndSeverity.clear();
+    }
+    hasValidationErrors = false;
+    hasValidationWarnings = false;
   }
 
   /** Tells if this container has any {@code ValidationNotice} that is an error. */
