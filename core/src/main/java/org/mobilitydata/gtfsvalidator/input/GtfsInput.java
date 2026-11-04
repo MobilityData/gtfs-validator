@@ -78,9 +78,12 @@ public abstract class GtfsInput implements Closeable {
    * @throws IOException
    */
   public static boolean hasSubfolderWithGtfsFile(Path path) throws IOException {
-    ZipInputStream zipInputStream =
-        new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())));
-    return containsGtfsFileInSubfolder(zipInputStream);
+    // The stream owns a file descriptor and an Inflater holding a native zlib stream, so it has to
+    // be closed: a long-running process validating many feeds would otherwise leak both.
+    try (ZipInputStream zipInputStream =
+        new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
+      return containsGtfsFileInSubfolder(zipInputStream);
+    }
   }
 
   /**
@@ -172,9 +175,11 @@ public abstract class GtfsInput implements Closeable {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion, httpHeaders);
       File zipFile = new File(sourceUrl.toString());
       String fileName = zipFile.getName().replace(".zip", "");
-      if (containsGtfsFileInSubfolder(
-          new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray())))) {
-        noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
+      try (ZipInputStream zipInputStream =
+          new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray()))) {
+        if (containsGtfsFileInSubfolder(zipInputStream)) {
+          noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
+        }
       }
       return new GtfsZipFileInput(
           new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);

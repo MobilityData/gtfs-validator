@@ -7,8 +7,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -16,6 +19,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRecommendedFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
@@ -165,13 +169,7 @@ public class ValidationReportComparatorTest {
                 + "### 💾 Out of Memory Check\n"
                 + "No datasets experienced an OutOfMemoryError.\n\n\n"
                 + "### ⏱️ Performance Assessment\n\n"
-                + "<details>\n"
-                + "<summary><strong>📈 Validation Time</strong></summary>\n"
-                + "<p>Assess the performance in terms of seconds taken for the validation process.</p>\n"
-                + "\n"
-                + "| Time Metric                      | Dataset ID        | Reference (s)  | Latest (s)     | Difference (s) |\n"
-                + "|-----------------------------|-------------------|----------------|----------------|----------------|\n"
-                + "</details>\n\n\n");
+                + "No performance data to compare.\n\n");
   }
 
   @Test
@@ -436,6 +434,70 @@ public class ValidationReportComparatorTest {
 
     // 1 corrupted source out of 2 = 50% corrupted = above threshold.
     assertThat(result.failure()).isTrue();
+  }
+
+  @Test
+  public void outOfMemoryErrorInSystemErrors_isReportedAndNotCompared() throws Exception {
+    Arguments args = defaultArgs();
+    // The latest run lost a notice because a validation thread ran out of memory.
+    File reportDir =
+        constructBeforeAndAfterReports(
+            "feed-id-a",
+            ImmutableList.of(
+                new MissingRequiredFileNotice("a.txt"), new MissingRequiredFileNotice("b.txt")),
+            ImmutableList.of(new MissingRequiredFileNotice("a.txt")));
+    NoticeContainer latestSystemErrors = new NoticeContainer();
+    latestSystemErrors.addSystemError(
+        new ThreadExecutionError(new ExecutionException(new OutOfMemoryError("Java heap space"))));
+    writeFile(
+        latestSystemErrors.exportSystemErrors(),
+        reportDir.toPath().resolve(args.getLatestSystemErrorsName()));
+
+    Result result =
+        new ValidationReportComparator()
+            .compareValidationRuns(args, ImmutableList.of(reportDir), constructSourceUrls());
+
+    assertThat(result.reportSummary()).contains("1 dataset(s) experienced an OutOfMemoryError.");
+    assertThat(result.reportSummary()).contains("| feed-id-a | ✅ | ⚠️ |");
+    assertThat(result.report().droppedErrors()).isEmpty();
+    assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
+    assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
+    // 1 latest out of memory source out of 1 = 100%, above the 25% threshold.
+    assertThat(result.failure()).isTrue();
+  }
+
+  @Test
+  public void outOfMemoryErrorWithoutReport_isReported() throws Exception {
+    // The script only runs on the Linux runners of the acceptance tests, and bash on Windows
+    // runners cannot be relied on to handle Windows paths.
+    Assume.assumeFalse(System.getProperty("os.name").startsWith("Windows"));
+    Arguments args = defaultArgs();
+    // The reference JVM died of an OutOfMemoryError before writing its reports, and
+    // scripts/write_oom_system_errors.sh wrote the system errors report.
+    File reportDir =
+        constructBeforeAndAfterReports(
+            "feed-id-a", ImmutableList.of(), ImmutableList.of(new MissingRequiredFileNotice("a")));
+    Files.delete(reportDir.toPath().resolve(REFERENCE_REPORT_NAME));
+    // Runs the script itself so that this test fails if its output stops matching what the
+    // comparator expects. Gradle runs the tests from the module directory.
+    Process script =
+        new ProcessBuilder(
+                "bash",
+                Path.of("..", "scripts", "write_oom_system_errors.sh").toString(),
+                reportDir.toPath().resolve(args.getReferenceSystemErrorsName()).toString())
+            .inheritIO()
+            .start();
+    assertThat(script.waitFor()).isEqualTo(0);
+
+    Result result =
+        new ValidationReportComparator()
+            .compareValidationRuns(args, ImmutableList.of(reportDir), constructSourceUrls());
+
+    assertThat(result.reportSummary()).contains("| feed-id-a | ⚠️ | ✅ |");
+    assertThat(result.report().corruptedSources().corruptedSources()).isEmpty();
+    assertThat(result.report().corruptedSources().sourceIdCount()).isEqualTo(0);
+    // Only the reference ran out of memory, which is not a regression of the latest version.
+    assertThat(result.failure()).isFalse();
   }
 
   private static Arguments defaultArgs() {

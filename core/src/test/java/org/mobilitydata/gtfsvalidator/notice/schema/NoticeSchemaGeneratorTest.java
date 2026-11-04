@@ -27,6 +27,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeDocComments;
 import org.mobilitydata.gtfsvalidator.notice.schema.ReferencesSchema.UrlReference;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.DocumentedNotice;
 import org.mobilitydata.gtfsvalidator.notice.testnotices.S2LatLngNotice;
@@ -119,6 +120,22 @@ public class NoticeSchemaGeneratorTest {
     String actualJson = new GsonBuilder().setPrettyPrinting().create().toJson(schema);
     String expectedJson = retrieveResource("generateJsonSchemaForNotice_s2LatLngNotice.json");
     assertThat(actualJson).isEqualTo(expectedJson);
+  }
+
+  @Test
+  public void loadComments_isCachedPerNoticeClass() {
+    NoticeDocComments comments = NoticeSchemaGenerator.loadComments(DocumentedNotice.class);
+
+    assertThat(NoticeSchemaGenerator.loadComments(DocumentedNotice.class))
+        .isSameInstanceAs(comments);
+    assertThat(comments.getFieldComment("value")).isEqualTo("A field comment");
+  }
+
+  @Test
+  public void loadComments_noticeWithoutComments_returnsEmptyComments() {
+    NoticeDocComments comments = NoticeSchemaGenerator.loadComments(String.class);
+
+    assertThat(comments.getFieldComment("value")).isNull();
   }
 
   private static String retrieveResource(String name) throws IOException {
