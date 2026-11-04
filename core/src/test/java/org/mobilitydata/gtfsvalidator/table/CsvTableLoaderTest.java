@@ -103,6 +103,24 @@ public class CsvTableLoaderTest {
   }
 
   @Test
+  public void unescapedQuotesProduceCsvParsingFailedNotice() {
+    var testTableDescriptor = spy(new GtfsTestTableDescriptor());
+    when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS))
+        .thenReturn(mockContainer);
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+    when(validatorProvider.getFieldValidator()).thenReturn(mock(GtfsFieldValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\n" + "s1,\"Main \"Street\" Stop\"\n");
+
+    var loadedContainer =
+        CsvFileLoader.getInstance()
+            .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(validationNoticeTypes(loaderNotices)).containsExactly(CsvParsingFailedNotice.class);
+    assertThat(loadedContainer).isEqualTo(mockContainer);
+  }
+
+  @Test
   public void invalidRowLengthNotice() {
     var testTableDescriptor = spy(new GtfsTestTableDescriptor());
     when(testTableDescriptor.createContainerForInvalidStatus(TableStatus.UNPARSABLE_ROWS))
