@@ -10,16 +10,19 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * case letters).
  *
  * <p>This field contains customer-facing text and should use Mixed Case (upper and lower case
- * letters) to ensure good readability when displayed to riders. The validator tokenizes the text
- * into letter-only tokens, treating spaces, digits and punctuation as separators. For a single
- * token, a notice is raised if it contains more than one character and is entirely lowercase. A
- * single uppercase word is accepted. For multiple tokens, a notice is raised when at least two
- * eligible tokens are counted and none contains both uppercase and lowercase letters.
+ * letters) to ensure good readability when displayed to riders. The validator splits the text into
+ * letter-only words, treating spaces, digits and punctuation as separators, and ignores
+ * single-letter words.
+ *
+ * <pre>
+ * - If there is only one word, the notice is raised only if it is all lowercase (e.g. `main`).
+ *   All uppercase single words are accepted (e.g. `MAIN`).
+ * - If there are two or more words, the notice is raised if none of them are Mixed Case
+ * </pre>
  *
  * <p>Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is
  * called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for
- * accessibility by screen reader software and voice user interfaces. Single all uppercased values
- * are acceptable eg: MAIN while single all lowercased values are not eg: main.
+ * accessibility by screen reader software and voice user interfaces.
  *
  * <table style="table-layout:auto; width:auto;">
  *   <caption>Good examples:</caption>
@@ -53,7 +56,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *   </tr>
  *   <tr>
  *     <td>"main"</td>
- *     <td>Tokens: [main]. Does not contain at least 1 mixed case token</td>
+ *     <td>Tokens: [main]. Contains a single all-lowercase word</td>
  *   </tr>
  * </table>
  */
