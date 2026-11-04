@@ -25,8 +25,9 @@ import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
 
-@GtfsTable(value = "shapes.txt", customContainer = true)
+@GtfsTable(value = "shapes.txt", storage = TableStorage.COLUMNAR)
 public interface GtfsShapeSchema extends GtfsEntity {
   @FieldType(FieldTypeEnum.ID)
   @Required

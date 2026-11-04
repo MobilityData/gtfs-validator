@@ -38,6 +38,7 @@ import javax.lang.model.element.Modifier;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
+import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
@@ -111,7 +112,7 @@ public class TableDescriptorGenerator {
     typeSpec.addMethod(generateCreateContainerForInvalidStatusMethod());
     typeSpec.addMethod(generateCreateContainerForHeaderAndEntitiesMethod());
     typeSpec.addMethod(generateCreateEntityBuilderMethod());
-    if (fileDescriptor.customContainer()) {
+    if (fileDescriptor.storage() == TableStorage.COLUMNAR) {
       typeSpec.addMethod(generateCreateEntityListMethod());
     }
     typeSpec.addMethod(generateGetEntityClassMethod());
