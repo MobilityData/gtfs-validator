@@ -11,13 +11,13 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *
  * <p>This field contains customer-facing text and should use Mixed Case (upper and lower case
  * letters) to ensure good readability when displayed to riders. The validator splits the text into
- * letter-only words, treating spaces, digits and punctuation as separators, and ignores
- * single-letter words.
+ * letter-only tokens, treating spaces, digits and punctuation as separators, and ignores
+ * single-letter tokens.
  *
  * <pre>
- * - If there is only one word, the notice is raised only if it is all lowercase (e.g. `main`).
- *   All uppercase single words are accepted (e.g. `MAIN`).
- * - If there are two or more words, the notice is raised if none of them are Mixed Case
+ * - If there is only one token, the notice is raised only if it is all lowercase (e.g. `main`).
+ *   All uppercase single tokens are accepted (e.g. `MAIN`).
+ * - If there are two or more tokens, the notice is raised if none of them are Mixed Case
  * </pre>
  *
  * <p>Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is
@@ -56,7 +56,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *   </tr>
  *   <tr>
  *     <td>"main"</td>
- *     <td>Tokens: [main]. Contains a single all-lowercase word</td>
+ *     <td>Tokens: [main]. Contains a single all-lowercase token</td>
  *   </tr>
  * </table>
  */
