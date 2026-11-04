@@ -452,10 +452,10 @@ public class FeedMetadata {
     return feedContainer
         .getTableForFilename(GtfsStopTime.FILENAME)
         .map(table -> (GtfsStopTimeTableContainer) table)
-        .map(GtfsStopTimeTableContainer::byTripIdMap)
+        .map(GtfsStopTimeTableContainer::byTripIdAsMap)
         .map(
             byTripIdMap ->
-                byTripIdMap.asMap().values().stream()
+                byTripIdMap.values().stream()
                     .anyMatch(
                         gtfsStopTimes -> {
                           boolean hasTripId = false,

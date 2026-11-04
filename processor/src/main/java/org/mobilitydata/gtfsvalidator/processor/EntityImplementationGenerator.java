@@ -47,6 +47,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
+import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
@@ -65,6 +66,10 @@ public class EntityImplementationGenerator {
   };
 
   private static final String CSV_ROW_NUMBER = "csvRowNumber";
+
+  /** Class that keeps the values of an entity of a table with columns. */
+  private static final String VALUES_CLASS = "Values";
+
   private static final Class CSV_ROW_NUMBER_TYPE = int.class;
   private final GtfsFileDescriptor fileDescriptor;
   private final GtfsEntityClasses classNames;
@@ -249,9 +254,10 @@ public class EntityImplementationGenerator {
   }
 
   public TypeSpec generateGtfsEntityClass() {
+    boolean columnar = fileDescriptor.storage() == TableStorage.COLUMNAR;
     TypeSpec.Builder typeSpec =
         TypeSpec.classBuilder(classNames.entityImplementationSimpleName())
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addModifiers(Modifier.PUBLIC, columnar ? Modifier.ABSTRACT : Modifier.FINAL)
             .addAnnotation(Generated.class)
             .addSuperinterface(GtfsEntity.class);
 
@@ -259,16 +265,40 @@ public class EntityImplementationGenerator {
       typeSpec.addSuperinterface(superinterface);
     }
 
-    typeSpec.addMethod(
-        MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PRIVATE)
-            .addJavadoc("Use {@link Builder} class to construct an object.")
-            .build());
+    if (columnar) {
+      typeSpec.addJavadoc(
+          "Use {@link Builder} class to construct an object. Rows of the columns of the table"
+              + " extend this class, and read each value only when it is asked for.");
+      typeSpec.addMethod(MethodSpec.constructorBuilder().build());
+      generateFilenameAndFieldNameConstants(typeSpec);
+      addDefaultValueFields(typeSpec);
+      addAbstractAccessors(typeSpec);
+      TypeSpec.Builder values =
+          TypeSpec.classBuilder(VALUES_CLASS)
+              .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+              .superclass(classNames.entityImplementationTypeName());
+      addEntityOrBuilderFields(values);
+      addAccessors(values);
+      typeSpec.addType(values.build());
+    } else {
+      typeSpec.addMethod(
+          MethodSpec.constructorBuilder()
+              .addModifiers(Modifier.PRIVATE)
+              .addJavadoc("Use {@link Builder} class to construct an object.")
+              .build());
+      generateFilenameAndFieldNameConstants(typeSpec);
+      addEntityOrBuilderFields(typeSpec);
+      addDefaultValueFields(typeSpec);
+      addAccessors(typeSpec);
+    }
 
-    generateFilenameAndFieldNameConstants(typeSpec);
-    addEntityOrBuilderFields(typeSpec);
-    addDefaultValueFields(typeSpec);
+    typeSpec.addType(generateGtfsEntityBuilderClass());
 
+    return typeSpec.build();
+  }
+
+  /** Adds the getters of the fields, which return the values kept by the entity. */
+  private void addAccessors(TypeSpec.Builder typeSpec) {
     int fieldNumber = 0;
 
     typeSpec.addMethod(
@@ -288,10 +318,57 @@ public class EntityImplementationGenerator {
       typeSpec.addMethod(generateGetLatLonMethod(latLonDescriptor));
       typeSpec.addMethod(generateHasLatLonMethod(latLonDescriptor));
     }
+  }
 
-    typeSpec.addType(generateGtfsEntityBuilderClass());
-
-    return typeSpec.build();
+  /**
+   * Adds the getters of an entity that does not keep its values: abstract, except for those that
+   * are computed from other getters.
+   */
+  private void addAbstractAccessors(TypeSpec.Builder typeSpec) {
+    for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+      MethodSpec.Builder getter =
+          MethodSpec.methodBuilder(getterMethodName(field.name()))
+              .addModifiers(Modifier.PUBLIC)
+              .returns(TypeName.get(field.javaType()))
+              .addAnnotation(nullabilityAnnotation(field))
+              .addAnnotation(Override.class);
+      if (field.type().equals(FieldTypeEnum.ENUM)) {
+        typeSpec.addMethod(
+            getter
+                .addStatement(
+                    "$T result = $T.forNumber($L())",
+                    field.javaType(),
+                    field.javaType(),
+                    getValueMethodName(field.name()))
+                .addStatement("return result == null ? $T.UNRECOGNIZED : result", field.javaType())
+                .build());
+        typeSpec.addMethod(
+            MethodSpec.methodBuilder(getValueMethodName(field.name()))
+                .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                .returns(int.class)
+                .build());
+      } else {
+        typeSpec.addMethod(getter.addModifiers(Modifier.ABSTRACT).build());
+      }
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder(hasMethodName(field.name()))
+              .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+              .returns(boolean.class)
+              .build());
+    }
+    for (LatLonDescriptor latLonDescriptor : fileDescriptor.latLonFields()) {
+      typeSpec.addMethod(
+          MethodSpec.methodBuilder(latLonDescriptor.latLonField())
+              .addModifiers(Modifier.PUBLIC)
+              .returns(S2LatLng.class)
+              .addStatement(
+                  "return $T.fromDegrees($L(), $L())",
+                  S2LatLng.class,
+                  latLonDescriptor.latField(),
+                  latLonDescriptor.lonField())
+              .build());
+      typeSpec.addMethod(generateHasLatLonMethod(latLonDescriptor));
+    }
   }
 
   private void generateFilenameAndFieldNameConstants(TypeSpec.Builder typeSpec) {
@@ -498,12 +575,16 @@ public class EntityImplementationGenerator {
 
   private MethodSpec generateBuilderBuildMethod() {
     TypeName gtfsEntityType = classNames.entityImplementationTypeName();
+    TypeName valuesType =
+        fileDescriptor.storage() == TableStorage.COLUMNAR
+            ? classNames.entityImplementationTypeName().nestedClass(VALUES_CLASS)
+            : gtfsEntityType;
     MethodSpec.Builder buildMethod =
         MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(gtfsEntityType)
-            .addStatement("$T entity = new $T()", gtfsEntityType, gtfsEntityType)
+            .addStatement("$T entity = new $T()", valuesType, valuesType)
             .addStatement("entity.$L = this.$L", CSV_ROW_NUMBER, CSV_ROW_NUMBER);
     for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
       buildMethod.addStatement("entity.$L = this.$L", bitFieldName(i), bitFieldName(i));
