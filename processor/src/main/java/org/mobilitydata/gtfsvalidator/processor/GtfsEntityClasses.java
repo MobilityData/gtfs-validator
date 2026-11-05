@@ -60,6 +60,10 @@ public final class GtfsEntityClasses {
     return className + "TableContainer";
   }
 
+  public String tableColumnsSimpleName() {
+    return className + "Columns";
+  }
+
   public ClassName entityImplementationTypeName() {
     return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName());
   }
@@ -70,6 +74,10 @@ public final class GtfsEntityClasses {
 
   public ClassName tableDescriptorTypeName() {
     return ClassName.get(TABLE_PACKAGE_NAME, tableDescriptorSimpleName());
+  }
+
+  public ClassName tableColumnsTypeName() {
+    return ClassName.get(TABLE_PACKAGE_NAME, tableColumnsSimpleName());
   }
 
   public ClassName tableContainerTypeName() {
