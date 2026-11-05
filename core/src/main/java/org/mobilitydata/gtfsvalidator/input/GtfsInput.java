@@ -149,14 +149,17 @@ public abstract class GtfsInput implements Closeable {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion, httpHeaders);
       String fileName = new File(sourceUrl.toString()).getName().replace(".zip", "");
-      try (ZipFile zipFile =
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray()))) {
-        if (containsGtfsFileInSubfolder(zipFile)) {
-          noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
-        }
-        return new GtfsZipFileInput(zipFile, fileName);
-      }
+      return createFromZipBytes(outputStream.toByteArray(), fileName, noticeContainer);
     }
+  }
+
+  static GtfsInput createFromZipBytes(
+      byte[] zipBytes, String fileName, NoticeContainer noticeContainer) throws IOException {
+    ZipFile zipFile = new ZipFile(new SeekableInMemoryByteChannel(zipBytes));
+    if (containsGtfsFileInSubfolder(zipFile)) {
+      noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
+    }
+    return new GtfsZipFileInput(zipFile, fileName);
   }
 
   /**

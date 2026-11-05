@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -44,8 +46,11 @@ public class GtfsInputTest {
           + "valid_zip_sample.zip";
 
   // A ZIP file with compression level ("STORE" method).
-  private static final String ZIP_STORE_METHOD_URL =
-      "https://files.mobilitydatabase.org/mdb-485/mdb-485-202501090054/mdb-485-202501090054.zip";
+  private final Path ZIP_STORE_METHOD_PATH =
+      Paths.get(
+          getClass()
+              .getResource("/org/mobilitydata/gtfsvalidator/input/stored_with_data_descriptor.zip")
+              .getPath());
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
   NoticeContainer noticeContainer = new NoticeContainer();
@@ -121,13 +126,30 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void createFromUrlInMemory_zipWithStoredMethod_success()
-      throws IOException, URISyntaxException {
+  public void createFromZipBytes_zipWithStoredMethod_success() throws IOException {
+    byte[] zipBytes = Files.readAllBytes(ZIP_STORE_METHOD_PATH);
+    String fileName = ZIP_STORE_METHOD_PATH.getFileName().toString().replace(".zip", "");
     // This will throw if we don't handle ZIP files with compression
     // level 0 ("STORE" level) properly.
-    try (GtfsInput underTest =
-        GtfsInput.createFromUrlInMemory(new URL(ZIP_STORE_METHOD_URL), noticeContainer, "1.0.1")) {
+    try (GtfsInput underTest = GtfsInput.createFromZipBytes(zipBytes, fileName, noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
+      // The archive contains two files; we check that they are accessible.
+      underTest.getFile("agency.txt");
+      underTest.getFile("stops.txt");
+    } catch (Exception e) {
+      fail("Failed to load ZIP file: " + e.getMessage());
+    }
+  }
+
+  @Test
+  public void createFromPath_zipWithStoredMethod_success() {
+    // This will throw if we don't handle ZIP files with compression
+    // level 0 ("STORE" level) properly.
+    try (GtfsInput underTest = GtfsInput.createFromPath(ZIP_STORE_METHOD_PATH, noticeContainer)) {
+      assertThat(underTest instanceof GtfsZipFileInput);
+      // The archive contains two files; we check that they are accessible.
+      underTest.getFile("agency.txt");
+      underTest.getFile("stops.txt");
     } catch (Exception e) {
       fail("Failed to load ZIP file: " + e.getMessage());
     }
