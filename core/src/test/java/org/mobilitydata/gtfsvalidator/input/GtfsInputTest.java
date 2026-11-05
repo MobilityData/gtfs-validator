@@ -164,7 +164,8 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void createFromZipBytes_zipWithStoredMethod_success() throws IOException, URISyntaxException {
+  public void createFromZipBytes_zipWithStoredMethod_success()
+      throws IOException, URISyntaxException {
     Path zipStoreMethodPath = getZipStoreMethodPath();
     byte[] zipBytes = Files.readAllBytes(zipStoreMethodPath);
     String fileName = zipStoreMethodPath.getFileName().toString().replace(".zip", "");
