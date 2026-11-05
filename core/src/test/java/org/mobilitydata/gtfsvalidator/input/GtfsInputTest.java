@@ -44,7 +44,7 @@ public class GtfsInputTest {
       "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
           + "valid_zip_sample.zip";
 
-  // A ZIP file with compression level ("STORE" method).
+  // A ZIP file with compression level 0 ("STORE" method).
   private final Path ZIP_STORE_METHOD_PATH =
       Paths.get(
           getClass()
