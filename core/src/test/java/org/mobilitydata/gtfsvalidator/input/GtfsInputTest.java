@@ -19,12 +19,10 @@ package org.mobilitydata.gtfsvalidator.input;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -123,6 +121,22 @@ public class GtfsInputTest {
     assertThrows(
         IOException.class,
         () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer, "1.0.1"));
+  }
+
+  @Test
+  public void createFromZipBytes_returnsReadableInput() throws IOException {
+    ByteArrayOutputStream zipBytes = new ByteArrayOutputStream();
+    try (ZipOutputStream out = new ZipOutputStream(zipBytes)) {
+      out.putNextEntry(new ZipEntry("stops.txt"));
+      out.write("stop_id,stop_name\ns1,S\n".getBytes(StandardCharsets.UTF_8));
+      out.closeEntry();
+    }
+    try (GtfsInput underTest =
+            GtfsInput.createFromZipBytes(zipBytes.toByteArray(), "feed", noticeContainer);
+        InputStream stops = underTest.getFile("stops.txt")) {
+      assertThat(underTest.getFilenames()).containsExactly("stops.txt");
+      assertThat(new String(stops.readAllBytes(), StandardCharsets.UTF_8)).startsWith("stop_id,");
+    }
   }
 
   @Test
