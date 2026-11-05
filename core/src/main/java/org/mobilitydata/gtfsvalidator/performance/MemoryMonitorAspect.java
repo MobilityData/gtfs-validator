@@ -6,7 +6,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 
-/** Aspect to monitor memory usage of a method. */
+/**
+ * Aspect to monitor memory usage of a method.
+ *
+ * @deprecated Replaced by {@link ValidationPerformanceTracker}, whose metrics do not depend on when
+ *     the garbage collector runs. Will be removed in the next major version.
+ */
+@Deprecated
 @Aspect
 public class MemoryMonitorAspect {
 

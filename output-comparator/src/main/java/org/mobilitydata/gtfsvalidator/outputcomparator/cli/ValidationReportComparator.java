@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.flogger.FluentLogger;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
@@ -69,7 +70,9 @@ public class ValidationReportComparator {
             args.getPercentInvalidDatasetsThreshold());
     CorruptedSourcesCollector corruptedSources =
         new CorruptedSourcesCollector(args.getPercentCorruptedSourcesThreshold());
-    OutOfMemorySourcesCollector oomSources = new OutOfMemorySourcesCollector();
+    // Out of memory errors used to count as corrupted sources, so they share its threshold.
+    OutOfMemorySourcesCollector oomSources =
+        new OutOfMemorySourcesCollector(args.getPercentCorruptedSourcesThreshold());
     ValidationPerformanceCollector validationPerformanceCollector =
         new ValidationPerformanceCollector();
 
@@ -80,13 +83,26 @@ public class ValidationReportComparator {
       if (!sourceUrlContainer.hasSourceId(sourceId)) {
         continue;
       }
-      corruptedSources.addSource();
       String sourceUrl = sourceUrlContainer.getUrlForSourceId(sourceId);
+      oomSources.addSource();
 
       Path referenceReportPath = file.toPath().resolve(args.getReferenceValidationReportName());
       Path referenceErrorsPath = file.toPath().resolve(args.getReferenceSystemErrorsName());
       Path latestReportPath = file.toPath().resolve(args.getLatestValidationReportName());
       Path latestErrorsPath = file.toPath().resolve(args.getLatestSystemErrorsName());
+      ValidationReport referenceSystemErrors = getValidationReportIfExists(referenceErrorsPath);
+      ValidationReport latestSystemErrors = getValidationReportIfExists(latestErrorsPath);
+
+      // A validation that ran out of memory leaves missing or partial reports and an unreliable
+      // validation time, so these datasets are only listed in the out of memory check and left
+      // out of every other check and statistic, including the corrupted sources count.
+      boolean refOom = hasOutOfMemoryError(referenceSystemErrors);
+      boolean latestOom = hasOutOfMemoryError(latestSystemErrors);
+      if (refOom || latestOom) {
+        oomSources.addOomSource(sourceId, refOom, latestOom);
+        continue;
+      }
+      corruptedSources.addSource();
       // in case a validation report does not exist for a sourceId we add the sourceId to
       // the list of corrupted sources
       if (!(referenceReportPath.toFile().exists() && latestReportPath.toFile().exists())) {
@@ -116,8 +132,6 @@ public class ValidationReportComparator {
       // As an edge case, when the execution raise a system exception the report will contain
       // no notices but system notices are found in the system_errors.json file.
       // In this case, the system notices are not considered as corrupted sources.
-      ValidationReport referenceSystemErrors = getValidationReport(referenceErrorsPath);
-      ValidationReport latestSystemErrors = getValidationReport(latestErrorsPath);
       if (hasSystemErrors(referenceReport, referenceSystemErrors)) {
         corruptedSources.addCorruptedSource(
             sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
@@ -126,18 +140,6 @@ public class ValidationReportComparator {
       if (hasSystemErrors(latestReport, latestSystemErrors)) {
         corruptedSources.addCorruptedSource(
             sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
-        continue;
-      }
-
-      // Check for OutOfMemoryError in the validation reports. An OOM in a validation thread may
-      // still produce partial results, so we check independently of whether the report has other
-      // notices.
-      boolean refOom = hasOutOfMemoryError(referenceReport);
-      boolean latestOom = hasOutOfMemoryError(latestReport);
-      if (refOom || latestOom) {
-        corruptedSources.addCorruptedSource(
-            sourceId, true, true, true, true, referenceSystemErrors, latestSystemErrors);
-        oomSources.addOomSource(sourceId, refOom, latestOom);
         continue;
       }
 
@@ -170,7 +172,8 @@ public class ValidationReportComparator {
             || droppedWarnings.isAboveThreshold()
             || newInfoNotices.isAboveThreshold()
             || droppedInfoNotices.isAboveThreshold()
-            || corruptedSources.isAboveThreshold();
+            || corruptedSources.isAboveThreshold()
+            || oomSources.isAboveThreshold();
 
     String reportSummaryString =
         generateReportSummaryString(
@@ -196,8 +199,19 @@ public class ValidationReportComparator {
         && !systemErrors.getNotices().isEmpty();
   }
 
-  private static boolean hasOutOfMemoryError(ValidationReport report) {
-    return report != null && report.hasOutOfMemoryError();
+  /**
+   * Returns whether a validation ran out of memory. An OutOfMemoryError in a validation thread is
+   * recorded by the validator as a {@code thread_execution_error} in the system errors report. When
+   * the error ends the JVM before the validator writes its reports, {@code
+   * scripts/write_oom_system_errors.sh}, run through the {@code -XX:OnOutOfMemoryError} option set
+   * in {@code scripts/queue_runner.sh}, writes an equivalent system errors report.
+   */
+  private static boolean hasOutOfMemoryError(ValidationReport systemErrors) {
+    return systemErrors != null && systemErrors.hasOutOfMemoryError();
+  }
+
+  private static ValidationReport getValidationReportIfExists(Path reportPath) {
+    return Files.exists(reportPath) ? getValidationReport(reportPath) : null;
   }
 
   private static ValidationReport getValidationReport(Path referenceReportPath) {

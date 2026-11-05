@@ -23,12 +23,18 @@ public class CreateJobRequest {
 
   private String countryCode;
   private String url;
+  private String filename;
 
   public CreateJobRequest() {}
 
   public CreateJobRequest(String countryCode, String url) {
+    this(countryCode, url, null);
+  }
+
+  public CreateJobRequest(String countryCode, String url, String filename) {
     this.countryCode = countryCode;
     this.url = url;
+    this.filename = filename;
   }
 
   public String getCountryCode() {
@@ -37,5 +43,9 @@ public class CreateJobRequest {
 
   public String getUrl() {
     return url;
+  }
+
+  public String getFilename() {
+    return filename;
   }
 }

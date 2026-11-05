@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.RuntimeExceptionInLoaderError;
@@ -41,6 +42,8 @@ import org.mobilitydata.gtfsvalidator.notice.ThreadExecutionError;
 import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.performance.MemoryMonitor;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceTracker;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorUtil;
@@ -120,6 +123,7 @@ public class GtfsFeedLoader {
       throws InterruptedException {
     logger.atInfo().log("Loading in %d threads", numThreads);
     ExecutorService exec = Executors.newFixedThreadPool(numThreads);
+    ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     skippedValidators.clear();
     List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
@@ -170,7 +174,11 @@ public class GtfsFeedLoader {
       var beforeLoading =
           MemoryUsageRegister.getInstance()
               .getMemoryUsageSnapshot("GtfsFeedLoader.loadTables", null);
-      loadTables(noticeContainer, exec, loaderCallables, tableContainers);
+      try (var phase =
+          performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_LOAD_TABLES)) {
+        loadTables(
+            noticeContainer, exec, track(performanceTracker, loaderCallables), tableContainers);
+      }
       MemoryUsageRegister.getInstance()
           .registerMemoryUsage("GtfsFeedLoader.loadTables", beforeLoading);
 
@@ -178,7 +186,11 @@ public class GtfsFeedLoader {
       var beforeMultiFileValidators =
           MemoryUsageRegister.getInstance()
               .getMemoryUsageSnapshot("GtfsFeedLoader.executeMultiFileValidators", null);
-      executeMultiFileValidators(validatorProvider, noticeContainer, feed, exec);
+      try (var phase =
+          performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_MULTI_FILE_VALIDATORS)) {
+        executeMultiFileValidators(
+            validatorProvider, noticeContainer, feed, exec, performanceTracker);
+      }
       MemoryUsageRegister.getInstance()
           .registerMemoryUsage(
               "GtfsFeedLoader.executeMultiFileValidators", beforeMultiFileValidators);
@@ -212,7 +224,8 @@ public class GtfsFeedLoader {
       ValidatorProvider validatorProvider,
       NoticeContainer noticeContainer,
       GtfsFeedContainer feed,
-      ExecutorService exec)
+      ExecutorService exec,
+      ValidationPerformanceTracker performanceTracker)
       throws InterruptedException {
     List<Callable<NoticeContainer>> validatorCallables = new ArrayList<>();
     // Validators with parser-error dependencies will not be returned here, but instead added to
@@ -226,7 +239,14 @@ public class GtfsFeedLoader {
             return validatorNotices;
           });
     }
-    collectMultiFileValidationNotices(noticeContainer, exec, validatorCallables);
+    collectMultiFileValidationNotices(
+        noticeContainer, exec, track(performanceTracker, validatorCallables));
+  }
+
+  /** Wraps the tasks so that their CPU time and allocations are added to the tracker. */
+  private static <T> List<Callable<T>> track(
+      ValidationPerformanceTracker performanceTracker, List<Callable<T>> tasks) {
+    return tasks.stream().map(performanceTracker::track).collect(Collectors.toList());
   }
 
   private void collectMultiFileValidationNotices(

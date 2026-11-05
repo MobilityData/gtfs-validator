@@ -105,7 +105,19 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
           new EntityImplementationGenerator(fileDescriptor, enumDescriptors)
               .generateGtfsEntityJavaFile());
       writeJavaFile(new TableDescriptorGenerator(fileDescriptor).generateGtfsDescriptorJavaFile());
-      writeJavaFile(new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
+      switch (fileDescriptor.storage()) {
+        case OBJECTS:
+          writeJavaFile(
+              new TableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
+          break;
+        case COLUMNAR:
+          writeJavaFile(
+              new TableColumnsGenerator(fileDescriptor, enumDescriptors)
+                  .generateGtfsColumnsJavaFile());
+          writeJavaFile(
+              new ColumnarTableContainerGenerator(fileDescriptor).generateGtfsContainerJavaFile());
+          break;
+      }
     }
 
     List<TypeSpec> generatedValidators = new ArrayList<>();

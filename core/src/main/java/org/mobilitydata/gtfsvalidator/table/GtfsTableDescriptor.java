@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -16,6 +17,11 @@ public abstract class GtfsTableDescriptor<T extends GtfsEntity> extends GtfsFile
       CsvHeader header, List<T> entities, NoticeContainer noticeContainer);
 
   public abstract GtfsEntityBuilder createEntityBuilder();
+
+  /** Returns the list the loader adds the parsed entities to. */
+  public List<T> createEntityList() {
+    return new ArrayList<>();
+  }
 
   public abstract ImmutableMap<String, GtfsFieldLoader> getFieldLoaders();
 

@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsJson;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
@@ -51,6 +52,19 @@ public class NoticeSchemaGenerator {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private static Gson GSON = new GsonBuilder().create();
+
+  /**
+   * Documentation comments per notice class.
+   *
+   * <p>Loading them means opening a resource and parsing JSON, and the HTML report needs the
+   * comments of a notice class once per rendered notice. The result only depends on the class, so
+   * it is cached. A plain {@code ConcurrentHashMap} is enough: notice classes are loaded once and
+   * live for the lifetime of the process, and it behaves the same on any runtime.
+   *
+   * <p>The cached instances are shared by all callers and must be treated as read-only, even though
+   * {@link NoticeDocComments} is mutable.
+   */
+  private static final Map<Class<?>, NoticeDocComments> COMMENTS_CACHE = new ConcurrentHashMap<>();
 
   /**
    * Convenient function to find all notices in given packages and describe their fields.
@@ -127,6 +141,16 @@ public class NoticeSchemaGenerator {
   }
 
   public static NoticeDocComments loadComments(Class<?> noticeClass) {
+    // Read with get before computeIfAbsent: the latter locks the bin of an already cached
+    // class unless it happens to be the first entry of that bin, and this is called once per
+    // notice rendered in the report.
+    NoticeDocComments cached = COMMENTS_CACHE.get(noticeClass);
+    return cached != null
+        ? cached
+        : COMMENTS_CACHE.computeIfAbsent(noticeClass, NoticeSchemaGenerator::loadCommentsUncached);
+  }
+
+  private static NoticeDocComments loadCommentsUncached(Class<?> noticeClass) {
     String resourceName = NoticeDocComments.getResourceNameForClass(noticeClass);
     InputStream is = noticeClass.getResourceAsStream(resourceName);
     if (is == null) {
