@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 @RunWith(JUnit4.class)
@@ -81,6 +82,31 @@ public class GtfsInputTest {
 
     try (GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath(), noticeContainer)) {
       assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
+  }
+
+  @Test
+  public void createFromPath_detectsGtfsFileInSubfolder() throws IOException {
+    assertSubfolderNotice("subfolder.zip", "sub/stops.txt", true);
+    assertSubfolderNotice("flat.zip", "stops.txt", false);
+    assertSubfolderNotice("other.zip", "sub/readme.md", false);
+  }
+
+  private void assertSubfolderNotice(String zipName, String entryName, boolean expected)
+      throws IOException {
+    File zipFile = tmpDir.newFile(zipName);
+    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
+      out.putNextEntry(new ZipEntry(entryName));
+      out.closeEntry();
+    }
+    NoticeContainer notices = new NoticeContainer();
+    try (GtfsInput unused = GtfsInput.createFromPath(zipFile.toPath(), notices)) {
+      if (expected) {
+        assertThat(notices.getValidationNotices())
+            .containsExactly(new InvalidInputFilesInSubfolderNotice());
+      } else {
+        assertThat(notices.getValidationNotices()).isEmpty();
+      }
     }
   }
 
