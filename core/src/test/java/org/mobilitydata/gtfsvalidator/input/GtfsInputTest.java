@@ -44,9 +44,10 @@ public class GtfsInputTest {
       "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
           + "valid_zip_sample.zip";
 
-  // A ZIP file with compression level 0 ("STORE" method).
-  private final Path ZIP_STORE_METHOD_PATH =
-      Paths.get(getClass().getResource("stored_with_data_descriptor.zip").getPath());
+  public Path getZipStoreMethodPath() throws URISyntaxException {
+    // A ZIP file with compression level 0 ("STORE" method).
+    return Path.of(getClass().getResource("stored_with_data_descriptor.zip").toURI());
+  }
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
   NoticeContainer noticeContainer = new NoticeContainer();
@@ -163,9 +164,10 @@ public class GtfsInputTest {
   }
 
   @Test
-  public void createFromZipBytes_zipWithStoredMethod_success() throws IOException {
-    byte[] zipBytes = Files.readAllBytes(ZIP_STORE_METHOD_PATH);
-    String fileName = ZIP_STORE_METHOD_PATH.getFileName().toString().replace(".zip", "");
+  public void createFromZipBytes_zipWithStoredMethod_success() throws IOException, URISyntaxException {
+    Path zipStoreMethodPath = getZipStoreMethodPath();
+    byte[] zipBytes = Files.readAllBytes(zipStoreMethodPath);
+    String fileName = zipStoreMethodPath.getFileName().toString().replace(".zip", "");
     // This will throw if we don't handle ZIP files with compression
     // level 0 ("STORE" level) properly.
     try (GtfsInput underTest = GtfsInput.createFromZipBytes(zipBytes, fileName, noticeContainer)) {
@@ -182,7 +184,7 @@ public class GtfsInputTest {
   public void createFromPath_zipWithStoredMethod_success() {
     // This will throw if we don't handle ZIP files with compression
     // level 0 ("STORE" level) properly.
-    try (GtfsInput underTest = GtfsInput.createFromPath(ZIP_STORE_METHOD_PATH, noticeContainer)) {
+    try (GtfsInput underTest = GtfsInput.createFromPath(getZipStoreMethodPath(), noticeContainer)) {
       assertThat(underTest instanceof GtfsZipFileInput);
       // The archive contains two files; we check that they are accessible.
       underTest.getFile("agency.txt");
