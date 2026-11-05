@@ -46,10 +46,7 @@ public class GtfsInputTest {
 
   // A ZIP file with compression level 0 ("STORE" method).
   private final Path ZIP_STORE_METHOD_PATH =
-      Paths.get(
-          getClass()
-              .getResource("/org/mobilitydata/gtfsvalidator/input/stored_with_data_descriptor.zip")
-              .getPath());
+      Paths.get(getClass().getResource("stored_with_data_descriptor.zip").getPath());
 
   @Rule public final TemporaryFolder tmpDir = new TemporaryFolder();
   NoticeContainer noticeContainer = new NoticeContainer();
