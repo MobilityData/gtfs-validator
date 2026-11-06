@@ -24,12 +24,15 @@ import com.google.common.geometry.S2PointIndex;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsLevel;
+import org.mobilitydata.gtfsvalidator.table.GtfsLevelTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
@@ -38,7 +41,8 @@ import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
  * Validates that stops and stations in `stops.txt` are not closer than 2 meters to each other,
- * excluding points near the origin or poles.
+ * excluding points near the origin or poles and locations separated by vertical levels in
+ * `levels.txt`.
  *
  * <p>Generated notices:
  *
@@ -59,10 +63,13 @@ public class StopStationDistanceValidator extends FileValidator {
       S1Angle.radians(QUERY_BUFFER_METERS / S2Earth.getRadiusMeters());
 
   private final GtfsStopTableContainer stopTable;
+  private final GtfsLevelTableContainer levelTable;
 
   @Inject
-  StopStationDistanceValidator(GtfsStopTableContainer stopTable) {
+  StopStationDistanceValidator(
+      GtfsStopTableContainer stopTable, GtfsLevelTableContainer levelTable) {
     this.stopTable = stopTable;
+    this.levelTable = levelTable;
   }
 
   @Override
@@ -126,7 +133,10 @@ public class StopStationDistanceValidator extends FileValidator {
         || Math.abs(stop.stopLat()) >= POLE_LAT_THRESHOLD_DEGREES;
   }
 
-  private static void validatePair(GtfsStop loc1, GtfsStop loc2, NoticeContainer noticeContainer) {
+  private void validatePair(GtfsStop loc1, GtfsStop loc2, NoticeContainer noticeContainer) {
+    if (shouldIgnoreByLevel(loc1, loc2)) {
+      return;
+    }
     if (loc1.locationType() == GtfsLocationType.STATION
         && loc2.locationType() == GtfsLocationType.STATION) {
       noticeContainer.addValidationNotice(new StationsTooCloseNotice(loc1, loc2));
@@ -141,6 +151,35 @@ public class StopStationDistanceValidator extends FileValidator {
             new StopTooCloseToNonParentStationNotice(stop, station));
       }
     }
+  }
+
+  private boolean shouldIgnoreByLevel(GtfsStop loc1, GtfsStop loc2) {
+    if (levelTable == null
+        || levelTable.isMissingFile()
+        || !loc1.hasLevelId()
+        || !loc2.hasLevelId()) {
+      return false;
+    }
+    Optional<GtfsLevel> level1 = levelTable.byLevelId(loc1.levelId());
+    Optional<GtfsLevel> level2 = levelTable.byLevelId(loc2.levelId());
+    if (level1.isEmpty()
+        || level2.isEmpty()
+        || !level1.get().hasLevelIndex()
+        || !level2.get().hasLevelIndex()) {
+      return false;
+    }
+
+    double levelIndex1 = level1.get().levelIndex();
+    double levelIndex2 = level2.get().levelIndex();
+
+    if (loc1.hasParentStation() && loc1.parentStation().equals(loc2.parentStation())) {
+      return levelIndex1 != levelIndex2;
+    }
+
+    return (levelIndex1 >= 0 && levelIndex2 < 0)
+        || (levelIndex2 >= 0 && levelIndex1 < 0)
+        || (levelIndex1 <= 0 && levelIndex2 > 0)
+        || (levelIndex2 <= 0 && levelIndex1 > 0);
   }
 
   /**

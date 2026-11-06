@@ -27,9 +27,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
+import org.mobilitydata.gtfsvalidator.table.GtfsLevel;
+import org.mobilitydata.gtfsvalidator.table.GtfsLevelTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.table.TableStatus;
 import org.mobilitydata.gtfsvalidator.validator.StopStationDistanceValidator.StationsTooCloseNotice;
 import org.mobilitydata.gtfsvalidator.validator.StopStationDistanceValidator.StopTooCloseToNonParentStationNotice;
 import org.mobilitydata.gtfsvalidator.validator.StopStationDistanceValidator.StopsTooCloseNotice;
@@ -51,6 +54,18 @@ public class StopStationDistanceValidatorTest {
       @Nullable Double stopLat,
       @Nullable Double stopLon,
       @Nullable String parentStation) {
+    return createLocation(
+        csvRowNumber, stopId, locationType, stopLat, stopLon, parentStation, null);
+  }
+
+  private static GtfsStop createLocation(
+      int csvRowNumber,
+      String stopId,
+      GtfsLocationType locationType,
+      @Nullable Double stopLat,
+      @Nullable Double stopLon,
+      @Nullable String parentStation,
+      @Nullable String levelId) {
     return new GtfsStop.Builder()
         .setCsvRowNumber(csvRowNumber)
         .setStopId(stopId)
@@ -58,12 +73,33 @@ public class StopStationDistanceValidatorTest {
         .setStopLat(stopLat)
         .setStopLon(stopLon)
         .setParentStation(parentStation)
+        .setLevelId(levelId)
+        .build();
+  }
+
+  private static GtfsLevel createLevel(int csvRowNumber, String levelId, double levelIndex) {
+    return new GtfsLevel.Builder()
+        .setCsvRowNumber(csvRowNumber)
+        .setLevelId(levelId)
+        .setLevelIndex(levelIndex)
         .build();
   }
 
   private static List<ValidationNotice> generateNotices(List<GtfsStop> stops) {
     NoticeContainer noticeContainer = new NoticeContainer();
-    new StopStationDistanceValidator(GtfsStopTableContainer.forEntities(stops, noticeContainer))
+    new StopStationDistanceValidator(
+            GtfsStopTableContainer.forEntities(stops, noticeContainer),
+            GtfsLevelTableContainer.forStatus(TableStatus.MISSING_FILE))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  private static List<ValidationNotice> generateNotices(
+      List<GtfsStop> stops, List<GtfsLevel> levels) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    new StopStationDistanceValidator(
+            GtfsStopTableContainer.forEntities(stops, noticeContainer),
+            GtfsLevelTableContainer.forEntities(levels, noticeContainer))
         .validate(noticeContainer);
     return noticeContainer.getValidationNotices();
   }
@@ -294,5 +330,218 @@ public class StopStationDistanceValidatorTest {
         new StopTooCloseToNonParentStationNotice(nonChildStop, station1).toString();
     assertThat(stopStationJson).contains("\"stopCsvRowNumber\":50");
     assertThat(stopStationJson).contains("\"stationCsvRowNumber\":10");
+  }
+
+  @Test
+  public void levelsFileMissing_withDifferentLevelIds_generatesNotice() {
+    GtfsStop stop1 =
+        createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "level0");
+    GtfsStop stop2 =
+        createLocation(
+            3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "station1", "level_neg2");
+
+    assertThat(generateNotices(ImmutableList.of(stop1, stop2)))
+        .containsExactly(new StopsTooCloseNotice(stop1, stop2));
+  }
+
+  @Test
+  public void sameStation_differentLevels_noNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(
+            createLevel(2, "ground", 0.0),
+            createLevel(3, "sub1", -1.0),
+            createLevel(4, "sub2", -2.0),
+            createLevel(5, "elev1", 1.0),
+            createLevel(6, "elev2", 2.0));
+    GtfsStop streetStop =
+        createLocation(
+            2, "stop_ground", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "ground");
+    GtfsStop sub1Stop =
+        createLocation(
+            3, "stop_sub1", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "station1", "sub1");
+    GtfsStop sub2Stop =
+        createLocation(
+            4, "stop_sub2", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "sub2");
+    GtfsStop elev1Stop =
+        createLocation(
+            5, "stop_elev1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "elev1");
+    GtfsStop elev2Stop =
+        createLocation(
+            6, "stop_elev2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "station1", "elev2");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(streetStop, sub1Stop, sub2Stop, elev1Stop, elev2Stop), levels))
+        .isEmpty();
+  }
+
+  @Test
+  public void sameStation_sameLevel_generatesNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(createLevel(2, "sub1_a", -1.0), createLevel(3, "sub1_b", -1.0));
+    GtfsStop stop1 =
+        createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "sub1_a");
+    GtfsStop stop2 =
+        createLocation(
+            3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "station1", "sub1_b");
+
+    assertThat(generateNotices(ImmutableList.of(stop1, stop2), levels))
+        .containsExactly(new StopsTooCloseNotice(stop1, stop2));
+  }
+
+  @Test
+  public void differentStations_nonNegativeAndNegativeLevels_noNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(
+            createLevel(2, "ground", 0.0),
+            createLevel(3, "elev1", 1.0),
+            createLevel(4, "sub2", -2.0));
+    GtfsStop groundStopStationA =
+        createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "stationA", "ground");
+    GtfsStop undergroundStopStationB =
+        createLocation(3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "stationB", "sub2");
+    GtfsStop elevatedStandaloneStop =
+        createLocation(4, "stop3", GtfsLocationType.STOP, FAR_LAT, BASE_LON, null, "elev1");
+    GtfsStop undergroundStandaloneStop =
+        createLocation(
+            5, "stop4", GtfsLocationType.STOP, FAR_LAT + 0.00001, BASE_LON, null, "sub2");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    groundStopStationA,
+                    undergroundStopStationB,
+                    elevatedStandaloneStop,
+                    undergroundStandaloneStop),
+                levels))
+        .isEmpty();
+  }
+
+  @Test
+  public void differentStations_nonPositiveAndPositiveLevels_noNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(createLevel(2, "ground", 0.0), createLevel(3, "elev1", 1.0));
+    GtfsStop groundStopStationA =
+        createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "stationA", "ground");
+    GtfsStop elevatedStopStationB =
+        createLocation(3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "stationB", "elev1");
+
+    assertThat(generateNotices(ImmutableList.of(groundStopStationA, elevatedStopStationB), levels))
+        .isEmpty();
+  }
+
+  @Test
+  public void differentStations_bothUndergroundOrBothOverground_generatesNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(
+            createLevel(2, "sub1", -1.0),
+            createLevel(3, "sub2", -2.0),
+            createLevel(4, "ground", 0.0),
+            createLevel(5, "elev1", 1.0),
+            createLevel(6, "elev2", 2.0));
+    // Different stations, both strictly negative (-1 and -2).
+    GtfsStop subStopA =
+        createLocation(2, "subA", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "stationA", "sub1");
+    GtfsStop subStopB =
+        createLocation(3, "subB", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "stationB", "sub2");
+    // Standalone stops (no parent_station), both strictly negative (-1 and -2): must NOT be treated
+    // as belonging to the same station.
+    GtfsStop standaloneSub1 =
+        createLocation(
+            4, "standaloneSub1", GtfsLocationType.STOP, BASE_LAT + 0.001, BASE_LON, null, "sub1");
+    GtfsStop standaloneSub2 =
+        createLocation(
+            5, "standaloneSub2", GtfsLocationType.STOP, BASE_LAT + 0.00101, BASE_LON, null, "sub2");
+    // Different stations, both at ground level (0 and 0).
+    GtfsStop groundStopA =
+        createLocation(
+            6, "groundA", GtfsLocationType.STOP, BASE_LAT + 0.002, BASE_LON, "stationA", "ground");
+    GtfsStop groundStopB =
+        createLocation(
+            7,
+            "groundB",
+            GtfsLocationType.STOP,
+            BASE_LAT + 0.00201,
+            BASE_LON,
+            "stationB",
+            "ground");
+    // Different stations, both strictly positive (1 and 2).
+    GtfsStop elevStopA =
+        createLocation(
+            8, "elevA", GtfsLocationType.STOP, BASE_LAT + 0.003, BASE_LON, "stationA", "elev1");
+    GtfsStop elevStopB =
+        createLocation(
+            9, "elevB", GtfsLocationType.STOP, BASE_LAT + 0.00301, BASE_LON, "stationB", "elev2");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    subStopA,
+                    subStopB,
+                    standaloneSub1,
+                    standaloneSub2,
+                    groundStopA,
+                    groundStopB,
+                    elevStopA,
+                    elevStopB),
+                levels))
+        .containsExactly(
+            new StopsTooCloseNotice(subStopA, subStopB),
+            new StopsTooCloseNotice(standaloneSub1, standaloneSub2),
+            new StopsTooCloseNotice(groundStopA, groundStopB),
+            new StopsTooCloseNotice(elevStopA, elevStopB));
+  }
+
+  @Test
+  public void stackedStationsAndStops_separatedByLevels_noNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(
+            createLevel(2, "ground", 0.0),
+            createLevel(3, "sub1", -1.0),
+            createLevel(4, "sub2", -2.0));
+    GtfsStop overgroundStation =
+        createLocation(
+            2, "station_tgv", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null, "ground");
+    GtfsStop undergroundStation =
+        createLocation(
+            3, "station_metro", GtfsLocationType.STATION, CLOSE_LAT, BASE_LON, null, "sub1");
+    GtfsStop metroStop =
+        createLocation(
+            4, "stop_metro", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_metro", "sub2");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(overgroundStation, undergroundStation, metroStop), levels))
+        .isEmpty();
+  }
+
+  @Test
+  public void missingOrUnresolvedLevelId_generatesNotice() {
+    ImmutableList<GtfsLevel> levels =
+        ImmutableList.of(createLevel(2, "ground", 0.0), createLevel(3, "sub2", -2.0));
+    GtfsStop stopWithLevel =
+        createLocation(2, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station1", "ground");
+    GtfsStop stopWithoutLevel =
+        createLocation(3, "stop2", GtfsLocationType.STOP, CLOSE_LAT, BASE_LON, "station1", null);
+    GtfsStop stopWithValidLevel =
+        createLocation(4, "stop3", GtfsLocationType.STOP, FAR_LAT, BASE_LON, "station1", "sub2");
+    GtfsStop stopWithUnknownLevel =
+        createLocation(
+            5,
+            "stop4",
+            GtfsLocationType.STOP,
+            FAR_LAT + 0.00001,
+            BASE_LON,
+            "station1",
+            "unknown_level");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    stopWithLevel, stopWithoutLevel, stopWithValidLevel, stopWithUnknownLevel),
+                levels))
+        .containsExactly(
+            new StopsTooCloseNotice(stopWithLevel, stopWithoutLevel),
+            new StopsTooCloseNotice(stopWithValidLevel, stopWithUnknownLevel));
   }
 }
