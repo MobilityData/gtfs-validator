@@ -166,7 +166,7 @@ public class FeedMetadata {
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(
-      GtfsEntityContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
+      GtfsEntityContainer<?> table, Class<E> clazz, Function<E, String> idExtractor) {
     // Iterate through entities and count unique IDs
     Set<String> uniqueIds = new HashSet<>();
     for (GtfsEntity entity : table.getEntities()) {
@@ -452,10 +452,10 @@ public class FeedMetadata {
     return feedContainer
         .getTableForFilename(GtfsStopTime.FILENAME)
         .map(table -> (GtfsStopTimeTableContainer) table)
-        .map(GtfsStopTimeTableContainer::byTripIdMap)
+        .map(GtfsStopTimeTableContainer::byTripIdAsMap)
         .map(
             byTripIdMap ->
-                byTripIdMap.asMap().values().stream()
+                byTripIdMap.values().stream()
                     .anyMatch(
                         gtfsStopTimes -> {
                           boolean hasTripId = false,
@@ -702,8 +702,7 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(
-      GtfsEntityContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
+  private void loadAgencyData(GtfsEntityContainer<GtfsAgency> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(
           new AgencyMetadata(
