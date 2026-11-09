@@ -90,6 +90,23 @@ public class GtfsInputTest {
     assertSubfolderNotice("other.zip", "sub/readme.md", false);
   }
 
+  @Test
+  public void createFromPath_rootDirectoryEntry_isIgnored() throws IOException {
+    // A zip made by some tools starts with a directory entry named "/" (the archive root).
+    File zipFile = tmpDir.newFile("root-dir-entry.zip");
+    try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile))) {
+      out.putNextEntry(new ZipEntry("/"));
+      out.closeEntry();
+      out.putNextEntry(new ZipEntry("stops.txt"));
+      out.closeEntry();
+    }
+    NoticeContainer notices = new NoticeContainer();
+    try (GtfsInput input = GtfsInput.createFromPath(zipFile.toPath(), notices)) {
+      assertThat(notices.getValidationNotices()).isEmpty();
+      assertThat(input.getFilenames()).contains("stops.txt");
+    }
+  }
+
   private void assertSubfolderNotice(String zipName, String entryName, boolean expected)
       throws IOException {
     File zipFile = tmpDir.newFile(zipName);
