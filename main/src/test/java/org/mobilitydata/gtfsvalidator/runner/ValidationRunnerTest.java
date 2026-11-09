@@ -83,7 +83,7 @@ public class ValidationRunnerTest {
   public void printSummary_tableTotalsOverload_logsSameOutputAsFeedContainerOverload() {
     GtfsFeedContainer feedContainer =
         new GtfsFeedContainer(
-            ImmutableList.<GtfsEntityContainer<?, ?>>of(
+            ImmutableList.<GtfsEntityContainer<?>>of(
                 GtfsStopTimeTableContainer.forEntities(ImmutableList.of(), new NoticeContainer())));
     FeedMetadata feedMetadata = FeedMetadata.from(feedContainer, ImmutableSet.of());
     feedMetadata.validationTimeSeconds = 1.5;

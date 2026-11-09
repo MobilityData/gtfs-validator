@@ -19,7 +19,6 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.ARRIVAL_TIME_FIELD_NAME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsStopTime.DEPARTURE_TIME_FIELD_NAME;
 
-import com.google.common.collect.Multimaps;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.inject.Inject;
@@ -50,8 +49,7 @@ public class MissingTripEdgeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (Entry<String, List<GtfsStopTime>> entry :
-        Multimaps.asMap(stopTimeTable.byTripIdMap()).entrySet()) {
+    for (Entry<String, List<GtfsStopTime>> entry : stopTimeTable.byTripIdAsMap().entrySet()) {
       String tripId = entry.getKey();
       List<GtfsStopTime> stopTimesForTrip = entry.getValue();
       GtfsStopTime tripFirstStop = stopTimesForTrip.get(0);

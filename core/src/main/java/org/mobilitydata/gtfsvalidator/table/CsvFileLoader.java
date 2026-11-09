@@ -8,7 +8,6 @@ import com.univocity.parsers.csv.CsvParserSettings;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public final class CsvFileLoader extends TableLoader {
   private final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   @Override
-  public GtfsEntityContainer<?, ?> load(
+  public GtfsEntityContainer<?> load(
       GtfsFileDescriptor fileDescriptor,
       ValidatorProvider validatorProvider,
       InputStream csvInputStream,
@@ -99,17 +98,20 @@ public final class CsvFileLoader extends TableLoader {
       final GtfsEntityBuilder builder = tableDescriptor.createEntityBuilder();
       final RowParser rowParser =
           new RowParser(gtfsFilename, header, validatorProvider.getFieldValidator());
-      final List<GtfsEntity> entities = new ArrayList<>();
+      final List<GtfsEntity> entities = tableDescriptor.createEntityList();
       boolean hasUnparsableRows = false;
       final List<SingleEntityValidator<GtfsEntity>> singleEntityValidators =
           createSingleEntityValidators(tableDescriptor.getEntityClass(), header, validatorProvider);
 
+      // One container reused for every row instead of one per row: on a file with millions of
+      // rows that is a few million containers, each with its own lists and map, of pure garbage.
+      final NoticeContainer rowNotices = new NoticeContainer();
       try {
         for (CsvRow row : csvFile) {
           if (row.getRowNumber() % 200000 == 0) {
             logger.atInfo().log("Reading %s, row %d", gtfsFilename, row.getRowNumber());
           }
-          NoticeContainer rowNotices = new NoticeContainer();
+          rowNotices.reset();
           rowParser.setRow(row, rowNotices);
           if (!rowParser.checkRowNumber()) {
             hasUnparsableRows = true;
