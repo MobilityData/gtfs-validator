@@ -67,4 +67,35 @@ public class S2Earth {
   public static double getRadiusMeters() {
     return 6371010.0;
   }
+
+  /**
+   * Maximum absolute latitude and longitude, in degrees, for a point to be considered near the
+   * origin (0, 0). Used for {@code PointNearOriginNotice}.
+   */
+  public static final double ORIGIN_THRESHOLD_DEGREES = 1.0;
+
+  /**
+   * Minimum absolute latitude, in degrees, for a point to be considered near a pole. Used for
+   * {@code PointNearPoleNotice}.
+   */
+  public static final double POLE_LAT_THRESHOLD_DEGREES = 89.0;
+
+  /** Returns true if both {@code |lat|} and {@code |lon|} are within 1 degree of 0. */
+  public static boolean isNearOrigin(double lat, double lon) {
+    return Math.abs(lat) <= ORIGIN_THRESHOLD_DEGREES && Math.abs(lon) <= ORIGIN_THRESHOLD_DEGREES;
+  }
+
+  /** Returns true if {@code |lat|} is at least 89 degrees. */
+  public static boolean isNearPole(double lat) {
+    return Math.abs(lat) >= POLE_LAT_THRESHOLD_DEGREES;
+  }
+
+  /**
+   * Returns true if the point is near the origin or near one of the poles, i.e. it would be
+   * reported by {@code PointNearOriginNotice} or {@code PointNearPoleNotice}. Validators comparing
+   * coordinates with each other can use this to skip points that are already reported as invalid.
+   */
+  public static boolean isNearOriginOrPole(double lat, double lon) {
+    return isNearOrigin(lat, lon) || isNearPole(lat);
+  }
 }

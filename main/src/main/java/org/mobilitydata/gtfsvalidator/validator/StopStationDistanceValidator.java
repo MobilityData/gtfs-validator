@@ -37,7 +37,6 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
-import org.mobilitydata.gtfsvalidator.util.CoordinateUtil;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
@@ -120,7 +119,7 @@ public class StopStationDistanceValidator extends FileValidator {
 
   private static boolean isStopOrStationWithCoordinates(GtfsStop stop) {
     return stop.hasStopLatLon()
-        && !CoordinateUtil.isNearOriginOrPole(stop.stopLat(), stop.stopLon())
+        && !S2Earth.isNearOriginOrPole(stop.stopLat(), stop.stopLon())
         && (stop.locationType() == GtfsLocationType.STOP
             || stop.locationType() == GtfsLocationType.STATION);
   }

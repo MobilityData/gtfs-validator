@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PointNearOriginNotice;
 import org.mobilitydata.gtfsvalidator.notice.PointNearPoleNotice;
-import org.mobilitydata.gtfsvalidator.util.CoordinateUtil;
+import org.mobilitydata.gtfsvalidator.util.S2Earth;
 import org.mobilitydata.gtfsvalidator.validator.SingleEntityValidator;
 
 /**
@@ -97,7 +97,7 @@ public class LatLonValidatorGenerator {
     validateMethod
         .beginControlFlow(
             "if ($T.isNearOrigin(entity.$L(), entity.$L()))",
-            CoordinateUtil.class,
+            S2Earth.class,
             latLonDescriptor.latField(),
             latLonDescriptor.lonField())
         .addStatement(
@@ -108,7 +108,7 @@ public class LatLonValidatorGenerator {
 
     validateMethod
         .beginControlFlow(
-            "if ($T.isNearPole(entity.$L()))", CoordinateUtil.class, latLonDescriptor.latField())
+            "if ($T.isNearPole(entity.$L()))", S2Earth.class, latLonDescriptor.latField())
         .addStatement(
             "noticeContainer.addValidationNotice(new $T($L))",
             PointNearPoleNotice.class,
