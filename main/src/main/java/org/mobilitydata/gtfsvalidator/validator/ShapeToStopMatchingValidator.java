@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Multimaps;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
@@ -126,7 +125,7 @@ public class ShapeToStopMatchingValidator extends FileValidator {
         || shapeTable.getEntities().isEmpty()) {
       return;
     }
-    for (List<GtfsShape> gtfsShapePoints : Multimaps.asMap(shapeTable.byShapeIdMap()).values()) {
+    for (List<GtfsShape> gtfsShapePoints : shapeTable.byShapeIdAsMap().values()) {
       List<GtfsTrip> trips = tripTable.byShapeId(gtfsShapePoints.get(0).shapeId());
       if (trips.isEmpty()) {
         continue;
