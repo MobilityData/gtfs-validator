@@ -37,6 +37,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.util.CoordinateUtil;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
@@ -57,8 +58,6 @@ public class StopStationDistanceValidator extends FileValidator {
 
   static final double DISTANCE_THRESHOLD_METERS = 2.0;
   private static final double QUERY_BUFFER_METERS = 2.1;
-  private static final double ORIGIN_THRESHOLD_DEGREES = 1.0;
-  private static final double POLE_LAT_THRESHOLD_DEGREES = 89.0;
   private static final S1Angle MAX_QUERY_DISTANCE =
       S1Angle.radians(QUERY_BUFFER_METERS / S2Earth.getRadiusMeters());
 
@@ -121,16 +120,9 @@ public class StopStationDistanceValidator extends FileValidator {
 
   private static boolean isStopOrStationWithCoordinates(GtfsStop stop) {
     return stop.hasStopLatLon()
-        && !isNearOriginOrPole(stop)
+        && !CoordinateUtil.isNearOriginOrPole(stop.stopLat(), stop.stopLon())
         && (stop.locationType() == GtfsLocationType.STOP
             || stop.locationType() == GtfsLocationType.STATION);
-  }
-
-  // Matches the bounds used for PointNearOriginNotice and PointNearPoleNotice.
-  private static boolean isNearOriginOrPole(GtfsStop stop) {
-    return (Math.abs(stop.stopLat()) <= ORIGIN_THRESHOLD_DEGREES
-            && Math.abs(stop.stopLon()) <= ORIGIN_THRESHOLD_DEGREES)
-        || Math.abs(stop.stopLat()) >= POLE_LAT_THRESHOLD_DEGREES;
   }
 
   private void validatePair(GtfsStop loc1, GtfsStop loc2, NoticeContainer noticeContainer) {
