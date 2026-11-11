@@ -110,10 +110,8 @@ public class ValidationRunner {
     }
     GtfsFeedLoader feedLoader = new GtfsFeedLoader(ClassGraphDiscovery.discoverTables());
 
-    if (!config.quietLogs()) {
-      logger.atInfo().log("validation config:\n%s", config);
-      logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
-    }
+    logger.atInfo().log("validation config:\n%s", config);
+    logger.atInfo().log("validators:\n%s", validatorLoader.listValidators());
 
     // Loads the tracker before the timer starts: its one-time setup would otherwise add a fixed
     // cost to every validation time, which shows as a regression on small feeds.
@@ -308,13 +306,11 @@ public class ValidationRunner {
       logger.atWarning().log(b.toString());
     }
 
-    if (!config.quietLogs()) {
-      logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
-      if (feedMetadata.performanceMetrics != null) {
-        logger.atInfo().log(feedMetadata.performanceMetrics.humanReadablePrint());
-      }
-      logger.atInfo().log(tableTotals);
+    logger.atInfo().log("Validation took %.3f seconds%n", feedMetadata.validationTimeSeconds);
+    if (feedMetadata.performanceMetrics != null) {
+      logger.atInfo().log(feedMetadata.performanceMetrics.humanReadablePrint());
     }
+    logger.atInfo().log(tableTotals);
   }
 
   /**
