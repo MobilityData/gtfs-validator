@@ -96,7 +96,7 @@ public abstract class ValidationRunnerConfig {
         .setDateForValidation(LocalDate.now())
         .setSkipValidatorUpdate(false)
         .setStdoutOutput(false)
-        .setHttpHeaders(ImmutableMap.of());
+        .setHttpHeaders(ImmutableMap.of())
         .setQuietLogs(false);
   }
 

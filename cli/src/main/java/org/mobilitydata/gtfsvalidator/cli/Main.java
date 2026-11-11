@@ -65,6 +65,10 @@ public class Main {
         }
       }
 
+      if (args.getQuietLogs()) {
+        java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.WARNING);
+      }
+
       ValidationRunner runner = new ValidationRunner(new VersionResolver(ApplicationType.CLI));
       if (runner.run(args.toConfig()) != ValidationRunner.Status.SUCCESS) {
         System.exit(-1);
