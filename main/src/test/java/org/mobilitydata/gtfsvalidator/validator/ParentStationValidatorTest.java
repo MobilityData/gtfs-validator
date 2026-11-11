@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.time.ZoneId;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.ParentStationMissingTimezoneNotice;
 import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.UnusedStationNotice;
 import org.mobilitydata.gtfsvalidator.validator.ParentStationValidator.WrongParentLocationTypeNotice;
 
@@ -186,6 +188,55 @@ public class ParentStationValidatorTest {
         .validate(noticeContainer);
     assertThat(noticeContainer.getValidationNotices())
         .containsExactly(new UnusedStationNotice(2, "unused_station", "Unused station"));
+  }
+
+  private List<ValidationNotice> validateTimezones(ZoneId childTimezone, ZoneId parentTimezone) {
+    NoticeContainer noticeContainer = new NoticeContainer();
+    GtfsStop.Builder child =
+        new GtfsStop.Builder()
+            .setCsvRowNumber(1)
+            .setStopId("child")
+            .setLocationType(GtfsLocationType.STOP)
+            .setParentStation("parent");
+    GtfsStop.Builder parent =
+        new GtfsStop.Builder()
+            .setCsvRowNumber(2)
+            .setStopId("parent")
+            .setLocationType(GtfsLocationType.STATION);
+    if (childTimezone != null) {
+      child.setStopTimezone(childTimezone);
+    }
+    if (parentTimezone != null) {
+      parent.setStopTimezone(parentTimezone);
+    }
+    new ParentStationValidator(
+            GtfsStopTableContainer.forEntities(
+                ImmutableList.of(child.build(), parent.build()), noticeContainer))
+        .validate(noticeContainer);
+    return noticeContainer.getValidationNotices();
+  }
+
+  @Test
+  public void childTimezone_parentWithoutTimezone_yieldsNotice() {
+    assertThat(validateTimezones(ZoneId.of("America/Montreal"), null))
+        .containsExactly(
+            new ParentStationMissingTimezoneNotice(1, "child", "America/Montreal", 2, "parent"));
+  }
+
+  @Test
+  public void childAndParentTimezones_noNotice() {
+    assertThat(validateTimezones(ZoneId.of("America/Montreal"), ZoneId.of("America/Toronto")))
+        .isEmpty();
+  }
+
+  @Test
+  public void parentTimezoneOnly_noNotice() {
+    assertThat(validateTimezones(null, ZoneId.of("America/Toronto"))).isEmpty();
+  }
+
+  @Test
+  public void noTimezones_noNotice() {
+    assertThat(validateTimezones(null, null)).isEmpty();
   }
 
   @Test
