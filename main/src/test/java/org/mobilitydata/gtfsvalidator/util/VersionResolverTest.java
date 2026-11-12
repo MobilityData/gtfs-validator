@@ -120,6 +120,7 @@ public class VersionResolverTest {
 
     assertThat(first.resolveCurrentVersion()).hasValue(expectedVersion);
     assertThat(second.resolveCurrentVersion()).hasValue(expectedVersion);
+    assertThat(second.resolveCurrentVersion()).isSameInstanceAs(first.resolveCurrentVersion());
   }
 
   @Test
