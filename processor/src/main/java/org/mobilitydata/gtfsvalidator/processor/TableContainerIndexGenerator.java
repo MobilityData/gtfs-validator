@@ -359,7 +359,7 @@ class TableContainerIndexGenerator {
     return method.build();
   }
 
-  private CodeBlock wrapStringAccessorWithTypeConversion(
+  static CodeBlock wrapStringAccessorWithTypeConversion(
       GtfsFieldDescriptor field, CodeBlock accessor) {
     switch (field.type()) {
       case INTEGER:

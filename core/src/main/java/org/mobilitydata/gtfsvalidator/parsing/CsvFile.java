@@ -49,6 +49,9 @@ public class CsvFile implements Iterable<CsvRow> {
     // Explicitly disable trimming of whitespaces because we will emit notices for them.
     settings.setIgnoreLeadingWhitespacesInQuotes(false);
     settings.setIgnoreTrailingWhitespacesInQuotes(false);
+    // Univocity reads on its own thread when several CPUs are available, which costs a thread and
+    // two buffers of the input buffer size per open file.
+    settings.setReadInputOnSeparateThread(false);
     return settings;
   }
 
