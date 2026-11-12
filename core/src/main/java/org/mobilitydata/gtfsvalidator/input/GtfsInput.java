@@ -73,6 +73,10 @@ public abstract class GtfsInput implements Closeable {
     while (entries.hasMoreElements()) {
       ZipArchiveEntry entry = entries.nextElement();
       String[] nameParts = entry.getName().split("/");
+      // Some zip tools add a root directory entry named "/". It has no file name to check.
+      if (nameParts.length == 0) {
+        continue;
+      }
       boolean isInSubfolder = nameParts.length > 1;
       boolean isGtfsFile = GtfsFiles.containsGtfsFile(nameParts[nameParts.length - 1]);
       if (isInSubfolder && isGtfsFile) {

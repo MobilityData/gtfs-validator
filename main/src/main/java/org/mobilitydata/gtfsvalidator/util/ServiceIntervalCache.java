@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.util;
 
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -85,6 +86,12 @@ public class ServiceIntervalCache {
     // Phase 1: calendar.txt
     if (calendarTable != null) {
       for (GtfsCalendar calendar : calendarTable.getEntities()) {
+        LocalDate start = calendar.startDate().getLocalDate();
+        LocalDate end = calendar.endDate().getLocalDate();
+        if (start.isAfter(end)) {
+          // Reported separately as start_and_end_range_out_of_order; skip it here.
+          continue;
+        }
         ServiceInterval interval =
             mutable.computeIfAbsent(calendar.serviceId(), id -> new ServiceInterval());
         byte pattern =
@@ -96,8 +103,7 @@ public class ServiceIntervalCache {
                 calendar.friday().getNumber(),
                 calendar.saturday().getNumber(),
                 calendar.sunday().getNumber());
-        interval.addInterval(
-            calendar.startDate().getLocalDate(), calendar.endDate().getLocalDate(), pattern);
+        interval.addInterval(start, end, pattern);
       }
     }
 
