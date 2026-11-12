@@ -41,7 +41,7 @@ jobs:
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           # We need to download all tags so that the axion-release-plugin
           # can resolve the most recent version tag.
