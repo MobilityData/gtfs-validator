@@ -65,9 +65,6 @@ public class TransferWalkingSpeedValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer notices) {
-    if (!shouldCallValidate()) {
-      return;
-    }
     for (GtfsTransfer transfer : transfers.getEntities()) {
       if (!transfer.hasFromStopId()
           || transfer.fromStopId().isEmpty()

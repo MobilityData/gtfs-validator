@@ -454,17 +454,9 @@ public class TransferWalkingSpeedValidatorTest {
         new NoticeContainer());
   }
 
-  // Checks that invalid input is skipped safely.
+  // Checks that invalid input is skipped by the framework.
   private static void assertValidatorSkipped(
       GtfsTransferTableContainer transfers, GtfsStopTableContainer stops) {
-
-    TransferWalkingSpeedValidator validator = new TransferWalkingSpeedValidator(transfers, stops);
-
-    assertThat(validator.shouldCallValidate()).isFalse();
-
-    NoticeContainer notices = new NoticeContainer();
-    validator.validate(notices);
-
-    assertThat(notices.getValidationNotices()).isEmpty();
+    assertThat(new TransferWalkingSpeedValidator(transfers, stops).shouldCallValidate()).isFalse();
   }
 }
