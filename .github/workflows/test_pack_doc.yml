@@ -10,7 +10,9 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    # The matrix keeps the 'ubuntu-latest' label because job names, and so the required status
+    # checks on master, are derived from it. The runner itself is pinned to Ubuntu 24.04.
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     strategy:
       matrix:
         java_version: [ '17' ]
@@ -37,7 +39,9 @@ jobs:
 
   package:
     needs: [test]
-    runs-on: ${{ matrix.os }}
+    # The matrix keeps the 'ubuntu-latest' label because job names, and so the required status
+    # checks on master, are derived from it. The runner itself is pinned to Ubuntu 24.04.
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     strategy:
       matrix:
         java_version: [ '17' ]
@@ -63,7 +67,9 @@ jobs:
 
   doc:
     needs: [test]
-    runs-on: ${{ matrix.os }}
+    # The matrix keeps the 'ubuntu-latest' label because job names, and so the required status
+    # checks on master, are derived from it. The runner itself is pinned to Ubuntu 24.04.
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     strategy:
       matrix:
         java_version: [ '17' ]

@@ -34,7 +34,9 @@ jobs:
 
   build_push:
     name: Build and upload packaged app
-    runs-on: ${{ matrix.os }}
+    # The matrix keeps the 'ubuntu-latest' label because job names, and so the required status
+    # checks on master, are derived from it. The runner itself is pinned to Ubuntu 24.04.
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     strategy:
       # Adding fail-fast: false so at least some artifacts gets uploaded if others fail
       fail-fast: false
