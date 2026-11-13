@@ -54,4 +54,39 @@ public class S2EarthTest {
         .isWithin(Math.ulp(expected))
         .of(expected);
   }
+
+  @Test
+  public void isNearOrigin() {
+    assertThat(S2Earth.isNearOrigin(0.0, 0.0)).isTrue();
+    assertThat(S2Earth.isNearOrigin(1.0, 1.0)).isTrue();
+    assertThat(S2Earth.isNearOrigin(-1.0, -1.0)).isTrue();
+    assertThat(S2Earth.isNearOrigin(0.5, -0.5)).isTrue();
+
+    assertThat(S2Earth.isNearOrigin(1.0001, 0.0)).isFalse();
+    assertThat(S2Earth.isNearOrigin(0.0, -1.0001)).isFalse();
+    assertThat(S2Earth.isNearOrigin(0.5, 30.0)).isFalse();
+    assertThat(S2Earth.isNearOrigin(45.5, -73.6)).isFalse();
+  }
+
+  @Test
+  public void isNearPole() {
+    assertThat(S2Earth.isNearPole(89.0)).isTrue();
+    assertThat(S2Earth.isNearPole(-89.0)).isTrue();
+    assertThat(S2Earth.isNearPole(90.0)).isTrue();
+    assertThat(S2Earth.isNearPole(-90.0)).isTrue();
+
+    assertThat(S2Earth.isNearPole(88.9999)).isFalse();
+    assertThat(S2Earth.isNearPole(-88.9999)).isFalse();
+    assertThat(S2Earth.isNearPole(0.0)).isFalse();
+  }
+
+  @Test
+  public void isNearOriginOrPole() {
+    assertThat(S2Earth.isNearOriginOrPole(0.0, 0.0)).isTrue();
+    assertThat(S2Earth.isNearOriginOrPole(89.5, 120.0)).isTrue();
+    assertThat(S2Earth.isNearOriginOrPole(-89.5, -120.0)).isTrue();
+
+    assertThat(S2Earth.isNearOriginOrPole(45.5, -73.6)).isFalse();
+    assertThat(S2Earth.isNearOriginOrPole(0.5, 30.0)).isFalse();
+  }
 }

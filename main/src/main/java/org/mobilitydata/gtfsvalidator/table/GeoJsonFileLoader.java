@@ -12,6 +12,7 @@ import java.util.Map;
 import org.locationtech.jts.geom.*;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.notice.GeoJsonDuplicatedElementNotice;
+import org.mobilitydata.gtfsvalidator.util.S2Earth;
 import org.mobilitydata.gtfsvalidator.util.geojson.*;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorProvider;
 
@@ -285,7 +286,7 @@ public class GeoJsonFileLoader extends TableLoader {
         JsonArray point = coordinates.get(i).getAsJsonArray().get(j).getAsJsonArray();
         double lon = point.get(0).getAsDouble();
         double lat = point.get(1).getAsDouble();
-        if (Math.abs(lon) <= 1 && Math.abs(lat) <= 1) {
+        if (S2Earth.isNearOrigin(lat, lon)) {
           noticeContainer.addValidationNotice(
               new PointNearOriginNotice(
                   GtfsGeoJsonFeature.FILENAME,
@@ -293,7 +294,7 @@ public class GeoJsonFileLoader extends TableLoader {
                   lat,
                   lon,
                   featureIndex));
-        } else if (Math.abs(lat) >= 89) {
+        } else if (S2Earth.isNearPole(lat)) {
           noticeContainer.addValidationNotice(
               new PointNearPoleNotice(
                   GtfsGeoJsonFeature.FILENAME,
