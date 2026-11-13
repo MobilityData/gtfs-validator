@@ -20,7 +20,9 @@ plugins {
     alias(libs.plugins.shadow.jar)
 }
 
-mainClassName = 'org.mobilitydata.gtfsvalidator.app.gui.Main'
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.app.gui.Main'
+}
 
 dependencies {
     implementation project(':core')

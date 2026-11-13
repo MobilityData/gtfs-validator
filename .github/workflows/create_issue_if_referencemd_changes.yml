@@ -7,7 +7,7 @@ on:
 jobs:
   fetch-and-create-pr:
     if: github.repository_owner == 'MobilityData'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
 
@@ -43,7 +43,7 @@ jobs:
 
       - name: Fetch commits and process JSON
         id: process_json
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9.0.0
         with:
           github-token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }}
           script: |
@@ -103,11 +103,15 @@ jobs:
 
       - name: Create Issue
         if: steps.process_json.outputs.condition_met == 'true'
-        uses: dacbd/create-issue-action@main
-        with:
-          token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }}
-          title: ${{ steps.dates.outputs.today }} — ${{ steps.process_json.outputs.commits_length }} new commit(s) made to `reference.md` in Google Transit's repo
-          body: |
-            ${{ steps.process_json.outputs.extracted_data }}
-          labels: 'status: Needs triage'
-          assignees: ${{ steps.git-setup.outputs.assigned }}
+        env:
+          GH_TOKEN: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }}
+          ISSUE_TITLE: ${{ steps.dates.outputs.today }} — ${{ steps.process_json.outputs.commits_length }} new commit(s) made to `reference.md` in Google Transit's repo
+          ISSUE_BODY: ${{ steps.process_json.outputs.extracted_data }}
+          ISSUE_ASSIGNEES: ${{ steps.git-setup.outputs.assigned }}
+        run: |
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label 'status: Needs triage' \
+            --assignee "$ISSUE_ASSIGNEES"

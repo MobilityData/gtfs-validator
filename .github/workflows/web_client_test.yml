@@ -11,7 +11,7 @@ env:
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Cypress e2e tests
     steps:
       - name: Checkout
@@ -26,19 +26,19 @@ jobs:
         working-directory: web/client
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.10
         with:
           start: npm run start:cypress:config
           wait-on: "npx wait-on --timeout 2000 http://127.0.0.1:5173"
           working-directory: web/client
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7.0.2
         if: failure()
         with:
           name: cypress-screenshots
           path: web/client/cypress/screenshots
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
           name: cypress-videos

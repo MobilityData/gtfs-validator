@@ -2,7 +2,7 @@ plugins {
 	id 'java'
     id 'application'
 	id 'org.springframework.boot' version '2.7.5'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'io.spring.dependency-management' version '1.1.7'
     alias(libs.plugins.shadow.jar)
 }
 
@@ -42,7 +42,9 @@ shadowJar {
     archiveClassifier = 'web'
 }
 
-mainClassName = 'org.mobilitydata.gtfsvalidator.web.service.Main'
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.web.service.Main'
+}
 
 ext {
 	set('springCloudGcpVersion', "3.4.0")
@@ -56,7 +58,11 @@ dependencies {
   testCompileOnly 'org.projectlombok:lombok:1.18.24'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
   implementation project(':core')
-  implementation project(':main')  
+  implementation project(':main')
+  // Expose the BOMs as Gradle platforms so versionless dependencies below also resolve
+  // from other projects (e.g. the root testAggregateTestReport).
+  implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+  implementation platform("com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}")
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.google.cloud:spring-cloud-gcp-starter'
 	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
@@ -67,6 +73,7 @@ dependencies {
   implementation 'com.google.cloud:spring-cloud-gcp-starter-logging:3.7.9'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 dependencyManagement {

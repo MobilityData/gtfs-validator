@@ -51,7 +51,7 @@ jobs:
         run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           # We need a recent version of Java with jpackage included.
           java-version: ${{ env.java_version }}
@@ -141,20 +141,20 @@ jobs:
 
       - name: Persist cli app jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: "gtfs-validator-cli-${{ env.SHORT_SHA }}.zip"
           path: cli/build/libs/gtfs-validator-*-cli.jar
 
       - name: Persist gui app jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: "gtfs-validator-gui-${{ env.SHORT_SHA }}.zip"
           path: app/gui/build/libs/gui-*-all.jar
 
       - name: "Upload Installer"
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: Installer - ${{matrix.os}}
           path: |
@@ -183,7 +183,7 @@ jobs:
         if: github.event_name == 'prerelease' || github.event_name == 'release'
         env:
           OS_NAME: '${{ matrix.os }}'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |

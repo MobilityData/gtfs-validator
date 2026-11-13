@@ -11,7 +11,7 @@ env:
 
 jobs:
   upload-release-assets:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v7.0.1
@@ -26,13 +26,15 @@ jobs:
       # If the trigger is a workflow_dispatch, the version will be the branch name, which is
       # not really useful.
       - id: get_version
-        uses: battila7/get-version-action@v2
+        run: |
+          echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          echo "version-without-v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - name: printVersion
         run: echo "The version extracted from github.ref is ${{ steps.get_version.outputs.version }}"
 
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -43,7 +45,7 @@ jobs:
 
       - name: Upload CLI JAR Asset
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -57,7 +59,7 @@ jobs:
 
       - name: Upload GUI JAR Asset
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -69,7 +71,7 @@ jobs:
 
       - name: Upload rules.json asset
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -85,7 +87,7 @@ jobs:
 
       - name: Upload zipped Javadocs
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
