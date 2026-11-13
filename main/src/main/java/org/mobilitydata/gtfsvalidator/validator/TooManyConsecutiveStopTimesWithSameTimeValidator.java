@@ -2,7 +2,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
-import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -36,7 +35,7 @@ public class TooManyConsecutiveStopTimesWithSameTimeValidator extends FileValida
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (List<GtfsStopTime> stopTimes : Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
+    for (List<GtfsStopTime> stopTimes : stopTimeTable.byTripIdAsMap().values()) {
       validateTrip(stopTimes, noticeContainer);
     }
   }

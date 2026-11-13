@@ -12,14 +12,14 @@ jobs:
     steps:
 
       - name: Checkout master of gtfs-validator repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           ref: master
           fetch-depth: 0
           token: ${{ secrets.GENERIC_ACTION_REPO_SCOPE }} 
 
       - name: Use Node.js 24.x
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: '24.x'
 
