@@ -125,6 +125,11 @@ public class Arguments {
               + " overrides the default validator User-Agent.")
   private List<String> httpHeaders = new ArrayList<>();
 
+  @Parameter(
+      names = {"-q", "--quiet"},
+      description = "Silences non-critical log messages when running validator")
+  private boolean quiet = false;
+
   ValidationRunnerConfig toConfig() throws URISyntaxException {
     ValidationRunnerConfig.Builder builder = ValidationRunnerConfig.builder();
     if (input != null) {
@@ -161,6 +166,7 @@ public class Arguments {
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
     builder.setStdoutOutput(stdoutOutput);
     builder.setHttpHeaders(parseHttpHeaders(httpHeaders));
+    builder.setQuietLogs(quiet);
     return builder.build();
   }
 
@@ -194,6 +200,10 @@ public class Arguments {
 
   public boolean getStdoutOutput() {
     return stdoutOutput;
+  }
+
+  public boolean getQuietLogs() {
+    return quiet;
   }
 
   /**
