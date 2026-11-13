@@ -36,4 +36,6 @@ shadowJar {
     archiveClassifier = 'cli'
 }
 
-mainClassName = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.outputcomparator.cli.Main'
+}

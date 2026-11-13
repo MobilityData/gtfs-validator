@@ -28,14 +28,14 @@ env:
 jobs:
   fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.
     if: github.event.pull_request.draft == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Fail if PR is a draft
         run: exit 1
   pre_ci:
     name: Prepare CI environment
     if: github.event.pull_request.draft == false # Skip this job and its dependencies if the PR is draft
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Project
         uses: actions/checkout@v7.0.1
@@ -57,11 +57,11 @@ jobs:
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
   pack-snapshot:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -71,23 +71,23 @@ jobs:
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
   pack-master:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
         with:
           ref: master
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -97,14 +97,14 @@ jobs:
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Persist gtfs-validator jar from master branch
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: gtfs-validator-master
           path: cli/build/libs/gtfs-validator-*-cli.jar
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v7.0.1
@@ -122,7 +122,7 @@ jobs:
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -159,23 +159,23 @@ jobs:
         env:
           OUTPUT_BASE: ${{ github.sha }}
       - name: Persist reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: reports_${{ env.CONCATENATED_IDS }}
           path: ${{ github.sha }}/output
   merge-reports-artifacts:
-     runs-on: ubuntu-latest
+     runs-on: ubuntu-24.04
      needs: [ get-reports ]
      steps:
        - name: Merge Artifacts
-         uses: actions/upload-artifact/merge@v6
+         uses: actions/upload-artifact/merge@v7.0.2
          with:
            name: reports_all
            pattern: reports_*
            delete-merged: true
   compare-outputs:
     needs: [ merge-reports-artifacts ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Download comparator .jar file from previous job
@@ -205,7 +205,7 @@ jobs:
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: acceptance_test_report
           path: acceptance-test-output
@@ -219,7 +219,8 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
       - name: Comment Pull Request
         if: always()
-        uses: thollander/actions-comment-pull-request@v1.0.4
+        uses: peter-evans/create-or-update-comment@v5.0.0
         with:
-          message: ${{ env.PR_COMMENT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ env.PR_COMMENT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
