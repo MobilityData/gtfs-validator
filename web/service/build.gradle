@@ -84,6 +84,9 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	// Tests run with the production application.properties written by webSecrets;
+	// an empty DSN disables Sentry so test logs and exceptions are not reported.
+	environment 'SENTRY_DSN', ''
 }
 
 task webSvcCredential (type: Exec) {
@@ -192,6 +195,12 @@ task webSecrets {
   dependsOn webSvcCredential
   dependsOn webSvcAPMLicense
   dependsOn webSvcSecretProperties
+}
+
+// The secret tasks write into src/main/resources, so the resources must be processed after them
+// whenever they run in the same build.
+tasks.named('processResources') {
+  mustRunAfter webSvcCredential, webSvcSecretProperties
 }
 
 task webTest {
