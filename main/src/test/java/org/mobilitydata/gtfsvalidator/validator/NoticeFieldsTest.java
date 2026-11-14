@@ -240,6 +240,7 @@ public class NoticeFieldsTest {
             "stopTimeCsvRowNumber",
             "stopTimeCsvRowNumber1",
             "stopTimeCsvRowNumber2",
+            "stopTimezone",
             "stopUrl",
             "suggestedExpirationDate",
             "tableName",
