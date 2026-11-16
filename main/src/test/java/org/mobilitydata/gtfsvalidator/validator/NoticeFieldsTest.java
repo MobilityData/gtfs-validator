@@ -69,7 +69,6 @@ public class NoticeFieldsTest {
             "childStopLat",
             "childStopLon",
             "columnIndex",
-            "columnName",
             "csvRowNumber",
             "csvRowNumber1",
             "csvRowNumber2",
