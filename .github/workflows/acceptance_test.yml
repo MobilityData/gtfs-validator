@@ -178,7 +178,9 @@ jobs:
       - name: Persist reports
         uses: actions/upload-artifact@v6
         with:
-          name: reports_${{ env.CONCATENATED_IDS }}
+          # The attempt number keeps a re-run from merging the previous attempt's artifacts,
+          # including its reports_all, which would put every feed's reports in twice.
+          name: reports_${{ github.run_attempt }}_${{ env.CONCATENATED_IDS }}
           path: ${{ github.sha }}/output
       - name: Persist master reports for reuse
         uses: actions/upload-artifact@v6
@@ -219,7 +221,7 @@ jobs:
          uses: actions/upload-artifact/merge@v6
          with:
            name: reports_all
-           pattern: reports_*
+           pattern: reports_${{ github.run_attempt }}_*
            delete-merged: true
   compare-outputs:
     needs: [ merge-reports-artifacts ]
