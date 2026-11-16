@@ -66,7 +66,6 @@ public class NoticeFieldsTest {
             "childFieldName",
             "childFilename",
             "columnIndex",
-            "columnName",
             "csvRowNumber",
             "csvRowNumber1",
             "csvRowNumber2",

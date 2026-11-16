@@ -34,7 +34,7 @@ public class NonAsciiOrNonPrintableCharNotice extends ValidationNotice {
   /** Row number of the faulty record. */
   private final int csvRowNumber;
 
-  /** Faulty record's field name. */
+  /** The name of the faulty field. */
   private final String fieldName;
 
   /** Faulty value. */
