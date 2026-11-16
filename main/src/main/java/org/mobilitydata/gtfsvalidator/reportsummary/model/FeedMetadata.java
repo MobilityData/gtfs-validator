@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsage;
 import org.mobilitydata.gtfsvalidator.performance.MemoryUsageRegister;
+import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 import org.mobilitydata.gtfsvalidator.reportsummary.AgencyMetadata;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportCounts;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportFeedInfo;
@@ -31,7 +32,12 @@ public class FeedMetadata {
 
   public double validationTimeSeconds;
 
-  public List<MemoryUsage> memoryUsageRecords;
+  /**
+   * @deprecated Use {@link #performanceMetrics} instead. Will be removed in the next major version.
+   */
+  @Deprecated public List<MemoryUsage> memoryUsageRecords;
+
+  public ValidationPerformanceMetrics performanceMetrics;
 
   // List of features that only require checking the presence of one record in the file.
   private final List<Pair<FeatureMetadata, String>> FILE_BASED_FEATURES =
@@ -160,7 +166,7 @@ public class FeedMetadata {
   }
 
   private <E extends GtfsEntity> int loadUniqueCount(
-      GtfsEntityContainer<?, ?> table, Class<E> clazz, Function<E, String> idExtractor) {
+      GtfsEntityContainer<?> table, Class<E> clazz, Function<E, String> idExtractor) {
     // Iterate through entities and count unique IDs
     Set<String> uniqueIds = new HashSet<>();
     for (GtfsEntity entity : table.getEntities()) {
@@ -446,10 +452,10 @@ public class FeedMetadata {
     return feedContainer
         .getTableForFilename(GtfsStopTime.FILENAME)
         .map(table -> (GtfsStopTimeTableContainer) table)
-        .map(GtfsStopTimeTableContainer::byTripIdMap)
+        .map(GtfsStopTimeTableContainer::byTripIdAsMap)
         .map(
             byTripIdMap ->
-                byTripIdMap.asMap().values().stream()
+                byTripIdMap.values().stream()
                     .anyMatch(
                         gtfsStopTimes -> {
                           boolean hasTripId = false,
@@ -696,8 +702,7 @@ public class FeedMetadata {
                 List.of((Function<GtfsRoute, Boolean>) GtfsRoute::hasRouteTextColor)));
   }
 
-  private void loadAgencyData(
-      GtfsEntityContainer<GtfsAgency, GtfsAgencyTableDescriptor> agencyTable) {
+  private void loadAgencyData(GtfsEntityContainer<GtfsAgency> agencyTable) {
     for (GtfsAgency agency : agencyTable.getEntities()) {
       agencies.add(
           new AgencyMetadata(

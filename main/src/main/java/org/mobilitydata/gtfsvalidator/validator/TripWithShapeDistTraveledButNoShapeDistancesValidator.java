@@ -17,8 +17,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 
-import com.google.common.collect.Multimaps;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -76,8 +77,9 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (List<GtfsStopTime> stopTimesForTrip :
-        Multimaps.asMap(stopTimeTable.byTripIdMap()).values()) {
+    // Trips share shapes, so each shape is checked only once.
+    Map<String, Boolean> missingDistancesByShapeId = new HashMap<>();
+    for (List<GtfsStopTime> stopTimesForTrip : stopTimeTable.byTripIdAsMap().values()) {
 
       // Find the first stop time that carries a shape_dist_traveled value.
       // If none exist there is nothing to check for this trip.
@@ -97,19 +99,20 @@ public class TripWithShapeDistTraveledButNoShapeDistancesValidator extends FileV
         continue;
       }
 
-      List<GtfsShape> shapePoints = shapeTable.byShapeId(trip.shapeId());
-      if (shapePoints.isEmpty()) {
-        // A missing shape is reported by a foreign-key rule; skip here to avoid double-reporting.
-        continue;
-      }
-
+      // A missing shape is reported by a foreign-key rule; skip here to avoid double-reporting.
       // All shape points must carry shape_dist_traveled for the distances to be usable.
       // Partial population (some points have a value, others do not) is also treated as
       // non-compliant because consumers cannot interpolate positions reliably from an
       // incomplete distance sequence.
-      boolean allShapePointsHaveDist =
-          shapePoints.stream().allMatch(GtfsShape::hasShapeDistTraveled);
-      if (!allShapePointsHaveDist) {
+      boolean missingDistances =
+          missingDistancesByShapeId.computeIfAbsent(
+              trip.shapeId(),
+              shapeId -> {
+                List<GtfsShape> shapePoints = shapeTable.byShapeId(shapeId);
+                return !shapePoints.isEmpty()
+                    && !shapePoints.stream().allMatch(GtfsShape::hasShapeDistTraveled);
+              });
+      if (missingDistances) {
         noticeContainer.addValidationNotice(
             new TripWithShapeDistTraveledButNoShapeDistancesNotice(
                 trip.csvRowNumber(),

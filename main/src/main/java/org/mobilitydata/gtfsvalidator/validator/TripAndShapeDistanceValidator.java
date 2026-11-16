@@ -20,6 +20,9 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.util.S2Earth.getDistanceMeters;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -55,6 +58,8 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
+    // Trips share shapes, so the farthest point of each shape is searched only once.
+    Map<String, Optional<GtfsShape>> maxShapeByShapeId = new HashMap<>();
     tripTable
         .getEntities()
         .forEach(
@@ -76,8 +81,12 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
               // Get max shape distance for trip
               GtfsShape maxShape =
-                  shapeTable.byShapeId(shapeId).stream()
-                      .max(Comparator.comparingDouble(GtfsShape::shapeDistTraveled))
+                  maxShapeByShapeId
+                      .computeIfAbsent(
+                          shapeId,
+                          id ->
+                              shapeTable.byShapeId(id).stream()
+                                  .max(Comparator.comparingDouble(GtfsShape::shapeDistTraveled)))
                       .orElse(null);
               if (maxShape == null) {
                 return;
@@ -106,8 +115,10 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   }
 
   /**
-   * The distance between the last shape point and last stop point is greater than or equal to the
-   * 11.1m threshold.
+   * `stop_times.shape_dist_traveled` for a trip exceeds the maximum `shapes.shape_dist_traveled`
+   * for the referenced shape, with 11.1m or more between the last shape point and last stop.
+   *
+   * <p>Ensure stop time distances do not exceed the shape's total distance.
    */
   @GtfsValidationNotice(
       severity = ERROR,
@@ -150,8 +161,10 @@ public class TripAndShapeDistanceValidator extends FileValidator {
   }
 
   /**
-   * The distance between the last shape point and last stop point is greater than 0 but less than
-   * the 11.1m threshold.
+   * `stop_times.shape_dist_traveled` for a trip exceeds the maximum `shapes.shape_dist_traveled`
+   * for the referenced shape, with less than 11.1m between the last shape point and last stop.
+   *
+   * <p>Ensure stop time distances do not exceed the shape's total distance.
    */
   @GtfsValidationNotice(
       severity = WARNING,

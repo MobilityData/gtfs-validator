@@ -42,7 +42,7 @@ jobs:
   pack-snapshot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v5
         with:
@@ -64,8 +64,8 @@ jobs:
     runs-on: ubuntu-latest-4-cores
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+        uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.python_version }}
       - name: Install dependencies
@@ -93,7 +93,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Download latest changes .jar file from previous job
         uses: actions/download-artifact@v8
         with:

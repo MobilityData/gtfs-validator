@@ -15,6 +15,7 @@ import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.GeoJsonDuplicatedElementNotice;
@@ -31,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.notice.InvalidGeometryNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidIntegerNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidLanguageCodeNotice;
+import org.mobilitydata.gtfsvalidator.notice.InvalidLineEndingNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidPhoneNumberNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.notice.InvalidTimeNotice;
@@ -94,6 +96,7 @@ public class NoticeReferenceTest {
           InvalidInputFilesInSubfolderNotice.class,
           InvalidIntegerNotice.class,
           InvalidLanguageCodeNotice.class,
+          InvalidLineEndingNotice.class,
           InvalidPhoneNumberNotice.class,
           InvalidRowLengthNotice.class,
           InvalidTimeNotice.class,
@@ -107,6 +110,7 @@ public class NoticeReferenceTest {
           MissingRequiredElementNotice.class,
           MissingRequiredFieldNotice.class,
           MissingRequiredFileNotice.class,
+          EmptyRequiredFileNotice.class,
           MixedCaseRecommendedFieldNotice.class,
           MoreThanOneEntityNotice.class,
           NewLineInValueNotice.class,

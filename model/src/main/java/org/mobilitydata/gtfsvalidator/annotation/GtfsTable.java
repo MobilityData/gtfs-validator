@@ -48,4 +48,7 @@ public @interface GtfsTable {
    * for the CSV Parser.
    */
   int maxCharsPerColumn() default 0;
+
+  /** How rows are kept in memory. Large tables, such as "stop_times.txt", use columns. */
+  TableStorage storage() default TableStorage.OBJECTS;
 }

@@ -112,28 +112,41 @@ public class RowParser {
   @Nullable
   public String asString(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
     String s = row.asString(columnIndex);
-    if (columnDescriptor.fieldLevel() == FieldLevelEnum.REQUIRED && s == null) {
+    if (s == null) {
+      noticeForMissingValue(columnDescriptor);
+      return null;
+    }
+    return validateValue(s, columnIndex, columnDescriptor, cellContext(columnIndex));
+  }
+
+  /** Adds a notice if the column requires or recommends a value and the cell has none. */
+  private void noticeForMissingValue(GtfsColumnDescriptor columnDescriptor) {
+    if (columnDescriptor.fieldLevel() == FieldLevelEnum.REQUIRED) {
       noticeContainer.addValidationNotice(
           new MissingRequiredFieldNotice(fileName, getRowNumber(), columnDescriptor.columnName()));
-    } else if (columnDescriptor.fieldLevel() == FieldLevelEnum.RECOMMENDED && s == null) {
+    } else if (columnDescriptor.fieldLevel() == FieldLevelEnum.RECOMMENDED) {
       noticeContainer.addValidationNotice(
           new MissingRecommendedFieldNotice(
               fileName, getRowNumber(), columnDescriptor.columnName()));
     }
-    if (s != null) {
-      // Validate if the string contains invalid characters
-      if (containsInvalidCharacters(s)) {
-        noticeContainer.addValidationNotice(
-            new InvalidCharacterNotice(fileName, getRowNumber(), columnDescriptor.columnName(), s));
-      }
+  }
 
-      s =
-          fieldValidator.validateField(
-              s,
-              GtfsCellContext.create(fileName, getRowNumber(), header.getColumnName(columnIndex)),
-              noticeContainer);
+  /** Applies the validation that every field value goes through, and returns the value to store. */
+  private String validateValue(
+      String s,
+      int columnIndex,
+      GtfsColumnDescriptor columnDescriptor,
+      GtfsCellContext cellContext) {
+    // Validate if the string contains invalid characters
+    if (containsInvalidCharacters(s)) {
+      noticeContainer.addValidationNotice(
+          new InvalidCharacterNotice(fileName, getRowNumber(), columnDescriptor.columnName(), s));
     }
-    return s;
+    return fieldValidator.validateField(s, cellContext, noticeContainer);
+  }
+
+  private GtfsCellContext cellContext(int columnIndex) {
+    return GtfsCellContext.create(fileName, getRowNumber(), header.getColumnName(columnIndex));
   }
 
   private boolean containsInvalidCharacters(String string) {
@@ -147,17 +160,17 @@ public class RowParser {
 
   @Nullable
   public String asId(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
-    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateId);
+    return asValidatedString(columnIndex, columnDescriptor, FieldValidation.ID);
   }
 
   @Nullable
   public String asUrl(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
-    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateUrl);
+    return asValidatedString(columnIndex, columnDescriptor, FieldValidation.URL);
   }
 
   @Nullable
   public String asEmail(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
-    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validateEmail);
+    return asValidatedString(columnIndex, columnDescriptor, FieldValidation.EMAIL);
   }
 
   /**
@@ -173,7 +186,7 @@ public class RowParser {
    */
   @Nullable
   public String asPhoneNumber(int columnIndex, GtfsColumnDescriptor columnDescriptor) {
-    return asValidatedString(columnIndex, columnDescriptor, fieldValidator::validatePhoneNumber);
+    return asValidatedString(columnIndex, columnDescriptor, FieldValidation.PHONE_NUMBER);
   }
 
   @Nullable
@@ -426,22 +439,22 @@ public class RowParser {
    *
    * @param columnIndex index of the column to parse
    * @param columnDescriptor GTFS column descriptor
-   * @param validatingFunction the predicate to validate a given string
+   * @param validation the type-specific validation to apply to the value
    * @return the cell value at the given column or null if the value is missing
    */
   @Nullable
   private String asValidatedString(
-      int columnIndex,
-      GtfsColumnDescriptor columnDescriptor,
-      FieldValidatingFunction validatingFunction) {
-    String s = asString(columnIndex, columnDescriptor);
+      int columnIndex, GtfsColumnDescriptor columnDescriptor, FieldValidation validation) {
+    String s = row.asString(columnIndex);
     if (s == null) {
+      noticeForMissingValue(columnDescriptor);
       return null;
     }
-    validatingFunction.apply(
-        s,
-        GtfsCellContext.create(fileName, getRowNumber(), header.getColumnName(columnIndex)),
-        noticeContainer);
+    // Both validations describe the same cell, so the context is built once instead of once each.
+    // This runs for every non-empty id, URL, e-mail address and phone number of the feed.
+    GtfsCellContext cellContext = cellContext(columnIndex);
+    s = validateValue(s, columnIndex, columnDescriptor, cellContext);
+    validation.validate(fieldValidator, s, cellContext, noticeContainer);
     return s;
   }
 
@@ -456,10 +469,60 @@ public class RowParser {
     T apply(String filename, int csvRowNumber, String fieldName, String fieldValue);
   }
 
-  /** Validates the given field and adds appropriate notices to the container. */
-  @FunctionalInterface
-  private interface FieldValidatingFunction {
+  /**
+   * The type-specific validation applied to a field on top of the validation every field goes
+   * through.
+   *
+   * <p>This is an enum rather than a function passed by the caller because it is selected for a
+   * large share of the cells of a feed: a method reference on the field validator would allocate a
+   * capturing lambda on every call.
+   */
+  private enum FieldValidation {
+    ID {
+      @Override
+      void validate(
+          GtfsFieldValidator fieldValidator,
+          String fieldValue,
+          GtfsCellContext cellContext,
+          NoticeContainer noticeContainer) {
+        fieldValidator.validateId(fieldValue, cellContext, noticeContainer);
+      }
+    },
+    URL {
+      @Override
+      void validate(
+          GtfsFieldValidator fieldValidator,
+          String fieldValue,
+          GtfsCellContext cellContext,
+          NoticeContainer noticeContainer) {
+        fieldValidator.validateUrl(fieldValue, cellContext, noticeContainer);
+      }
+    },
+    EMAIL {
+      @Override
+      void validate(
+          GtfsFieldValidator fieldValidator,
+          String fieldValue,
+          GtfsCellContext cellContext,
+          NoticeContainer noticeContainer) {
+        fieldValidator.validateEmail(fieldValue, cellContext, noticeContainer);
+      }
+    },
+    PHONE_NUMBER {
+      @Override
+      void validate(
+          GtfsFieldValidator fieldValidator,
+          String fieldValue,
+          GtfsCellContext cellContext,
+          NoticeContainer noticeContainer) {
+        fieldValidator.validatePhoneNumber(fieldValue, cellContext, noticeContainer);
+      }
+    };
 
-    void apply(String fieldValue, GtfsCellContext cellContext, NoticeContainer noticeContainer);
+    abstract void validate(
+        GtfsFieldValidator fieldValidator,
+        String fieldValue,
+        GtfsCellContext cellContext,
+        NoticeContainer noticeContainer);
   }
 }

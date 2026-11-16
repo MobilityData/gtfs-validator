@@ -12,6 +12,7 @@ import io.github.classgraph.Resource;
 import io.github.classgraph.ScanResult;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.Duration;
@@ -31,6 +32,10 @@ import org.mobilitydata.gtfsvalidator.runner.ApplicationType;
 public class VersionResolver {
 
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+  private static final Object CURRENT_VERSION_LOCK = new Object();
+
+  private static Optional<String> cachedCurrentVersion;
 
   /** We look up the latest release version at the JSON api endpoint. */
   private static final String LATEST_RELEASE_VERSION_URL =
@@ -141,30 +146,47 @@ public class VersionResolver {
    * @throws IOException
    */
   public Optional<String> resolveCurrentVersion() throws IOException {
-    ScanResult scan = new ClassGraph().scan();
-    Optional<String> gtfsValidatorCoreVersion = Optional.empty();
-    for (Resource resource : scan.getResourcesWithPath("META-INF/MANIFEST.MF")) {
-      Manifest m = new Manifest();
-      m.read(resource.open());
-      String title = m.getMainAttributes().getValue("Implementation-Title");
-      if (title == null) {
-        continue;
+    synchronized (CURRENT_VERSION_LOCK) {
+      if (cachedCurrentVersion == null) {
+        cachedCurrentVersion = scanCurrentVersion();
       }
-      if (title.equals("gtfs-validator")) {
-        // We prefer the gtfs-validator version and return it immediately if found.
-        String version = m.getMainAttributes().getValue("Implementation-Version");
-        if (version != null && !version.isBlank()) {
-          return Optional.of(version);
+      return cachedCurrentVersion;
+    }
+  }
+
+  private static Optional<String> scanCurrentVersion() throws IOException {
+    Optional<String> gtfsValidatorCoreVersion = Optional.empty();
+
+    try (ScanResult scan = new ClassGraph().scan()) {
+      for (Resource resource : scan.getResourcesWithPath("META-INF/MANIFEST.MF")) {
+        Manifest manifest;
+
+        try (InputStream inputStream = resource.open()) {
+          manifest = new Manifest(inputStream);
         }
-      } else if (title.equals("gtfs-validator-core")) {
-        // We'll also use gtfs-validator-core version if available but keep processing in case
-        // we find gtfs-validator instead.
-        String version = m.getMainAttributes().getValue("Implementation-Version");
-        if (version != null && !version.isBlank()) {
-          gtfsValidatorCoreVersion = Optional.of(version);
+
+        String title = manifest.getMainAttributes().getValue("Implementation-Title");
+
+        if (title == null) {
+          continue;
+        }
+
+        if (title.equals("gtfs-validator")) {
+          String version = manifest.getMainAttributes().getValue("Implementation-Version");
+
+          if (version != null && !version.isBlank()) {
+            return Optional.of(version);
+          }
+        } else if (title.equals("gtfs-validator-core")) {
+          String version = manifest.getMainAttributes().getValue("Implementation-Version");
+
+          if (version != null && !version.isBlank()) {
+            gtfsValidatorCoreVersion = Optional.of(version);
+          }
         }
       }
     }
+
     return gtfsValidatorCoreVersion;
   }
 

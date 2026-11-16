@@ -10,10 +10,19 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  * case letters).
  *
  * <p>This field contains customer-facing text and should use Mixed Case (upper and lower case
- * letters) to ensure good readability when displayed to riders. Avoid the use of abbreviations
- * throughout the feed (e.g. St. for Street) unless a location is called by its abbreviated name
- * (e.g. “JFK Airport”). Abbreviations may be problematic for accessibility by screen reader
- * software and voice user interfaces.
+ * letters) to ensure good readability when displayed to riders. The validator splits the text into
+ * letter-only tokens, treating spaces, digits and punctuation as separators, and ignores
+ * single-letter tokens.
+ *
+ * <pre>
+ * - If there is only one token, the notice is raised only if it is all lowercase (e.g. `main`).
+ *   All uppercase single tokens are accepted (e.g. `MAIN`).
+ * - If there are two or more tokens, the notice is raised if none of them are Mixed Case
+ * </pre>
+ *
+ * <p>Avoid the use of abbreviations throughout the feed (e.g. St. for Street) unless a location is
+ * called by its abbreviated name (e.g. “JFK Airport”). Abbreviations may be problematic for
+ * accessibility by screen reader software and voice user interfaces.
  *
  * <table style="table-layout:auto; width:auto;">
  *   <caption>Good examples:</caption>
@@ -39,15 +48,15 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.UrlRef;
  *   <caption>Bad examples:</caption>
  *   <tr>
  *     <th><code>Field Text</code></th>
+ *     <th><code>Reason</code></th>
  *   </tr>
  *   <tr>
- *     <td>"GALLERIA MALL"</td>
+ *     <td>"GALLERIA mall"</td>
+ *     <td>Tokens: [GALLERIA, mall]. Does not contain at least 1 mixed case token</td>
  *   </tr>
  *   <tr>
- *     <td>"3427 GG 17"</td>
- *   </tr>
- *   <tr>
- *     <td>"21 Clark Rd Est"</td>
+ *     <td>"main"</td>
+ *     <td>Tokens: [main]. Contains a single all-lowercase token</td>
  *   </tr>
  * </table>
  */

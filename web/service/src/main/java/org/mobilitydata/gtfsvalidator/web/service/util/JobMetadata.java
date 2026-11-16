@@ -11,4 +11,9 @@ import lombok.NoArgsConstructor;
 public class JobMetadata {
   private String jobId;
   private String countryCode;
+  private String originalGtfsSource;
+
+  public JobMetadata(String jobId, String countryCode) {
+    this(jobId, countryCode, null);
+  }
 }

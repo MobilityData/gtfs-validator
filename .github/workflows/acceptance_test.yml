@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7.0.1
         with:
           # We need to fetch with a depth of 2 for pull_request so we can do HEAD^2
           fetch-depth: 2
@@ -59,7 +59,7 @@ jobs:
   pack-snapshot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
         uses: actions/setup-java@v5
         with:
@@ -83,7 +83,7 @@ jobs:
   pack-master:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
         with:
           ref: master
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
@@ -107,8 +107,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v6
-      - uses: actions/setup-python@v5
+        uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ env.python_version }}
       - name: Install dependencies
@@ -136,7 +136,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Download .jar file from master branch
         uses: actions/download-artifact@v8
         with:
@@ -177,7 +177,7 @@ jobs:
     needs: [ merge-reports-artifacts ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.1
       - name: Download comparator .jar file from previous job
         uses: actions/download-artifact@v8
         with:

@@ -3,7 +3,13 @@ package org.mobilitydata.gtfsvalidator.performance;
 import java.text.DecimalFormat;
 import org.apache.commons.lang3.StringUtils;
 
-/** Represents memory usage information. */
+/**
+ * Represents memory usage information.
+ *
+ * @deprecated Replaced by {@link ValidationPerformanceTracker}, whose metrics do not depend on when
+ *     the garbage collector runs. Will be removed in the next major version.
+ */
+@Deprecated
 public class MemoryUsage {
   private static final DecimalFormat TWO_DECIMAL_FORMAT = new DecimalFormat("0.00");
 
