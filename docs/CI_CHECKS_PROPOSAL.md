@@ -85,14 +85,16 @@ Overall estimate:
 - **Time:** about 10 to 15 minutes on a PR's first run and about 6 to 10 minutes on later pushes, down from 30 to 45.
 - **Cost:** around half per PR from decisions 1, 3 and 4 alone; much lower if most feeds can move to free runners.
 
-Actual results (to fill in after rollout):
+Actual results, measured on [MobilityData/gtfs-validator PR 2259](https://github.com/MobilityData/gtfs-validator/pull/2259) on 2026-11-16. Paid minutes are billed per job, rounded up to the minute, from the GitHub Actions jobs API. The before figures come from PR 2256: 234 paid minutes for acceptance plus 26 for end-to-end, 260 in total.
 
 | Measure | Estimated | Actual |
 |---|---|---|
-| First run on a PR | 10 to 15 min | |
-| Later pushes to the same PR | 6 to 10 min | |
-| Paid runner minutes per PR | About half of today, lower with free runners | |
-| Linux 4-core billed per month (October 2026: $211.73) | About half, lower with free runners | |
+| First run on a PR (master's results not cached yet) | 10 to 15 min | About 17 min; mdb-2014 (about 2 GB) alone took about 15 min, all other jobs finished within 5 to 7 min |
+| Later runs on the same PR (master unchanged) | 6 to 10 min | 9 to 12 min; master's results reused for 1,002 of 1,004 feeds, mdb-2014 down to 8 min 24 s |
+| Paid runner minutes per PR | About half of today, lower with free runners | 95 on a first run (down 63% from 260); 54 to 57 on later runs (down about 79%); 23 of 60 validation jobs on paid runners, plus 99 to 145 free-runner minutes |
+| Linux 4-core billed per month (October 2026: $211.73) | About half, lower with free runners | Not measured yet; check the December 2026 usage page |
+
+Issue found while testing: re-running a run made the report merge also pick up the previous attempt's merged reports, corrupting files at random. This bug predates the change and is fixed in the same PR.
 
 ## Rejected
 
