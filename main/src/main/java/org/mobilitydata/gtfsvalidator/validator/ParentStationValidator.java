@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.HashSet;
@@ -34,12 +35,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeSchema;
 
 /**
- * Validates parent stations are used and have the correct `location_type`.
+ * Validates parent stations are used, have the correct `location_type`, and define a timezone when
+ * their child locations do.
  *
  * <p>Generated notices:
  *
  * <ul>
  *   <li>{@link WrongParentLocationTypeNotice}.
+ *   <li>{@link ParentStationMissingTimezoneNotice}.
  *   <li>{@link UnusedStationNotice}.
  * </ul>
  */
@@ -88,6 +91,15 @@ public class ParentStationValidator extends FileValidator {
         stationsWithStops.add(location.parentStation());
       }
       GtfsStop parentLocation = optionalParentLocation.get();
+      if (location.hasStopTimezone() && !parentLocation.hasStopTimezone()) {
+        noticeContainer.addValidationNotice(
+            new ParentStationMissingTimezoneNotice(
+                location.csvRowNumber(),
+                location.stopId(),
+                location.stopTimezone().getId(),
+                parentLocation.csvRowNumber(),
+                location.parentStation()));
+      }
       GtfsLocationType expected = expectedParentLocationType(location.locationType());
       if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
         noticeContainer.addValidationNotice(
@@ -186,6 +198,45 @@ public class ParentStationValidator extends FileValidator {
       this.parentStopName = parentStopName;
       this.parentLocationType = parentLocationType;
       this.expectedLocationType = expectedLocationType;
+    }
+  }
+
+  /**
+   * A location has a timezone but its parent station does not.
+   *
+   * <p>A location with a `parent_station` inherits the timezone of its parent and ignores its own
+   * `stop_timezone`. When the location defines `stop_timezone` but its parent does not, the
+   * location's timezone is not applied, which may not be what the producer intended.
+   */
+  @GtfsValidationNotice(severity = INFO, files = @FileRefs(GtfsStopSchema.class))
+  static class ParentStationMissingTimezoneNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The id of the faulty record. */
+    private final String stopId;
+
+    /** The faulty record's `stops.stop_timezone`. */
+    private final String stopTimezone;
+
+    /** The row number of the faulty record's parent. */
+    private final int parentCsvRowNumber;
+
+    /** The id of the faulty record's parent station. */
+    private final String parentStation;
+
+    ParentStationMissingTimezoneNotice(
+        int csvRowNumber,
+        String stopId,
+        String stopTimezone,
+        int parentCsvRowNumber,
+        String parentStation) {
+      this.csvRowNumber = csvRowNumber;
+      this.stopId = stopId;
+      this.stopTimezone = stopTimezone;
+      this.parentCsvRowNumber = parentCsvRowNumber;
+      this.parentStation = parentStation;
     }
   }
 
