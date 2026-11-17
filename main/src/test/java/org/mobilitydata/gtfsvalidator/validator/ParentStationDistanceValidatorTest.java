@@ -127,15 +127,15 @@ public class ParentStationDistanceValidatorTest {
                 ParentStationDistanceValidator.TOO_FAR_THRESHOLD_METERS
                     / S2Earth.getRadiusMeters()));
 
-    GtfsStop station = createLocation(2, "station1", GtfsLocationType.STATION, 0.0, 0.0, null);
+    GtfsStop station = createLocation(2, "station1", GtfsLocationType.STATION, 0.0, 2.0, null);
     GtfsStop stopAtOrBelow1Km =
-        createLocation(3, "stop_1km_le", GtfsLocationType.STOP, lat1KmBelow, 0.0, "station1");
+        createLocation(3, "stop_1km_le", GtfsLocationType.STOP, lat1KmBelow, 2.0, "station1");
     GtfsStop stopJustAbove1Km =
-        createLocation(4, "stop_1km_gt", GtfsLocationType.STOP, lat1KmAbove, 0.0, "station1");
+        createLocation(4, "stop_1km_gt", GtfsLocationType.STOP, lat1KmAbove, 2.0, "station1");
     GtfsStop stopAtOrBelow10Km =
-        createLocation(5, "stop_10km_le", GtfsLocationType.STOP, lat10KmBelow, 0.0, "station1");
+        createLocation(5, "stop_10km_le", GtfsLocationType.STOP, lat10KmBelow, 2.0, "station1");
     GtfsStop stopJustAbove10Km =
-        createLocation(6, "stop_10km_gt", GtfsLocationType.STOP, lat10KmAbove, 0.0, "station1");
+        createLocation(6, "stop_10km_gt", GtfsLocationType.STOP, lat10KmAbove, 2.0, "station1");
 
     assertThat(
             generateNotices(
