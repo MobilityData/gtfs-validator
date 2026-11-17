@@ -19,6 +19,9 @@ run_validator() {
 # Percentage of the feeds, picked by feed ID, whose master reports are never reused: both
 # validators run in the same job, so that their timings can be compared.
 fresh_master_percent="${FRESH_MASTER_PERCENT:-25}"
+# Feeds this large are left out of that sample: each one is alone in its job, so running master
+# again would make the whole workflow wait longer, and too few of them exist to flag a change.
+fresh_master_max_bytes=500000000
 
 master="$1"
 raw_queue_string="${@:2}"
@@ -67,7 +70,8 @@ do
          master_source=(--url "$URL")
       fi;
       output_dir="$OUTPUT_BASE/output/$path_name"
-      if (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 100 < fresh_master_percent ));
+      if [ "$zip_bytes" != null ] && (( zip_bytes < fresh_master_max_bytes )) \
+         && (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 100 < fresh_master_percent ));
       then
          fresh_master=true
       else

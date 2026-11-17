@@ -152,10 +152,7 @@ public class ValidationReportComparator {
       droppedInfoNotices.compareValidationReports(
           sourceId, sourceUrl, latestReport, referenceReport);
       validationPerformanceCollector.compareValidationReports(
-          sourceId,
-          referenceReport,
-          latestReport,
-          FeedRun.fromDirectory(file.toPath()).isMasterReused());
+          sourceId, referenceReport, latestReport, FeedRun.fromDirectory(file.toPath()));
     }
 
     AcceptanceReport report =

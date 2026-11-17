@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 import org.mobilitydata.gtfsvalidator.model.ValidationReport;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.FeedRun;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.ValidationPerformance;
 import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
 
@@ -18,11 +19,11 @@ import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
  * acceptance test run.
  *
  * <p>Each metric is compared per dataset as the ratio latest / reference, so that every dataset
- * weighs the same whatever its size. The datasets are grouped by size, using the reference
- * validation time, because the few largest feeds have the noisiest timings and would otherwise
- * dominate any average. For each group, the geometric mean of the ratios is reported with a
- * bootstrap 95% confidence interval, and a change is only flagged when the whole interval is beyond
- * the metric's threshold.
+ * weighs the same whatever its size. The datasets are grouped by the size of their zip file, which
+ * does not depend on either run, because the few largest feeds have the noisiest timings and would
+ * otherwise dominate any average. For each group, the geometric mean of the ratios is reported with
+ * a bootstrap 95% confidence interval, and a change is only flagged when the whole interval is
+ * beyond the metric's threshold.
  *
  * <p>The acceptance tests reuse the reference report of an unchanged feed from an earlier run, made
  * on another machine. The metrics that depend on the machine are only compared on the datasets
@@ -30,8 +31,17 @@ import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
  */
 public class ValidationPerformanceCollector {
 
-  /** Upper bounds, in seconds of reference validation time, of the dataset size groups. */
-  static final double[] SIZE_GROUP_UPPER_BOUNDS_SECONDS = {2, 20, 120};
+  /**
+   * Upper bounds, in MB of zip file, of the dataset size groups. The bounds above 50 MB fall in
+   * gaps between the sizes of the acceptance test feeds, so that a feed rarely moves to another
+   * group.
+   */
+  static final long[] SIZE_GROUP_UPPER_BOUNDS_MB = {10, 50, 100, 200, 500};
+
+  /** Group of the datasets whose size is unknown, because their download failed. */
+  static final int UNKNOWN_SIZE_GROUP = -1;
+
+  private static final double BYTES_PER_MB = 1_000_000;
 
   /** Datasets faster than this are left out of the per-dataset table: JVM noise dominates them. */
   static final double MIN_SECONDS_FOR_DATASET_TABLE = 2;
@@ -46,14 +56,42 @@ public class ValidationPerformanceCollector {
 
   /** A metric compared between the reference and latest reports. */
   enum Metric {
-    WALL_TIME("Wall time", 0.05, true),
-    CPU_TIME("CPU time", 0.05, true),
-    ALLOCATED_MEMORY("Allocated memory", 0.01, false),
+    WALL_TIME(
+        "Wall time",
+        "Elapsed time of the validation, without reading the feed. It also moves with other load"
+            + " on the machine.",
+        0.05,
+        true),
+    CPU_TIME(
+        "CPU time",
+        "Processor time of the threads doing the validation, without garbage collection. Steadier"
+            + " than the wall time.",
+        0.05,
+        true),
+    ALLOCATED_MEMORY(
+        "Allocated memory",
+        "Total memory the validation allocated. It is nearly identical between runs, so even small"
+            + " changes are meaningful.",
+        0.01,
+        false),
     // When the collector runs depends on the speed and number of processors.
-    PEAK_HEAP_AFTER_GC("Peak heap after GC", 0.05, true),
-    PEAK_LIVE_HEAP("Peak live heap", 0.02, false);
+    PEAK_HEAP_AFTER_GC(
+        "Peak heap after GC",
+        "Largest memory in use right after a garbage collection. Only measured when a collection"
+            + " ran, which is mostly on larger feeds.",
+        0.05,
+        true),
+    PEAK_LIVE_HEAP(
+        "Peak live heap",
+        "Largest memory still in use at the end of a validation step, measured on every feed. The"
+            + " best indicator of how much memory a feed needs.",
+        0.02,
+        false);
 
     final String label;
+
+    /** What the metric measures, for the readers of the report. */
+    final String description;
 
     /**
      * Relative change the whole confidence interval must exceed for the change to be flagged.
@@ -64,8 +102,9 @@ public class ValidationPerformanceCollector {
     /** Whether the metric varies between machines, so that both reports must come from one job. */
     final boolean machineDependent;
 
-    Metric(String label, double threshold, boolean machineDependent) {
+    Metric(String label, String description, double threshold, boolean machineDependent) {
       this.label = label;
+      this.description = description;
       this.threshold = threshold;
       this.machineDependent = machineDependent;
     }
@@ -76,28 +115,23 @@ public class ValidationPerformanceCollector {
     final String datasetId;
     final Double referenceValidationTimeSeconds;
     final Double latestValidationTimeSeconds;
+    final Long zipBytes;
     final boolean referenceReused;
-
-    /** Reference time used to pick the size group, also when the wall time is not compared. */
-    Double referenceGroupingSeconds;
-
     final Map<Metric, double[]> referenceAndLatest = new LinkedHashMap<>();
 
     DatasetPerformance(
         String datasetId,
         Double referenceValidationTimeSeconds,
         Double latestValidationTimeSeconds,
-        boolean referenceReused) {
+        FeedRun feedRun) {
       this.datasetId = datasetId;
       this.referenceValidationTimeSeconds = referenceValidationTimeSeconds;
       this.latestValidationTimeSeconds = latestValidationTimeSeconds;
-      this.referenceReused = referenceReused;
+      this.zipBytes = feedRun.getZipBytes();
+      this.referenceReused = feedRun.isMasterReused();
     }
 
     void put(Metric metric, Number reference, Number latest) {
-      if (metric == Metric.WALL_TIME && reference != null) {
-        referenceGroupingSeconds = reference.doubleValue();
-      }
       if (metric.machineDependent && referenceReused) {
         return;
       }
@@ -121,26 +155,21 @@ public class ValidationPerformanceCollector {
 
   private final List<DatasetPerformance> datasets = new ArrayList<>();
 
-  public void compareValidationReports(
-      String sourceId, ValidationReport referenceReport, ValidationReport latestReport) {
-    compareValidationReports(sourceId, referenceReport, latestReport, false);
-  }
-
   /**
-   * @param referenceReused whether the reference report was reused from an earlier run on another
-   *     machine, which leaves out the metrics that depend on the machine
+   * @param feedRun how the acceptance tests validated the feed: its size picks the dataset's group,
+   *     and a reused reference report leaves out the metrics that depend on the machine
    */
   public void compareValidationReports(
       String sourceId,
       ValidationReport referenceReport,
       ValidationReport latestReport,
-      boolean referenceReused) {
+      FeedRun feedRun) {
     DatasetPerformance dataset =
         new DatasetPerformance(
             sourceId,
             referenceReport.getValidationTimeSeconds(),
             latestReport.getValidationTimeSeconds(),
-            referenceReused);
+            feedRun);
     ValidationPerformanceMetrics reference = referenceReport.getPerformanceMetrics();
     ValidationPerformanceMetrics latest = latestReport.getPerformanceMetrics();
     if (reference != null
@@ -177,10 +206,13 @@ public class ValidationPerformanceCollector {
     StringBuilder b = new StringBuilder();
     b.append("### ⏱️ Performance Assessment\n\n");
 
-    List<String[]> groupRows = new ArrayList<>();
+    Map<Metric, List<String[]>> groupRows = new LinkedHashMap<>();
+    Map<Metric, List<String>> groupVerdicts = new LinkedHashMap<>();
     List<String> flagged = new ArrayList<>();
     for (Metric metric : Metric.values()) {
-      for (int group = 0; group <= SIZE_GROUP_UPPER_BOUNDS_SECONDS.length; group++) {
+      List<String[]> rows = new ArrayList<>();
+      List<String> verdicts = new ArrayList<>();
+      for (int group : sizeGroups()) {
         List<Double> logRatios = new ArrayList<>();
         for (DatasetPerformance dataset : datasets) {
           Double ratio = dataset.ratio(metric);
@@ -203,16 +235,20 @@ public class ValidationPerformanceCollector {
                   sizeGroupLabel(group),
                   formatChange(summary.geometricMean),
                   formatInterval(summary)));
+          verdicts.add(verdict + " for " + sizeGroupLabel(group));
         }
-        groupRows.add(
+        rows.add(
             new String[] {
-              metric.label,
               sizeGroupLabel(group),
               String.valueOf(logRatios.size()),
               formatChange(summary.median),
               formatChange(summary.geometricMean) + " " + formatInterval(summary),
               verdict.isEmpty() ? "-" : "**" + verdict + "**"
             });
+      }
+      if (!rows.isEmpty()) {
+        groupRows.put(metric, rows);
+        groupVerdicts.put(metric, verdicts);
       }
     }
 
@@ -254,23 +290,31 @@ public class ValidationPerformanceCollector {
               reusedCount));
     }
 
-    b.append("<details>\n")
-        .append("<summary><strong>Changes by feed size</strong></summary>\n\n")
-        .append(
-            "Each feed is compared with itself (latest / reference) and the feeds are grouped by"
-                + " their reference validation time, so that the largest feeds do not dominate."
-                + " A change is flagged only when its whole 95% confidence interval is beyond the"
-                + " threshold: ")
-        .append(thresholdsDescription())
-        .append(".\n\n")
-        .append(
-            "| Metric | Feed size (reference time) | Feeds | Median change |"
-                + " Geometric mean change [95% CI] | Flag |\n")
-        .append("|---|---|---|---|---|---|\n");
-    for (String[] row : groupRows) {
-      b.append("| ").append(String.join(" | ", row)).append(" |\n");
+    b.append(
+        "Each feed is compared with itself (latest / reference), and the feeds are grouped by the"
+            + " size of their zip file so that the largest feeds do not dominate. A change is"
+            + " flagged only when its whole 95% confidence interval is beyond the metric's"
+            + " threshold.\n\n");
+    for (Map.Entry<Metric, List<String[]>> entry : groupRows.entrySet()) {
+      Metric metric = entry.getKey();
+      List<String> verdicts = groupVerdicts.get(metric);
+      b.append("<details>\n")
+          .append("<summary><strong>")
+          .append(metric.label)
+          .append("</strong>: ")
+          .append(verdicts.isEmpty() ? "no significant change" : String.join(", ", verdicts))
+          .append("</summary>\n\n")
+          .append(metric.description)
+          .append(String.format(Locale.ROOT, " Flagged beyond %.0f%%.\n\n", metric.threshold * 100))
+          .append(
+              "| Feed size (zip) | Feeds | Median change | Geometric mean change [95% CI] | Flag"
+                  + " |\n")
+          .append("|---|---|---|---|---|\n");
+      for (String[] row : entry.getValue()) {
+        b.append("| ").append(String.join(" | ", row)).append(" |\n");
+      }
+      b.append("</details>\n\n");
     }
-    b.append("</details>\n\n");
 
     appendLargestChanges(b);
     return b.toString();
@@ -301,11 +345,11 @@ public class ValidationPerformanceCollector {
                     + " by more than 20%% between runs, so look for changes that also show in CPU"
                     + " time or allocated memory.\n\n",
                 MIN_SECONDS_FOR_DATASET_TABLE))
-        .append("| Dataset ID | Reference time (s) | Latest time (s) |");
+        .append("| Dataset ID | Size (MB) | Reference time (s) | Latest time (s) |");
     for (Metric metric : Metric.values()) {
       b.append(' ').append(metric.label).append(" |");
     }
-    b.append("\n|---|---|---|");
+    b.append("\n|---|---|---|---|");
     for (int i = 0; i < Metric.values().length; i++) {
       b.append("---|");
     }
@@ -315,7 +359,14 @@ public class ValidationPerformanceCollector {
       double[] times = dataset.referenceAndLatest.get(Metric.WALL_TIME);
       b.append(
           String.format(
-              Locale.ROOT, "| %s | %.2f | %.2f |", dataset.datasetId, times[0], times[1]));
+              Locale.ROOT,
+              "| %s | %s | %.2f | %.2f |",
+              dataset.datasetId,
+              dataset.zipBytes == null
+                  ? "N/A"
+                  : String.format(Locale.ROOT, "%.1f", dataset.zipBytes / BYTES_PER_MB),
+              times[0],
+              times[1]));
       for (Metric metric : Metric.values()) {
         Double ratio = dataset.ratio(metric);
         b.append(' ').append(ratio == null ? "N/A" : formatChange(ratio)).append(" |");
@@ -402,41 +453,42 @@ public class ValidationPerformanceCollector {
     return "";
   }
 
-  static int sizeGroupOf(DatasetPerformance dataset) {
-    Double referenceTime = dataset.referenceGroupingSeconds;
-    if (referenceTime == null) {
-      referenceTime = dataset.referenceValidationTimeSeconds;
+  /** The size groups in display order, the unknown size last. */
+  static List<Integer> sizeGroups() {
+    List<Integer> groups = new ArrayList<>();
+    for (int group = 0; group <= SIZE_GROUP_UPPER_BOUNDS_MB.length; group++) {
+      groups.add(group);
     }
-    if (referenceTime == null) {
-      return -1;
+    groups.add(UNKNOWN_SIZE_GROUP);
+    return groups;
+  }
+
+  static int sizeGroupOf(DatasetPerformance dataset) {
+    if (dataset.zipBytes == null) {
+      return UNKNOWN_SIZE_GROUP;
     }
     int group = 0;
-    while (group < SIZE_GROUP_UPPER_BOUNDS_SECONDS.length
-        && referenceTime >= SIZE_GROUP_UPPER_BOUNDS_SECONDS[group]) {
+    while (group < SIZE_GROUP_UPPER_BOUNDS_MB.length
+        && dataset.zipBytes >= SIZE_GROUP_UPPER_BOUNDS_MB[group] * BYTES_PER_MB) {
       group++;
     }
     return group;
   }
 
   static String sizeGroupLabel(int group) {
-    Function<Double, String> format = seconds -> String.format(Locale.ROOT, "%.0f s", seconds);
+    if (group == UNKNOWN_SIZE_GROUP) {
+      return "unknown size";
+    }
+    Function<Long, String> format = mb -> String.format(Locale.ROOT, "%d MB", mb);
     if (group == 0) {
-      return "< " + format.apply(SIZE_GROUP_UPPER_BOUNDS_SECONDS[0]);
+      return "< " + format.apply(SIZE_GROUP_UPPER_BOUNDS_MB[0]);
     }
-    if (group == SIZE_GROUP_UPPER_BOUNDS_SECONDS.length) {
-      return ">= " + format.apply(SIZE_GROUP_UPPER_BOUNDS_SECONDS[group - 1]);
+    if (group == SIZE_GROUP_UPPER_BOUNDS_MB.length) {
+      return ">= " + format.apply(SIZE_GROUP_UPPER_BOUNDS_MB[group - 1]);
     }
-    return format.apply(SIZE_GROUP_UPPER_BOUNDS_SECONDS[group - 1])
+    return format.apply(SIZE_GROUP_UPPER_BOUNDS_MB[group - 1])
         + " to "
-        + format.apply(SIZE_GROUP_UPPER_BOUNDS_SECONDS[group]);
-  }
-
-  private static String thresholdsDescription() {
-    List<String> thresholds = new ArrayList<>();
-    for (Metric metric : Metric.values()) {
-      thresholds.add(String.format(Locale.ROOT, "%s %.0f%%", metric.label, metric.threshold * 100));
-    }
-    return String.join(", ", thresholds);
+        + format.apply(SIZE_GROUP_UPPER_BOUNDS_MB[group]);
   }
 
   private static String machineDependentLabels() {

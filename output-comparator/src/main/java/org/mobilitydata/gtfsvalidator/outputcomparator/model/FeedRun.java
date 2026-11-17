@@ -35,6 +35,13 @@ public class FeedRun {
   /** The number of processors available to the job. */
   private Integer processors;
 
+  private FeedRun() {}
+
+  public FeedRun(Long zipBytes, boolean masterReused) {
+    this.zipBytes = zipBytes;
+    this.masterReused = masterReused;
+  }
+
   /**
    * Reads the file from a feed's report directory. Without the file, as with reports from before it
    * existed, both reports are assumed to come from the same job.
