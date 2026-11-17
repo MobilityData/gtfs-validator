@@ -19,9 +19,7 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.Optional;
-
 import javax.inject.Inject;
-
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
