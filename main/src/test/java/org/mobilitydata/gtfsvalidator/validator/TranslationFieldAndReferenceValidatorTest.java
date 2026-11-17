@@ -88,17 +88,6 @@ public final class TranslationFieldAndReferenceValidatorTest {
   }
 
   @Test
-  public void missingRequiredStandardFields_yieldsNotice() {
-    GtfsTranslation translation = new GtfsTranslation.Builder().setCsvRowNumber(2).build();
-    assertThat(
-            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
-        .containsExactly(
-            new MissingRequiredFieldNotice("translations.txt", 2, "table_name"),
-            new MissingRequiredFieldNotice("translations.txt", 2, "field_name"),
-            new MissingRequiredFieldNotice("translations.txt", 2, "language"));
-  }
-
-  @Test
   public void wrongTableName_yieldsNotice() {
     GtfsTranslation translation =
         new GtfsTranslation.Builder()

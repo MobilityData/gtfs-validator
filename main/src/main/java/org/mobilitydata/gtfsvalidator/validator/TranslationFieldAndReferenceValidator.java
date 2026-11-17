@@ -59,52 +59,9 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
       // Skip validation if legacy Google translation format is detected.
       return;
     }
-    // If GtfsTranslationSchema.java is patched to enable the legacy Google format, then
-    // fields field_name, language and table_name become optional. Here we have detected that
-    // table_name header is present, so this is the standard GTFS translation format. Check that the
-    // standard required fields are present.
-    if (!validateStandardRequiredFields(noticeContainer)) {
-      return;
-    }
     for (GtfsTranslation translation : translationTable.getEntities()) {
       validateTranslation(translation, noticeContainer);
     }
-  }
-
-  /**
-   * Emits errors for missing required fields field_name, language and table_name.
-   *
-   * @return true if all required fields are set for all entities, false otherwise
-   */
-  private boolean validateStandardRequiredFields(NoticeContainer noticeContainer) {
-    boolean isValid = true;
-    for (GtfsTranslation translation : translationTable.getEntities()) {
-      if (!translation.hasFieldName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.FIELD_NAME_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasLanguage()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.LANGUAGE_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasTableName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.TABLE_NAME_FIELD_NAME));
-        isValid = false;
-      }
-    }
-    return isValid;
   }
 
   /** Validates a single row in {@code translations.txt}. */
