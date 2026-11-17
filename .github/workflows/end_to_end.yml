@@ -16,21 +16,8 @@ on:
       - 'acceptance_test.yml'
       - 'web/**'
       - '.github/workflows/**'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-      - '**.md'
-      - '**.py'
-      - 'Dockerfile'
-      - '.gitignore'
-      - 'LICENSE'
-      - 'docker.yml'
-      - 'formatting.yml'
-      - 'test_pack_dock.yml'
-      - 'triage.yml'
-      - 'acceptance_test.yml'
-      - 'web/**'
-      - '.github/workflows/**'
+  # No pull_request trigger: on PRs, the acceptance tests already validate every feed of the
+  # end-to-end sample with the PR's version of the validator.
   workflow_dispatch:
 
 env:
@@ -61,7 +48,7 @@ jobs:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
   fetch-urls:
-    runs-on: ubuntu-latest-4-cores
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v7.0.1
@@ -74,7 +61,7 @@ jobs:
       - name: Set URL matrix
         id: set-matrix
         run: |
-          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json -s)
+          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json -s --small-runner ubuntu-24.04 --large-runner ubuntu-latest-4-cores --large-feed-threshold-mb 50)
           echo $DATASETS
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
       - name: Persist metadata
@@ -87,9 +74,9 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   run-on-data:
     needs: [ fetch-urls, pack-snapshot ]
-    # We use machines with more memory to run validation, as large feeds
-    # can consume too much heap for default machine instances (see #1304).
-    runs-on: ubuntu-latest-4-cores
+    # Large feeds can consume too much heap for default machine instances (see #1304), so jobs
+    # holding them run on larger machines. The runner for each job is chosen in fetch-urls.
+    runs-on: ${{ matrix.runner }}
     strategy:
       matrix: ${{ fromJson(needs.fetch-urls.outputs.matrix) }}
     steps:
