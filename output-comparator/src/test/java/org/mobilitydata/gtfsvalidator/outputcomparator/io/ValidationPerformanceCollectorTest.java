@@ -123,6 +123,60 @@ public class ValidationPerformanceCollectorTest {
   }
 
   @Test
+  public void reusedReference_comparesOnlyMachineIndependentMetrics() {
+    ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
+    for (int i = 0; i < 6; i++) {
+      collector.compareValidationReports(
+          "fresh-" + i, report(0, 10, 1_000_000, 500L), report(0, 10, 1_000_000, 500L), false);
+    }
+    for (int i = 0; i < 4; i++) {
+      // The reference ran on a slower machine: only the timings and the heap after GC differ.
+      collector.compareValidationReports(
+          "reused-" + i, report(0, 15, 1_000_000, 900L), report(0, 10, 1_000_000, 500L), true);
+    }
+
+    String log = collector.generateLogString();
+
+    assertThat(log).contains("No significant performance change detected.");
+    assertThat(log)
+        .contains(
+            "Wall time, CPU time and Peak heap after GC are only compared on the 6 feeds validated"
+                + " by both versions in the same job. The other 4 feeds reused");
+    assertThat(log).contains("| Wall time | 2 s to 20 s | 6 | +0.0% |");
+    assertThat(log).contains("| Peak heap after GC | 2 s to 20 s | 6 | +0.0% |");
+    // The reused datasets keep their size group, from the reference time.
+    assertThat(log).contains("| Allocated memory | 2 s to 20 s | 10 | +0.0% |");
+    assertThat(log).doesNotContain("reused-0 |");
+  }
+
+  @Test
+  public void everyReferenceReused_saysTimingsAreNotCompared() {
+    ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
+    for (int i = 0; i < 5; i++) {
+      collector.compareValidationReports(
+          "reused-" + i, report(0, 15, 1_000_000, 900L), report(0, 10, 1_000_000, 500L), true);
+    }
+
+    String log = collector.generateLogString();
+
+    assertThat(log)
+        .contains(
+            "Wall time, CPU time and Peak heap after GC are not compared: every feed reused the"
+                + " reference report");
+    assertThat(log).contains("| Allocated memory | 2 s to 20 s | 5 | +0.0% |");
+    assertThat(log).doesNotContain("| Wall time |");
+  }
+
+  @Test
+  public void sameJobReferences_doNotMentionReuse() {
+    ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
+    collector.compareValidationReports(
+        "feed-a", report(0, 10, 1_000_000, 500L), report(0, 10, 1_000_000, 500L));
+
+    assertThat(collector.generateLogString()).doesNotContain("reused");
+  }
+
+  @Test
   public void legacyReports_compareValidationTimeOnly() {
     ValidationPerformanceCollector collector = new ValidationPerformanceCollector();
     collector.compareValidationReports("feed-a", legacyReport(10), legacyReport(12));

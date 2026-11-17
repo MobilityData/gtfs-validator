@@ -13,6 +13,7 @@ import org.mobilitydata.gtfsvalidator.outputcomparator.io.ChangedNoticesCollecto
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.CorruptedSourcesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.OutOfMemorySourcesCollector;
 import org.mobilitydata.gtfsvalidator.outputcomparator.io.ValidationPerformanceCollector;
+import org.mobilitydata.gtfsvalidator.outputcomparator.model.FeedRun;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.SourceUrlContainer;
 import org.mobilitydata.gtfsvalidator.outputcomparator.model.report.AcceptanceReport;
 
@@ -151,7 +152,10 @@ public class ValidationReportComparator {
       droppedInfoNotices.compareValidationReports(
           sourceId, sourceUrl, latestReport, referenceReport);
       validationPerformanceCollector.compareValidationReports(
-          sourceId, referenceReport, latestReport);
+          sourceId,
+          referenceReport,
+          latestReport,
+          FeedRun.fromDirectory(file.toPath()).isMasterReused());
     }
 
     AcceptanceReport report =

@@ -23,6 +23,10 @@ import org.mobilitydata.gtfsvalidator.performance.ValidationPerformanceMetrics;
  * dominate any average. For each group, the geometric mean of the ratios is reported with a
  * bootstrap 95% confidence interval, and a change is only flagged when the whole interval is beyond
  * the metric's threshold.
+ *
+ * <p>The acceptance tests reuse the reference report of an unchanged feed from an earlier run, made
+ * on another machine. The metrics that depend on the machine are only compared on the datasets
+ * whose reports were both produced in the same job.
  */
 public class ValidationPerformanceCollector {
 
@@ -42,11 +46,12 @@ public class ValidationPerformanceCollector {
 
   /** A metric compared between the reference and latest reports. */
   enum Metric {
-    WALL_TIME("Wall time", 0.05),
-    CPU_TIME("CPU time", 0.05),
-    ALLOCATED_MEMORY("Allocated memory", 0.01),
-    PEAK_HEAP_AFTER_GC("Peak heap after GC", 0.05),
-    PEAK_LIVE_HEAP("Peak live heap", 0.02);
+    WALL_TIME("Wall time", 0.05, true),
+    CPU_TIME("CPU time", 0.05, true),
+    ALLOCATED_MEMORY("Allocated memory", 0.01, false),
+    // When the collector runs depends on the speed and number of processors.
+    PEAK_HEAP_AFTER_GC("Peak heap after GC", 0.05, true),
+    PEAK_LIVE_HEAP("Peak live heap", 0.02, false);
 
     final String label;
 
@@ -56,9 +61,13 @@ public class ValidationPerformanceCollector {
      */
     final double threshold;
 
-    Metric(String label, double threshold) {
+    /** Whether the metric varies between machines, so that both reports must come from one job. */
+    final boolean machineDependent;
+
+    Metric(String label, double threshold, boolean machineDependent) {
       this.label = label;
       this.threshold = threshold;
+      this.machineDependent = machineDependent;
     }
   }
 
@@ -67,18 +76,31 @@ public class ValidationPerformanceCollector {
     final String datasetId;
     final Double referenceValidationTimeSeconds;
     final Double latestValidationTimeSeconds;
+    final boolean referenceReused;
+
+    /** Reference time used to pick the size group, also when the wall time is not compared. */
+    Double referenceGroupingSeconds;
+
     final Map<Metric, double[]> referenceAndLatest = new LinkedHashMap<>();
 
     DatasetPerformance(
         String datasetId,
         Double referenceValidationTimeSeconds,
-        Double latestValidationTimeSeconds) {
+        Double latestValidationTimeSeconds,
+        boolean referenceReused) {
       this.datasetId = datasetId;
       this.referenceValidationTimeSeconds = referenceValidationTimeSeconds;
       this.latestValidationTimeSeconds = latestValidationTimeSeconds;
+      this.referenceReused = referenceReused;
     }
 
     void put(Metric metric, Number reference, Number latest) {
+      if (metric == Metric.WALL_TIME && reference != null) {
+        referenceGroupingSeconds = reference.doubleValue();
+      }
+      if (metric.machineDependent && referenceReused) {
+        return;
+      }
       if (reference != null && latest != null && reference.doubleValue() > 0) {
         referenceAndLatest.put(
             metric, new double[] {reference.doubleValue(), latest.doubleValue()});
@@ -101,11 +123,24 @@ public class ValidationPerformanceCollector {
 
   public void compareValidationReports(
       String sourceId, ValidationReport referenceReport, ValidationReport latestReport) {
+    compareValidationReports(sourceId, referenceReport, latestReport, false);
+  }
+
+  /**
+   * @param referenceReused whether the reference report was reused from an earlier run on another
+   *     machine, which leaves out the metrics that depend on the machine
+   */
+  public void compareValidationReports(
+      String sourceId,
+      ValidationReport referenceReport,
+      ValidationReport latestReport,
+      boolean referenceReused) {
     DatasetPerformance dataset =
         new DatasetPerformance(
             sourceId,
             referenceReport.getValidationTimeSeconds(),
-            latestReport.getValidationTimeSeconds());
+            latestReport.getValidationTimeSeconds(),
+            referenceReused);
     ValidationPerformanceMetrics reference = referenceReport.getPerformanceMetrics();
     ValidationPerformanceMetrics latest = latestReport.getPerformanceMetrics();
     if (reference != null
@@ -197,6 +232,26 @@ public class ValidationPerformanceCollector {
       b.append(
           "Only the validation time is compared: the reference or latest validator does not"
               + " report the detailed performance metrics.\n\n");
+    }
+    long reusedCount = datasets.stream().filter(d -> d.referenceReused).count();
+    if (reusedCount == datasets.size()) {
+      b.append(
+          String.format(
+              Locale.ROOT,
+              "%s are not compared: every feed reused the reference report of an earlier run on"
+                  + " another machine. Run the workflow manually with reuse_master_reports off to"
+                  + " compare them.\n\n",
+              machineDependentLabels()));
+    } else if (reusedCount > 0) {
+      b.append(
+          String.format(
+              Locale.ROOT,
+              "%s are only compared on the %d feeds validated by both versions in the same job."
+                  + " The other %d feeds reused the reference report of an earlier run on another"
+                  + " machine.\n\n",
+              machineDependentLabels(),
+              datasets.size() - reusedCount,
+              reusedCount));
     }
 
     b.append("<details>\n")
@@ -348,7 +403,7 @@ public class ValidationPerformanceCollector {
   }
 
   static int sizeGroupOf(DatasetPerformance dataset) {
-    Double referenceTime = dataset.reference(Metric.WALL_TIME);
+    Double referenceTime = dataset.referenceGroupingSeconds;
     if (referenceTime == null) {
       referenceTime = dataset.referenceValidationTimeSeconds;
     }
@@ -382,6 +437,18 @@ public class ValidationPerformanceCollector {
       thresholds.add(String.format(Locale.ROOT, "%s %.0f%%", metric.label, metric.threshold * 100));
     }
     return String.join(", ", thresholds);
+  }
+
+  private static String machineDependentLabels() {
+    List<String> labels = new ArrayList<>();
+    for (Metric metric : Metric.values()) {
+      if (metric.machineDependent) {
+        labels.add(metric.label);
+      }
+    }
+    return String.join(", ", labels.subList(0, labels.size() - 1))
+        + " and "
+        + labels.get(labels.size() - 1);
   }
 
   private static String formatChange(double ratio) {
