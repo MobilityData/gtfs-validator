@@ -29,6 +29,10 @@ On each of these urls:
 1. the reference version of the validator is executed and the validation report is output as JSON (under `reference.json`);
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
 
+The reference reports only depend on master's code and on the feed's file, so they are cached by feed ID and file hash, per master commit. When a feed's file is unchanged, the reference report of an earlier run is reused and only the proposed validator runs. A fixed sample of about 25% of the feeds, picked by feed ID, never reuses it, so that both validators run in the same job and their timings can be compared. Feeds of 500 MB or more are left out of that sample: each one is alone in its job, and running the reference validator again would make the whole workflow wait longer.
+
+Next to each feed's reports, `feed.json` records how the feed was validated: the size of its zip file (`zipBytes`, `null` when the download failed), whether the reference report was reused (`masterReused`), the runner and its number of processors. The validators do not read or write this file.
+
 At the end of execution of the two aforementioned steps for every url in the matrix, all the validation
 reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets
 is output to the console.  The final acceptance test report is output at `acceptance_report.json`.
@@ -127,14 +131,15 @@ The _Out of Memory Check_ lists the datasets whose validation ran out of memory 
 ### How the comparison works
 
 - Each metric is compared per dataset as latest / reference, so that every dataset weighs the same.
-- Datasets are grouped by reference validation time: < 2 s, 2 to 20 s, 20 to 120 s and >= 120 s.
-- For each group, the comment shows the median and the geometric mean of the changes, with a 95% bootstrap confidence interval.
+- Datasets are grouped by the size of their zip file: < 10 MB, 10 to 50 MB, 50 to 100 MB, 100 to 200 MB, 200 to 500 MB and >= 500 MB. Datasets whose download failed are grouped as _unknown size_. The size does not depend on either run, and the bounds above 50 MB fall in gaps between the sizes of the feeds, so that a feed rarely moves to another group.
+- Wall time, CPU time and peak heap after GC depend on the machine, so they are only compared on the datasets whose two reports were produced in the same job. Allocated memory and peak live heap are compared on every dataset. The comment says how many datasets the timings used.
+- Each metric has its own collapsible section, with a short description and a table by size group. For each group, the table shows the median and the geometric mean of the changes, with a 95% bootstrap confidence interval.
 - A change is flagged as _Regression_ or _Improvement_ only when the whole interval is beyond the metric's threshold and the group has at least 5 datasets.
-- _Largest wall time changes per feed_ lists the 10 datasets of at least 2 s with the largest wall time change, with all their metrics.
+- _Largest wall time changes per feed_ lists the 10 datasets of at least 2 s with the largest wall time change, with their zip size and all their metrics.
 
 ### How to read it
 
-- Start with the flagged lines, then check the group table: a group's median shows what a typical feed does, while the geometric mean can be pulled by a few feeds.
+- Start with the flagged lines, then open the metric's section: a group's median shows what a typical feed does, while the geometric mean can be pulled by a few feeds.
 - Memory: _Peak live heap_ is what the validator keeps, which decides whether a feed fits in memory. _Allocated memory_ is what it creates, which costs garbage collection and CPU time. A change can lower one and raise the other.
 - Memory against CPU. These often move in opposite directions:
   - Lower live heap, higher CPU and allocation: less data is kept and rows are rebuilt on each read, for example a table stored as compact columns.
@@ -143,12 +148,14 @@ The _Out of Memory Check_ lists the datasets whose validation ran out of memory 
 
   A memory fix is expected to cost some CPU, and a speed fix some memory.
 - Timings: a single feed's time can vary by more than 20% between runs. Trust a timing change when it shows across a group, or when CPU time or allocated memory move the same way.
-- Expect changes in loading or validators to show mostly in the 2 to 20 s and 20 to 120 s groups. The >= 120 s group has few datasets and is rarely flagged.
+- The groups above 100 MB have few datasets, and fewer still have timings on a regular PR run. To compare the timings of every feed, run the pipeline manually without reusing the reference reports (see below). The >= 500 MB group has 2 datasets and is never flagged: check them in the per-feed table.
 
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
 2. The acceptance test pipeline will run each time code is pushed on the newly created branch; **except if** the keyword `[acceptance test skip]` is included in the commit message.
+
+To validate every feed with both validators in the same job, for example to check a performance change, run the pipeline manually: in the Actions tab, open _Rule acceptance tests_, click _Run workflow_, pick the PR's branch and uncheck `reuse_master_reports`. The report is posted on the branch's open PR and in the run summary. A manual run validates the branch as is, not merged with master, and is only available for branches of this repository.
 
 ## Instructions to verify the execution of the pipeline
 
