@@ -37,10 +37,21 @@ do
       # otherwise show up as a difference in the reports.
       feed_dir="$OUTPUT_BASE/feeds/$path_name"
       mkdir -p "$feed_dir"
+      cached_master_dir=""
       if curl -fsSL --retry 3 -A "MobilityData GTFS-Validator (acceptance tests)" "$URL" -o "$feed_dir/gtfs.zip";
       then
          snapshot_source=(--input "$feed_dir/gtfs.zip")
          master_source=(--input "$feed_dir/gtfs.zip")
+         # Master's reports only depend on master's code and on the feed's content, so they are
+         # stored by feed ID and feed file hash. MASTER_REPORTS_CACHE holds reports from earlier
+         # runs on the same master commit (restored by the workflow); MASTER_REPORTS_OUT
+         # receives this job's master reports, reused or new, so the workflow can save them.
+         if [ -n "$MASTER_REPORTS_CACHE" ] && [ -n "$MASTER_REPORTS_OUT" ];
+         then
+            feed_hash=$(sha256sum "$feed_dir/gtfs.zip" | cut -d ' ' -f 1)
+            cached_master_dir="$MASTER_REPORTS_CACHE/$path_name/$feed_hash"
+            out_master_dir="$MASTER_REPORTS_OUT/$path_name/$feed_hash"
+         fi;
       else
          # Let the validators do their own fetching so an unreachable feed is recorded as
          # an IOError in the reports, which is what the comparison expects, instead of
@@ -48,17 +59,33 @@ do
          snapshot_source=(--url "$URL")
          master_source=(--url "$URL")
       fi;
-      # Whichever validator runs first on a feed is slightly slower, which biased every
-      # performance comparison against the snapshot when it always ran first. Alternating the
-      # order per feed cancels that out across the datasets. The order comes from a checksum of
-      # the feed ID so that a feed always runs in the same order across runs.
-      if (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 2 == 0 ));
+      output_dir="$OUTPUT_BASE/output/$path_name"
+      if [ -n "$cached_master_dir" ] && [ -f "$cached_master_dir/reference.json" ];
       then
+         echo "Reusing master reports for $ID from an earlier run on the same feed file"
+         mkdir -p "$output_dir"
+         cp "$cached_master_dir"/reference*.json "$output_dir/"
          run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
-         run_validator gtfs-validator-master reference "${master_source[@]}"
       else
-         run_validator gtfs-validator-master reference "${master_source[@]}"
-         run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+         # Whichever validator runs first on a feed is slightly slower, which biased every
+         # performance comparison against the snapshot when it always ran first. Alternating the
+         # order per feed cancels that out across the datasets. The order comes from a checksum of
+         # the feed ID so that a feed always runs in the same order across runs.
+         if (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 2 == 0 ));
+         then
+            run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+            run_validator gtfs-validator-master reference "${master_source[@]}"
+         else
+            run_validator gtfs-validator-master reference "${master_source[@]}"
+            run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
+         fi;
+      fi;
+      # Only a complete master report is kept for reuse; a crashed or out-of-memory master run is
+      # retried next time.
+      if [ -n "$cached_master_dir" ] && [ -f "$output_dir/reference.json" ];
+      then
+         mkdir -p "$out_master_dir"
+         cp "$output_dir"/reference*.json "$out_master_dir/"
       fi;
       rm -rf "$feed_dir"
    else
