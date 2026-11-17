@@ -19,7 +19,9 @@ import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.INFO;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
 import java.util.Optional;
+
 import javax.inject.Inject;
+
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
@@ -59,7 +61,8 @@ public class ParentStationDistanceValidator extends FileValidator {
     for (GtfsStop stop : stopTable.getEntities()) {
       if (stop.locationType() != GtfsLocationType.STOP
           || !stop.hasParentStation()
-          || !stop.hasStopLatLon()) {
+          || !stop.hasStopLatLon()
+          || S2Earth.isNearOriginOrPole(stop.stopLat(), stop.stopLon())) {
         continue;
       }
       Optional<GtfsStop> optionalParentStation = stopTable.byStopId(stop.parentStation());
