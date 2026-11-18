@@ -16,6 +16,13 @@ run_validator() {
    java -Xmx12G -Xms8G -Dgtfsvalidator.performance.liveHeap=true "-XX:OnOutOfMemoryError=bash $oom_script $output_dir/${report_name}_errors.json" -XX:+ExitOnOutOfMemoryError -jar $jar_dir/gtfs-validator*.jar "$@" --output_base "$output_dir" --validation_report_name "$report_name.json" --system_errors_report_name "${report_name}_errors.json" --skip_validator_update
 }
 
+# Percentage of the feeds, picked by feed ID, whose master reports are never reused: both
+# validators run in the same job, so that their timings can be compared.
+fresh_master_percent="${FRESH_MASTER_PERCENT:-25}"
+# Feeds this large are left out of that sample: each one is alone in its job, so running master
+# again would make the whole workflow wait longer, and too few of them exist to flag a change.
+fresh_master_max_bytes=500000000
+
 master="$1"
 raw_queue_string="${@:2}"
 IFS=" " read -a queue <<< $raw_queue_string
@@ -38,10 +45,13 @@ do
       feed_dir="$OUTPUT_BASE/feeds/$path_name"
       mkdir -p "$feed_dir"
       cached_master_dir=""
+      zip_bytes=null
+      master_reused=false
       if curl -fsSL --retry 3 -A "MobilityData GTFS-Validator (acceptance tests)" "$URL" -o "$feed_dir/gtfs.zip";
       then
          snapshot_source=(--input "$feed_dir/gtfs.zip")
          master_source=(--input "$feed_dir/gtfs.zip")
+         zip_bytes=$(wc -c < "$feed_dir/gtfs.zip" | tr -d ' ')
          # Master's reports only depend on master's code and on the feed's content, so they are
          # stored by feed ID and feed file hash. MASTER_REPORTS_CACHE holds reports from earlier
          # runs on the same master commit (restored by the workflow); MASTER_REPORTS_OUT
@@ -60,11 +70,19 @@ do
          master_source=(--url "$URL")
       fi;
       output_dir="$OUTPUT_BASE/output/$path_name"
-      if [ -n "$cached_master_dir" ] && [ -f "$cached_master_dir/reference.json" ];
+      if [ "$zip_bytes" != null ] && (( zip_bytes < fresh_master_max_bytes )) \
+         && (( $(cksum <<< "$ID" | cut -d ' ' -f 1) % 100 < fresh_master_percent ));
+      then
+         fresh_master=true
+      else
+         fresh_master=false
+      fi;
+      if [ "$fresh_master" = false ] && [ -n "$cached_master_dir" ] && [ -f "$cached_master_dir/reference.json" ];
       then
          echo "Reusing master reports for $ID from an earlier run on the same feed file"
          mkdir -p "$output_dir"
          cp "$cached_master_dir"/reference*.json "$output_dir/"
+         master_reused=true
          run_validator gtfs-validator-snapshot latest "${snapshot_source[@]}"
       else
          # Whichever validator runs first on a feed is slightly slower, which biased every
@@ -87,6 +105,15 @@ do
          mkdir -p "$out_master_dir"
          cp "$output_dir"/reference*.json "$out_master_dir/"
       fi;
+      # Tells the comparator how the feed was validated. The validators do not read this file.
+      mkdir -p "$output_dir"
+      jq -n \
+         --argjson zipBytes "$zip_bytes" \
+         --argjson masterReused "$master_reused" \
+         --arg runner "${RUNNER_LABEL:-}" \
+         --argjson processors "$(getconf _NPROCESSORS_ONLN)" \
+         '{zipBytes: $zipBytes, masterReused: $masterReused, runner: $runner, processors: $processors}' \
+         > "$output_dir/feed.json"
       rm -rf "$feed_dir"
    else
       run_validator gtfs-validator-snapshot latest --url "$URL"
