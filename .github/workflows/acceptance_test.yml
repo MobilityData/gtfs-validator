@@ -17,13 +17,17 @@ on:
       - '.github/workflows/stg_web_**.yml'
     types: [ opened, synchronize, reopened, ready_for_review ]
   # Manual runs, on a PR's branch, can validate every feed with master again so that all the
-  # timings are compared within one job.
+  # timings are compared within one job, or compare the branch with another reference than master.
   workflow_dispatch:
     inputs:
       reuse_master_reports:
         description: 'Reuse master reports of unchanged feeds from earlier runs'
         type: boolean
         default: true
+      baseline_ref:
+        description: 'Branch, tag or commit to build the reference validator from (default: master)'
+        type: string
+        default: ''
 concurrency:
   group: ${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -89,12 +93,14 @@ jobs:
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
+  # Builds the reference validator: master, or the baseline_ref of a manual run. The job and its
+  # artifact keep the master name.
   pack-master:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
         with:
-          ref: master
+          ref: ${{ inputs.baseline_ref || 'master' }}
       - name: Record master commit
         id: master-commit
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -108,6 +114,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
+      # queue_runner.sh passes --skip_validator_update, which older validators reject on every feed.
+      - name: Check that the reference validator supports the acceptance tests
+        run: |
+          usage=$(java -jar cli/build/libs/gtfs-validator-*-cli.jar --help 2>&1 || true)
+          grep -q -- --skip_validator_update <<< "$usage" \
+            || { echo "::error::The reference validator is too old: it has no --skip_validator_update option (added in #1683)."; exit 1; }
       - name: Persist gtfs-validator jar from master branch
         uses: actions/upload-artifact@v6
         with:
@@ -206,7 +218,9 @@ jobs:
     # Collects master's reports from every validation job into one cache entry for this master
     # commit, on top of the previous entry, so later runs can reuse them.
     needs: [ pack-master, get-reports ]
-    if: ${{ !cancelled() && needs.pack-master.result == 'success' }}
+    # A baseline other than master is not saved, so that it does not evict master's reports from
+    # the cache.
+    if: ${{ !cancelled() && needs.pack-master.result == 'success' && !inputs.baseline_ref }}
     runs-on: ubuntu-24.04
     steps:
       - name: Restore master reports from earlier runs
@@ -237,7 +251,7 @@ jobs:
            pattern: reports_${{ github.run_attempt }}_*
            delete-merged: true
   compare-outputs:
-    needs: [ merge-reports-artifacts ]
+    needs: [ pack-master, merge-reports-artifacts ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
@@ -265,6 +279,7 @@ jobs:
            --latest_report_name latest.json \
            --output_base acceptance-test-output \
            --commit_sha ${{ github.sha }} \
+           --reference_commit_sha ${{ needs.pack-master.outputs.master_sha }} \
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()

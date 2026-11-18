@@ -6,7 +6,7 @@ Because GTFS data consumers and producers rely on the validator it is important 
 If this step is skipped, newly declared invalid datasets could be rejected by GTFS data consumers (e.g. Transit App, Google Maps) which could lead to public transit systems disappearing from their interface which means that riders would no longer be able to access the trip information they are used to getting on these platforms.   
 
 ## Definitions
-- **The reference validator** is defined as the latest version of the validator available on the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository.
+- **The reference validator** is defined as the latest version of the validator available on the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository, or the commit chosen with `baseline_ref` in a manual run.
 - **The proposed validator** is defined as the version of the validator that results from the changes introduced in the pull request that is proposed.
 - **The acceptance criteria** (mentioned in the diagram below) is defined as the impact that a pull request has on datasets: does this pull request disrupt a large quantities of datasets? If yes, the pull request should be flagged as introducing breaking changes or rejected, if no then the pull request can be safely merged to the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master).
    
@@ -156,6 +156,8 @@ The _Out of Memory Check_ lists the datasets whose validation ran out of memory 
 2. The acceptance test pipeline will run each time code is pushed on the newly created branch; **except if** the keyword `[acceptance test skip]` is included in the commit message.
 
 To validate every feed with both validators in the same job, for example to check a performance change, run the pipeline manually: in the Actions tab, open _Rule acceptance tests_, click _Run workflow_, pick the PR's branch and uncheck `reuse_master_reports`. The report is posted on the branch's open PR and in the run summary. A manual run validates the branch as is, not merged with master, and is only available for branches of this repository.
+
+To compare the branch with another reference than master, for example the commit before a performance change or a release tag, fill in `baseline_ref` with a branch, tag or commit SHA when starting a manual run. The reference validator is then built from that commit, and the report says which commit it was built from. The reference reports of such a run are not saved for reuse. The baseline must be from March 2024 (#1683) or later: older validators lack the `--skip_validator_update` option, and the run stops before validating any feed.
 
 ## Instructions to verify the execution of the pipeline
 
