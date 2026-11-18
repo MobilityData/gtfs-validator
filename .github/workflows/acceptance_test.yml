@@ -332,13 +332,7 @@ jobs:
         with:
           message: ${{ env.PR_COMMENT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # A manual run comments on the open PR of its branch, if there is one, and always writes the
-      # report to the run summary.
-      - name: Comment Pull Request of a manual run
+      # A manual run does not comment on any PR: it writes the report to the run summary only.
+      - name: Write the report of a manual run to the run summary
         if: ${{ always() && github.event_name == 'workflow_dispatch' }}
-        run: |
-          cat acceptance-test-output/acceptance_report_summary.md >> "$GITHUB_STEP_SUMMARY"
-          gh pr comment "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --body-file acceptance-test-output/acceptance_report_summary.md \
-            || echo "No open pull request for $GITHUB_REF_NAME, the report is in the run summary."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cat acceptance-test-output/acceptance_report_summary.md >> "$GITHUB_STEP_SUMMARY"
