@@ -271,6 +271,11 @@ public class ValidationReportComparator {
     } else {
       b.append(".\n");
     }
+    if (args.getReferenceCommitSha().isPresent()) {
+      b.append("Compared with the reference validator built from commit ")
+          .append(args.getReferenceCommitSha().get())
+          .append(".\n");
+    }
     if (args.getRunId().isPresent()) {
       b.append(
           String.format(

@@ -11,6 +11,7 @@
 # limitations under the License.
 
 import argparse
+import io
 import json
 import pandas as pd
 import os
@@ -29,6 +30,20 @@ from os import path
 FEEDS_CSV = "scripts/mobility-database-harvester/acceptance_test_feed_list.csv"
 LATEST_URL = "urls.latest"
 STABLE_ID = "stable_id"
+
+# The full Mobility Database catalog, for manual runs over more feeds than the committed list.
+CATALOG_CSV = "https://files.mobilitydatabase.org/feeds_v2.csv"
+CATALOG_ID = "id"
+CATALOG_DATA_TYPE = "data_type"
+CATALOG_STATUS = "status"
+GTFS = "gtfs"
+DEPRECATED = "deprecated"
+# Feed lists: the committed list, or the catalog's GTFS feeds that have a latest dataset, either
+# only the active ones or all but the deprecated ones.
+ACCEPTANCE_LIST = "acceptance"
+ACTIVE = "active"
+NON_DEPRECATED = "non-deprecated"
+FEED_LISTS = [ACCEPTANCE_LIST, ACTIVE, NON_DEPRECATED]
 
 # Github constants
 # As per https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
@@ -97,14 +112,40 @@ def save_content_to_file(content, data_path, filename):
         json.dump(content, f)
 
 
-def harvest_latest_versions(to_sample):
+def read_catalog(feed_list):
+    """Reads the GTFS feeds that have a latest dataset from the Mobility Database catalog.
+    :param feed_list: ACTIVE or NON_DEPRECATED.
+    :return: A data frame with the columns 'stable_id' and 'urls.latest'.
+    """
+    response = requests.get(
+        CATALOG_CSV,
+        headers={"User-Agent": USER_AGENT},
+        timeout=SIZE_REQUEST_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    catalog = pd.read_csv(io.StringIO(response.text), low_memory=False)
+    catalog = catalog[
+        (catalog[CATALOG_DATA_TYPE] == GTFS) & catalog[LATEST_URL].notna()
+    ]
+    if feed_list == ACTIVE:
+        catalog = catalog[catalog[CATALOG_STATUS] == ACTIVE]
+    else:
+        catalog = catalog[catalog[CATALOG_STATUS] != DEPRECATED]
+    return catalog.rename(columns={CATALOG_ID: STABLE_ID})[[STABLE_ID, LATEST_URL]]
+
+
+def harvest_latest_versions(to_sample, feed_list=ACCEPTANCE_LIST):
     """Harvests the latest URLs from the provided csv.
     The only columns of interest are 'stable_id' and 'urls.latest'.
     The files may contain other columns, but they are ignored.
     :param to_sample: Boolean flag. Sample the sources in the CSV if True.
+    :param feed_list: One of FEED_LISTS: the committed list, or feeds of the catalog.
     :return: The dictionary of the latest URLs with the format {Name: Url}.
     """
-    catalogs_gtfs = pd.read_csv(FEEDS_CSV)
+    if feed_list == ACCEPTANCE_LIST:
+        catalogs_gtfs = pd.read_csv(FEEDS_CSV)
+    else:
+        catalogs_gtfs = read_catalog(feed_list)
     latest_versions = {}
 
     if to_sample:
@@ -257,6 +298,13 @@ if __name__ == "__main__":
         help="Boolean flag to sample or not the data.",
     )
     parser.add_argument(
+        "--feeds",
+        choices=FEED_LISTS,
+        default=ACCEPTANCE_LIST,
+        help="Feeds to validate: the committed acceptance test list, or the active or"
+        " non-deprecated GTFS feeds of the Mobility Database catalog.",
+    )
+    parser.add_argument(
         "--large-feed-threshold-mb",
         type=float,
         default=DEFAULT_LARGE_FEED_THRESHOLD_MB,
@@ -289,7 +337,7 @@ if __name__ == "__main__":
     elif not path.isdir(data_path):
         os.mkdir(data_path)
 
-    latest_versions = harvest_latest_versions(to_sample)
+    latest_versions = harvest_latest_versions(to_sample, args.feeds)
     # We save the latest versions as a JSON file because it is used later in the "compare-outputs" job of the workflow.
     save_content_to_file(
         latest_versions,
