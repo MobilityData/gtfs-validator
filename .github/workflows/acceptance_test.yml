@@ -98,9 +98,20 @@ jobs:
   pack-master:
     runs-on: ubuntu-latest
     steps:
+      # actions/checkout only takes a full commit SHA, so a short SHA, branch or tag is resolved
+      # first.
+      - name: Resolve reference commit
+        id: reference
+        run: |
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/$REF" --jq .sha) \
+            || { echo "::error::Cannot find the commit, branch or tag '$REF'."; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+        env:
+          REF: ${{ inputs.baseline_ref || 'master' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v7.0.1
         with:
-          ref: ${{ inputs.baseline_ref || 'master' }}
+          ref: ${{ steps.reference.outputs.sha }}
       - name: Record master commit
         id: master-commit
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
