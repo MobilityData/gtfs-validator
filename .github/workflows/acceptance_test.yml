@@ -218,7 +218,7 @@ jobs:
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Comment Pull Request
-        if: always()
+        if: always() && env.PR_COMMENT != ''
         uses: peter-evans/create-or-update-comment@v5.0.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
