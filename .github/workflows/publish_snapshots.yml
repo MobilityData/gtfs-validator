@@ -17,7 +17,7 @@ env:
 
 jobs:
   publish-snapshots:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v7.0.1
@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}

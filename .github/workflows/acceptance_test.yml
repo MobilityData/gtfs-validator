@@ -49,7 +49,7 @@ env:
 jobs:
   fail_if_pull_request_is_draft: # Fails in order to indicate that pull request needs to be marked as ready to review to pass.
     if: github.event.pull_request.draft == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Fail if PR is a draft
         run: exit 1
@@ -57,7 +57,7 @@ jobs:
     name: Prepare CI environment
     # Skip this job and its dependencies if the PR is draft. Manual runs have no PR.
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Project
         uses: actions/checkout@v7.0.1
@@ -79,11 +79,11 @@ jobs:
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
   pack-snapshot:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -93,19 +93,19 @@ jobs:
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: gtfs-validator-snapshot
           path: cli/build/libs/gtfs-validator-*-cli.jar
       - name: Persist comparator snapshot jar
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
   # Builds the reference validator: master, or the baseline_ref of a manual run. The job and its
   # artifact keep the master name.
   pack-master:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       # actions/checkout only takes a full commit SHA, so a short SHA, branch or tag is resolved
       # first.
@@ -122,7 +122,7 @@ jobs:
         with:
           ref: ${{ steps.reference.outputs.sha }}
       - name: Set up JDK ${{ env.java_version }}-${{ env.java_distribution }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: ${{ env.java_version }}
           distribution: ${{ env.java_distribution }}
@@ -138,7 +138,7 @@ jobs:
           grep -q -- --skip_validator_update <<< "$usage" \
             || { echo "::error::The reference validator is too old: it has no --skip_validator_update option (added in #1683)."; exit 1; }
       - name: Persist gtfs-validator jar from master branch
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: gtfs-validator-master
           path: cli/build/libs/gtfs-validator-*-cli.jar
@@ -147,7 +147,7 @@ jobs:
   fetch-urls:
     if: "!contains(needs.pre_ci.outputs.commit_message, '[acceptance test skip]')"
     needs: pre_ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v7.0.1
@@ -169,7 +169,7 @@ jobs:
           FEED_LIST: ${{ inputs.feed_list || 'acceptance' }}
       - name: Persist metadata
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: datasets_metadata
           path: scripts/mobility-database-harvester/datasets_metadata
@@ -215,7 +215,7 @@ jobs:
           RUNNER_LABEL: ${{ matrix.runner }}
           FRESH_MASTER_PERCENT: 25
       - name: Persist reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           # The attempt number keeps a re-run from merging the previous attempt's artifacts,
           # including its reports_all, which would put every feed's reports in twice.
@@ -224,7 +224,7 @@ jobs:
       # Only collected by save-master-reports, which skips a baseline other than master.
       - name: Persist master reports for reuse
         if: ${{ !inputs.baseline_ref }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: master_reports_${{ strategy.job-index }}
           path: master-reports-out
@@ -272,18 +272,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   merge-reports-artifacts:
-     runs-on: ubuntu-latest
+     runs-on: ubuntu-24.04
      needs: [ get-reports ]
      steps:
        - name: Merge Artifacts
-         uses: actions/upload-artifact/merge@v6
+         uses: actions/upload-artifact/merge@v7.0.2
          with:
            name: reports_all
            pattern: reports_${{ github.run_attempt }}_*
            delete-merged: true
   compare-outputs:
     needs: [ pack-master, merge-reports-artifacts ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Download comparator .jar file from previous job
@@ -314,7 +314,7 @@ jobs:
            --run_id ${{github.run_id}}
       - name: Persist acceptance test reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: acceptance_test_report
           path: acceptance-test-output
@@ -327,11 +327,12 @@ jobs:
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Comment Pull Request
-        if: ${{ always() && github.event_name == 'pull_request' }}
-        uses: thollander/actions-comment-pull-request@v1.0.4
+        if: ${{ always() && github.event_name == 'pull_request' && env.PR_COMMENT != '' }}
+        uses: peter-evans/create-or-update-comment@v5.0.0
         with:
-          message: ${{ env.PR_COMMENT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ env.PR_COMMENT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       # A manual run does not comment on any PR: it writes the report to the run summary only.
       - name: Write the report of a manual run to the run summary
         if: ${{ always() && github.event_name == 'workflow_dispatch' }}
