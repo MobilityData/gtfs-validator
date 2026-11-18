@@ -16,8 +16,16 @@ on:
       - '.github/workflows/web_**.yml'
       - '.github/workflows/stg_web_**.yml'
     types: [ opened, synchronize, reopened, ready_for_review ]
+  # Manual runs, on a PR's branch, can validate every feed with master again so that all the
+  # timings are compared within one job.
+  workflow_dispatch:
+    inputs:
+      reuse_master_reports:
+        description: 'Reuse master reports of unchanged feeds from earlier runs'
+        type: boolean
+        default: true
 concurrency:
-  group: ${{ github.head_ref }}
+  group: ${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -34,7 +42,8 @@ jobs:
         run: exit 1
   pre_ci:
     name: Prepare CI environment
-    if: github.event.pull_request.draft == false # Skip this job and its dependencies if the PR is draft
+    # Skip this job and its dependencies if the PR is draft. Manual runs have no PR.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
@@ -156,7 +165,9 @@ jobs:
           path: gtfs-validator-snapshot
       # Master's reports from earlier runs on the same master commit, stored by feed file hash.
       # Feeds whose file is unchanged reuse them instead of running the master validator again.
+      # A manual run with reuse_master_reports off skips them.
       - name: Restore master reports from earlier runs
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.reuse_master_reports }}
         uses: actions/cache/restore@v6.1.0
         with:
           path: master-reports-cache
@@ -175,6 +186,8 @@ jobs:
           OUTPUT_BASE: ${{ github.sha }}
           MASTER_REPORTS_CACHE: ${{ github.workspace }}/master-reports-cache
           MASTER_REPORTS_OUT: ${{ github.workspace }}/master-reports-out
+          RUNNER_LABEL: ${{ matrix.runner }}
+          FRESH_MASTER_PERCENT: 25
       - name: Persist reports
         uses: actions/upload-artifact@v6
         with:
@@ -268,8 +281,18 @@ jobs:
           echo "$PR_COMMENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Comment Pull Request
-        if: always()
+        if: ${{ always() && github.event_name == 'pull_request' }}
         uses: thollander/actions-comment-pull-request@v1.0.4
         with:
           message: ${{ env.PR_COMMENT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # A manual run comments on the open PR of its branch, if there is one, and always writes the
+      # report to the run summary.
+      - name: Comment Pull Request of a manual run
+        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+        run: |
+          cat acceptance-test-output/acceptance_report_summary.md >> "$GITHUB_STEP_SUMMARY"
+          gh pr comment "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --body-file acceptance-test-output/acceptance_report_summary.md \
+            || echo "No open pull request for $GITHUB_REF_NAME, the report is in the run summary."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
