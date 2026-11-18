@@ -11,6 +11,7 @@
 # limitations under the License.
 
 import argparse
+import io
 import json
 import pandas as pd
 import os
@@ -66,6 +67,7 @@ DEFAULT_SMALL_RUNNER = "ubuntu-24.04"
 DEFAULT_LARGE_RUNNER = "ubuntu-latest-4-cores"
 SIZE_REQUEST_TIMEOUT_SECONDS = 30
 SIZE_REQUEST_WORKERS = 32
+CATALOG_REQUEST_TIMEOUT_SECONDS = 120
 USER_AGENT = "MobilityData GTFS-Validator (acceptance tests)"
 
 # Sampling constants
@@ -116,7 +118,13 @@ def read_catalog(feed_list):
     :param feed_list: ACTIVE or NON_DEPRECATED.
     :return: A data frame with the columns 'stable_id' and 'urls.latest'.
     """
-    catalog = pd.read_csv(CATALOG_CSV, low_memory=False)
+    response = requests.get(
+        CATALOG_CSV,
+        headers={"User-Agent": USER_AGENT},
+        timeout=CATALOG_REQUEST_TIMEOUT_SECONDS,
+    )
+    response.raise_for_status()
+    catalog = pd.read_csv(io.StringIO(response.text), low_memory=False)
     catalog = catalog[
         (catalog[CATALOG_DATA_TYPE] == GTFS) & catalog[LATEST_URL].notna()
     ]
