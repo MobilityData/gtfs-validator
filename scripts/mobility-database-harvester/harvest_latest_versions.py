@@ -13,8 +13,9 @@
 import argparse
 import json
 import pandas as pd
-import numpy as np
 import os
+import requests
+from concurrent.futures import ThreadPoolExecutor
 from os import path
 
 #####################################################################################
@@ -38,6 +39,20 @@ ROOT = "include"
 URL_KEY = "url"
 DATA = "data"
 ID = "id"
+RUNNER = "runner"
+
+# Job grouping constants
+MB = 1_000_000
+# Feeds above this size (zipped) are validated on the large runner. Below it, on the small runner.
+DEFAULT_LARGE_FEED_THRESHOLD_MB = 50
+# Fixed cost of a feed regardless of its size (download, JVM start-up, report writing), expressed
+# as an equivalent size so that a job of many tiny feeds is not mistaken for a light one.
+DEFAULT_PER_FEED_OVERHEAD_MB = 10
+DEFAULT_SMALL_RUNNER = "ubuntu-24.04"
+DEFAULT_LARGE_RUNNER = "ubuntu-latest-4-cores"
+SIZE_REQUEST_TIMEOUT_SECONDS = 30
+SIZE_REQUEST_WORKERS = 32
+USER_AGENT = "MobilityData GTFS-Validator (acceptance tests)"
 
 # Sampling constants
 
@@ -103,25 +118,118 @@ def harvest_latest_versions(to_sample):
     return latest_versions
 
 
-def apply_github_matrix_formatting(latest_urls):
-    """Transforms the dictionary of latest URLs to a GitHub matrix.
+def fetch_feed_size(url):
+    """Returns the size in bytes of the feed at the given URL, read from a HEAD request.
+    :param url: The feed URL.
+    :return: The size in bytes, or None if it could not be determined.
+    """
+    try:
+        response = requests.head(
+            url,
+            allow_redirects=True,
+            timeout=SIZE_REQUEST_TIMEOUT_SECONDS,
+            headers={"User-Agent": USER_AGENT},
+        )
+        response.raise_for_status()
+        return int(response.headers["Content-Length"])
+    except (requests.RequestException, KeyError, ValueError):
+        return None
+
+
+def fetch_feed_sizes(latest_urls):
+    """Fetches the size of every feed in parallel.
     :param latest_urls: The dictionary of the latest URLs with the format {Name: Url}.
-    :return: The GitHub matrix of latest URLs for the workflow jobs.
+    :return: The dictionary of sizes in bytes with the format {Name: size or None}.
+    """
+    ids = list(latest_urls.keys())
+    with ThreadPoolExecutor(max_workers=SIZE_REQUEST_WORKERS) as executor:
+        sizes = executor.map(fetch_feed_size, [latest_urls[feed_id] for feed_id in ids])
+    return dict(zip(ids, sizes))
+
+
+def split_into_balanced_jobs(weights, job_count):
+    """Splits feeds into jobs of similar total weight, heaviest feed first, each one going to the
+    job with the least weight so far (longest-processing-time-first scheduling).
+    :param weights: The dictionary of feed weights with the format {Name: weight}.
+    :param job_count: The number of jobs to create.
+    :return: The list of jobs, each one a list of feed IDs, heaviest job first.
+    """
+    jobs = [[] for _ in range(job_count)]
+    loads = [0] * job_count
+    for feed_id in sorted(weights, key=lambda feed: (-weights[feed], feed)):
+        lightest_job = loads.index(min(loads))
+        jobs[lightest_job].append(feed_id)
+        loads[lightest_job] += weights[feed_id]
+    return [job for _, job in sorted(zip(loads, jobs), key=lambda pair: -pair[0]) if job]
+
+
+def group_feeds_by_size(
+    latest_urls,
+    sizes,
+    large_feed_threshold_mb,
+    per_feed_overhead_mb,
+    small_runner,
+    large_runner,
+):
+    """Groups feeds into at most MAX_JOB_NUMBER jobs of similar validation work and picks a runner
+    for each job. Feeds above the threshold, or whose size is unknown, go to the large runner.
+    Jobs are shared between the two runners in proportion to their total weight.
+    :return: The list of (runner, list of feed IDs) tuples, large-runner jobs first.
+    """
+    overhead = per_feed_overhead_mb * MB
+    threshold = large_feed_threshold_mb * MB
+    weights = {}
+    large_ids = []
+    small_ids = []
+    for feed_id in latest_urls:
+        size = sizes.get(feed_id)
+        if size is None or size > threshold:
+            large_ids.append(feed_id)
+            # An unknown size is treated as the threshold so the feed is neither ignored nor
+            # assumed to be the heaviest.
+            weights[feed_id] = (size if size is not None else threshold) + overhead
+        else:
+            small_ids.append(feed_id)
+            weights[feed_id] = size + overhead
+
+    total_jobs = min(MAX_JOB_NUMBER, len(latest_urls))
+    large_weight = sum(weights[feed_id] for feed_id in large_ids)
+    small_weight = sum(weights[feed_id] for feed_id in small_ids)
+
+    if not small_ids:
+        large_jobs = total_jobs
+    elif not large_ids:
+        large_jobs = 0
+    else:
+        large_jobs = round(total_jobs * large_weight / (large_weight + small_weight))
+        large_jobs = max(1, min(large_jobs, len(large_ids), total_jobs - 1))
+    small_jobs = min(total_jobs - large_jobs, len(small_ids))
+
+    grouped = []
+    if large_jobs:
+        large_weights = {feed_id: weights[feed_id] for feed_id in large_ids}
+        for job in split_into_balanced_jobs(large_weights, large_jobs):
+            grouped.append((large_runner, job))
+    if small_jobs:
+        small_weights = {feed_id: weights[feed_id] for feed_id in small_ids}
+        for job in split_into_balanced_jobs(small_weights, small_jobs):
+            grouped.append((small_runner, job))
+    return grouped
+
+
+def apply_github_matrix_formatting(latest_urls, grouped_jobs):
+    """Transforms the grouped feeds to a GitHub matrix.
+    :param latest_urls: The dictionary of the latest URLs with the format {Name: Url}.
+    :param grouped_jobs: The list of (runner, list of feed IDs) tuples.
+    :return: The GitHub matrix of latest URLs and runners for the workflow jobs.
     """
     latest_versions_data = []
-
-    jobs = np.array_split(list(latest_urls.keys()), min(MAX_JOB_NUMBER, len(list(latest_urls.keys()))))
-    jobs = [list(job_ids) for job_ids in jobs]
-    for job_ids in jobs:
-        latest_version_data_string = ""
-        while len(job_ids) > 0:
-            job_id = job_ids.pop()
-            dataset_information = {ID: job_id, URL_KEY: latest_urls[job_id]}
-            latest_version_data_string = latest_version_data_string + json.dumps(
-                dataset_information, separators=(",", ":")
-            )
-        job_data = {DATA: latest_version_data_string.replace("}{", "} {")}
-        latest_versions_data.append(job_data)
+    for runner, job_ids in grouped_jobs:
+        datasets = [
+            json.dumps({ID: job_id, URL_KEY: latest_urls[job_id]}, separators=(",", ":"))
+            for job_id in job_ids
+        ]
+        latest_versions_data.append({DATA: " ".join(datasets), RUNNER: runner})
     return {ROOT: latest_versions_data}
 
 
@@ -148,8 +256,30 @@ if __name__ == "__main__":
         action="store_true",
         help="Boolean flag to sample or not the data.",
     )
+    parser.add_argument(
+        "--large-feed-threshold-mb",
+        type=float,
+        default=DEFAULT_LARGE_FEED_THRESHOLD_MB,
+        help="Feeds above this zipped size in MB are validated on the large runner.",
+    )
+    parser.add_argument(
+        "--per-feed-overhead-mb",
+        type=float,
+        default=DEFAULT_PER_FEED_OVERHEAD_MB,
+        help="Fixed cost of validating a feed, expressed as an equivalent size in MB.",
+    )
+    parser.add_argument(
+        "--small-runner",
+        default=DEFAULT_SMALL_RUNNER,
+        help="Runner label for jobs that only hold feeds below the threshold.",
+    )
+    parser.add_argument(
+        "--large-runner",
+        default=DEFAULT_LARGE_RUNNER,
+        help="Runner label for jobs that hold feeds above the threshold.",
+    )
     args = parser.parse_args()
-    
+
     latest_versions_file = args.latest_versions_file
     data_path = args.data_path
     to_sample = args.sample
@@ -166,7 +296,15 @@ if __name__ == "__main__":
         data_path,
         latest_versions_file,
     )
-    github_formatted_latest_versions = apply_github_matrix_formatting(
-        latest_versions
+    grouped_jobs = group_feeds_by_size(
+        latest_versions,
+        fetch_feed_sizes(latest_versions),
+        args.large_feed_threshold_mb,
+        args.per_feed_overhead_mb,
+        args.small_runner,
+        args.large_runner,
     )
-    print(github_formatted_latest_versions)
+    github_formatted_latest_versions = apply_github_matrix_formatting(
+        latest_versions, grouped_jobs
+    )
+    print(json.dumps(github_formatted_latest_versions, separators=(",", ":")))
