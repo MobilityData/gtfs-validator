@@ -196,7 +196,7 @@ jobs:
           name: reports_${{ github.run_attempt }}_${{ env.CONCATENATED_IDS }}
           path: ${{ github.sha }}/output
       - name: Persist master reports for reuse
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: master_reports_${{ strategy.job-index }}
           path: master-reports-out
