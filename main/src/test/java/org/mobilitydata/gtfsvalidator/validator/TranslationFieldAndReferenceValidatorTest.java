@@ -40,11 +40,14 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTranslationTableDescriptor;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnknownFieldNameNotice;
+import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnknownFieldValueNotice;
 import org.mobilitydata.gtfsvalidator.validator.TranslationFieldAndReferenceValidator.TranslationUnknownTableNameNotice;
 
 @RunWith(JUnit4.class)
 public final class TranslationFieldAndReferenceValidatorTest {
-  private static final GtfsAgency AGENCY = new GtfsAgency.Builder().setAgencyId("agency0").build();
+  private static final GtfsAgency AGENCY =
+      new GtfsAgency.Builder().setAgencyId("agency0").setAgencyName("Agency Zero").build();
   private static final GtfsStopTime STOP_TIME =
       new GtfsStopTime.Builder().setTripId("trip0").setStopSequence(0).build();
   private static final GtfsFeedInfo FEED_INFO =
@@ -82,12 +85,6 @@ public final class TranslationFieldAndReferenceValidatorTest {
   }
 
   @Test
-  public void legacyFormat_yieldsNoNotice() {
-    GtfsTranslation translation = new GtfsTranslation.Builder().setCsvRowNumber(2).build();
-    assertThat(generateNotices(CsvHeader.EMPTY, ImmutableList.of(translation))).isEmpty();
-  }
-
-  @Test
   public void wrongTableName_yieldsNotice() {
     GtfsTranslation translation =
         new GtfsTranslation.Builder()
@@ -102,13 +99,13 @@ public final class TranslationFieldAndReferenceValidatorTest {
   }
 
   @Test
-  public void fieldValueDefined_yieldsNoNotice() {
+  public void fieldValueFound_yieldsNoNotice() {
     GtfsTranslation translation =
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
-            .setFieldValue("any")
+            .setFieldName("agency_name")
+            .setFieldValue("Agency Zero")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
     assertThat(
@@ -122,9 +119,9 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
+            .setFieldName("agency_name")
             .setRecordId("id")
-            .setFieldValue("any")
+            .setFieldValue("Agency Zero")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
     assertThat(
@@ -138,9 +135,9 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
+            .setFieldName("agency_name")
             .setRecordSubId("sub_id")
-            .setFieldValue("any")
+            .setFieldValue("Agency Zero")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
     assertThat(
@@ -155,7 +152,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
+            .setFieldName("agency_name")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
     assertThat(
@@ -169,7 +166,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
+            .setFieldName("agency_name")
             .setRecordId("any")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
@@ -184,7 +181,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("feed_info")
-            .setFieldName("any")
+            .setFieldName("feed_publisher_name")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
     assertThat(
@@ -198,7 +195,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("feed_info")
-            .setFieldName("any")
+            .setFieldName("feed_publisher_name")
             .setLanguage(Locale.forLanguageTag("en"))
             .setRecordId("feed-id")
             .build();
@@ -213,7 +210,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("agency")
-            .setFieldName("any")
+            .setFieldName("agency_name")
             .setRecordId("agency0")
             .setLanguage(Locale.forLanguageTag("en"))
             .build();
@@ -228,7 +225,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("stop_times")
-            .setFieldName("any")
+            .setFieldName("stop_headsign")
             .setRecordId("trip0")
             .setRecordSubId("0")
             .setLanguage(Locale.forLanguageTag("en"))
@@ -244,7 +241,7 @@ public final class TranslationFieldAndReferenceValidatorTest {
         new GtfsTranslation.Builder()
             .setCsvRowNumber(2)
             .setTableName("stop_times")
-            .setFieldName("any")
+            .setFieldName("stop_headsign")
             .setRecordId("trip0")
             .setRecordSubId("not-an-int")
             .setLanguage(Locale.forLanguageTag("en"))
@@ -252,5 +249,137 @@ public final class TranslationFieldAndReferenceValidatorTest {
     assertThat(
             generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
         .containsExactly(new TranslationForeignKeyViolationNotice(translation));
+  }
+
+  @Test
+  public void unknownFieldNameWithRecordId_yieldsNotice() {
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_nme")
+            .setRecordId("agency0")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldNameNotice(translation));
+  }
+
+  @Test
+  public void unknownFieldNameWithUnknownRecordId_yieldsOnlyUnknownFieldNameNotice() {
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_nme")
+            .setRecordId("no-such-agency")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldNameNotice(translation));
+  }
+
+  @Test
+  public void unknownFieldNameWithFieldValue_yieldsOnlyUnknownFieldNameNotice() {
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_nme")
+            .setFieldValue("Agency Zero")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldNameNotice(translation));
+  }
+
+  @Test
+  public void nonEntityGetterAsFieldName_yieldsNotice() {
+    // csv_row_number has a getter on every entity but is not a GTFS field.
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("csv_row_number")
+            .setRecordId("agency0")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldNameNotice(translation));
+  }
+
+  @Test
+  public void fieldValueNotFound_yieldsNotice() {
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_name")
+            .setFieldValue("Agency One")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldValueNotice(translation));
+  }
+
+  @Test
+  public void fieldValueInOtherField_yieldsNotice() {
+    // "agency0" exists in agency_id, not in agency_name.
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_name")
+            .setFieldValue("agency0")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .containsExactly(new TranslationUnknownFieldValueNotice(translation));
+  }
+
+  @Test
+  public void fieldValueOnNonTextField_yieldsNoNotice() {
+    // stop_sequence is an integer field: its values are not compared with field_value.
+    GtfsTranslation translation =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("stop_times")
+            .setFieldName("stop_sequence")
+            .setFieldValue("99")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    assertThat(
+            generateNotices(new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(translation)))
+        .isEmpty();
+  }
+
+  @Test
+  public void severalFieldValueTranslations_eachChecked() {
+    GtfsTranslation found =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(2)
+            .setTableName("agency")
+            .setFieldName("agency_name")
+            .setFieldValue("Agency Zero")
+            .setLanguage(Locale.forLanguageTag("en"))
+            .build();
+    GtfsTranslation notFound =
+        new GtfsTranslation.Builder()
+            .setCsvRowNumber(3)
+            .setTableName("agency")
+            .setFieldName("agency_name")
+            .setFieldValue("Agency One")
+            .setLanguage(Locale.forLanguageTag("fr"))
+            .build();
+    assertThat(
+            generateNotices(
+                new CsvHeader(NEW_FORMAT_CSV_HEADERS), ImmutableList.of(found, notFound)))
+        .containsExactly(new TranslationUnknownFieldValueNotice(notFound));
   }
 }
