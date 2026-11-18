@@ -18,7 +18,9 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 compileJava.options.encoding = "UTF-8"
 
 repositories {
