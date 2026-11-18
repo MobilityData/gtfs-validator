@@ -159,6 +159,13 @@ To validate every feed with both validators in the same job, for example to chec
 
 To compare the branch with another reference than master, for example the commit before a performance change or a release tag, fill in `baseline_ref` with a branch, tag or commit SHA when starting a manual run. The reference validator is then built from that commit, and the report says which commit it was built from. The reference reports of such a run are not saved for reuse. The baseline must be from March 2024 (#1683) or later: older validators lack the `--skip_validator_update` option, and the run stops before validating any feed.
 
+By default, the pipeline validates a fixed list of about 1,000 feeds, committed in [`acceptance_test_feed_list.csv`](../scripts/mobility-database-harvester/acceptance_test_feed_list.csv). To validate more feeds, for example to investigate the differences between releases, set `feed_list` when starting a manual run:
+- `acceptance`: the fixed list (default);
+- `active`: the active GTFS feeds of the [Mobility Database catalog](https://files.mobilitydatabase.org/feeds_v2.csv) that have a latest dataset, about 2,800;
+- `non-deprecated`: the same, also with the inactive, future and development feeds, about 3,600.
+
+A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so the corrupted sources check may fail on its own.
+
 ## Instructions to verify the execution of the pipeline
 
 1. Download all validation reports from the artifact listed for the specific GitHub run;

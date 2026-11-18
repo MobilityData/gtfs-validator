@@ -17,7 +17,8 @@ on:
       - '.github/workflows/stg_web_**.yml'
     types: [ opened, synchronize, reopened, ready_for_review ]
   # Manual runs, on a PR's branch, can validate every feed with master again so that all the
-  # timings are compared within one job, or compare the branch with another reference than master.
+  # timings are compared within one job, compare the branch with another reference than master,
+  # or validate the feeds of the whole Mobility Database catalog.
   workflow_dispatch:
     inputs:
       reuse_master_reports:
@@ -28,6 +29,14 @@ on:
         description: 'Branch, tag or commit to build the reference validator from (default: master)'
         type: string
         default: ''
+      feed_list:
+        description: 'Feeds to validate: the acceptance test list, or the active or non-deprecated GTFS feeds of the Mobility Database catalog'
+        type: choice
+        options:
+          - acceptance
+          - active
+          - non-deprecated
+        default: acceptance
 concurrency:
   group: ${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -156,9 +165,11 @@ jobs:
         run: |
           # Feeds are grouped into jobs of similar size. Jobs holding a feed above the threshold
           # run on the large runner; the others run on the free runner.
-          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json --small-runner ubuntu-24.04 --large-runner ubuntu-latest-4-cores --large-feed-threshold-mb 50)
+          DATASETS=$(python3 scripts/mobility-database-harvester/harvest_latest_versions.py -d scripts/mobility-database-harvester/datasets_metadata -l gtfs_latest_versions.json --feeds "$FEED_LIST" --small-runner ubuntu-24.04 --large-runner ubuntu-latest-4-cores --large-feed-threshold-mb 50)
           echo $DATASETS
           echo "matrix=$DATASETS" >> $GITHUB_OUTPUT
+        env:
+          FEED_LIST: ${{ inputs.feed_list || 'acceptance' }}
       - name: Persist metadata
         if: always()
         uses: actions/upload-artifact@v6
@@ -196,11 +207,6 @@ jobs:
           path: master-reports-cache
           key: master-reports-${{ needs.pack-master.outputs.master_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: master-reports-${{ needs.pack-master.outputs.master_sha }}-
-      - name: Extract and concatenate IDs
-        run: |
-          concatenated_ids=$(bash ./scripts/extract_ids.sh '${{ matrix.data }}')
-          echo "CONCATENATED_IDS=$concatenated_ids" >> $GITHUB_ENV
-          echo "CONCATENATED_IDS=$concatenated_ids"
       - name: Run validators on queued URLs
         run: |
           queue="${{ matrix.data }}"
@@ -216,7 +222,7 @@ jobs:
         with:
           # The attempt number keeps a re-run from merging the previous attempt's artifacts,
           # including its reports_all, which would put every feed's reports in twice.
-          name: reports_${{ github.run_attempt }}_${{ env.CONCATENATED_IDS }}
+          name: reports_${{ github.run_attempt }}_${{ strategy.job-index }}
           path: ${{ github.sha }}/output
       - name: Persist master reports for reuse
         uses: actions/upload-artifact@v6
