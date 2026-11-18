@@ -1,0 +1,13 @@
+trip_id,arrival_time,departure_time,stop_id,stop_sequence
+bus-trip,08:00:00,08:00:00,C,1
+bus-trip,08:05:00,08:05:00,A,2
+bus-trip,08:10:00,08:10:00,BUS_BAY,3
+bus-trip,08:15:00,08:15:00,BUS_END,4
+rail-trip,08:00:00,08:00:00,C,1
+rail-trip,08:05:00,08:05:00,M,2
+rail-trip,08:10:00,08:10:00,RAIL_BAY,3
+rail-trip,08:15:00,08:15:00,RAIL_END,4
+tram-trip,08:05:00,08:05:00,A,1
+tram-trip,08:10:00,08:10:00,TRAM_END,2
+monorail-trip,08:05:00,08:05:00,M,1
+monorail-trip,08:10:00,08:10:00,MONO_END,2
