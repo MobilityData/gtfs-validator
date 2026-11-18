@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 
-group 'org.mobilitydata'
-version '4.0.1-SNAPSHOT'
+group = 'org.mobilitydata'
+version = '4.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
