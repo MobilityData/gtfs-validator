@@ -81,6 +81,9 @@ public abstract class ValidationRunnerConfig {
   // A "User-Agent" entry overrides the default validator User-Agent.
   public abstract ImmutableMap<String, String> httpHeaders();
 
+  // If true, the validation runner will not print informational logging messages
+  public abstract boolean quietLogs();
+
   public static Builder builder() {
     // Set reasonable defaults where appropriate.
     return new AutoValue_ValidationRunnerConfig.Builder()
@@ -93,7 +96,8 @@ public abstract class ValidationRunnerConfig {
         .setDateForValidation(LocalDate.now())
         .setSkipValidatorUpdate(false)
         .setStdoutOutput(false)
-        .setHttpHeaders(ImmutableMap.of());
+        .setHttpHeaders(ImmutableMap.of())
+        .setQuietLogs(false);
   }
 
   @AutoValue.Builder
@@ -125,6 +129,8 @@ public abstract class ValidationRunnerConfig {
     public abstract Builder setStdoutOutput(boolean stdoutOutput);
 
     public abstract Builder setHttpHeaders(ImmutableMap<String, String> httpHeaders);
+
+    public abstract Builder setQuietLogs(boolean quietLogs);
 
     public abstract ValidationRunnerConfig build();
   }
