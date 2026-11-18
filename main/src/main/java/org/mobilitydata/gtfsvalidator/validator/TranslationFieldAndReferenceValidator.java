@@ -18,8 +18,14 @@ package org.mobilitydata.gtfsvalidator.validator;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.FileRefs;
@@ -34,9 +40,6 @@ import org.mobilitydata.gtfsvalidator.table.*;
  *
  * <p>Checks that fields and values provided in translations are correct and checks that a
  * translation references existing entity.
- *
- * <p>This validator gracefully handles legacy Google translations format. If {@code
- * translations.txt} does not follow the new format, then no validations are performed.
  */
 @GtfsValidator
 public class TranslationFieldAndReferenceValidator extends FileValidator {
@@ -44,6 +47,12 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
   private final GtfsTranslationTableContainer translationTable;
 
   private final GtfsFeedContainer feedContainer;
+
+  /**
+   * Values of the columns referenced by {@code field_value} translations, keyed by file name and
+   * column name, so each column is read only once.
+   */
+  private final Map<String, Optional<Set<String>>> fieldValuesCache = new HashMap<>();
 
   @Inject
   TranslationFieldAndReferenceValidator(
@@ -54,57 +63,9 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    // The legacy Google translation format does not define `translations.table_name` field.
-    if (!translationTable.getHeader().hasColumn(GtfsTranslation.TABLE_NAME_FIELD_NAME)) {
-      // Skip validation if legacy Google translation format is detected.
-      return;
-    }
-    // If GtfsTranslationSchema.java is patched to enable the legacy Google format, then
-    // fields field_name, language and table_name become optional. Here we have detected that
-    // table_name header is present, so this is the standard GTFS translation format. Check that the
-    // standard required fields are present.
-    if (!validateStandardRequiredFields(noticeContainer)) {
-      return;
-    }
     for (GtfsTranslation translation : translationTable.getEntities()) {
       validateTranslation(translation, noticeContainer);
     }
-  }
-
-  /**
-   * Emits errors for missing required fields field_name, language and table_name.
-   *
-   * @return true if all required fields are set for all entities, false otherwise
-   */
-  private boolean validateStandardRequiredFields(NoticeContainer noticeContainer) {
-    boolean isValid = true;
-    for (GtfsTranslation translation : translationTable.getEntities()) {
-      if (!translation.hasFieldName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.FIELD_NAME_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasLanguage()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.LANGUAGE_FIELD_NAME));
-        isValid = false;
-      }
-      if (!translation.hasTableName()) {
-        noticeContainer.addValidationNotice(
-            new MissingRequiredFieldNotice(
-                GtfsTranslation.FILENAME,
-                translation.csvRowNumber(),
-                GtfsTranslation.TABLE_NAME_FIELD_NAME));
-        isValid = false;
-      }
-    }
-    return isValid;
   }
 
   /** Validates a single row in {@code translations.txt}. */
@@ -125,14 +86,93 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
         feedContainer.getTableForFilename(translation.tableName() + ".txt");
     if (parentTable.isEmpty() || parentTable.get().isMissingFile()) {
       noticeContainer.addValidationNotice(new TranslationUnknownTableNameNotice(translation));
-    } else if (!translation.hasFieldValue()) {
-      if (parentTable.isPresent() && parentTable.get() instanceof GtfsTableContainer) {
+      return;
+    }
+    if (!isKnownFieldName(translation, parentTable.get())) {
+      noticeContainer.addValidationNotice(new TranslationUnknownFieldNameNotice(translation));
+      return;
+    }
+    if (!translation.hasFieldValue()) {
+      if (parentTable.get() instanceof GtfsTableContainer) {
         validateReferenceIntegrity(
             translation, (GtfsTableContainer) parentTable.get(), noticeContainer);
       } else {
         //        TODO check for JSON Tables here
       }
+    } else if (parentTable.get() instanceof GtfsTableContainer) {
+      validateFieldValueReference(
+          translation, (GtfsTableContainer<?, ?>) parentTable.get(), noticeContainer);
     }
+  }
+
+  /**
+   * Returns whether {@code field_name} is a column defined for the parent table.
+   *
+   * <p>Returns true for tables that are not CSV, such as {@code locations.geojson}, since their
+   * fields are not described by columns.
+   */
+  private static boolean isKnownFieldName(
+      GtfsTranslation translation, GtfsEntityContainer<?> parentTable) {
+    if (!(parentTable.getDescriptor() instanceof GtfsTableDescriptor)) {
+      return true;
+    }
+    return ((GtfsTableDescriptor<?>) parentTable.getDescriptor())
+        .getColumns().stream()
+            .anyMatch(column -> column.columnName().equals(translation.fieldName()));
+  }
+
+  /**
+   * Checks that at least one row of the parent table has {@code field_value} in the column named by
+   * {@code field_name}.
+   *
+   * <p>Only text-like columns are checked: per the GTFS specification, other field types should not
+   * be translated.
+   */
+  private void validateFieldValueReference(
+      GtfsTranslation translation,
+      GtfsTableContainer<?, ?> parentTable,
+      NoticeContainer noticeContainer) {
+    Optional<Set<String>> values =
+        fieldValuesCache.computeIfAbsent(
+            parentTable.gtfsFilename() + "/" + translation.fieldName(),
+            key -> collectFieldValues(parentTable, translation.fieldName()));
+    if (values.isPresent() && !values.get().contains(translation.fieldValue())) {
+      noticeContainer.addValidationNotice(new TranslationUnknownFieldValueNotice(translation));
+    }
+  }
+
+  /**
+   * Collects every value of a {@code String} column in a table.
+   *
+   * @return the values, or empty if the column is not a {@code String} column and so cannot be
+   *     compared with {@code field_value}
+   */
+  private static Optional<Set<String>> collectFieldValues(
+      GtfsTableContainer<?, ?> table, String columnName) {
+    Method getter;
+    try {
+      // Entities have no accessor by column name, so the generated getter is found by reflection
+      // (route_short_name -> routeShortName()). This is safe because columnName has already been
+      // checked against the schema columns, and it runs once per column thanks to the cache.
+      getter =
+          table
+              .getEntityClass()
+              .getMethod(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName));
+    } catch (NoSuchMethodException e) {
+      return Optional.empty();
+    }
+    if (getter.getReturnType() != String.class) {
+      return Optional.empty();
+    }
+    Set<String> values = new HashSet<>();
+    try {
+      for (GtfsEntity entity : table.getEntities()) {
+        values.add((String) getter.invoke(entity));
+      }
+    } catch (ReflectiveOperationException e) {
+      return Optional.empty();
+    }
+    return Optional.of(values);
   }
 
   /**
@@ -227,6 +267,59 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
     TranslationUnknownTableNameNotice(GtfsTranslation translation) {
       this.csvRowNumber = translation.csvRowNumber();
       this.tableName = translation.tableName();
+    }
+  }
+
+  /**
+   * A translation references a field that is not defined for the referenced table.
+   *
+   * <p>`field_name` must be the name of a field of the table given in `table_name`.
+   */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
+  static class TranslationUnknownFieldNameNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** `table_name` of the faulty record. */
+    private final String tableName;
+
+    /** `field_name` of the faulty record. */
+    private final String fieldName;
+
+    TranslationUnknownFieldNameNotice(GtfsTranslation translation) {
+      this.csvRowNumber = translation.csvRowNumber();
+      this.tableName = translation.tableName();
+      this.fieldName = translation.fieldName();
+    }
+  }
+
+  /**
+   * A translation references an unknown or missing GTFS field value.
+   *
+   * <p>No row of the table given in `table_name` has exactly `field_value` in the field given by
+   * `field_name`, so the translation is never applied.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+  static class TranslationUnknownFieldValueNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** `table_name` of the faulty record. */
+    private final String tableName;
+
+    /** `field_name` of the faulty record. */
+    private final String fieldName;
+
+    /** `field_value` of the faulty record. */
+    private final String fieldValue;
+
+    TranslationUnknownFieldValueNotice(GtfsTranslation translation) {
+      this.csvRowNumber = translation.csvRowNumber();
+      this.tableName = translation.tableName();
+      this.fieldName = translation.fieldName();
+      this.fieldValue = translation.fieldValue();
     }
   }
 
