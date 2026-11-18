@@ -224,7 +224,9 @@ jobs:
           # including its reports_all, which would put every feed's reports in twice.
           name: reports_${{ github.run_attempt }}_${{ strategy.job-index }}
           path: ${{ github.sha }}/output
+      # Only collected by save-master-reports, which skips a baseline other than master.
       - name: Persist master reports for reuse
+        if: ${{ !inputs.baseline_ref }}
         uses: actions/upload-artifact@v6
         with:
           name: master_reports_${{ strategy.job-index }}
@@ -239,6 +241,8 @@ jobs:
     # the cache.
     if: ${{ !cancelled() && needs.pack-master.result == 'success' && !inputs.baseline_ref }}
     runs-on: ubuntu-24.04
+    permissions:
+      actions: write
     steps:
       - name: Restore master reports from earlier runs
         uses: actions/cache/restore@v6.1.0
@@ -257,6 +261,17 @@ jobs:
         with:
           path: master-reports-cache
           key: master-reports-${{ needs.pack-master.outputs.master_sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+      # The per-job artifacts are now in the cache, so they are deleted instead of being kept until
+      # they expire.
+      - name: Delete the per-job master reports artifacts
+        run: |
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.name | startswith("master_reports_")) | .id' \
+            | while read -r id; do
+                gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id"
+              done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   merge-reports-artifacts:
      runs-on: ubuntu-latest
      needs: [ get-reports ]
