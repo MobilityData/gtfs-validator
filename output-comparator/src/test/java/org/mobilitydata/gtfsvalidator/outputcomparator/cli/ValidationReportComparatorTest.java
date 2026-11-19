@@ -173,6 +173,27 @@ public class ValidationReportComparatorTest {
   }
 
   @Test
+  public void referenceCommit_isNamedInSummary() throws Exception {
+    Arguments args = defaultArgs();
+    args.setNewErrorThreshold(1);
+    args.setPercentInvalidDatasetsThreshold(25);
+    args.setCommitSha("abc123");
+    args.setReferenceCommitSha("def456");
+
+    List<File> reportDirs =
+        ImmutableList.of(
+            constructBeforeAndAfterReports("feed-id-a", ImmutableList.of(), ImmutableList.of()));
+
+    ValidationReportComparator comparator = new ValidationReportComparator();
+    Result result = comparator.compareValidationRuns(args, reportDirs, constructSourceUrls());
+
+    assertThat(result.reportSummary())
+        .contains(
+            "✅ The rule acceptance has passed for commit abc123\n"
+                + "Compared with the reference validator built from commit def456.\n");
+  }
+
+  @Test
   public void noChangeInNotices_noFailure() throws Exception {
     Arguments args = defaultArgs();
     args.setNewErrorThreshold(1);
