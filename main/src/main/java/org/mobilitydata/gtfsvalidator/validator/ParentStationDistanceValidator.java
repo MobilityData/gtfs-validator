@@ -32,7 +32,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 import org.mobilitydata.gtfsvalidator.util.S2Earth;
 
 /**
- * Validates that child stops in `stops.txt` are not far from their parent stations.
+ * Validates that child stops in `stops.txt` are not far from their parent stations excluding points
+ * near the origin or poles
  *
  * <p>Generated notices:
  *
@@ -69,7 +70,8 @@ public class ParentStationDistanceValidator extends FileValidator {
       }
       GtfsStop parentStation = optionalParentStation.get();
       if (parentStation.locationType() != GtfsLocationType.STATION
-          || !parentStation.hasStopLatLon()) {
+          || !parentStation.hasStopLatLon()
+          || S2Earth.isNearOriginOrPole(parentStation.stopLat(), parentStation.stopLon())) {
         continue;
       }
       double distance = S2Earth.getDistanceMeters(stop.stopLatLon(), parentStation.stopLatLon());

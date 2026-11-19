@@ -188,6 +188,99 @@ public class ParentStationDistanceValidatorTest {
   }
 
   @Test
+  public void childStopNearOriginOrPole_noNotice() {
+    GtfsStop station =
+        createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
+    GtfsStop stopNearOrigin =
+        createLocation(3, "stop_origin", GtfsLocationType.STOP, 0.0, 0.0, "station1");
+    GtfsStop stopNearOriginEdge =
+        createLocation(
+            4,
+            "stop_origin_edge",
+            GtfsLocationType.STOP,
+            S2Earth.ORIGIN_THRESHOLD_DEGREES,
+            -S2Earth.ORIGIN_THRESHOLD_DEGREES,
+            "station1");
+    GtfsStop stopNearNorthPole =
+        createLocation(5, "stop_north_pole", GtfsLocationType.STOP, 89.5, BASE_LON, "station1");
+    GtfsStop stopNearSouthPole =
+        createLocation(
+            6,
+            "stop_south_pole",
+            GtfsLocationType.STOP,
+            -S2Earth.POLE_LAT_THRESHOLD_DEGREES,
+            BASE_LON,
+            "station1");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    station,
+                    stopNearOrigin,
+                    stopNearOriginEdge,
+                    stopNearNorthPole,
+                    stopNearSouthPole)))
+        .isEmpty();
+  }
+
+  @Test
+  public void parentStationNearOriginOrPole_noNotice() {
+    GtfsStop stationNearOrigin =
+        createLocation(2, "station_origin", GtfsLocationType.STATION, 0.5, -0.5, null);
+    GtfsStop stationNearNorthPole =
+        createLocation(
+            3,
+            "station_north_pole",
+            GtfsLocationType.STATION,
+            S2Earth.POLE_LAT_THRESHOLD_DEGREES,
+            BASE_LON,
+            null);
+    GtfsStop stationNearSouthPole =
+        createLocation(4, "station_south_pole", GtfsLocationType.STATION, -89.5, BASE_LON, null);
+    GtfsStop stopWithOriginParent =
+        createLocation(5, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_origin");
+    GtfsStop stopWithNorthPoleParent =
+        createLocation(6, "stop2", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_north_pole");
+    GtfsStop stopWithSouthPoleParent =
+        createLocation(7, "stop3", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_south_pole");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    stationNearOrigin,
+                    stationNearNorthPole,
+                    stationNearSouthPole,
+                    stopWithOriginParent,
+                    stopWithNorthPoleParent,
+                    stopWithSouthPoleParent)))
+        .isEmpty();
+  }
+
+  @Test
+  public void justOutsideOriginOrPoleThreshold_generatesNotices() {
+    // Sanity check: points just outside the thresholds are still validated.
+    double justOutsideOrigin = Math.nextUp(S2Earth.ORIGIN_THRESHOLD_DEGREES);
+    double justOutsidePole = Math.nextDown(S2Earth.POLE_LAT_THRESHOLD_DEGREES);
+    GtfsStop station =
+        createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
+    GtfsStop stopOutsideOrigin =
+        createLocation(3, "stop1", GtfsLocationType.STOP, justOutsideOrigin, 0.0, "station1");
+    GtfsStop stopOutsidePole =
+        createLocation(4, "stop2", GtfsLocationType.STOP, justOutsidePole, BASE_LON, "station1");
+
+    assertThat(generateNotices(ImmutableList.of(station, stopOutsideOrigin, stopOutsidePole)))
+        .containsExactly(
+            new ChildStopTooFarFromParentStationNotice(
+                stopOutsideOrigin,
+                station,
+                S2Earth.getDistanceMeters(stopOutsideOrigin.stopLatLon(), station.stopLatLon())),
+            new ChildStopTooFarFromParentStationNotice(
+                stopOutsidePole,
+                station,
+                S2Earth.getDistanceMeters(stopOutsidePole.stopLatLon(), station.stopLatLon())));
+  }
+
+  @Test
   public void nonStopChildOrNonStationParent_noNotice() {
     GtfsStop station =
         createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
