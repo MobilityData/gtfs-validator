@@ -34,6 +34,29 @@ import org.junit.runners.JUnit4;
 public class CsvFileTest {
 
   @Test
+  public void rejectsUnescapedQuotes() throws IOException {
+    try (InputStream inputStream =
+        toInputStream("stop_id,stop_name\n" + "s1,\"Main \"Street\" Stop\"\n")) {
+      CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+
+      org.junit.Assert.assertThrows(
+          com.univocity.parsers.common.TextParsingException.class,
+          () -> csvFile.iterator().hasNext());
+    }
+  }
+
+  @Test
+  public void acceptsEscapedQuotes() throws IOException {
+    try (InputStream inputStream =
+        toInputStream("stop_id,stop_name\n" + "s1,\"Main \"\"Street\"\" Stop\"\n")) {
+      CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+
+      CsvRow row = csvFile.iterator().next();
+      assertThat(row.asString(1)).isEqualTo("Main \"Street\" Stop");
+    }
+  }
+
+  @Test
   public void emptyFile() throws IOException {
     InputStream inputStream = toInputStream("");
     CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
