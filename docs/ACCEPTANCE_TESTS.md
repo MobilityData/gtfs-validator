@@ -6,7 +6,7 @@ Because GTFS data consumers and producers rely on the validator it is important 
 If this step is skipped, newly declared invalid datasets could be rejected by GTFS data consumers (e.g. Transit App, Google Maps) which could lead to public transit systems disappearing from their interface which means that riders would no longer be able to access the trip information they are used to getting on these platforms.   
 
 ## Definitions
-- **The reference validator** is defined as the latest version of the validator available on the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository.
+- **The reference validator** is defined as the latest version of the validator available on the ([master branch](https://github.com/MobilityData/gtfs-validator/tree/master)) of this repository, or the commit chosen with `baseline_ref` in a manual run.
 - **The proposed validator** is defined as the version of the validator that results from the changes introduced in the pull request that is proposed.
 - **The acceptance criteria** (mentioned in the diagram below) is defined as the impact that a pull request has on datasets: does this pull request disrupt a large quantities of datasets? If yes, the pull request should be flagged as introducing breaking changes or rejected, if no then the pull request can be safely merged to the [`master` branch](https://github.com/MobilityData/gtfs-validator/tree/master).
    
@@ -28,6 +28,10 @@ This workflow:
 On each of these urls:
 1. the reference version of the validator is executed and the validation report is output as JSON (under `reference.json`);
 1. the proposed version of the validator is executed and the validation report is output as JSON (under `latest.json`).
+
+The reference reports only depend on master's code and on the feed's file, so they are cached by feed ID and file hash, per master commit. When a feed's file is unchanged, the reference report of an earlier run is reused and only the proposed validator runs. A fixed sample of about 25% of the feeds, picked by feed ID, never reuses it, so that both validators run in the same job and their timings can be compared. Feeds of 500 MB or more are left out of that sample: each one is alone in its job, and running the reference validator again would make the whole workflow wait longer.
+
+Next to each feed's reports, `feed.json` records how the feed was validated: the size of its zip file (`zipBytes`, `null` when the download failed), whether the reference report was reused (`masterReused`), the runner and its number of processors. The validators do not read or write this file.
 
 At the end of execution of the two aforementioned steps for every url in the matrix, all the validation
 reports are gathered in a single folder (`output`) and compared - the percentage of newly invalid datasets
@@ -106,35 +110,61 @@ We follow this process:
 
 ## Performance metrics within the acceptance reports
 
-There are two main metrics added to the acceptance report comment at the PR level, _Validation Time_ and _Memory Consumption_.
-The performance metrics are **not a blocker** as performance might vary due to external factors including GitHub infrastructure performance.
-However, large jumps in performance values should be investigated before approving a PR.
+The _Performance Assessment_ section of the PR comment compares the reference and proposed validators on every dataset. It is **not a blocker**, since timings vary with the GitHub runners, but large or unexpected changes should be investigated before approving a PR.
 
-### Validation Time
-The validation time consists in general metrics like average, median, standard deviation, minimums and maximums.
-This metrics can be affected by addition of new validators than introduce a penalty in processing time.
+### Measurements
 
-### Memory Consumption
-There are two main patterns on how to take a memory usage snapshot:
+Each validation records its measurements in `report.json`, under `summary.performanceMetrics`. A validation has four phases: `input` (reading or downloading the feed), `loadTables`, `multiFileValidators` and `feedMetadata`. Report generation is not measured.
 
-- MemoryMonitor annotation: This annotation persists the memory usage in the target method. As a limitation, for methods that have concurrent thread executions, the annotation persists in multiple snapshots. This cannot be very clear when analyzing memory usage.
-- MemoryUsageRegister: using the registry directly give you more flexibility than the annotation and can be used in cases where MemoryMonitor produces multiple entries on concurrent executed methods.
+| Metric | What it measures | Flag threshold |
+|---|---|---|
+| Wall time | Elapsed time of all phases except `input`, so that download time does not count. | 5% |
+| CPU time | CPU time of the validation thread and of the tasks it runs in the loader's thread pool. Excludes the garbage collector and JIT threads. | 5% |
+| Allocated memory | Bytes allocated by those same threads. Nearly identical between runs of the same code, so small changes are real. | 1% |
+| Peak heap after GC | Highest heap in use right after a garbage collection run by the JVM on its own. Empty when none ran, which is common on small feeds since CI starts with an 8 GB heap. | 5% |
+| Peak live heap | Highest heap in use after a full garbage collection forced at the end of each phase. Measured on every feed. Enabled in CI with `-Dgtfsvalidator.performance.liveHeap=true`. | 2% |
 
-The memory consumption section contains three tables.
-- The first, list the first 25 datasets that the difference increased memory comparing with the main branch.
-- The second, list the first 25 datasets that the difference decreased memory comparing with the main branch.
-- The third, list(not always visible) the first 25 datasets that were not available for comparison as the main branch didn't contain the memory usage information.
+When either validator does not report these metrics, only the validation time is compared.
 
-Memory usage is collected in critical points and persists in the JSON report. The added snapshot points are:
-- _GtfsFeedLoader.loadTables_: This is taken after the validator loads all files.
-- _GtfsFeedLoader.executeMultiFileValidators_: This is taken after the validator executed all multi-file validators
-- _org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader.loadAndValidate_: This is taken for the complete load and validation method.
-- _ValidationRunner.run_: This is taken for the complete run of the validator, excluding report generation
+The _Out of Memory Check_ lists the datasets whose validation ran out of memory (12 GB heap in CI). They are left out of every other check and statistic.
+
+### How the comparison works
+
+- Each metric is compared per dataset as latest / reference, so that every dataset weighs the same.
+- Datasets are grouped by the size of their zip file: < 10 MB, 10 to 50 MB, 50 to 100 MB, 100 to 200 MB, 200 to 500 MB and >= 500 MB. Datasets whose download failed are grouped as _unknown size_. The size does not depend on either run, and the bounds above 50 MB fall in gaps between the sizes of the feeds, so that a feed rarely moves to another group.
+- Wall time, CPU time and peak heap after GC depend on the machine, so they are only compared on the datasets whose two reports were produced in the same job. Allocated memory and peak live heap are compared on every dataset. The comment says how many datasets the timings used.
+- Each metric has its own collapsible section, with a short description and a table by size group. For each group, the table shows the median and the geometric mean of the changes, with a 95% bootstrap confidence interval.
+- A change is flagged as _Regression_ or _Improvement_ only when the whole interval is beyond the metric's threshold and the group has at least 5 datasets.
+- _Largest wall time changes per feed_ lists the 10 datasets of at least 2 s with the largest wall time change, with their zip size and all their metrics.
+
+### How to read it
+
+- Start with the flagged lines, then open the metric's section: a group's median shows what a typical feed does, while the geometric mean can be pulled by a few feeds.
+- Memory: _Peak live heap_ is what the validator keeps, which decides whether a feed fits in memory. _Allocated memory_ is what it creates, which costs garbage collection and CPU time. A change can lower one and raise the other.
+- Memory against CPU. These often move in opposite directions:
+  - Lower live heap, higher CPU and allocation: less data is kept and rows are rebuilt on each read, for example a table stored as compact columns.
+  - Higher live heap, lower CPU: results are kept to avoid recomputing them, for example a per-trip cache.
+  - _CPU time_ excludes the garbage collector, so a smaller heap's savings show in wall time, not CPU.
+
+  A memory fix is expected to cost some CPU, and a speed fix some memory.
+- Timings: a single feed's time can vary by more than 20% between runs. Trust a timing change when it shows across a group, or when CPU time or allocated memory move the same way.
+- The groups above 100 MB have few datasets, and fewer still have timings on a regular PR run. To compare the timings of every feed, run the pipeline manually without reusing the reference reports (see below). The >= 500 MB group has 2 datasets and is never flagged: check them in the per-feed table.
 
 ## Instructions to run the pipeline
 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
 2. The acceptance test pipeline will run each time code is pushed on the newly created branch; **except if** the keyword `[acceptance test skip]` is included in the commit message.
+
+To validate every feed with both validators in the same job, for example to check a performance change, run the pipeline manually: in the Actions tab, open _Rule acceptance tests_, click _Run workflow_, pick the PR's branch and uncheck `reuse_master_reports`. The report is written to the run summary only, not posted on any PR. A manual run validates the branch as is, not merged with master, and is only available for branches of this repository.
+
+To compare the branch with another reference than master, for example the commit before a performance change or a release tag, fill in `baseline_ref` with a branch, tag or commit SHA when starting a manual run. The reference validator is then built from that commit, and the report says which commit it was built from. The reference reports of such a run are not saved for reuse. The baseline must be from March 2024 (#1683) or later: older validators lack the `--skip_validator_update` option, and the run stops before validating any feed.
+
+By default, the pipeline validates a fixed list of about 1,000 feeds, committed in [`acceptance_test_feed_list.csv`](../scripts/mobility-database-harvester/acceptance_test_feed_list.csv). To validate more feeds, for example to investigate the differences between releases, set `feed_list` when starting a manual run:
+- `acceptance`: the fixed list (default);
+- `active`: the active GTFS feeds of the [Mobility Database catalog](https://files.mobilitydatabase.org/feeds_v2.csv) that have a latest dataset, about 2,800;
+- `non-deprecated`: the same, also with the inactive, future and development feeds, about 3,600.
+
+A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so the corrupted sources check may fail on its own.
 
 ## Instructions to verify the execution of the pipeline
 

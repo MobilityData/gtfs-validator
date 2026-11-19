@@ -17,7 +17,6 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import com.google.common.collect.Multimaps;
 import java.util.List;
 import javax.inject.Inject;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
@@ -54,7 +53,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(table.byTripIdMap()).values()) {
+    for (List<GtfsStopTime> stopTimeList : table.byTripIdAsMap().values()) {
       int previousDepartureRow = -1;
       for (int i = 0; i < stopTimeList.size(); ++i) {
         GtfsStopTime stopTime = stopTimeList.get(i);

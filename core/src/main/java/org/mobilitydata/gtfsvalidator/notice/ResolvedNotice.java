@@ -28,9 +28,16 @@ public final class ResolvedNotice<T extends Notice> {
 
   private final SeverityLevel severityLevel;
 
+  /**
+   * Computed once: the key is needed twice for every notice added to a container and again for
+   * every notice when they are grouped, and building it allocates.
+   */
+  private final String mappingKey;
+
   public ResolvedNotice(T context, SeverityLevel severityLevel) {
     this.context = context;
     this.severityLevel = severityLevel;
+    this.mappingKey = mappingKey(context.getCode(), severityLevel);
   }
 
   public T getContext() {
@@ -45,7 +52,7 @@ public final class ResolvedNotice<T extends Notice> {
    * @return the key used to group notices per type and severity: code + ordinal of severity level.
    */
   public String getMappingKey() {
-    return mappingKey(context.getCode(), getSeverityLevel());
+    return mappingKey;
   }
 
   /** Returns the key under which notices of the given code and severity level are grouped. */

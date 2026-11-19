@@ -218,6 +218,22 @@ public class FeedServiceWindowValidatorTest {
   }
 
   @Test
+  public void reversedCalendarRow_isIgnored_noNotice() {
+    // Issue #2247: a calendar row with start_date after end_date used to make the service
+    // window computation throw. It is reported elsewhere as start_and_end_range_out_of_order,
+    // so the service window ignores it and only s1 (fully inside the feed period) counts.
+    List<ValidationNotice> notices =
+        generateNotices(
+            ImmutableList.of(
+                new CalendarMetadata("s1", "20240101", "20240131"),
+                new CalendarMetadata("s2", "20240301", "20240201")), // start after end
+            "20240101",
+            "20240131",
+            ImmutableList.of("s1", "s2"));
+    assertThat(notices).isEmpty();
+  }
+
+  @Test
   public void feedExtendsJustAtThreshold_noNotice() {
     // Feed starts exactly THRESHOLD_DAYS (14) before service window -> no FeedBeyond notice.
     // TODAY = Jan 15, service starts Jan 15 -> no FutureCalendar notice either.

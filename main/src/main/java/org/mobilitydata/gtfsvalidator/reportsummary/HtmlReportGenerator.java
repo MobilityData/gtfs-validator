@@ -73,6 +73,12 @@ public class HtmlReportGenerator {
     }
   }
 
+  /**
+   * Returns, per notice code, the fields that are set on at least one of its notices.
+   *
+   * <p>The lists in {@code noticesByCode} hold the notices the report actually lists, so the
+   * columns are derived from exactly the rows that are rendered.
+   */
   private Map<String, List<String>> getUniqueFieldsForCodes(
       Map<String, List<NoticeView>> noticesByCode) {
     return noticesByCode.entrySet().stream()

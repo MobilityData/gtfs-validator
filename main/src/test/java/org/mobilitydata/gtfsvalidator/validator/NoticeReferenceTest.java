@@ -15,6 +15,7 @@ import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.EmptyRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyRowNotice;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyViolationNotice;
 import org.mobilitydata.gtfsvalidator.notice.GeoJsonDuplicatedElementNotice;
@@ -109,6 +110,7 @@ public class NoticeReferenceTest {
           MissingRequiredElementNotice.class,
           MissingRequiredFieldNotice.class,
           MissingRequiredFileNotice.class,
+          EmptyRequiredFileNotice.class,
           MixedCaseRecommendedFieldNotice.class,
           MoreThanOneEntityNotice.class,
           NewLineInValueNotice.class,

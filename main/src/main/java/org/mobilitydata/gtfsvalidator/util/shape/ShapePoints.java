@@ -43,10 +43,25 @@ import org.mobilitydata.gtfsvalidator.util.MathUtil;
  */
 public class ShapePoints {
 
+  /** Covers rounding errors when skipping segments that are too far from a location. */
+  private static final double SKIP_MARGIN_METERS = 1.0;
+
   private final List<ShapePoint> points;
+
+  private double[] segmentLengths;
 
   public ShapePoints(List<ShapePoint> points) {
     this.points = points;
+  }
+
+  private double[] getSegmentLengths() {
+    if (segmentLengths == null) {
+      segmentLengths = new double[Math.max(0, points.size() - 1)];
+      for (int i = 0; i + 1 < points.size(); ++i) {
+        segmentLengths[i] = getDistanceMeters(points.get(i).location, points.get(i + 1).location);
+      }
+    }
+    return segmentLengths;
   }
 
   public static ShapePoints fromGtfsShape(List<GtfsShape> gtfsPoints) {
@@ -91,12 +106,21 @@ public class ShapePoints {
       match.keepBestMatch(closestPoint, getDistanceMeters(location, closestPoint), 0);
     }
 
+    // Segments that cannot be closer than the best match so far are skipped, see
+    // matchesFromLocation.
+    double distanceToSegmentStartLowerBound = 0.0;
+    double[] segmentLengths = getSegmentLengths();
     for (int i = 0; i + 1 < points.size(); ++i) {
       final ShapePoint left = points.get(i);
       final ShapePoint right = points.get(i + 1);
+      distanceToSegmentStartLowerBound -= segmentLengths[i];
+      if (distanceToSegmentStartLowerBound > match.getGeoDistanceToShape() + SKIP_MARGIN_METERS) {
+        continue;
+      }
       final S2Point closestPoint =
           S2EdgeUtil.getClosestPoint(location, left.location, right.location);
       match.keepBestMatch(closestPoint, getDistanceMeters(location, closestPoint), i);
+      distanceToSegmentStartLowerBound = getDistanceMeters(location, right.location);
     }
     if (match.hasBestMatch()) {
       fillLocationMatch(match);
@@ -137,10 +161,22 @@ public class ShapePoints {
     // best localMatch to the matches list and reset the localMatch.
     double distanceToEndOfPreviousSegment = Double.POSITIVE_INFINITY;
     boolean previousSegmentGettingFurtherAway = false;
+    // By the triangle inequality, a segment is at least (distance to its start - its length) away,
+    // so segments that cannot be within maxDistanceFromShape are skipped like any far segment.
+    double distanceToSegmentStartLowerBound = 0.0;
+    double[] segmentLengths = getSegmentLengths();
 
     for (int i = 0; i + 1 < points.size(); ++i) {
       final ShapePoint left = points.get(i);
       final ShapePoint right = points.get(i + 1);
+      distanceToSegmentStartLowerBound -= segmentLengths[i];
+      if (distanceToSegmentStartLowerBound > maxDistanceFromShape + SKIP_MARGIN_METERS) {
+        if (localMatch.hasBestMatch()) {
+          matches.add(new StopToShapeMatch(localMatch));
+          localMatch.clearBestMatch();
+        }
+        continue;
+      }
       final S2Point closestPoint =
           S2EdgeUtil.getClosestPoint(location, left.location, right.location);
       final double geoDistanceToShape = getDistanceMeters(location, closestPoint);
@@ -167,6 +203,7 @@ public class ShapePoints {
       }
 
       distanceToEndOfPreviousSegment = getDistanceMeters(location, right.location);
+      distanceToSegmentStartLowerBound = distanceToEndOfPreviousSegment;
       previousSegmentGettingFurtherAway = distanceToEndOfPreviousSegment > geoDistanceToShape;
     }
 
