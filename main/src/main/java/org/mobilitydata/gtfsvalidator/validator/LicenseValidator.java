@@ -123,7 +123,7 @@ public class LicenseValidator extends FileValidator {
   /**
    * A `licenses.txt` table name does not match any known GTFS file.
    *
-   * <p>`licensed_table_name` must be the name of a GTFS file, omitting the `.txt` extension.
+   * <p>`licensed_table_name` should be the name of a GTFS file, omitting the `.txt` extension.
    * `locations.geojson` may be referred to as `locations` or `locations.geojson`.
    */
   @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsLicenseSchema.class))
