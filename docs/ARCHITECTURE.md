@@ -123,7 +123,7 @@ A [minimal wrapper]((/app/pkg/src/main/java/org/mobilitydata/gtfsvalidator/app/p
 
 ## Memory: tables stored as columns
 
-`stop_times.txt` is usually the largest table, so it is declared with `@GtfsTable(storage = TableStorage.COLUMNAR)`. For such tables, the annotation processor generates two classes instead of the usual container:
+`stop_times.txt` and `shapes.txt` are usually the largest tables, so they are declared with `@GtfsTable(storage = TableStorage.COLUMNAR)`. For such tables, the annotation processor generates two classes instead of the usual container:
 
 - `GtfsStopTimeColumns` ([`TableColumnsGenerator`](../processor/src/main/java/org/mobilitydata/gtfsvalidator/processor/TableColumnsGenerator.java)), which keeps each field of the schema in an array.
 - `GtfsStopTimeTableContainer` ([`ColumnarTableContainerGenerator`](../processor/src/main/java/org/mobilitydata/gtfsvalidator/processor/ColumnarTableContainerGenerator.java)), whose rows and indices live in a [`ColumnarEntityList`](../core/src/main/java/org/mobilitydata/gtfsvalidator/table/ColumnarEntityList.java) over those columns.
@@ -136,7 +136,7 @@ Adding or changing a field in the schema needs no other change. How the rows are
 
 A columnar table must not be `singleRow`, must have at most 64 fields, and either no primary key or a primary key made of an `@Index` field and an integer field with `@PrimaryKey(isSequenceUsedForSorting = true)`, such as `(trip_id, stop_sequence)`.
 
-The container API is unchanged, except `byTripIdMap()` and `byStopIdMap()`, which now create every stop time at once and are deprecated: validators iterate trips with `byTripIdAsMap()`, which creates each trip's stop times when it is read.
+The container API is unchanged, except `byTripIdMap()` and `byStopIdMap()`, which now create every stop time at once and are deprecated: validators iterate trips with `byTripIdAsMap()`, which creates each trip's stop times when it is read. Likewise, `byShapeIdMap()` is deprecated and validators iterate shapes with `byShapeIdAsMap()`.
 
 Columnar storage keeps much less in memory, at the cost of some CPU time, since a row is created on each read and its values are decoded on each call. On a 3 million row sample of a large feed, the live heap of the whole validation went from 1 718 MB to 1 365 MB, allocations went up by 21%.
 

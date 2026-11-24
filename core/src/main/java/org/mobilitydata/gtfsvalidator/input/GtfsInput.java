@@ -23,9 +23,9 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel;
 import org.mobilitydata.gtfsvalidator.notice.InvalidInputFilesInSubfolderNotice;
@@ -37,9 +37,6 @@ import org.mobilitydata.gtfsvalidator.util.HttpGetUtil;
  * directory.
  */
 public abstract class GtfsInput implements Closeable {
-  public static final String invalidInputMessage =
-      "At least 1 GTFS file is in a subfolder. All GTFS files must reside at the root level directly.";
-
   /**
    * Creates a specific GtfsInput to read data from the given path.
    *
@@ -64,40 +61,22 @@ public abstract class GtfsInput implements Closeable {
             // Load a remote ZIP file to memory.
             : new ZipFile(new SeekableInMemoryByteChannel(Files.readAllBytes(path)));
 
-    if (hasSubfolderWithGtfsFile(path)) {
+    if (containsGtfsFileInSubfolder(zipFile)) {
       noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
     }
     return new GtfsZipFileInput(zipFile, fileName);
   }
 
-  /**
-   * Check if a zip file contains a subfolder with GTFS files
-   *
-   * @param path
-   * @return
-   * @throws IOException
-   */
-  public static boolean hasSubfolderWithGtfsFile(Path path) throws IOException {
-    // The stream owns a file descriptor and an Inflater holding a native zlib stream, so it has to
-    // be closed: a long-running process validating many feeds would otherwise leak both.
-    try (ZipInputStream zipInputStream =
-        new ZipInputStream(new BufferedInputStream(new FileInputStream(path.toFile())))) {
-      return containsGtfsFileInSubfolder(zipInputStream);
-    }
-  }
-
-  /**
-   * Common method used by two overloaded hasSubfolderWithGtfsFile methods
-   *
-   * @param zipInputStream
-   * @return
-   * @throws IOException
-   */
-  private static boolean containsGtfsFileInSubfolder(ZipInputStream zipInputStream)
-      throws IOException {
-    ZipEntry entry;
-    while ((entry = zipInputStream.getNextEntry()) != null) {
+  /** Check whether a ZIP file contains a subfolder with GTFS files. */
+  private static boolean containsGtfsFileInSubfolder(ZipFile zipFile) {
+    Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+    while (entries.hasMoreElements()) {
+      ZipArchiveEntry entry = entries.nextElement();
       String[] nameParts = entry.getName().split("/");
+      // Some zip tools add a root directory entry named "/". It has no file name to check.
+      if (nameParts.length == 0) {
+        continue;
+      }
       boolean isInSubfolder = nameParts.length > 1;
       boolean isGtfsFile = GtfsFiles.containsGtfsFile(nameParts[nameParts.length - 1]);
       if (isInSubfolder && isGtfsFile) {
@@ -173,17 +152,18 @@ public abstract class GtfsInput implements Closeable {
       throws IOException, URISyntaxException {
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
       HttpGetUtil.loadFromUrl(sourceUrl, outputStream, validatorVersion, httpHeaders);
-      File zipFile = new File(sourceUrl.toString());
-      String fileName = zipFile.getName().replace(".zip", "");
-      try (ZipInputStream zipInputStream =
-          new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray()))) {
-        if (containsGtfsFileInSubfolder(zipInputStream)) {
-          noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
-        }
-      }
-      return new GtfsZipFileInput(
-          new ZipFile(new SeekableInMemoryByteChannel(outputStream.toByteArray())), fileName);
+      String fileName = new File(sourceUrl.toString()).getName().replace(".zip", "");
+      return createFromZipBytes(outputStream.toByteArray(), fileName, noticeContainer);
     }
+  }
+
+  static GtfsInput createFromZipBytes(
+      byte[] zipBytes, String fileName, NoticeContainer noticeContainer) throws IOException {
+    ZipFile zipFile = new ZipFile(new SeekableInMemoryByteChannel(zipBytes));
+    if (containsGtfsFileInSubfolder(zipFile)) {
+      noticeContainer.addValidationNotice(new InvalidInputFilesInSubfolderNotice());
+    }
+    return new GtfsZipFileInput(zipFile, fileName);
   }
 
   /**

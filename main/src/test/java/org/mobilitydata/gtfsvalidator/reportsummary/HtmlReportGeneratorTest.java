@@ -139,7 +139,7 @@ public class HtmlReportGeneratorTest {
   private String generateReport(NoticeContainer noticeContainer) throws IOException {
     GtfsFeedContainer feedContainer =
         new GtfsFeedContainer(
-            ImmutableList.<GtfsEntityContainer<?, ?>>of(
+            ImmutableList.<GtfsEntityContainer<?>>of(
                 GtfsStopTimeTableContainer.forEntities(ImmutableList.of(), new NoticeContainer())));
     Path reportPath = temporaryFolder.newFile("report.html").toPath();
     ValidationRunnerConfig config =
