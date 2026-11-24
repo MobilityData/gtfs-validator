@@ -33,7 +33,9 @@ import org.mobilitydata.gtfsvalidator.table.GtfsShape;
 import org.mobilitydata.gtfsvalidator.table.GtfsShapeTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
+import org.mobilitydata.gtfsvalidator.validator.LicenseValidator.DeprecatedLicenseSpdxIdNotice;
 import org.mobilitydata.gtfsvalidator.validator.LicenseValidator.ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice;
+import org.mobilitydata.gtfsvalidator.validator.LicenseValidator.InvalidLicenseSpdxIdNotice;
 import org.mobilitydata.gtfsvalidator.validator.LicenseValidator.LicensesUnknownTableNameNotice;
 import org.mobilitydata.gtfsvalidator.validator.LicenseValidator.MissingLicenseSpdxIdOrCustomLicenseUrlNotice;
 
@@ -303,5 +305,113 @@ public final class LicenseValidatorTest {
                 GtfsLicense.FILENAME, 2, 3, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, "Shapes"),
             new DuplicateKeyNotice(
                 GtfsLicense.FILENAME, 2, 4, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, "SHAPES"));
+  }
+
+  @Test
+  public void unknownSpdxId_yieldsInvalidNotice() {
+    GtfsLicense license = license(2).setLicenseSpdxId("Not-A-License").build();
+    assertThat(generateNotices(license)).containsExactly(new InvalidLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void deprecatedSpdxId_yieldsDeprecatedNotice() {
+    GtfsLicense license = license(2).setLicenseSpdxId("GPL-3.0").build();
+    assertThat(generateNotices(license))
+        .containsExactly(new DeprecatedLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void currentSpdxIdReplacingDeprecatedOne_noNotice() {
+    assertThat(generateNotices(license(2).setLicenseSpdxId("GPL-3.0-only").build())).isEmpty();
+  }
+
+  @Test
+  public void spdxIdWithDifferentCase_noNotice() {
+    assertThat(generateNotices(license(2).setLicenseSpdxId("cc-by-4.0").build())).isEmpty();
+  }
+
+  @Test
+  public void unknownSpdxIdWithCustomUrl_yieldsForbiddenAndInvalidNotices() {
+    GtfsLicense license =
+        license(2)
+            .setLicenseSpdxId("Not-A-License")
+            .setCustomLicenseUrl("https://example.com/license")
+            .build();
+    assertThat(generateNotices(license))
+        .containsExactly(
+            new ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice(2),
+            new InvalidLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void deprecatedSpdxIdWithDifferentCase_yieldsDeprecatedNotice() {
+    GtfsLicense license = license(2).setLicenseSpdxId("gpl-3.0").build();
+    assertThat(generateNotices(license))
+        .containsExactly(new DeprecatedLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void deprecatedSpdxIdWithCustomUrl_yieldsForbiddenAndDeprecatedNotices() {
+    GtfsLicense license =
+        license(2)
+            .setLicenseSpdxId("GPL-3.0")
+            .setCustomLicenseUrl("https://example.com/license")
+            .build();
+    assertThat(generateNotices(license))
+        .containsExactly(
+            new ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice(2),
+            new DeprecatedLicenseSpdxIdNotice(license));
+  }
+
+  /**
+   * `license_spdx_id` holds a single identifier from the SPDX License List. SPDX expressions,
+   * `LicenseRef-` values and license exceptions are not license identifiers.
+   */
+  @Test
+  public void spdxExpressionsAndNonLicenseIds_yieldInvalidNotice() {
+    GtfsLicense dualLicense = license(2).setLicenseSpdxId("MIT OR Apache-2.0").build();
+    GtfsLicense combinedLicenses =
+        license(3)
+            .setLicensedTableName("shapes")
+            .setLicenseSpdxId("CC-BY-4.0 AND ODbL-1.0")
+            .build();
+    GtfsLicense licenseWithException =
+        license(4)
+            .setLicensedTableName("stops")
+            .setLicenseSpdxId("GPL-2.0-or-later WITH Classpath-exception-2.0")
+            .build();
+    assertThat(generateNotices(dualLicense, combinedLicenses, licenseWithException))
+        .containsExactly(
+            new InvalidLicenseSpdxIdNotice(dualLicense),
+            new InvalidLicenseSpdxIdNotice(combinedLicenses),
+            new InvalidLicenseSpdxIdNotice(licenseWithException));
+  }
+
+  @Test
+  public void licenseRefSpdxId_yieldsInvalidNotice() {
+    GtfsLicense license = license(2).setLicenseSpdxId("LicenseRef-Custom").build();
+    assertThat(generateNotices(license)).containsExactly(new InvalidLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void licenseExceptionSpdxId_yieldsInvalidNotice() {
+    GtfsLicense license = license(2).setLicenseSpdxId("Classpath-exception-2.0").build();
+    assertThat(generateNotices(license)).containsExactly(new InvalidLicenseSpdxIdNotice(license));
+  }
+
+  @Test
+  public void mixedSpdxIdRows_eachFaultyRowFlaggedWithItsRowNumber() {
+    GtfsLicense invalid =
+        license(3).setLicensedTableName("shapes").setLicenseSpdxId("Not-A-License").build();
+    GtfsLicense deprecated =
+        license(4).setLicensedTableName("stops").setLicenseSpdxId("GPL-3.0").build();
+    assertThat(
+            generateNotices(
+                license(2).setLicenseSpdxId("CC-BY-4.0").build(),
+                invalid,
+                deprecated,
+                license(5).setLicensedTableName("locations").setLicenseSpdxId("MIT").build()))
+        .containsExactly(
+            new InvalidLicenseSpdxIdNotice(invalid), new DeprecatedLicenseSpdxIdNotice(deprecated));
   }
 }
