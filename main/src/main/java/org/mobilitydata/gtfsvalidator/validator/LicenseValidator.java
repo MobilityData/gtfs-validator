@@ -65,28 +65,41 @@ public class LicenseValidator extends FileValidator {
 
   @Override
   public void validate(NoticeContainer noticeContainer) {
-    // Table names are matched case-insensitively and `locations` and `locations.geojson` name the
-    // same file, so different values can refer to the same file. The primary key check only
-    // catches identical values; this catches the rest.
+    // The primary key check only catches identical non-empty values. This catches the rest:
+    // - an empty value is the feed-wide license, and the feed can only have one;
+    // - table names are matched case-insensitively, and `locations` and `locations.geojson` name
+    //   the same file, so different values can refer to the same file.
+    GtfsLicense firstFeedWideLicense = null;
     Map<String, GtfsLicense> licenseByNormalizedTableName = new HashMap<>();
     for (GtfsLicense license : licenseTable.getEntities()) {
       validateLicense(license, noticeContainer);
       if (!license.hasLicensedTableName()) {
+        if (firstFeedWideLicense == null) {
+          firstFeedWideLicense = license;
+        } else {
+          addDuplicateKeyNotice(firstFeedWideLicense, license, noticeContainer);
+        }
         continue;
       }
       GtfsLicense first =
           licenseByNormalizedTableName.putIfAbsent(
               normalizeTableName(license.licensedTableName()), license);
+      // Identical values are already reported by the primary key check.
       if (first != null && !first.licensedTableName().equals(license.licensedTableName())) {
-        noticeContainer.addValidationNotice(
-            new DuplicateKeyNotice(
-                GtfsLicense.FILENAME,
-                first.csvRowNumber(),
-                license.csvRowNumber(),
-                GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME,
-                license.licensedTableName()));
+        addDuplicateKeyNotice(first, license, noticeContainer);
       }
     }
+  }
+
+  private static void addDuplicateKeyNotice(
+      GtfsLicense first, GtfsLicense duplicate, NoticeContainer noticeContainer) {
+    noticeContainer.addValidationNotice(
+        new DuplicateKeyNotice(
+            GtfsLicense.FILENAME,
+            first.csvRowNumber(),
+            duplicate.csvRowNumber(),
+            GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME,
+            duplicate.licensedTableName()));
   }
 
   private void validateLicense(GtfsLicense license, NoticeContainer noticeContainer) {

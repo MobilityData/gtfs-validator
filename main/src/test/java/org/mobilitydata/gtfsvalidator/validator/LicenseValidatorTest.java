@@ -187,7 +187,7 @@ public final class LicenseValidatorTest {
   }
 
   @Test
-  public void bothSpdxIdAndCustomUrl_yieldsNotice() {
+  public void forbiddenSpdxIdAndCustomUrl_yieldsNotice() {
     assertThat(
             generateNotices(
                 license(3)
@@ -195,6 +195,53 @@ public final class LicenseValidatorTest {
                     .setCustomLicenseUrl("https://example.com/license")
                     .build()))
         .containsExactly(new ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice(3));
+  }
+
+  @Test
+  public void twoFeedWideLicensesConflictingSpdxId_yieldsDuplicateKeyNotice() {
+    assertThat(
+            generateNotices(
+                license(2).setLicenseSpdxId("CC0-1.0").build(),
+                license(3).setLicenseSpdxId("ODbL-1.0").build()))
+        .containsExactly(
+            new DuplicateKeyNotice(
+                GtfsLicense.FILENAME, 2, 3, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, ""));
+  }
+
+  @Test
+  public void twoFeedWideLicensesConflictingCustomUrl_yieldsDuplicateKeyNotice() {
+    assertThat(
+            generateNotices(
+                license(2).setCustomLicenseUrl("https://example.com/license1").build(),
+                license(3).setCustomLicenseUrl("https://example.com/license2").build()))
+        .containsExactly(
+            new DuplicateKeyNotice(
+                GtfsLicense.FILENAME, 2, 3, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, ""));
+  }
+
+  @Test
+  public void twoIdenticalFeedWideLicenses_yieldsDuplicateKeyNotice() {
+    assertThat(
+            generateNotices(
+                license(2).setLicenseSpdxId("CC0-1.0").build(),
+                license(3).setLicenseSpdxId("CC0-1.0").build()))
+        .containsExactly(
+            new DuplicateKeyNotice(
+                GtfsLicense.FILENAME, 2, 3, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, ""));
+  }
+
+  @Test
+  public void threeFeedWideLicenses_eachExtraRowReportedAgainstFirst() {
+    assertThat(
+            generateNotices(
+                license(2).setLicenseSpdxId("CC0-1.0").build(),
+                license(3).setLicenseSpdxId("MIT").build(),
+                license(4).setCustomLicenseUrl("https://example.com/license").build()))
+        .containsExactly(
+            new DuplicateKeyNotice(
+                GtfsLicense.FILENAME, 2, 3, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, ""),
+            new DuplicateKeyNotice(
+                GtfsLicense.FILENAME, 2, 4, GtfsLicense.LICENSED_TABLE_NAME_FIELD_NAME, ""));
   }
 
   @Test
