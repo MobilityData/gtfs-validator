@@ -52,6 +52,7 @@ public class FeedMetadata {
           new Pair<>(new FeatureMetadata("Feed Information", null), GtfsFeedInfo.FILENAME),
           new Pair<>(new FeatureMetadata("Attributions", null), GtfsAttribution.FILENAME),
           new Pair<>(new FeatureMetadata("Translations", null), GtfsTranslation.FILENAME),
+          new Pair<>(new FeatureMetadata("Licensing", null), GtfsLicense.FILENAME),
           new Pair<>(new FeatureMetadata("Fares V1", "Fares"), GtfsFareAttribute.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Products", "Fares"), GtfsFareProduct.FILENAME),
           new Pair<>(new FeatureMetadata("Fare Transfers", "Fares"), GtfsFareTransferRule.FILENAME),
