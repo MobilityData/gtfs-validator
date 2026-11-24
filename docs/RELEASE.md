@@ -10,10 +10,12 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 - Examine the pull request and if satisfactory merge it.
 
 ### 3. Update the bundled SPDX license list
-The validator bundles `licenses.json` from the [SPDX license list data](https://github.com/spdx/license-list-data) to validate `licenses.license_spdx_id`.
+The validator uses `main/src/main/resources/spdx/licenses.json` to validate `licenses.license_spdx_id`.
 1. Check the version of the [latest SPDX release](https://github.com/spdx/license-list-data/releases/latest) (e.g. `v3.29.0`) against `licenseListVersion` at the top of `main/src/main/resources/spdx/licenses.json`. If they match, the file is up to date: skip this step.
-1. Otherwise, open `https://github.com/spdx/license-list-data/blob/<version>/json/licenses.json`, replacing `<version>` with the latest release (e.g. [`v3.29.0`](https://github.com/spdx/license-list-data/blob/v3.29.0/json/licenses.json)). Click the "Download raw file" icon at the top right of the file view.
-1. Replace `main/src/main/resources/spdx/licenses.json` with it and open a pull request that names the SPDX version in its title, e.g. `chore: update SPDX license list to v3.29.0`.
+1. Go to [spdx/license-list-data](https://github.com/spdx/license-list-data) on GitHub.
+1. Select the tag of the latest version (e.g. `v3.29.0`).
+1. Copy `json/licenses.json` to `main/src/main/resources/spdx/licenses.json`.
+1. Open a pull request named after the version, e.g. `chore: update SPDX license list to v3.29.0`.
 
 ### 4. Do a pre release
 1. Go to the release section of GitHub ![step 1](https://user-images.githubusercontent.com/35747326/99820876-567dd600-2b1f-11eb-87d2-eef132b3016a.png)
