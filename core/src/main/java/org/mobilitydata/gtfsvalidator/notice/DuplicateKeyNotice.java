@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import static org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRef.FILE_REQUIREMENTS;
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
