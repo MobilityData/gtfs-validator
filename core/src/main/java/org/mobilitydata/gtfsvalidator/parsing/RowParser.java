@@ -21,7 +21,7 @@ import java.time.ZoneId;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Function;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.FieldLevelEnum;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.table.GtfsColumnDescriptor;

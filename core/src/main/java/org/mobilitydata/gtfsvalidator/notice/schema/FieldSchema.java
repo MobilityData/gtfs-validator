@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.notice.schema;
 
 import java.util.Objects;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the schema of a single field of a validation notice in the JSON validation schema

@@ -13,6 +13,7 @@ dependencies {
     implementation libs.java.poet
     implementation libs.commons.lang3
     implementation libs.guava
+    implementation libs.jspecify
     implementation libs.flogger
     implementation libs.univocity.parsers
     implementation libs.geometry
