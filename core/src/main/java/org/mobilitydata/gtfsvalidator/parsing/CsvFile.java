@@ -26,9 +26,9 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import javax.annotation.Nullable;
 import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Reading support for a CSV file in GTFS feed. The file normally has headers and 0 or several data

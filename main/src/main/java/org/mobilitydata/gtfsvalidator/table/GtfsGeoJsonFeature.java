@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.locationtech.jts.geom.Geometry;
 import org.mobilitydata.gtfsvalidator.util.geojson.GeometryType;
 
@@ -50,7 +50,7 @@ public final class GtfsGeoJsonFeature implements GtfsEntity {
     return featureIndex;
   }
 
-  @Nonnull
+  @NonNull
   public String featureId() {
     return featureId;
   }

@@ -19,7 +19,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -127,15 +127,15 @@ public class ParentStationDistanceValidatorTest {
                 ParentStationDistanceValidator.TOO_FAR_THRESHOLD_METERS
                     / S2Earth.getRadiusMeters()));
 
-    GtfsStop station = createLocation(2, "station1", GtfsLocationType.STATION, 0.0, 0.0, null);
+    GtfsStop station = createLocation(2, "station1", GtfsLocationType.STATION, 0.0, 2.0, null);
     GtfsStop stopAtOrBelow1Km =
-        createLocation(3, "stop_1km_le", GtfsLocationType.STOP, lat1KmBelow, 0.0, "station1");
+        createLocation(3, "stop_1km_le", GtfsLocationType.STOP, lat1KmBelow, 2.0, "station1");
     GtfsStop stopJustAbove1Km =
-        createLocation(4, "stop_1km_gt", GtfsLocationType.STOP, lat1KmAbove, 0.0, "station1");
+        createLocation(4, "stop_1km_gt", GtfsLocationType.STOP, lat1KmAbove, 2.0, "station1");
     GtfsStop stopAtOrBelow10Km =
-        createLocation(5, "stop_10km_le", GtfsLocationType.STOP, lat10KmBelow, 0.0, "station1");
+        createLocation(5, "stop_10km_le", GtfsLocationType.STOP, lat10KmBelow, 2.0, "station1");
     GtfsStop stopJustAbove10Km =
-        createLocation(6, "stop_10km_gt", GtfsLocationType.STOP, lat10KmAbove, 0.0, "station1");
+        createLocation(6, "stop_10km_gt", GtfsLocationType.STOP, lat10KmAbove, 2.0, "station1");
 
     assertThat(
             generateNotices(
@@ -185,6 +185,99 @@ public class ParentStationDistanceValidatorTest {
                     stopWithoutCoords,
                     stopWithCoordlessParent)))
         .isEmpty();
+  }
+
+  @Test
+  public void childStopNearOriginOrPole_noNotice() {
+    GtfsStop station =
+        createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
+    GtfsStop stopNearOrigin =
+        createLocation(3, "stop_origin", GtfsLocationType.STOP, 0.0, 0.0, "station1");
+    GtfsStop stopNearOriginEdge =
+        createLocation(
+            4,
+            "stop_origin_edge",
+            GtfsLocationType.STOP,
+            S2Earth.ORIGIN_THRESHOLD_DEGREES,
+            -S2Earth.ORIGIN_THRESHOLD_DEGREES,
+            "station1");
+    GtfsStop stopNearNorthPole =
+        createLocation(5, "stop_north_pole", GtfsLocationType.STOP, 89.5, BASE_LON, "station1");
+    GtfsStop stopNearSouthPole =
+        createLocation(
+            6,
+            "stop_south_pole",
+            GtfsLocationType.STOP,
+            -S2Earth.POLE_LAT_THRESHOLD_DEGREES,
+            BASE_LON,
+            "station1");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    station,
+                    stopNearOrigin,
+                    stopNearOriginEdge,
+                    stopNearNorthPole,
+                    stopNearSouthPole)))
+        .isEmpty();
+  }
+
+  @Test
+  public void parentStationNearOriginOrPole_noNotice() {
+    GtfsStop stationNearOrigin =
+        createLocation(2, "station_origin", GtfsLocationType.STATION, 0.5, -0.5, null);
+    GtfsStop stationNearNorthPole =
+        createLocation(
+            3,
+            "station_north_pole",
+            GtfsLocationType.STATION,
+            S2Earth.POLE_LAT_THRESHOLD_DEGREES,
+            BASE_LON,
+            null);
+    GtfsStop stationNearSouthPole =
+        createLocation(4, "station_south_pole", GtfsLocationType.STATION, -89.5, BASE_LON, null);
+    GtfsStop stopWithOriginParent =
+        createLocation(5, "stop1", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_origin");
+    GtfsStop stopWithNorthPoleParent =
+        createLocation(6, "stop2", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_north_pole");
+    GtfsStop stopWithSouthPoleParent =
+        createLocation(7, "stop3", GtfsLocationType.STOP, BASE_LAT, BASE_LON, "station_south_pole");
+
+    assertThat(
+            generateNotices(
+                ImmutableList.of(
+                    stationNearOrigin,
+                    stationNearNorthPole,
+                    stationNearSouthPole,
+                    stopWithOriginParent,
+                    stopWithNorthPoleParent,
+                    stopWithSouthPoleParent)))
+        .isEmpty();
+  }
+
+  @Test
+  public void justOutsideOriginOrPoleThreshold_generatesNotices() {
+    // Sanity check: points just outside the thresholds are still validated.
+    double justOutsideOrigin = Math.nextUp(S2Earth.ORIGIN_THRESHOLD_DEGREES);
+    double justOutsidePole = Math.nextDown(S2Earth.POLE_LAT_THRESHOLD_DEGREES);
+    GtfsStop station =
+        createLocation(2, "station1", GtfsLocationType.STATION, BASE_LAT, BASE_LON, null);
+    GtfsStop stopOutsideOrigin =
+        createLocation(3, "stop1", GtfsLocationType.STOP, justOutsideOrigin, 0.0, "station1");
+    GtfsStop stopOutsidePole =
+        createLocation(4, "stop2", GtfsLocationType.STOP, justOutsidePole, BASE_LON, "station1");
+
+    assertThat(generateNotices(ImmutableList.of(station, stopOutsideOrigin, stopOutsidePole)))
+        .containsExactly(
+            new ChildStopTooFarFromParentStationNotice(
+                stopOutsideOrigin,
+                station,
+                S2Earth.getDistanceMeters(stopOutsideOrigin.stopLatLon(), station.stopLatLon())),
+            new ChildStopTooFarFromParentStationNotice(
+                stopOutsidePole,
+                station,
+                S2Earth.getDistanceMeters(stopOutsidePole.stopLatLon(), station.stopLatLon())));
   }
 
   @Test

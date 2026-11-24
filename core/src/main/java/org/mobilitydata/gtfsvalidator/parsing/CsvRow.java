@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
 import com.google.common.base.Strings;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Read access to a data row in a CSV file. */
 public class CsvRow {
