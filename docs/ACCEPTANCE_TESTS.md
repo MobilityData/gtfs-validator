@@ -218,9 +218,9 @@ Rows are sorted by feed ID, in numeric order (`mdb-2` before `mdb-10`), then by 
 
 #### HTML report links
 
-A manual run uploads the feeds' HTML reports to the public `stg-gtfs-validator-results` bucket, under `acceptance/<run ID>-<attempt>/<feed ID>/`, and the report columns link to them. The bucket deletes them after 30 days. PR runs do not upload them, and their report columns hold paths inside `reports_all`, as does a manual run whose upload failed.
+A manual run uploads the feeds' HTML reports to the `mobilitydata-validation-reports` bucket, under `acceptance/<run ID>-<attempt>/<feed ID>/`, and the report columns link to them. Anyone can open a report from its link, but not list the bucket, and the reports are kept. PR runs do not upload them, and their report columns hold paths inside `reports_all`, as does a manual run whose upload failed.
 
-The upload uses the `GCP_ACCEPTANCE_REPORTS_SA_KEY` repository secret, the key of a service account allowed to create objects in that bucket (`roles/storage.objectCreator`). Without the secret, the upload is skipped.
+The upload uses the `GCP_ACCEPTANCE_REPORTS_SA_KEY` repository secret, the key of a service account allowed to create and read objects in that bucket, but not to delete them (`roles/storage.objectCreator` and `roles/storage.objectViewer`). Without the secret, the upload is skipped.
 
 #### Building it from a run
 

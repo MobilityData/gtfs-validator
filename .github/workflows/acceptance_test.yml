@@ -323,9 +323,9 @@ jobs:
     needs: [ pack-master, pack-snapshot, merge-reports-artifacts ]
     runs-on: ubuntu-24.04
     env:
-      # Public bucket, whose files are deleted after 30 days, where a manual run uploads the HTML
+      # Public bucket, readable by link but not listable, where a manual run uploads the HTML
       # reports linked from the notice comparison CSV. Skipped without the service account key.
-      REPORTS_BUCKET: stg-gtfs-validator-results
+      REPORTS_BUCKET: mobilitydata-validation-reports
       UPLOAD_REPORTS: ${{ github.event_name == 'workflow_dispatch' && secrets.GCP_ACCEPTANCE_REPORTS_SA_KEY != '' }}
     steps:
       - uses: actions/checkout@v7.0.1
