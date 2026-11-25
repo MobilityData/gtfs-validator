@@ -1,8 +1,8 @@
-"""Writes the acceptance test PR comment: the report summary, then a footer to start a full run.
+"""Writes the acceptance test PR comment: the report summary, then the command for a full run.
 
-The footer has a checkbox that starts a run of the acceptance tests of the PR's branch against the
-latest release on all the non-deprecated feeds (see acceptance_test_full_run.yml), and the
-equivalent command. It is left out for a PR from a fork, whose branch cannot run the workflow.
+The footer gives the command that runs the acceptance tests of the PR's branch against the latest
+release on all the non-deprecated feeds. It is left out for a PR from a fork, whose branch cannot
+run the workflow.
 
 The summary is cut to fit GitHub's comment size limit, so that the footer is always kept.
 
@@ -19,9 +19,6 @@ import sys
 
 # GitHub rejects comments longer than this, in characters.
 MAX_COMMENT_LENGTH = 65536
-# Marks the comment for acceptance_test_full_run.yml.
-MARKER = "<!-- acceptance-full-run -->"
-CHECKBOX = "- [ ] Run the full acceptance test"
 TRUNCATED = "\n\n*The summary is cut short here: see the full report in the run linked above.*\n"
 
 
@@ -29,11 +26,8 @@ def footer(repository, branch, release):
     against = f"the latest release (`{release}`)" if release else "the latest release"
     baseline = release or "<latest release>"
     return (
-        f"\n\n---\n{MARKER}\n"
-        f"To compare this branch with {against} on all the non-deprecated feeds, tick the box"
-        " (requires write access to the repository):\n\n"
-        f"{CHECKBOX}\n\n"
-        "Or run:\n"
+        "\n\n---\n"
+        f"To compare this branch with {against} on all the non-deprecated feeds, run:\n"
         "```\n"
         f"gh workflow run acceptance_test.yml -R {repository} --ref {branch}"
         f" -f baseline_ref={baseline} -f feed_list=non-deprecated\n"
