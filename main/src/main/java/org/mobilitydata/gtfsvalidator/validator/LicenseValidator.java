@@ -34,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsGeoJsonFeature;
 import org.mobilitydata.gtfsvalidator.table.GtfsLicense;
 import org.mobilitydata.gtfsvalidator.table.GtfsLicenseSchema;
 import org.mobilitydata.gtfsvalidator.table.GtfsLicenseTableContainer;
+import org.mobilitydata.gtfsvalidator.util.SpdxLicenseList;
 
 /**
  * Validates records of `licenses.txt`.
@@ -44,6 +45,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsLicenseTableContainer;
  *   <li>{@link LicensesUnknownTableNameNotice}
  *   <li>{@link MissingLicenseSpdxIdOrCustomLicenseUrlNotice}
  *   <li>{@link ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice}
+ *   <li>{@link InvalidLicenseSpdxIdNotice}
+ *   <li>{@link DeprecatedLicenseSpdxIdNotice}
  *   <li>{@link DuplicateKeyNotice}
  * </ul>
  */
@@ -112,6 +115,14 @@ public class LicenseValidator extends FileValidator {
     } else if (license.hasLicenseSpdxId() && license.hasCustomLicenseUrl()) {
       noticeContainer.addValidationNotice(
           new ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice(license.csvRowNumber()));
+    }
+    if (license.hasLicenseSpdxId()) {
+      SpdxLicenseList spdxLicenses = SpdxLicenseList.getInstance();
+      if (!spdxLicenses.isKnown(license.licenseSpdxId())) {
+        noticeContainer.addValidationNotice(new InvalidLicenseSpdxIdNotice(license));
+      } else if (spdxLicenses.isDeprecated(license.licenseSpdxId())) {
+        noticeContainer.addValidationNotice(new DeprecatedLicenseSpdxIdNotice(license));
+      }
     }
   }
 
@@ -193,6 +204,66 @@ public class LicenseValidator extends FileValidator {
 
     ForbiddenLicenseSpdxIdOrCustomLicenseUrlNotice(int csvRowNumber) {
       this.csvRowNumber = csvRowNumber;
+      this.filename = GtfsLicense.FILENAME;
+    }
+  }
+
+  /**
+   * `license_spdx_id` is not a recognized SPDX identifier.
+   *
+   * <p>The value is not a license identifier in the <a href="https://spdx.org/licenses/">SPDX
+   * License List</a>, so it does not correspond to any known license. Identifiers are matched
+   * case-insensitively.
+   */
+  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsLicenseSchema.class))
+  static class InvalidLicenseSpdxIdNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The name of the faulty field. */
+    private final String fieldName;
+
+    /** The value of the faulty field. */
+    private final String fieldValue;
+
+    /** The name of the faulty file. */
+    private final String filename;
+
+    InvalidLicenseSpdxIdNotice(GtfsLicense license) {
+      this.csvRowNumber = license.csvRowNumber();
+      this.fieldName = GtfsLicense.LICENSE_SPDX_ID_FIELD_NAME;
+      this.fieldValue = license.licenseSpdxId();
+      this.filename = GtfsLicense.FILENAME;
+    }
+  }
+
+  /**
+   * `license_spdx_id` is a deprecated SPDX identifier.
+   *
+   * <p>The value is in the <a href="https://spdx.org/licenses/">SPDX License List</a> but is marked
+   * deprecated. It should be replaced with its current identifier (e.g. `GPL-3.0` with
+   * `GPL-3.0-only` or `GPL-3.0-or-later`).
+   */
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsLicenseSchema.class))
+  static class DeprecatedLicenseSpdxIdNotice extends ValidationNotice {
+
+    /** The row number of the faulty record. */
+    private final int csvRowNumber;
+
+    /** The name of the faulty field. */
+    private final String fieldName;
+
+    /** The value of the faulty field. */
+    private final String fieldValue;
+
+    /** The name of the faulty file. */
+    private final String filename;
+
+    DeprecatedLicenseSpdxIdNotice(GtfsLicense license) {
+      this.csvRowNumber = license.csvRowNumber();
+      this.fieldName = GtfsLicense.LICENSE_SPDX_ID_FIELD_NAME;
+      this.fieldValue = license.licenseSpdxId();
       this.filename = GtfsLicense.FILENAME;
     }
   }

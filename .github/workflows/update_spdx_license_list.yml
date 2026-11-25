@@ -1,0 +1,90 @@
+name: Update SPDX license list
+
+# Sets main/src/main/resources/spdx/licenses.json to a release of
+# https://github.com/spdx/license-list-data (the latest one by default) and opens a pull request
+# when it changed. Run by hand as part of the release process (see docs/RELEASE.md).
+
+on:
+  workflow_dispatch:
+    inputs:
+      SPDX_VERSION:
+        description: 'SPDX license list version, e.g. v3.29.0. Leave empty for the latest release.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  LICENSES_FILE: main/src/main/resources/spdx/licenses.json
+
+jobs:
+  update_spdx_license_list:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Compare bundled and target SPDX versions
+        id: versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_VERSION: ${{ github.event.inputs.SPDX_VERSION }}
+        run: |
+          if [[ -z "$REQUESTED_VERSION" ]]; then
+            target_tag=$(gh api repos/spdx/license-list-data/releases/latest --jq .tag_name)
+            target_label="the latest version"
+          else
+            # Accept the version with or without the leading "v".
+            target_tag="v${REQUESTED_VERSION#v}"
+            target_label="the requested version"
+          fi
+          if [[ ! "$target_tag" =~ ^v[0-9]+(\.[0-9]+)+$ ]]; then
+            echo "::error title=Invalid SPDX version::'$target_tag' is not a version like v3.29.0."
+            exit 1
+          fi
+          if ! gh api "repos/spdx/license-list-data/releases/tags/$target_tag" --silent 2>/dev/null; then
+            echo "::error title=Unknown SPDX version::$target_tag is not a release of spdx/license-list-data."
+            exit 1
+          fi
+          bundled_version=$(jq -r .licenseListVersion "$LICENSES_FILE")
+          echo "Bundled: $bundled_version, target: $target_tag"
+          echo "target_tag=$target_tag" >> "$GITHUB_OUTPUT"
+          if [[ "v$bundled_version" == "$target_tag" ]]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+            message="The bundled SPDX license list ($bundled_version) is already $target_label ($target_tag). Nothing to update, no pull request created."
+            echo "::notice title=SPDX license list up to date::$message"
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+            message="The bundled SPDX license list ($bundled_version) differs from $target_label ($target_tag). Creating a pull request to update it."
+          fi
+          echo "$message" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Download licenses.json
+        if: steps.versions.outputs.up_to_date == 'false'
+        env:
+          TARGET_TAG: ${{ steps.versions.outputs.target_tag }}
+        run: |
+          curl -sSfL "https://raw.githubusercontent.com/spdx/license-list-data/$TARGET_TAG/json/licenses.json" \
+            -o "$LICENSES_FILE"
+          # Sanity checks: the version matches the tag and the list is not truncated.
+          version=$(jq -r .licenseListVersion "$LICENSES_FILE")
+          count=$(jq '.licenses | length' "$LICENSES_FILE")
+          echo "Downloaded version $version with $count licenses"
+          [[ "v$version" == "$TARGET_TAG" ]]
+          [[ "$count" -gt 500 ]]
+
+      - name: Create PR
+        if: steps.versions.outputs.up_to_date == 'false'
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          base: master
+          branch: chore/update-spdx-license-list
+          commit-message: "chore: update SPDX license list to ${{ steps.versions.outputs.target_tag }}"
+          title: "chore: update SPDX license list to ${{ steps.versions.outputs.target_tag }}"
+          body: |
+            Automated update of `${{ env.LICENSES_FILE }}` to SPDX license list [${{ steps.versions.outputs.target_tag }}](https://github.com/spdx/license-list-data/releases/tag/${{ steps.versions.outputs.target_tag }}).
+
+            Created by the `Update SPDX license list` workflow.
+          delete-branch: true
+          add-paths: ${{ env.LICENSES_FILE }}
