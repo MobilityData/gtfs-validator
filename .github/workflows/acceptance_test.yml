@@ -323,8 +323,9 @@ jobs:
     needs: [ pack-master, pack-snapshot, merge-reports-artifacts ]
     runs-on: ubuntu-24.04
     env:
-      # Public bucket, readable by link but not listable, where a manual run uploads the HTML
-      # reports linked from the notice comparison CSV. Skipped without the service account key.
+      # Public bucket, readable by link but not listable, where a manual run uploads the HTML and
+      # JSON validation reports, the HTML ones linked from the notice comparison CSV. Skipped
+      # without the service account key.
       REPORTS_BUCKET: mobilitydata-validation-reports
       UPLOAD_REPORTS: ${{ github.event_name == 'workflow_dispatch' && secrets.GCP_ACCEPTANCE_REPORTS_SA_KEY != '' }}
     steps:
@@ -366,7 +367,7 @@ jobs:
               echo "See the _Generate acceptance report test_ step in the [run logs]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) for the error. The validation reports are in the \`reports_all\` artifact."
             } > acceptance-test-output/acceptance_report_summary.md
           fi
-      - name: Authenticate to Google Cloud to upload the HTML reports
+      - name: Authenticate to Google Cloud to upload the validation reports
         if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
         continue-on-error: true
         uses: google-github-actions/auth@v3
@@ -376,18 +377,18 @@ jobs:
         if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
         continue-on-error: true
         uses: google-github-actions/setup-gcloud@v3.0.1
-      # Only the feeds' reports, not other HTML files of the checkout.
-      - name: Upload the HTML reports
+      # Only the feeds' HTML and JSON validation reports, not other files of the checkout.
+      - name: Upload the validation reports
         id: upload-reports
         if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
         continue-on-error: true
         run: |
           staging=$(mktemp -d)
           for feed in $(jq -r 'keys[]' gtfs_latest_versions.json); do
-            for report in reference latest; do
-              if [ -f "$feed/$report.html" ]; then
+            for report in reference.html latest.html reference.json latest.json; do
+              if [ -f "$feed/$report" ]; then
                 mkdir -p "$staging/$feed"
-                cp "$feed/$report.html" "$staging/$feed/"
+                cp "$feed/$report" "$staging/$feed/"
               fi
             done
           done
