@@ -221,6 +221,7 @@ jobs:
           # including its reports_all, which would put every feed's reports in twice.
           name: reports_${{ github.run_attempt }}_${{ strategy.job-index }}
           path: ${{ github.sha }}/output
+          retention-days: 1
       # Only collected by save-master-reports, which skips a baseline other than master.
       - name: Persist master reports for reuse
         if: ${{ !inputs.baseline_ref }}
@@ -274,13 +275,25 @@ jobs:
   merge-reports-artifacts:
      runs-on: ubuntu-24.04
      needs: [ get-reports ]
+     permissions:
+       actions: write
      steps:
        - name: Merge Artifacts
          uses: actions/upload-artifact/merge@v7.0.2
          with:
            name: reports_all
            pattern: reports_${{ github.run_attempt }}_*
-           delete-merged: true
+       # Best effort: artifacts left over, for example on a PR from a fork, expire after a day.
+       - name: Delete the per-job reports artifacts
+         run: |
+           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
+             --jq ".artifacts[] | select(.name | startswith(\"reports_${GITHUB_RUN_ATTEMPT}_\")) | .id" \
+             | while read -r id; do
+                 gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id" \
+                   || echo "Could not delete artifact $id, it will expire on its own."
+               done
+         env:
+           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   compare-outputs:
     needs: [ pack-master, merge-reports-artifacts ]
     runs-on: ubuntu-24.04
