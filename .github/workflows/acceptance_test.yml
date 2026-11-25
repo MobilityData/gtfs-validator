@@ -41,8 +41,9 @@ on:
           - active
           - non-deprecated
         default: acceptance
+# Manual runs comparing different versions or feeds do not cancel each other.
 concurrency:
-  group: ${{ github.head_ref || github.ref }}
+  group: ${{ github.head_ref || github.ref }}${{ github.event_name == 'workflow_dispatch' && format('-{0}-{1}-{2}', inputs.baseline_ref, inputs.latest_ref, inputs.feed_list) || '' }}
   cancel-in-progress: true
 
 env:
