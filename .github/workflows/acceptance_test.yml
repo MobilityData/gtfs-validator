@@ -312,6 +312,13 @@ jobs:
            --commit_sha ${{ github.sha }} \
            --reference_commit_sha "${{ needs.pack-master.outputs.master_sha }}" \
            --run_id ${{github.run_id}}
+      # A manual run also exports the notice counts of every feed and code, before and after, as a
+      # CSV in the acceptance test report artifact.
+      - name: Export the notice comparison of a manual run to CSV
+        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+        run: |
+          mkdir -p acceptance-test-output
+          bash scripts/export_notice_diff_csv.sh . gtfs_latest_versions.json acceptance-test-output/notice_comparison.csv
       - name: Persist acceptance test reports
         if: always()
         uses: actions/upload-artifact@v7.0.2

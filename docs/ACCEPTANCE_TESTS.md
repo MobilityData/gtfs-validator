@@ -166,6 +166,15 @@ By default, the pipeline validates a fixed list of about 1,000 feeds, committed 
 
 A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so the corrupted sources check may fail on its own.
 
+A manual run also writes `notice_comparison.csv` to the `acceptance_test_report` artifact, with one row per feed and notice code:
+- `total_previous` and `total_current`: the code's notice count in the reference and latest reports;
+- `new_notices` and `dropped_notices`: the increase and decrease between them. Unlike the report, which lists the codes that appear in or disappear from a feed, they also count changes of a code present in both reports;
+- `severity`: the reference severity, or the latest one for a new code;
+- `source_url`: the URL the feed was downloaded from;
+- `status`: `ok`, or why a feed could not be compared, checked in the same order as the report: `out_of_memory`, `missing` (no report written), `unreadable` (not valid JSON) or `system_errors` (no notices but system errors, for example when the feed could not be read, listed in `code`), followed by the report concerned, `_reference`, `_latest` or `_reference_latest`. Such a feed has a single row with empty counts.
+
+Rows are sorted by most new notices, then most dropped notices. A feed whose reports both have no notices has no row. To build the same CSV from a run's artifacts, download `reports_all` and `datasets_metadata` and run `scripts/export_notice_diff_csv.sh <reports_all folder> <datasets_metadata folder>/gtfs_latest_versions.json notice_comparison.csv`.
+
 ## Instructions to verify the execution of the pipeline
 
 1. Download all validation reports from the artifact listed for the specific GitHub run;
