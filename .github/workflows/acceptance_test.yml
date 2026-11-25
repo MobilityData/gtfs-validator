@@ -322,6 +322,11 @@ jobs:
   compare-outputs:
     needs: [ pack-master, pack-snapshot, merge-reports-artifacts ]
     runs-on: ubuntu-24.04
+    env:
+      # Public bucket, whose files are deleted after 30 days, where a manual run uploads the HTML
+      # reports linked from the notice comparison CSV. Skipped without the service account key.
+      REPORTS_BUCKET: stg-gtfs-validator-results
+      UPLOAD_REPORTS: ${{ github.event_name == 'workflow_dispatch' && secrets.GCP_ACCEPTANCE_REPORTS_SA_KEY != '' }}
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Download comparator .jar file from previous job
@@ -361,32 +366,65 @@ jobs:
               echo "See the _Generate acceptance report test_ step in the [run logs]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) for the error. The validation reports are in the \`reports_all\` artifact."
             } > acceptance-test-output/acceptance_report_summary.md
           fi
+      - name: Authenticate to Google Cloud to upload the HTML reports
+        if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
+        continue-on-error: true
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.GCP_ACCEPTANCE_REPORTS_SA_KEY }}
+      - name: Set up the Google Cloud CLI
+        if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
+        continue-on-error: true
+        uses: google-github-actions/setup-gcloud@v3.0.1
+      # Only the feeds' reports, not other HTML files of the checkout.
+      - name: Upload the HTML reports
+        id: upload-reports
+        if: ${{ always() && env.UPLOAD_REPORTS == 'true' }}
+        continue-on-error: true
+        run: |
+          staging=$(mktemp -d)
+          for feed in $(jq -r 'keys[]' gtfs_latest_versions.json); do
+            for report in reference latest; do
+              if [ -f "$feed/$report.html" ]; then
+                mkdir -p "$staging/$feed"
+                cp "$feed/$report.html" "$staging/$feed/"
+              fi
+            done
+          done
+          path="acceptance/$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          gcloud storage rsync --recursive "$staging" "gs://$REPORTS_BUCKET/$path"
+          echo "url=https://storage.googleapis.com/$REPORTS_BUCKET/$path" >> "$GITHUB_OUTPUT"
       - name: Export the notice comparison to CSV
         if: always()
         continue-on-error: true
         run: |
           mkdir -p acceptance-test-output
-          bash scripts/export_notice_diff_csv.sh . gtfs_latest_versions.json acceptance-test-output/notice_comparison.csv
+          bash scripts/export_notice_diff_csv.sh . gtfs_latest_versions.json acceptance-test-output/notice_comparison.csv "$REPORTS_URL"
+        env:
+          REPORTS_URL: ${{ steps.upload-reports.outputs.url }}
       - name: Persist acceptance test reports
         if: always()
         uses: actions/upload-artifact@v7.0.2
         with:
           name: acceptance_test_report
           path: acceptance-test-output
-      - name: Generate PR comment
-        id: generate-comment
-        if: always()
+      - name: Write the PR comment
+        if: ${{ always() && github.event_name == 'pull_request' }}
         run: |
-          PR_COMMENT=$(< acceptance-test-output/acceptance_report_summary.md)
-          echo "PR_COMMENT<<EOF" >> $GITHUB_ENV
-          echo "$PR_COMMENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          LATEST_RELEASE=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name || true)
+          export LATEST_RELEASE
+          python3 scripts/write_acceptance_pr_comment.py acceptance-test-output/acceptance_report_summary.md pr-comment.md
+        env:
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # From a file: the comment can exceed the 128 KB limit of an environment variable.
       - name: Comment Pull Request
-        if: ${{ always() && github.event_name == 'pull_request' && env.PR_COMMENT != '' }}
+        if: ${{ always() && github.event_name == 'pull_request' }}
         uses: peter-evans/create-or-update-comment@v5.0.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ env.PR_COMMENT }}
+          body-path: pr-comment.md
           token: ${{ secrets.GITHUB_TOKEN }}
       # A manual run does not comment on any PR: it writes the report to the run summary only.
       - name: Write the report of a manual run to the run summary

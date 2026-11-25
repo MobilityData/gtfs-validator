@@ -1,0 +1,69 @@
+name: Full rule acceptance test from a PR comment
+# Starts the rule acceptance tests of a PR's branch against the latest release on all the
+# non-deprecated feeds, when someone with write access ticks the box at the end of the acceptance
+# test comment (see scripts/write_acceptance_pr_comment.py).
+on:
+  issue_comment:
+    types: [ edited ]
+
+concurrency:
+  group: acceptance-full-run-${{ github.event.comment.id }}
+  cancel-in-progress: false
+
+jobs:
+  start-full-run:
+    # Only the box of the bot's acceptance test comment, ticked in this edit.
+    if: >-
+      github.event.issue.pull_request
+      && github.event.comment.user.login == 'github-actions[bot]'
+      && contains(github.event.comment.body, '<!-- acceptance-full-run -->')
+      && contains(github.event.comment.body, '- [x] Run the full acceptance test')
+      && contains(github.event.changes.body.from, '- [ ] Run the full acceptance test')
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Start the full acceptance test
+        run: |
+          permission=$(gh api "repos/$GITHUB_REPOSITORY/collaborators/$SENDER/permission" --jq .permission)
+          case "$permission" in
+            admin|maintain|write) ;;
+            *) echo "::error::$SENDER has no write access to the repository."; exit 1 ;;
+          esac
+
+          pr=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq '"\(.head.repo.full_name) \(.head.ref)"')
+          read -r head_repository branch <<< "$pr"
+          if [ "$head_repository" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error::The PR's branch is in a fork, from which the workflow cannot run."; exit 1
+          fi
+          release=$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)
+
+          gh workflow run acceptance_test.yml -R "$GITHUB_REPOSITORY" --ref "$branch" \
+            -f baseline_ref="$release" -f feed_list=non-deprecated
+
+          # Replaces the box, so that the run is not started twice.
+          runs="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/workflows/acceptance_test.yml?query=branch%3A$(jq -rn --arg b "$branch" '$b|@uri')+event%3Aworkflow_dispatch"
+          gh api "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" --jq .body > body.md
+          python3 - "$SENDER" "$release" "$runs" <<'PY'
+          import sys
+          sender, release, runs = sys.argv[1:]
+          with open("body.md", encoding="utf-8") as f:
+              body = f.read()
+          body = body.replace(
+              "- [x] Run the full acceptance test",
+              f"Full acceptance test against `{release}` started by {sender}: [runs of this branch]({runs})",
+              1,
+          )
+          with open("body.md", "w", encoding="utf-8") as f:
+              f.write(body)
+          PY
+          jq -n --rawfile body body.md '{body: $body}' \
+            | gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" --input - > /dev/null
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENDER: ${{ github.event.sender.login }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_ID: ${{ github.event.comment.id }}

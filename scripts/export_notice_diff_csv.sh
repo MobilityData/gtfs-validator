@@ -17,23 +17,28 @@
 # where <report> is reference, latest or reference_latest. The other rows have the status ok.
 # A feed whose reports both have no notices has no row, as in the BigQuery comparison.
 #
-# Usage: export_notice_diff_csv.sh <report directory> <latest versions file> <output CSV>
+# Every row also links to the feed's reference.html and latest.html reports, when they exist.
+#
+# Usage: export_notice_diff_csv.sh <report directory> <latest versions file> <output CSV> [<reports URL>]
 #   report directory      the folder holding one subfolder per feed ID, each with reference.json
 #                         and latest.json, as written by queue_runner.sh
 #   latest versions file  gtfs_latest_versions.json written by harvest_latest_versions.py, which
 #                         maps each feed ID to its URL and gives the list of feeds
 #   output CSV            the CSV file to write
+#   reports URL           where the report directory is published, so that the links are URLs;
+#                         without it, they are paths inside the report directory
 
 set -euo pipefail
 
-if [ "$#" -ne 3 ]; then
-  echo "Usage: $0 <report directory> <latest versions file> <output CSV>" >&2
+if [ "$#" -lt 3 ] || [ "$#" -gt 4 ]; then
+  echo "Usage: $0 <report directory> <latest versions file> <output CSV> [<reports URL>]" >&2
   exit 1
 fi
 
 report_directory="$1"
 latest_versions="$2"
 output_csv="$3"
+reports_url="${4:+${4%/}/}"
 
 rows=$(mktemp)
 trap 'rm -f "$rows"' EXIT
@@ -54,7 +59,7 @@ read -r -d '' compare_feed <<'JQ' || true
   def counts: (.notices // []) | group_by(.code)
     | map({key: .[0].code, value: {severity: .[0].severity, total: (map(.totalNotices) | add)}})
     | from_entries;
-  {reference: {report: ($reference | parse), errors: ($reference_errors | parse),
+  ({reference: {report: ($reference | parse), errors: ($reference_errors | parse),
                exists: ($reference_exists == "true")},
    latest: {report: ($latest | parse), errors: ($latest_errors | parse),
             exists: ($latest_exists == "true")}} as $r
@@ -75,12 +80,22 @@ read -r -d '' compare_feed <<'JQ' || true
          total_previous: $p, total_current: $c,
          new_notices: ([$c - $p, 0] | max), dropped_notices: ([$p - $c, 0] | max),
          source_url: $url, status: "ok"}
-    end
+    end)
+  + {reference_report: (if $reference_report == "" then null else $reference_report end),
+     latest_report: (if $latest_report == "" then null else $latest_report end)}
 JQ
 
 jq -r 'to_entries[] | "\(.key)\t\(.value)"' "$latest_versions" | while IFS=$'\t' read -r feed_id url; do
   # Each report is passed as raw text, so that an unreadable one is reported instead of failing.
   arguments=(--arg feed "$feed_id" --arg url "$url")
+  for report in reference latest; do
+    html="$feed_id/$report.html"
+    if [ -f "$report_directory/$html" ]; then
+      arguments+=(--arg "${report}_report" "$reports_url$html")
+    else
+      arguments+=(--arg "${report}_report" "")
+    fi
+  done
   for report in reference reference_errors latest latest_errors; do
     path="$report_directory/$feed_id/$report.json"
     if [ -f "$path" ]; then
@@ -95,7 +110,7 @@ done
 # Sorted by feed ID, in numeric order (mdb-2 before mdb-10), then by notice code.
 jq -rs '
   ["feed_id", "code", "severity", "total_previous", "total_current", "new_notices",
-   "dropped_notices", "source_url", "status"] as $columns
+   "dropped_notices", "source_url", "reference_report", "latest_report", "status"] as $columns
   | $columns,
     (sort_by([.feed_id | scan("[0-9]+$") | tonumber][0], .feed_id, .code)[]
      | [.[$columns[]]])

@@ -46,6 +46,7 @@ Update the [README.md](/README.md) to match the latest developments. The documen
       ```
       gh run download <run ID> -R MobilityData/gtfs-validator -n acceptance_test_report
       ```
+      Its `reference_report` and `latest_report` columns link to each feed's HTML reports for 30 days.
 2. Generate analytics based on the acceptance tests and the CSV to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
 3. Identify if any critical issues should be resolved before release. 
 
