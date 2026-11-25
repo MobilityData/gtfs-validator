@@ -29,6 +29,10 @@ on:
         description: 'Branch, tag or commit to build the reference validator from (default: master)'
         type: string
         default: ''
+      latest_ref:
+        description: 'Branch, tag or commit to build the validator under test from (default: the branch the workflow runs on)'
+        type: string
+        default: ''
       feed_list:
         description: 'Feeds to validate: the acceptance test list, or the active or non-deprecated GTFS feeds of the Mobility Database catalog'
         type: choice
@@ -78,6 +82,8 @@ jobs:
     # For **Pull Request** events this will resolve to something like "$( [ -z "commit message pr" ] && echo "" || echo "commit message pr" )" which then resolves to just "commit message pr"
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
+  # Builds the validator under test: the branch, or the latest_ref of a manual run. The comparator
+  # is always built from the branch.
   pack-snapshot:
     runs-on: ubuntu-24.04
     steps:
@@ -90,18 +96,42 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
-      - name: Package cli app jar with Gradle
-        run: ./gradlew shadowJar
-      - name: Persist gtfs-validator snapshot jar
-        uses: actions/upload-artifact@v7.0.2
-        with:
-          name: gtfs-validator-snapshot
-          path: cli/build/libs/gtfs-validator-*-cli.jar
+      - name: Package comparator jar with Gradle
+        run: ./gradlew :output-comparator:shadowJar
       - name: Persist comparator snapshot jar
         uses: actions/upload-artifact@v7.0.2
         with:
           name: comparator-snapshot
           path: output-comparator/build/libs/output-comparator-*-cli.jar
+      - name: Resolve latest commit
+        id: latest
+        run: |
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/$REF" --jq .sha) \
+            || { echo "::error::Cannot find the commit, branch or tag '$REF'."; exit 1; }
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+        if: ${{ inputs.latest_ref }}
+        env:
+          REF: ${{ inputs.latest_ref }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v7.0.1
+        if: ${{ inputs.latest_ref }}
+        with:
+          ref: ${{ steps.latest.outputs.sha }}
+      - name: Package cli app jar with Gradle
+        run: ./gradlew :cli:shadowJar
+      - name: Check that the validator under test supports the acceptance tests
+        if: ${{ inputs.latest_ref }}
+        run: |
+          usage=$(java -jar cli/build/libs/gtfs-validator-*-cli.jar --help 2>&1 || true)
+          grep -q -- --skip_validator_update <<< "$usage" \
+            || { echo "::error::The validator under test is too old: it has no --skip_validator_update option (added in #1683)."; exit 1; }
+      - name: Persist gtfs-validator snapshot jar
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: gtfs-validator-snapshot
+          path: cli/build/libs/gtfs-validator-*-cli.jar
+    outputs:
+      latest_sha: ${{ steps.latest.outputs.sha || github.sha }}
   # Builds the reference validator: master, or the baseline_ref of a manual run. The job and its
   # artifact keep the master name.
   pack-master:
@@ -275,27 +305,21 @@ jobs:
   merge-reports-artifacts:
      runs-on: ubuntu-24.04
      needs: [ get-reports ]
-     permissions:
-       actions: write
      steps:
+       # A failed deletion of the merged artifacts does not fail the job: they expire after a day.
        - name: Merge Artifacts
+         id: merge
+         continue-on-error: true
          uses: actions/upload-artifact/merge@v7.0.2
          with:
            name: reports_all
            pattern: reports_${{ github.run_attempt }}_*
-       # Best effort: artifacts left over, for example on a PR from a fork, expire after a day.
-       - name: Delete the per-job reports artifacts
-         run: |
-           gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
-             --jq ".artifacts[] | select(.name | startswith(\"reports_${GITHUB_RUN_ATTEMPT}_\")) | .id" \
-             | while read -r id; do
-                 gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id" \
-                   || echo "Could not delete artifact $id, it will expire on its own."
-               done
-         env:
-           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           delete-merged: true
+       - name: Fail if reports_all was not uploaded
+         if: ${{ steps.merge.outputs.artifact-id == '' }}
+         run: exit 1
   compare-outputs:
-    needs: [ pack-master, merge-reports-artifacts ]
+    needs: [ pack-master, pack-snapshot, merge-reports-artifacts ]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
@@ -322,7 +346,7 @@ jobs:
            --reference_report_name reference.json \
            --latest_report_name latest.json \
            --output_base acceptance-test-output \
-           --commit_sha ${{ github.sha }} \
+           --commit_sha "${{ needs.pack-snapshot.outputs.latest_sha }}" \
            --reference_commit_sha "${{ needs.pack-master.outputs.master_sha }}" \
            --run_id ${{github.run_id}}
       - name: Write a summary if the comparator wrote none
@@ -366,4 +390,11 @@ jobs:
       # A manual run does not comment on any PR: it writes the report to the run summary only.
       - name: Write the report of a manual run to the run summary
         if: ${{ always() && github.event_name == 'workflow_dispatch' }}
-        run: cat acceptance-test-output/acceptance_report_summary.md >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "Compared \`${LATEST_REF:-$GITHUB_REF_NAME}\` ($LATEST_SHA) with \`${BASELINE_REF:-master}\` ($BASELINE_SHA)." >> "$GITHUB_STEP_SUMMARY"
+          cat acceptance-test-output/acceptance_report_summary.md >> "$GITHUB_STEP_SUMMARY"
+        env:
+          LATEST_REF: ${{ inputs.latest_ref }}
+          LATEST_SHA: ${{ needs.pack-snapshot.outputs.latest_sha }}
+          BASELINE_REF: ${{ inputs.baseline_ref }}
+          BASELINE_SHA: ${{ needs.pack-master.outputs.master_sha }}

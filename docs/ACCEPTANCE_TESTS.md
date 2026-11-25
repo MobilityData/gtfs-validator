@@ -159,6 +159,8 @@ To validate every feed with both validators in the same job, for example to chec
 
 To compare the branch with another reference than master, for example the commit before a performance change or a release tag, fill in `baseline_ref` with a branch, tag or commit SHA when starting a manual run. The reference validator is then built from that commit, and the report says which commit it was built from. The reference reports of such a run are not saved for reuse. The baseline must be from March 2024 (#1683) or later: older validators lack the `--skip_validator_update` option, and the run stops before validating any feed.
 
+To test another version than the branch, for example a release tag, fill in `latest_ref` with a branch, tag or commit SHA. The validator under test is then built from that commit, while the workflow and the comparator still come from the branch the run starts on. The same March 2024 limit applies. The run summary names both versions and the commits they resolved to. To compare two releases, start the run on `master` with, for example, `baseline_ref` set to `v8.0.0` and `latest_ref` to `v8.1.0`.
+
 By default, the pipeline validates a fixed list of about 1,000 feeds, committed in [`acceptance_test_feed_list.csv`](../scripts/mobility-database-harvester/acceptance_test_feed_list.csv). To validate more feeds, for example to investigate the differences between releases, set `feed_list` when starting a manual run:
 - `acceptance`: the fixed list (default);
 - `active`: the active GTFS feeds of the [Mobility Database catalog](https://files.mobilitydatabase.org/feeds_v2.csv) that have a latest dataset, about 2,800;
