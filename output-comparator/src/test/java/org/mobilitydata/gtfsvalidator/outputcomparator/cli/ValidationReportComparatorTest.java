@@ -458,6 +458,36 @@ public class ValidationReportComparatorTest {
   }
 
   @Test
+  public void truncatedReport_isCorruptedSource() throws Exception {
+    Arguments args = defaultArgs();
+    File truncatedDir =
+        constructBeforeAndAfterReports(
+            "feed-id-a",
+            ImmutableList.of(new MissingRequiredFileNotice("a.txt")),
+            ImmutableList.of(new MissingRequiredFileNotice("a.txt")));
+    // The latest report was cut short, as in a run whose report was not fully written.
+    Path latestReport = truncatedDir.toPath().resolve(LATEST_REPORT_NAME);
+    String content = Files.readString(latestReport);
+    Files.writeString(latestReport, content.substring(0, content.length() / 2));
+    File validDir =
+        constructBeforeAndAfterReports(
+            "feed-id-b",
+            ImmutableList.of(),
+            ImmutableList.of(new MissingRequiredFileNotice("b.txt")));
+
+    Result result =
+        new ValidationReportComparator()
+            .compareValidationRuns(
+                args, ImmutableList.of(truncatedDir, validDir), constructSourceUrls());
+
+    // The truncated report does not stop the comparison: it is reported as corrupted, and the
+    // other dataset is still compared.
+    assertThat(result.report().corruptedSources().corruptedSources()).containsExactly("feed-id-a");
+    assertThat(result.report().newErrors()).hasSize(1);
+    assertThat(result.report().newErrors().get(0).noticeCode()).isEqualTo("missing_required_file");
+  }
+
+  @Test
   public void outOfMemoryErrorInSystemErrors_isReportedAndNotCompared() throws Exception {
     Arguments args = defaultArgs();
     // The latest run lost a notice because a validation thread ran out of memory.

@@ -92,11 +92,11 @@ jq -r 'to_entries[] | "\(.key)\t\(.value)"' "$latest_versions" | while IFS=$'\t'
   jq -cn "${arguments[@]}" "$compare_feed" >> "$rows"
 done
 
-# Sorted as the BigQuery comparison: most new notices first, then most dropped notices.
+# Sorted by feed ID, in numeric order (mdb-2 before mdb-10), then by notice code.
 jq -rs '
   ["feed_id", "code", "severity", "total_previous", "total_current", "new_notices",
    "dropped_notices", "source_url", "status"] as $columns
   | $columns,
-    (sort_by(-(.new_notices // 0), -(.dropped_notices // 0), .feed_id, .code)[]
+    (sort_by([.feed_id | scan("[0-9]+$") | tonumber][0], .feed_id, .code)[]
      | [.[$columns[]]])
   | @csv' "$rows" > "$output_csv"

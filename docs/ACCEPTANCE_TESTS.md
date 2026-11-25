@@ -166,14 +166,59 @@ By default, the pipeline validates a fixed list of about 1,000 feeds, committed 
 
 A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so the corrupted sources check may fail on its own.
 
-A manual run also writes `notice_comparison.csv` to the `acceptance_test_report` artifact, with one row per feed and notice code:
-- `total_previous` and `total_current`: the code's notice count in the reference and latest reports;
-- `new_notices` and `dropped_notices`: the increase and decrease between them. Unlike the report, which lists the codes that appear in or disappear from a feed, they also count changes of a code present in both reports;
-- `severity`: the reference severity, or the latest one for a new code;
-- `source_url`: the URL the feed was downloaded from;
-- `status`: `ok`, or why a feed could not be compared, checked in the same order as the report: `out_of_memory`, `missing` (no report written), `unreadable` (not valid JSON) or `system_errors` (no notices but system errors, for example when the feed could not be read, listed in `code`), followed by the report concerned, `_reference`, `_latest` or `_reference_latest`. Such a feed has a single row with empty counts.
+### Notice comparison CSV
 
-Rows are sorted by most new notices, then most dropped notices. A feed whose reports both have no notices has no row. To build the same CSV from a run's artifacts, download `reports_all` and `datasets_metadata` and run `scripts/export_notice_diff_csv.sh <reports_all folder> <datasets_metadata folder>/gtfs_latest_versions.json notice_comparison.csv`.
+Every run writes `notice_comparison.csv` to the `acceptance_test_report` artifact. It compares the notices of the reference and latest reports of every feed, with one row per feed and notice code. Unlike the acceptance report, which only lists the codes that appear in or disappear from a feed, it also shows count changes of a code present in both reports.
+
+#### Columns
+
+| Column | Type | Description |
+|---|---|---|
+| `feed_id` | string | Mobility Database ID of the feed, for example `mdb-1000`. |
+| `code` | string | Notice code. For a `system_errors_*` row, the system error codes, separated by `;`. Empty for other failed feeds. |
+| `severity` | string | `ERROR`, `WARNING` or `INFO`: the severity in the reference report, or in the latest report for a new code. |
+| `total_previous` | integer | Number of notices with this code in the reference report, 0 if the code is absent. |
+| `total_current` | integer | Number of notices with this code in the latest report, 0 if the code is absent. |
+| `new_notices` | integer | `total_current - total_previous` when positive, otherwise 0. |
+| `dropped_notices` | integer | `total_previous - total_current` when positive, otherwise 0. |
+| `source_url` | string | URL the feed was downloaded from. |
+| `status` | string | `ok` when both reports were compared, otherwise why the feed could not be compared (see below). |
+
+The counts are empty when `status` is not `ok`.
+
+#### Status
+
+A feed that could not be compared has a single row. Its status is checked in the same order as the acceptance report, and is followed by the report concerned: `_reference`, `_latest` or `_reference_latest`.
+
+| Status | Meaning |
+|---|---|
+| `ok` | Both reports were compared. |
+| `out_of_memory_*` | The validator ran out of memory. |
+| `missing_*` | The report was not written, for example when the feed could not be downloaded. |
+| `unreadable_*` | The report is not valid JSON, for example when it was cut short. |
+| `system_errors_*` | The report has no notices and the system errors report has some, for example when the feed could not be read. |
+
+#### Example
+
+```csv
+"feed_id","code","severity","total_previous","total_current","new_notices","dropped_notices","source_url","status"
+"mdb-1","duplicate_key","ERROR",3,3,0,0,"https://files.mobilitydatabase.org/mdb-1/latest.zip","ok"
+"mdb-1","missing_recommended_field","WARNING",5,0,0,5,"https://files.mobilitydatabase.org/mdb-1/latest.zip","ok"
+"mdb-2","foreign_key_violation","ERROR",0,4,4,0,"https://files.mobilitydatabase.org/mdb-2/latest.zip","ok"
+"mdb-1114","i_o_error",,,,,,"https://files.mobilitydatabase.org/mdb-1114/latest.zip","system_errors_reference_latest"
+```
+
+Rows are sorted by feed ID, in numeric order (`mdb-2` before `mdb-10`), then by notice code. Codes whose count did not change are included with zeros. A feed whose reports both have no notices has no row.
+
+#### Building it from a run
+
+Download the `reports_all` and `datasets_metadata` artifacts of the run, then:
+
+```sh
+scripts/export_notice_diff_csv.sh <reports_all folder> <datasets_metadata folder>/gtfs_latest_versions.json notice_comparison.csv
+```
+
+A failure of the CSV export does not fail the acceptance tests. If the comparator stops on an unexpected error before writing its report, the CSV is still written, and the PR comment and run summary link to the run logs.
 
 ## Instructions to verify the execution of the pipeline
 

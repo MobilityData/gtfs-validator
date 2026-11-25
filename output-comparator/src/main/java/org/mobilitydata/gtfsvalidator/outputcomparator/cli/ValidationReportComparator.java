@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.outputcomparator.cli;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.flogger.FluentLogger;
+import com.google.gson.JsonParseException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -215,12 +216,17 @@ public class ValidationReportComparator {
     return Files.exists(reportPath) ? getValidationReport(reportPath) : null;
   }
 
+  /**
+   * Returns the validation report at the given path, or null when it cannot be read or is not valid
+   * JSON, for example when it was cut short, so that the dataset is reported as corrupted instead
+   * of stopping the comparison.
+   */
   private static ValidationReport getValidationReport(Path referenceReportPath) {
     ValidationReport referenceReport;
     try {
       referenceReport = ValidationReport.fromPath(referenceReportPath);
-    } catch (IOException ioException) {
-      logger.atSevere().withCause(ioException).log(
+    } catch (IOException | JsonParseException exception) {
+      logger.atSevere().withCause(exception).log(
           "Error reading %s validation report", referenceReportPath);
       return null;
     }

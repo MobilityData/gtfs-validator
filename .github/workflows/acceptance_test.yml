@@ -312,10 +312,20 @@ jobs:
            --commit_sha ${{ github.sha }} \
            --reference_commit_sha "${{ needs.pack-master.outputs.master_sha }}" \
            --run_id ${{github.run_id}}
-      # A manual run also exports the notice counts of every feed and code, before and after, as a
-      # CSV in the acceptance test report artifact.
-      - name: Export the notice comparison of a manual run to CSV
-        if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+      - name: Write a summary if the comparator wrote none
+        if: always()
+        run: |
+          if [ ! -s acceptance-test-output/acceptance_report_summary.md ]; then
+            mkdir -p acceptance-test-output
+            {
+              echo "## :x: The acceptance test comparator stopped before writing its report"
+              echo
+              echo "See the _Generate acceptance report test_ step in the [run logs]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID) for the error. The validation reports are in the \`reports_all\` artifact."
+            } > acceptance-test-output/acceptance_report_summary.md
+          fi
+      - name: Export the notice comparison to CSV
+        if: always()
+        continue-on-error: true
         run: |
           mkdir -p acceptance-test-output
           bash scripts/export_notice_diff_csv.sh . gtfs_latest_versions.json acceptance-test-output/notice_comparison.csv
