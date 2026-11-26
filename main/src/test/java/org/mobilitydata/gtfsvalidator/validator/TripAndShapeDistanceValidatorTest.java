@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -106,6 +108,57 @@ public class TripAndShapeDistanceValidatorTest {
                         instanceof
                         TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice);
     assertThat(found).isTrue();
+  }
+
+  @Test
+  public void testTripDistanceExceedsShapeDistanceReportsTripRowNumber() {
+    // Both trips exceed their shape's distance; each notice should point to the trip's row in
+    // trips.txt.
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(2, 10.0),
+            createShapeTable(2, 9.0, 10.0),
+            createStopTable(2));
+    Map<String, Integer> rowNumberByTripId =
+        notices.stream()
+            .filter(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator.TripDistanceExceedsShapeDistanceNotice)
+            .map(notice -> notice.toJsonTree().getAsJsonObject())
+            .collect(
+                Collectors.toMap(
+                    json -> json.get("tripId").getAsString(),
+                    json -> json.get("csvRowNumber").getAsInt()));
+    assertThat(rowNumberByTripId).containsExactly("t0", 1, "t1", 2);
+  }
+
+  @Test
+  public void testTripDistanceExceedsShapeDistanceBelowThresholdReportsTripRowNumber() {
+    // Both trips exceed their shape's distance by less than the threshold; each notice should
+    // point to the trip's row in trips.txt.
+    List<ValidationNotice> notices =
+        generateNotices(
+            createTripTable(2),
+            createStopTimesTable(2, 10.0),
+            createShapeTable(2, 9.0, 0.000001),
+            createStopTable(2));
+    Map<String, Integer> rowNumberByTripId =
+        notices.stream()
+            .filter(
+                notice ->
+                    notice
+                        instanceof
+                        TripAndShapeDistanceValidator
+                            .TripDistanceExceedsShapeDistanceBelowThresholdNotice)
+            .map(notice -> notice.toJsonTree().getAsJsonObject())
+            .collect(
+                Collectors.toMap(
+                    json -> json.get("tripId").getAsString(),
+                    json -> json.get("csvRowNumber").getAsInt()));
+    assertThat(rowNumberByTripId).containsExactly("t0", 1, "t1", 2);
   }
 
   @Test

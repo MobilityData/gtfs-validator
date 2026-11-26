@@ -104,11 +104,21 @@ public class TripAndShapeDistanceValidator extends FileValidator {
                 if (distanceInMeters > DISTANCE_THRESHOLD) {
                   noticeContainer.addValidationNotice(
                       new TripDistanceExceedsShapeDistanceNotice(
-                          tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                          tripId,
+                          trip.csvRowNumber(),
+                          shapeId,
+                          maxStopTimeDist,
+                          maxShapeDist,
+                          distanceInMeters));
                 } else {
                   noticeContainer.addValidationNotice(
                       new TripDistanceExceedsShapeDistanceBelowThresholdNotice(
-                          tripId, shapeId, maxStopTimeDist, maxShapeDist, distanceInMeters));
+                          tripId,
+                          trip.csvRowNumber(),
+                          shapeId,
+                          maxStopTimeDist,
+                          maxShapeDist,
+                          distanceInMeters));
                 }
               }
             });
@@ -134,6 +144,9 @@ public class TripAndShapeDistanceValidator extends FileValidator {
     /** The faulty record's trip id. */
     private final String tripId;
 
+    /** The row number of the faulty trip in `trips.txt`. */
+    private final int csvRowNumber;
+
     /** The faulty record's shape id. */
     private final String shapeId;
 
@@ -148,11 +161,13 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
     TripDistanceExceedsShapeDistanceNotice(
         String tripId,
+        int csvRowNumber,
         String shapeId,
         double maxTripDistanceTraveled,
         double maxShapeDistanceTraveled,
         double geoDistanceToShape) {
       this.tripId = tripId;
+      this.csvRowNumber = csvRowNumber;
       this.shapeId = shapeId;
       this.maxShapeDistanceTraveled = maxShapeDistanceTraveled;
       this.maxTripDistanceTraveled = maxTripDistanceTraveled;
@@ -180,6 +195,9 @@ public class TripAndShapeDistanceValidator extends FileValidator {
     /** The faulty record's trip id. */
     private final String tripId;
 
+    /** The row number of the faulty trip in `trips.txt`. */
+    private final int csvRowNumber;
+
     /** The faulty record's shape id. */
     private final String shapeId;
 
@@ -194,11 +212,13 @@ public class TripAndShapeDistanceValidator extends FileValidator {
 
     TripDistanceExceedsShapeDistanceBelowThresholdNotice(
         String tripId,
+        int csvRowNumber,
         String shapeId,
         double maxTripDistanceTraveled,
         double maxShapeDistanceTraveled,
         double geoDistanceToShape) {
       this.tripId = tripId;
+      this.csvRowNumber = csvRowNumber;
       this.shapeId = shapeId;
       this.maxShapeDistanceTraveled = maxShapeDistanceTraveled;
       this.maxTripDistanceTraveled = maxTripDistanceTraveled;
