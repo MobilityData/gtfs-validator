@@ -48,6 +48,8 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 4. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
 ![publish](https://user-images.githubusercontent.com/35747326/99821105-99d84480-2b1f-11eb-9661-493966904a11.png)
 
+Publishing the release (not the pre-release) deploys the web validator and notifies [mobility-feed-api](https://github.com/MobilityData/mobility-feed-api), which validates the latest dataset of every published feed with the new version 24 hours later.
+
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
 
 ### 7. Remove all `sha` Docker images added since last release
