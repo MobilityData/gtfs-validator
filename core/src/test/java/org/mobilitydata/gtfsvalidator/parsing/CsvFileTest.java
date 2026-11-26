@@ -17,9 +17,11 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
 import com.google.common.primitives.Bytes;
+import com.univocity.parsers.common.TextParsingException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +41,7 @@ public class CsvFileTest {
         toInputStream("stop_id,stop_name\n" + "s1,\"Main \"Street\" Stop\"\n")) {
       CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
 
-      org.junit.Assert.assertThrows(
-          com.univocity.parsers.common.TextParsingException.class,
-          () -> csvFile.iterator().hasNext());
+      assertThrows(TextParsingException.class, () -> csvFile.iterator().hasNext());
     }
   }
 
