@@ -448,21 +448,21 @@ public class FeedMetadataTest {
   }
 
   @Test
-  public void containsLicensingFeatureTest() throws IOException, InterruptedException {
+  public void containsLicenseInformationFeatureTest() throws IOException, InterruptedException {
     String content = "licensed_table_name,license_spdx_id\n" + "stops.txt,CC-BY-4.0\n";
     createDataFile(GtfsLicense.FILENAME, content);
     validateSpecFeature(
-        "Licensing",
+        "License Information",
         true,
         ImmutableList.of(GtfsLicenseTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
 
   @Test
-  public void omitsLicensingFeatureTest() throws IOException, InterruptedException {
+  public void omitsLicenseInformationFeatureTest() throws IOException, InterruptedException {
     String content = "licensed_table_name,license_spdx_id\n";
     createDataFile(GtfsLicense.FILENAME, content);
     validateSpecFeature(
-        "Licensing",
+        "License Information",
         false,
         ImmutableList.of(GtfsLicenseTableDescriptor.class, GtfsAgencyTableDescriptor.class));
   }
