@@ -55,19 +55,3 @@ jobs:
         run: |
           ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
           ./gradlew ':web:service:webDeploy'
-
-      - name: Load secrets from 1Password to be used for sending notification
-        id: onepw_secrets
-        uses: ./.github/actions/extract-1password-secret
-        with:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }} # This is required to connect to the vault in our 1Password account.
-          VARIABLES_TO_EXTRACT: 'GITHUB_GENERIC_ACTION_CREDENTIALS'
-          ONE_PASSWORD_SECRET_REFERENCES: ${{ vars.ONE_PASSWORD_SECRET_REFERENCES }}
-
-
-      - name: Send a notification to mobility-feed-api
-        uses: peter-evans/repository-dispatch@v4.0.1
-        with:
-          token: ${{ env.GITHUB_GENERIC_ACTION_CREDENTIALS }}
-          repository: MobilityData/mobility-feed-api
-          event-type: gtfs-validator-update-stg
