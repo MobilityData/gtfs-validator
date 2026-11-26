@@ -28,6 +28,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.geometry.S2LatLng;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -40,11 +41,11 @@ import com.squareup.javapoet.TypeSpec;
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.TableStorage;
@@ -202,7 +203,15 @@ public class EntityImplementationGenerator {
   }
 
   private static Class<?> nullabilityAnnotation(GtfsFieldDescriptor field) {
-    return getDefaultValue(field).toString().equals("null") ? Nullable.class : Nonnull.class;
+    return getDefaultValue(field).toString().equals("null") ? Nullable.class : NonNull.class;
+  }
+
+  /**
+   * Returns {@code type} annotated with the given JSpecify type-use annotation. Primitive types are
+   * returned unchanged since nullness does not apply to them.
+   */
+  private static TypeName withNullability(TypeName type, Class<?> annotation) {
+    return type.isPrimitive() ? type : type.annotated(AnnotationSpec.builder(annotation).build());
   }
 
   private TypeName getClassFieldType(GtfsFieldDescriptor field) {
@@ -329,8 +338,8 @@ public class EntityImplementationGenerator {
       MethodSpec.Builder getter =
           MethodSpec.methodBuilder(getterMethodName(field.name()))
               .addModifiers(Modifier.PUBLIC)
-              .returns(TypeName.get(field.javaType()))
-              .addAnnotation(nullabilityAnnotation(field))
+              .returns(
+                  withNullability(TypeName.get(field.javaType()), nullabilityAnnotation(field)))
               .addAnnotation(Override.class);
       if (field.type().equals(FieldTypeEnum.ENUM)) {
         typeSpec.addMethod(
@@ -394,8 +403,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder(getterMethodName(field.name()))
             .addModifiers(Modifier.PUBLIC)
-            .returns(TypeName.get(field.javaType()))
-            .addAnnotation(nullabilityAnnotation(field));
+            .returns(withNullability(TypeName.get(field.javaType()), nullabilityAnnotation(field)));
     if (classContext.equals(ClassContext.ENTITY)) {
       method.addAnnotation(Override.class);
     }
@@ -450,8 +458,7 @@ public class EntityImplementationGenerator {
     MethodSpec.Builder method =
         MethodSpec.methodBuilder(setterMethodName(field.name()))
             .addModifiers(Modifier.PUBLIC)
-            .returns(classNames.entityBuilderTypeName())
-            .addAnnotation(Nonnull.class)
+            .returns(withNullability(classNames.entityBuilderTypeName(), NonNull.class))
             .addParameter(
                 ParameterSpec.builder(
                         (field.type() == FieldTypeEnum.ENUM ? TypeName.INT : fieldType).box(),
@@ -483,8 +490,7 @@ public class EntityImplementationGenerator {
     typeSpec.addMethod(
         MethodSpec.methodBuilder(setterMethodName(field.name()))
             .addModifiers(Modifier.PUBLIC)
-            .returns(classNames.entityBuilderTypeName())
-            .addAnnotation(Nonnull.class)
+            .returns(withNullability(classNames.entityBuilderTypeName(), NonNull.class))
             .addParameter(
                 ParameterSpec.builder(TypeName.get(field.javaType()), "value")
                     .addAnnotation(Nullable.class)
@@ -499,8 +505,7 @@ public class EntityImplementationGenerator {
   private MethodSpec generateClearMethod(GtfsFieldDescriptor field, int fieldNumber) {
     return MethodSpec.methodBuilder(clearMethodName(field.name()))
         .addModifiers(Modifier.PUBLIC)
-        .returns(classNames.entityBuilderTypeName())
-        .addAnnotation(Nonnull.class)
+        .returns(withNullability(classNames.entityBuilderTypeName(), NonNull.class))
         .addStatement("$L = $L", field.name(), fieldDefaultName(field.name()))
         .addStatement(
             "$L &= ~$L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))

@@ -36,7 +36,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import org.mobilitydata.gtfsvalidator.input.DateForValidation;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.IOError;
@@ -481,7 +481,7 @@ public class ValidationRunner {
   private static GtfsInput createGtfsInput(
       ValidationRunnerConfig config,
       String validatorVersion,
-      @Nonnull NoticeContainer noticeContainer)
+      @NonNull NoticeContainer noticeContainer)
       throws IOException, URISyntaxException {
     URI source = config.gtfsSource();
     if (source.getScheme().equals("file")) {

@@ -26,7 +26,7 @@ import static org.mobilitydata.gtfsvalidator.util.StopUtil.getIncludingStation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.truth.Expect;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

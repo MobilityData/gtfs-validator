@@ -44,6 +44,7 @@ dependencies {
     implementation libs.gson
     implementation libs.geometry
     implementation libs.guava
+    implementation libs.jspecify
     implementation libs.commons.validator
     implementation libs.libphonenumber
     implementation libs.flogger

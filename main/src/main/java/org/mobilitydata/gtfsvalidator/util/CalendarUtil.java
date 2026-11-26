@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimaps;
 import java.time.LocalDate;
 import java.util.*;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
 import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateExceptionType;
@@ -27,7 +27,7 @@ public final class CalendarUtil {
    * @return a {@link ServicePeriod} object
    */
   public static ServicePeriod createServicePeriod(
-      @Nullable GtfsCalendar calendar, @Nonnull List<GtfsCalendarDate> calendarDates) {
+      @Nullable GtfsCalendar calendar, @NonNull List<GtfsCalendarDate> calendarDates) {
     // Store service period from calendar.txt, if provided.
     LocalDate serviceStart = null;
     LocalDate serviceEnd = null;
@@ -88,8 +88,8 @@ public final class CalendarUtil {
    * @return mapping from service id to {@link ServicePeriod} object
    */
   public static Map<String, ServicePeriod> buildServicePeriodMap(
-      @Nonnull GtfsCalendarTableContainer calendarTable,
-      @Nonnull GtfsCalendarDateTableContainer calendarDateTable) {
+      @NonNull GtfsCalendarTableContainer calendarTable,
+      @NonNull GtfsCalendarDateTableContainer calendarDateTable) {
     Preconditions.checkNotNull(calendarTable);
     Preconditions.checkNotNull(calendarDateTable);
 
@@ -116,7 +116,7 @@ public final class CalendarUtil {
    * @return mapping from service id to a set of included days
    */
   public static Map<String, SortedSet<LocalDate>> servicePeriodToServiceDatesMap(
-      @Nonnull Map<String, ServicePeriod> servicePeriods) {
+      @NonNull Map<String, ServicePeriod> servicePeriods) {
     Map<String, SortedSet<LocalDate>> serviceDates = new HashMap<>();
     for (Map.Entry<String, ServicePeriod> kv : servicePeriods.entrySet()) {
       serviceDates.put(kv.getKey(), kv.getValue().toDates());
@@ -138,7 +138,7 @@ public final class CalendarUtil {
    * @return the first intersecting date or {@code Optional.empty()} if there is no intersection
    */
   public static Optional<LocalDate> firstIntersectingDate(
-      @Nonnull SortedSet<LocalDate> dates1, @Nonnull SortedSet<LocalDate> dates2) {
+      @NonNull SortedSet<LocalDate> dates1, @NonNull SortedSet<LocalDate> dates2) {
     if (dates1.isEmpty() || dates2.isEmpty()) {
       return Optional.empty();
     }

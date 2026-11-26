@@ -6,7 +6,7 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsRouteType.LIGHT_RAIL;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;

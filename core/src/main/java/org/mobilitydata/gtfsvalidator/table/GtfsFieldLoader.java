@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.table;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 

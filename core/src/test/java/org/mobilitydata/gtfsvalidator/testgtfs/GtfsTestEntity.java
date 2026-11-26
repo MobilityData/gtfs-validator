@@ -16,8 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.testgtfs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntityBuilder;
 
@@ -48,7 +48,7 @@ public class GtfsTestEntity implements GtfsEntity {
     return csvRowNumber;
   }
 
-  @Nonnull
+  @NonNull
   public String id() {
     return id;
   }
@@ -90,13 +90,12 @@ public class GtfsTestEntity implements GtfsEntity {
       return this;
     }
 
-    @Nonnull
+    @NonNull
     public String id() {
       return id;
     }
 
-    @Nonnull
-    public GtfsTestEntity.Builder setId(@Nullable String value) {
+    public GtfsTestEntity.@NonNull Builder setId(@Nullable String value) {
       if (value == null) {
         return clearId();
       }
@@ -105,20 +104,18 @@ public class GtfsTestEntity implements GtfsEntity {
       return this;
     }
 
-    @Nonnull
-    public GtfsTestEntity.Builder clearId() {
+    public GtfsTestEntity.@NonNull Builder clearId() {
       id = DEFAULT_ID;
       bitField0_ &= ~0x1;
       return this;
     }
 
-    @Nonnull
+    @NonNull
     public String code() {
       return code;
     }
 
-    @Nonnull
-    public GtfsTestEntity.Builder setCode(@Nullable String value) {
+    public GtfsTestEntity.@NonNull Builder setCode(@Nullable String value) {
       if (value == null) {
         return clearCode();
       }
@@ -127,8 +124,7 @@ public class GtfsTestEntity implements GtfsEntity {
       return this;
     }
 
-    @Nonnull
-    public GtfsTestEntity.Builder clearCode() {
+    public GtfsTestEntity.@NonNull Builder clearCode() {
       code = DEFAULT_CODE;
       bitField0_ &= ~0x2;
       return this;

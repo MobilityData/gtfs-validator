@@ -1,8 +1,7 @@
 package org.mobilitydata.gtfsvalidator.notice.schema;
 
 import java.util.Objects;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the schema for the type of a field (integer, number, string, etc) in the JSON
@@ -11,7 +10,6 @@ import javax.annotation.concurrent.Immutable;
  * <p>This class is intended for JSON serialization with a structure that is publicly exposed. Be
  * thoughtful when making changes.
  */
-@Immutable
 public class FieldTypeSchema {
   private final String type;
 

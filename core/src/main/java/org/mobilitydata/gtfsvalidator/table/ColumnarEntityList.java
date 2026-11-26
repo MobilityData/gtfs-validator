@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.RandomAccess;
 import java.util.function.IntUnaryOperator;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 

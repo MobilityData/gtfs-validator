@@ -20,7 +20,7 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import java.util.Locale;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Represents the country code of a GTFS feed. */
 public class CountryCode {
