@@ -300,7 +300,7 @@ public class TranslationFieldAndReferenceValidator extends FileValidator {
    * <p>No row of the table given in `table_name` has exactly `field_value` in the field given by
    * `field_name`, so the translation is never applied.
    */
-  @GtfsValidationNotice(severity = ERROR, files = @FileRefs(GtfsTranslationSchema.class))
+  @GtfsValidationNotice(severity = WARNING, files = @FileRefs(GtfsTranslationSchema.class))
   static class TranslationUnknownFieldValueNotice extends ValidationNotice {
 
     /** The row number of the faulty record. */
