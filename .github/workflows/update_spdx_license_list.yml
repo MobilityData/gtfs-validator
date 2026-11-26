@@ -76,7 +76,7 @@ jobs:
 
       - name: Create PR
         if: steps.versions.outputs.up_to_date == 'false'
-        uses: peter-evans/create-pull-request@v8.1.1
+        uses: peter-evans/create-pull-request@v8.1.3
         with:
           base: master
           branch: chore/update-spdx-license-list
