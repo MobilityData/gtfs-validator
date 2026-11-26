@@ -448,6 +448,26 @@ public class FeedMetadataTest {
   }
 
   @Test
+  public void containsLicenseInformationFeatureTest() throws IOException, InterruptedException {
+    String content = "licensed_table_name,license_spdx_id\n" + "stops.txt,CC-BY-4.0\n";
+    createDataFile(GtfsLicense.FILENAME, content);
+    validateSpecFeature(
+        "License Information",
+        true,
+        ImmutableList.of(GtfsLicenseTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
+  public void omitsLicenseInformationFeatureTest() throws IOException, InterruptedException {
+    String content = "licensed_table_name,license_spdx_id\n";
+    createDataFile(GtfsLicense.FILENAME, content);
+    validateSpecFeature(
+        "License Information",
+        false,
+        ImmutableList.of(GtfsLicenseTableDescriptor.class, GtfsAgencyTableDescriptor.class));
+  }
+
+  @Test
   public void containsTranslationsFeatureTest() throws IOException, InterruptedException {
     String content =
         "table_name, field_name, language, translation\n" + "agency, agency_name, fr, Agence\n";
