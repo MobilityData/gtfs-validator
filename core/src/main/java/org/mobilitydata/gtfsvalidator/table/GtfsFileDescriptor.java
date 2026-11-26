@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.table;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * This class provides some info about the different files within a GTFS dataset. Its children
@@ -36,7 +36,7 @@ public abstract class GtfsFileDescriptor<T extends GtfsEntity> {
    *
    * @return the appropriate file loader.
    */
-  @Nonnull
+  @NonNull
   public TableLoader getTableLoader() {
     return CsvFileLoader.getInstance();
   }

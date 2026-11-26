@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.util;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.collect.ImmutableList;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -63,6 +64,34 @@ public class ServiceIntervalCacheTest {
     GtfsCalendarDateTableContainer calendarDates = calendarDateTable(ImmutableList.of());
 
     assertThat(cache.getIntervals("unknown_service", calendar, calendarDates)).isNull();
+  }
+
+  @Test
+  public void onlyReversedCalendarRow_returnsNull() {
+    ServiceIntervalCache cache = new ServiceIntervalCache();
+    GtfsCalendarTableContainer calendar =
+        calendarTable(ImmutableList.of(buildCalendar("service_1", "20260907", "20260906", 1)));
+
+    assertThat(cache.getIntervals("service_1", calendar, calendarDateTable(ImmutableList.of())))
+        .isNull();
+  }
+
+  @Test
+  public void reversedCalendarRow_withAddedCalendarDate_usesCalendarDates() {
+    ServiceIntervalCache cache = new ServiceIntervalCache();
+    GtfsCalendarTableContainer calendar =
+        calendarTable(ImmutableList.of(buildCalendar("service_1", "20260907", "20260906", 1)));
+    GtfsCalendarDateTableContainer calendarDates =
+        calendarDateTable(
+            ImmutableList.of(
+                buildCalendarDate(
+                    "service_1", "20260910", GtfsCalendarDateExceptionType.SERVICE_ADDED, 1)));
+
+    ServiceInterval interval = cache.getIntervals("service_1", calendar, calendarDates);
+
+    assertThat(interval).isNotNull();
+    assertThat(interval.firstActiveDate()).isEqualTo(LocalDate.of(2026, 9, 10));
+    assertThat(interval.lastActiveDate()).isEqualTo(LocalDate.of(2026, 9, 10));
   }
 
   @Test
@@ -255,5 +284,22 @@ public class ServiceIntervalCacheTest {
 
     assertThat(first).isNotNull();
     assertThat(shouldBeNull).isNull(); // service_2 was not in the original build
+  }
+
+  @Test
+  public void reversedCalendarRow_isSkipped_validRowStillUsed() {
+    ServiceIntervalCache cache = new ServiceIntervalCache();
+    GtfsCalendarTableContainer calendar =
+        calendarTable(
+            ImmutableList.of(
+                buildCalendar("service_1", "20260901", "20260930", 1),
+                buildCalendar("service_1", "20260907", "20260906", 2))); // start after end
+
+    ServiceInterval interval =
+        cache.getIntervals("service_1", calendar, calendarDateTable(ImmutableList.of()));
+
+    assertThat(interval).isNotNull();
+    assertThat(interval.firstActiveDate()).isEqualTo(LocalDate.of(2026, 9, 1));
+    assertThat(interval.lastActiveDate()).isEqualTo(LocalDate.of(2026, 9, 30));
   }
 }

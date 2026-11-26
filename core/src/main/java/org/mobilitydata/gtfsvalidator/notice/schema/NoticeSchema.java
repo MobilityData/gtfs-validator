@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.notice.schema;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.notice.SeverityLevel;
 
 /**

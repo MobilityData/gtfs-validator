@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import com.google.common.base.Strings;
 import java.util.HashMap;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.validator.ColumnInspector;
 
 /** Read access to a header row in a CSV file. */

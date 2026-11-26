@@ -31,17 +31,23 @@ plugins {
     id 'signing'
     id 'test-report-aggregation'
     id "io.freefair.aggregate-javadoc" version "6.4.3"
-    id "pl.allegro.tech.build.axion-release" version "1.15.3"
+    id "pl.allegro.tech.build.axion-release" version "1.21.4"
     alias(libs.plugins.spotless)
+}
+
+scmVersion {
+    // Keep the version independent of the current branch name. Newer axion-release versions
+    // append the branch name by default (e.g. 1.2.3-my-branch-SNAPSHOT).
+    versionCreator('simple')
 }
 
 // Setup and configure properties that are consistent across all projects, including sub-modules.
 allprojects {
-    group 'org.mobilitydata.gtfs-validator'
+    group = 'org.mobilitydata.gtfs-validator'
 
     // Per the axion-release plugin, this computes the project version based
     // on the most recent tag in the repo.
-    version scmVersion.version
+    version = scmVersion.version
 
     repositories {
         mavenCentral()
@@ -228,7 +234,7 @@ reporting {
     reports {
         // Necessary for unit test result aggregation.
         testAggregateTestReport(AggregateTestReport) {
-            testType = TestSuiteType.UNIT_TEST
+            testSuiteName = 'test'
         }
     }
 }

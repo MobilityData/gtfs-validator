@@ -26,6 +26,7 @@ dependencies {
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value.annotations
     implementation libs.guava
+    implementation libs.jspecify
     implementation libs.flogger
     implementation libs.flogger.system.backend
     implementation libs.univocity.parsers

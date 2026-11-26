@@ -17,7 +17,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.ERROR;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 
 /** A point is too close to the North or South Pole. */

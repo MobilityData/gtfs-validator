@@ -13,5 +13,5 @@ dependencies {
     annotationProcessor libs.auto.value
     compileOnly libs.auto.value.annotations
     implementation libs.jetbrains.annotations
-    implementation libs.findbugs
+    implementation libs.jspecify
 }

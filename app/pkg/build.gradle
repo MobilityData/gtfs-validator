@@ -19,7 +19,7 @@ import org.gradle.internal.os.OperatingSystem
 plugins {
     id 'java'
     id "de.jjohannes.extra-java-module-info" version "0.11"
-    id "org.beryx.jlink" version "2.24.1"
+    id "org.beryx.jlink" version "3.2.1"
 }
 
 dependencies {

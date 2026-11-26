@@ -98,6 +98,12 @@ public class Arguments {
       required = false)
   private String commitSha;
 
+  @Parameter(
+      names = {"--reference_commit_sha"},
+      description = "SHA fingerprint of the commit the reference validator was built from.",
+      required = false)
+  private String referenceCommitSha;
+
   public String getReportDirectory() {
     return reportDirectory;
   }
@@ -176,6 +182,14 @@ public class Arguments {
 
   public void setCommitSha(String commitSha) {
     this.commitSha = commitSha;
+  }
+
+  public Optional<String> getReferenceCommitSha() {
+    return Optional.ofNullable(referenceCommitSha);
+  }
+
+  public void setReferenceCommitSha(String referenceCommitSha) {
+    this.referenceCommitSha = referenceCommitSha;
   }
 
   public String getReferenceSystemErrorsName() {

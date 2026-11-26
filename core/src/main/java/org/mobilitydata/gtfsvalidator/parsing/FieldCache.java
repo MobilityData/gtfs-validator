@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.parsing;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Caches field values for a single table.

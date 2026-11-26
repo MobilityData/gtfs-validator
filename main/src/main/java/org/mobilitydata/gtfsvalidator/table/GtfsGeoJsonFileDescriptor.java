@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.table;
 
 import java.util.List;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 /**
@@ -39,7 +39,7 @@ public class GtfsGeoJsonFileDescriptor extends GtfsFileDescriptor<GtfsGeoJsonFea
     return "locations.geojson";
   }
 
-  @Nonnull
+  @NonNull
   public TableLoader getTableLoader() {
     return new GeoJsonFileLoader();
   }

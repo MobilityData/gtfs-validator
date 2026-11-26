@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.parsing;
 import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import com.univocity.parsers.csv.UnescapedQuoteHandling;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,9 +27,9 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import javax.annotation.Nullable;
 import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Reading support for a CSV file in GTFS feed. The file normally has headers and 0 or several data
@@ -46,6 +47,7 @@ public class CsvFile implements Iterable<CsvRow> {
     settings.getFormat().setLineSeparator("\n");
     settings.getFormat().setDelimiter(',');
     settings.setHeaderExtractionEnabled(true);
+    settings.setUnescapedQuoteHandling(UnescapedQuoteHandling.RAISE_ERROR);
     // Explicitly disable trimming of whitespaces because we will emit notices for them.
     settings.setIgnoreLeadingWhitespacesInQuotes(false);
     settings.setIgnoreTrailingWhitespacesInQuotes(false);

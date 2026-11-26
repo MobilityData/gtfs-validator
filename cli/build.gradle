@@ -20,8 +20,6 @@ plugins {
     alias(libs.plugins.shadow.jar)
 }
 
-applicationDefaultJvmArgs = [ "-Xmx8G" ]
-
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
     manifest {
@@ -48,7 +46,10 @@ shadowJar {
     archiveClassifier = 'cli'
 }
 
-mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
+application {
+    mainClass = 'org.mobilitydata.gtfsvalidator.cli.Main'
+    applicationDefaultJvmArgs = [ "-Xmx8G" ]
+}
 
 dependencies {
     implementation project(':core')

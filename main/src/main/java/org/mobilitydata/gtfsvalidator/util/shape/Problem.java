@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.util.shape;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTime;
 
 /** Specifies the detail of a stop-to-shape matching issue. */
