@@ -166,7 +166,6 @@ public class Arguments {
     builder.setSkipValidatorUpdate(skipValidatorUpdate);
     builder.setStdoutOutput(stdoutOutput);
     builder.setHttpHeaders(parseHttpHeaders(httpHeaders));
-    builder.setQuietLogs(quiet);
     return builder.build();
   }
 
