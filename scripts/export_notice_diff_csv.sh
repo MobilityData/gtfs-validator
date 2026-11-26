@@ -2,10 +2,12 @@
 #
 # Writes a CSV comparing the notices of the reference and latest validation reports of every feed
 # of an acceptance test run. It has one row per feed and notice code, with the same columns and
-# counts as the comparison MobilityData runs in BigQuery between two validator releases:
-# total_previous and total_current are the code's notice counts in the reference and latest
-# reports, and new_notices and dropped_notices the increase and decrease between them. Codes
-# whose count did not change are included with zeros.
+# counts as the comparison MobilityData runs in BigQuery between two validator releases, plus
+# previous_severity: severity and previous_severity are the code's severity in the latest and
+# reference reports, total_previous and total_current its notice counts in them, and new_notices
+# and dropped_notices the increase and decrease between them. When the severity changed, as the
+# acceptance report does, all the reference notices count as dropped and all the latest ones as
+# new. Codes whose count and severity did not change are included with zeros.
 #
 # A feed that could not be compared gets a single row with empty counts and a status saying why
 # and for which report, checked in the same order as the acceptance test comparator:
@@ -45,8 +47,8 @@ trap 'rm -f "$rows"' EXIT
 
 # The comparison of one feed, from the raw text of its four reports (empty when missing). It
 # returns the failure row, or one row per notice code. The checks follow the comparator's order.
-# A code's count is summed over its entries, as the comparator does. The severity is the reference
-# one, falling back to the latest one, as in the BigQuery comparison.
+# A code's count is summed over its entries, as the comparator does. The severity is the latest
+# one, falling back to the reference one for a dropped code.
 read -r -d '' compare_feed <<'JQ' || true
   def parse: if . == "" then null else (try fromjson catch "unreadable") end;
   def failure($status; $reports; $codes):
@@ -75,10 +77,12 @@ read -r -d '' compare_feed <<'JQ' || true
     else ($r.reference.report | counts) as $previous | ($r.latest.report | counts) as $current
       | ($previous + $current | keys[]) as $code
       | ($previous[$code].total // 0) as $p | ($current[$code].total // 0) as $c
-      | {feed_id: $feed, code: $code,
-         severity: ($previous[$code].severity // $current[$code].severity),
+      | $previous[$code].severity as $ps | $current[$code].severity as $cs
+      | ($ps != null and $cs != null and $ps != $cs) as $changed
+      | {feed_id: $feed, code: $code, severity: ($cs // $ps), previous_severity: $ps,
          total_previous: $p, total_current: $c,
-         new_notices: ([$c - $p, 0] | max), dropped_notices: ([$p - $c, 0] | max),
+         new_notices: (if $changed then $c else [$c - $p, 0] | max end),
+         dropped_notices: (if $changed then $p else [$p - $c, 0] | max end),
          source_url: $url, status: "ok"}
     end)
   + {reference_report: (if $reference_report == "" then null else $reference_report end),
@@ -109,8 +113,8 @@ done
 
 # Sorted by feed ID, in numeric order (mdb-2 before mdb-10), then by notice code.
 jq -rs '
-  ["feed_id", "code", "severity", "total_previous", "total_current", "new_notices",
-   "dropped_notices", "source_url", "reference_report", "latest_report", "status"] as $columns
+  ["feed_id", "code", "severity", "previous_severity", "total_previous", "total_current",
+   "new_notices", "dropped_notices", "source_url", "reference_report", "latest_report", "status"] as $columns
   | $columns,
     (sort_by([.feed_id | scan("[0-9]+$") | tonumber][0], .feed_id, .code)[]
      | [.[$columns[]]])

@@ -180,17 +180,18 @@ Every run writes `notice_comparison.csv` to the `acceptance_test_report` artifac
 |---|---|---|
 | `feed_id` | string | Mobility Database ID of the feed, for example `mdb-1000`. |
 | `code` | string | Notice code. For a `system_errors_*` row, the system error codes, separated by `;`. Empty for other failed feeds. |
-| `severity` | string | `ERROR`, `WARNING` or `INFO`: the severity in the reference report, or in the latest report for a new code. |
+| `severity` | string | `ERROR`, `WARNING` or `INFO`: the severity in the latest report, or in the reference report for a dropped code. |
+| `previous_severity` | string | The severity in the reference report. Empty for a new code. |
 | `total_previous` | integer | Number of notices with this code in the reference report, 0 if the code is absent. |
 | `total_current` | integer | Number of notices with this code in the latest report, 0 if the code is absent. |
-| `new_notices` | integer | `total_current - total_previous` when positive, otherwise 0. |
-| `dropped_notices` | integer | `total_previous - total_current` when positive, otherwise 0. |
+| `new_notices` | integer | `total_current - total_previous` when positive, otherwise 0. `total_current` when the severity changed. |
+| `dropped_notices` | integer | `total_previous - total_current` when positive, otherwise 0. `total_previous` when the severity changed. |
 | `source_url` | string | URL the feed was downloaded from. |
 | `reference_report` | string | The feed's HTML validation report from the reference validator. On a manual run, a link to it (see [HTML report links](#html-report-links)), otherwise a path inside the `reports_all` artifact, for example `mdb-1/reference.html`. Empty if that validator wrote no report. |
 | `latest_report` | string | The same for the validator under test, for example `mdb-1/latest.html`. |
 | `status` | string | `ok` when both reports were compared, otherwise why the feed could not be compared (see below). |
 
-The counts are empty when `status` is not `ok`.
+A code whose severity changed is counted as dropped at its previous severity and new at its current one, as in the acceptance report. The severities and counts are empty when `status` is not `ok`.
 
 #### Status
 
@@ -207,14 +208,15 @@ A feed that could not be compared has a single row. Its status is checked in the
 #### Example
 
 ```csv
-"feed_id","code","severity","total_previous","total_current","new_notices","dropped_notices","source_url","reference_report","latest_report","status"
-"mdb-1","duplicate_key","ERROR",3,3,0,0,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
-"mdb-1","missing_recommended_field","WARNING",5,0,0,5,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
-"mdb-2","foreign_key_violation","ERROR",0,4,4,0,"https://files.mobilitydatabase.org/mdb-2/latest.zip","mdb-2/reference.html","mdb-2/latest.html","ok"
-"mdb-1114","i_o_error",,,,,,"https://files.mobilitydatabase.org/mdb-1114/latest.zip","mdb-1114/reference.html","mdb-1114/latest.html","system_errors_reference_latest"
+"feed_id","code","severity","previous_severity","total_previous","total_current","new_notices","dropped_notices","source_url","reference_report","latest_report","status"
+"mdb-1","duplicate_key","ERROR","ERROR",3,3,0,0,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
+"mdb-1","missing_recommended_field","WARNING","WARNING",5,0,0,5,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
+"mdb-2","foreign_key_violation","ERROR",,0,4,4,0,
+"mdb-2","translation_unknown_field_value","WARNING","ERROR",1,1,1,1,"https://files.mobilitydatabase.org/mdb-2/latest.zip","mdb-2/reference.html","mdb-2/latest.html","ok""https://files.mobilitydatabase.org/mdb-2/latest.zip","mdb-2/reference.html","mdb-2/latest.html","ok"
+"mdb-1114","i_o_error",,,,,,,"https://files.mobilitydatabase.org/mdb-1114/latest.zip","mdb-1114/reference.html","mdb-1114/latest.html","system_errors_reference_latest"
 ```
 
-Rows are sorted by feed ID, in numeric order (`mdb-2` before `mdb-10`), then by notice code. Codes whose count did not change are included with zeros. A feed whose reports both have no notices has no row.
+Rows are sorted by feed ID, in numeric order (`mdb-2` before `mdb-10`), then by notice code. Codes whose count and severity did not change are included with zeros. A feed whose reports both have no notices has no row.
 
 #### HTML report links
 
