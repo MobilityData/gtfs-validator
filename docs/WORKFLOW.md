@@ -32,7 +32,7 @@ For instructions on downloading a CLI snapshot artifact produced by GitHub Actio
 | --- | --- | --- | --- |
 | Web client staging CD | [`stg_web_client_merge.yml`](../.github/workflows/stg_web_client_merge.yml) | Push to `master`; manual dispatch. | Deploys the web client to the staging environment. |
 | Web service staging CD | [`stg_web_svc_merge.yml`](../.github/workflows/stg_web_svc_merge.yml) | Push to `master`; manual dispatch. | Deploys the web service to the staging environment. |
-| Web application release process | [`web_release.yml`](../.github/workflows/web_release.yml) | Release (`released`). | On a released GitHub release, runs the web continuous-deployment task and sends a release notification to `mobility-feed-api`. |
+| Web application release process | [`web_release.yml`](../.github/workflows/web_release.yml) | Release (`released`). | On a released GitHub release, runs the web continuous-deployment task and sends a release notification to `mobility-feed-api`, which re-validates the latest datasets of the Mobility Database with the new version 24 hours later. |
 
 ## Repository maintenance
 
