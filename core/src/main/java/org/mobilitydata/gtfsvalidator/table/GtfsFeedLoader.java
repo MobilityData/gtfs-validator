@@ -126,6 +126,8 @@ public class GtfsFeedLoader {
     ValidationPerformanceTracker performanceTracker = ValidationPerformanceTracker.getInstance();
     skippedValidators.clear();
     List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
+    // Name of the file loaded by each callable, in the same order as loaderCallables.
+    List<String> loaderFilenames = new ArrayList<>();
     Map<String, GtfsTableDescriptor<?>> remainingDescriptors =
         (Map<String, GtfsTableDescriptor<?>>) tableDescriptors.clone();
     for (String filename : gtfsInput.getFilenames()) {
@@ -133,6 +135,7 @@ public class GtfsFeedLoader {
       if (tableDescriptor == null) {
         noticeContainer.addValidationNotice(new UnknownFileNotice(filename));
       } else {
+        loaderFilenames.add(filename);
         loaderCallables.add(
             () -> {
               NoticeContainer loaderNotices = new NoticeContainer();
@@ -177,7 +180,11 @@ public class GtfsFeedLoader {
       try (var phase =
           performanceTracker.startPhase(ValidationPerformanceMetrics.PHASE_LOAD_TABLES)) {
         loadTables(
-            noticeContainer, exec, track(performanceTracker, loaderCallables), tableContainers);
+            noticeContainer,
+            exec,
+            track(performanceTracker, loaderCallables),
+            loaderFilenames,
+            tableContainers);
       }
       MemoryUsageRegister.getInstance()
           .registerMemoryUsage("GtfsFeedLoader.loadTables", beforeLoading);
@@ -201,22 +208,40 @@ public class GtfsFeedLoader {
     }
   }
 
+  /**
+   * Runs the loader tasks and collects their containers.
+   *
+   * @throws FeedLoadingException if a loader task failed without producing a container, for example
+   *     on an {@code OutOfMemoryError} or an {@code IOException}. Validation must not continue,
+   *     since the validators depending on that file would get a {@code null} table.
+   */
   private void loadTables(
       NoticeContainer noticeContainer,
       ExecutorService exec,
       List<Callable<TableAndNoticeContainers>> loaderCallables,
+      List<String> loaderFilenames,
       ArrayList<GtfsEntityContainer<?>> tableContainers)
       throws InterruptedException {
-    for (Future<TableAndNoticeContainers> futureContainer : exec.invokeAll(loaderCallables)) {
+    List<String> failedFiles = new ArrayList<>();
+    Throwable firstFailure = null;
+    List<Future<TableAndNoticeContainers>> futures = exec.invokeAll(loaderCallables);
+    for (int i = 0; i < futures.size(); i++) {
       try {
-        TableAndNoticeContainers containers = futureContainer.get();
+        TableAndNoticeContainers containers = futures.get(i).get();
         tableContainers.add(containers.tableContainer);
         noticeContainer.addAll(containers.noticeContainer);
       } catch (ExecutionException e) {
-        // All runtime exceptions should be caught above.
-        // ExecutionException is not expected to happen.
+        // Runtime exceptions from load() are caught in the loader task, so this is an Error or an
+        // IOException, and no container was produced for the file.
         addThreadExecutionError(e, noticeContainer);
+        failedFiles.add(loaderFilenames.get(i));
+        if (firstFailure == null) {
+          firstFailure = e.getCause();
+        }
       }
+    }
+    if (!failedFiles.isEmpty()) {
+      throw new FeedLoadingException(failedFiles, firstFailure);
     }
   }
 
