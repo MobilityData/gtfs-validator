@@ -211,7 +211,7 @@ public class CsvTableLoaderTest {
         .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
-        .contains(new InvalidLineEndingNotice("filename.txt", 2));
+        .contains(new InvalidLineEndingNotice("filename.txt", 2, "CRCRLF"));
   }
 
   @Test
@@ -244,8 +244,22 @@ public class CsvTableLoaderTest {
         .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
     assertThat(loaderNotices.getValidationNotices())
-        .contains(new InvalidLineEndingNotice("filename", 1));
+        .contains(new InvalidLineEndingNotice("filename", 1, "CRCRLF"));
     assertThat(loaderNotices.getValidationNotices()).contains(headerValidationNotice);
+  }
+
+  @Test
+  public void longerCarriageReturnRunBeforeLfIsCrCrLf() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\r\r\r\n");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 1, "CRCRLF"));
   }
 
   @Test
@@ -258,7 +272,50 @@ public class CsvTableLoaderTest {
     CsvFileLoader.getInstance()
         .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
 
-    assertThat(validationNoticeTypes(loaderNotices)).contains(InvalidLineEndingNotice.class);
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 1, "CR"));
+  }
+
+  @Test
+  public void trailingCarriageReturnAtEofProducesCrNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\r");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 1, "CR"));
+  }
+
+  @Test
+  public void trailingCarriageReturnsAtEofProduceCrNotice() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\r\r");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 1, "CR"));
+  }
+
+  @Test
+  public void firstDetectedLineEndingIsReported() {
+    var testTableDescriptor = new GtfsTestTableDescriptor();
+    when(validatorProvider.getTableHeaderValidator()).thenReturn(mock(TableHeaderValidator.class));
+
+    InputStream inputStream = toInputStream("id,code\r" + "s1,value\r\r\n");
+
+    CsvFileLoader.getInstance()
+        .load(testTableDescriptor, validatorProvider, inputStream, loaderNotices);
+
+    assertThat(loaderNotices.getValidationNotices())
+        .contains(new InvalidLineEndingNotice("filename.txt", 1, "CR"));
   }
 
   @Test
