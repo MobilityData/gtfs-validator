@@ -17,9 +17,11 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
 import com.google.common.primitives.Bytes;
+import com.univocity.parsers.common.TextParsingException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +34,27 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class CsvFileTest {
+
+  @Test
+  public void rejectsUnescapedQuotes() throws IOException {
+    try (InputStream inputStream =
+        toInputStream("stop_id,stop_name\n" + "s1,\"Main \"Street\" Stop\"\n")) {
+      CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+
+      assertThrows(TextParsingException.class, () -> csvFile.iterator().hasNext());
+    }
+  }
+
+  @Test
+  public void acceptsEscapedQuotes() throws IOException {
+    try (InputStream inputStream =
+        toInputStream("stop_id,stop_name\n" + "s1,\"Main \"\"Street\"\" Stop\"\n")) {
+      CsvFile csvFile = new CsvFile(inputStream, "stops.txt");
+
+      CsvRow row = csvFile.iterator().next();
+      assertThat(row.asString(1)).isEqualTo("Main \"Street\" Stop");
+    }
+  }
 
   @Test
   public void emptyFile() throws IOException {

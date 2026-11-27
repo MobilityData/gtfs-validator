@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.runner;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assume.assumeFalse;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -10,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -38,6 +40,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.table.GtfsStopTimeTableContainer;
 import org.mobilitydata.gtfsvalidator.util.VersionInfo;
+import org.mobilitydata.gtfsvalidator.util.VersionResolver;
 
 @RunWith(JUnit4.class)
 public class ValidationRunnerTest {
@@ -232,5 +235,38 @@ public class ValidationRunnerTest {
             .build();
 
     assertFalse(config.stdoutOutput());
+  }
+
+  /**
+   * A file present in the feed that cannot be loaded must stop the validation: no report is
+   * written, and the status is not {@code SUCCESS}. See issue #2245.
+   */
+  @Test
+  public void run_presentFileCannotBeLoaded_returnsExceptionWithoutReport() throws IOException {
+    File gtfsDirectory = temporaryFolder.newFolder("gtfs");
+    File stopTimes = new File(gtfsDirectory, "stop_times.txt");
+    Files.writeString(stopTimes.toPath(), "trip_id,stop_id,stop_sequence\n");
+    stopTimes.setReadable(false);
+    // Permissions are not enforced everywhere, e.g. when running as root.
+    assumeFalse(Files.isReadable(stopTimes.toPath()));
+    File outputDirectory = temporaryFolder.newFolder("output");
+    ValidationRunnerConfig config =
+        ValidationRunnerConfig.builder()
+            .setGtfsSource(gtfsDirectory.toURI())
+            .setOutputDirectory(outputDirectory.toPath())
+            .setNumThreads(1)
+            .setCountryCode(CountryCode.forStringOrUnknown(""))
+            .setSkipValidatorUpdate(true)
+            .build();
+
+    try {
+      ValidationRunner.Status status =
+          new ValidationRunner(new VersionResolver(ApplicationType.CLI)).run(config);
+
+      assertThat(status).isEqualTo(ValidationRunner.Status.EXCEPTION);
+      assertThat(outputDirectory.list()).isEmpty();
+    } finally {
+      stopTimes.setReadable(true);
+    }
   }
 }
