@@ -1,6 +1,6 @@
 <script>
-  import { dev } from '$app/environment';
-  import Button from '$lib/Button.svelte';
+  import { dev } from '$app/env';
+  import Button from '#lib/Button.svelte';
   import '../app.css';
 
   // Fixes issue where clicking rule hash link scrolls too far

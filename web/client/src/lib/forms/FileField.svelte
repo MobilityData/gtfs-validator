@@ -1,5 +1,5 @@
 <script>
-  import Button from '$lib/Button.svelte';
+  import Button from '#lib/Button.svelte';
   import LabeledField from './LabeledField.svelte';
 
   /** @type {string} */
