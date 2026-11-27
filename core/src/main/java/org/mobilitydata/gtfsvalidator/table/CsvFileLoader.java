@@ -162,9 +162,19 @@ public final class CsvFileLoader extends TableLoader {
   }
 
   private static final class LineEndingCheckingInputStream extends FilterInputStream {
+    /** A carriage return that is not followed by a line feed. */
+    private static final String LINE_ENDING_CR = "CR";
+
+    /**
+     * Two or more carriage returns followed by a line feed. Longer CR runs before LF are reported
+     * as this same case: the detector does not distinguish them.
+     */
+    private static final String LINE_ENDING_CRCRLF = "CRCRLF";
+
     private int pendingCarriageReturns = 0;
     private long currentLineNumber = 1;
     private long firstInvalidLineNumber = -1;
+    private String firstInvalidLineEnding;
     private boolean invalidLineEndingFound = false;
     private boolean sawEof = false;
     private boolean finished = false;
@@ -178,11 +188,13 @@ public final class CsvFileLoader extends TableLoader {
       this.filename = filename;
     }
 
-    private void markInvalidLineEnding() {
-      invalidLineEndingFound = true;
-      if (firstInvalidLineNumber < 0) {
-        firstInvalidLineNumber = currentLineNumber;
+    private void markInvalidLineEnding(String lineEnding) {
+      if (invalidLineEndingFound) {
+        return;
       }
+      invalidLineEndingFound = true;
+      firstInvalidLineNumber = currentLineNumber;
+      firstInvalidLineEnding = lineEnding;
     }
 
     private void inspect(int value) {
@@ -192,16 +204,18 @@ public final class CsvFileLoader extends TableLoader {
       }
 
       if (value == '\n') {
+        // pendingCarriageReturns > 1 before LF is CRCRLF.
         if (pendingCarriageReturns > 1) {
-          markInvalidLineEnding();
+          markInvalidLineEnding(LINE_ENDING_CRCRLF);
         }
         pendingCarriageReturns = 0;
         currentLineNumber++;
         return;
       }
 
+      // A non-LF byte after a CR is a CR line ending.
       if (pendingCarriageReturns > 0) {
-        markInvalidLineEnding();
+        markInvalidLineEnding(LINE_ENDING_CR);
         pendingCarriageReturns = 0;
       }
     }
@@ -212,13 +226,14 @@ public final class CsvFileLoader extends TableLoader {
       }
       finished = true;
 
+      // Trailing CRs at EOF were not followed by LF, so this is CR rather than CRCRLF.
       if (sawEof && pendingCarriageReturns > 0) {
-        markInvalidLineEnding();
+        markInvalidLineEnding(LINE_ENDING_CR);
       }
 
       if (invalidLineEndingFound) {
         noticeContainer.addValidationNotice(
-            new InvalidLineEndingNotice(filename, firstInvalidLineNumber));
+            new InvalidLineEndingNotice(filename, firstInvalidLineNumber, firstInvalidLineEnding));
       }
     }
 

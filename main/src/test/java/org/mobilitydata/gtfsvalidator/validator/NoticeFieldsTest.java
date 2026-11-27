@@ -134,6 +134,7 @@ public class NoticeFieldsTest {
             "isBidirectional",
             "latFieldName",
             "latFieldValue",
+            "lineEnding",
             "lineIndex",
             "locationGroupId",
             "locationId",
