@@ -32,5 +32,4 @@ dependencies {
     implementation libs.univocity.parsers
     testImplementation libs.junit
     testImplementation libs.truth
-    testImplementation libs.truth.extension
 }

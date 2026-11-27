@@ -14,7 +14,6 @@ commonsCompress = "1.28.0"
 mockito = "4.5.1"
 junit = "4.13.2"
 truth = "1.4.5"
-truthExtension = "1.4.5"
 javaxInject = "1"
 httpClient5 = "5.6.5"
 geometry = "2.0.0"
@@ -52,7 +51,6 @@ commons-compress = { module = "org.apache.commons:commons-compress", version.ref
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 junit = { module = "junit:junit", version.ref = "junit" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
-truth-extension = { module = "com.google.truth.extensions:truth-java8-extension", version.ref = "truthExtension" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "httpClient5" }
 geometry = { module = "com.google.geometry:s2-geometry", version.ref = "geometry" }

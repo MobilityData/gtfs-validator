@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.gson.Gson;
 import org.junit.Test;
