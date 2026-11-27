@@ -87,6 +87,13 @@ public class Arguments {
   private float percentCorruptedSourcesThreshold;
 
   @Parameter(
+      names = {"--report_only"},
+      description =
+          "Reports the differences without pass or fail: the thresholds are not checked and the"
+              + " exit code does not depend on them.")
+  private boolean reportOnly;
+
+  @Parameter(
       names = {"--run_id"},
       description = "Id of the run from GitHub workflow.",
       required = false)
@@ -166,6 +173,14 @@ public class Arguments {
 
   public void setPercentCorruptedSourcesThreshold(float percentCorruptedSourcesThreshold) {
     this.percentCorruptedSourcesThreshold = percentCorruptedSourcesThreshold;
+  }
+
+  public boolean isReportOnly() {
+    return reportOnly;
+  }
+
+  public void setReportOnly(boolean reportOnly) {
+    this.reportOnly = reportOnly;
   }
 
   public Optional<String> getRunId() {

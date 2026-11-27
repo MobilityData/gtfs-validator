@@ -91,6 +91,7 @@ public class OutOfMemorySourcesCollectorTest {
         .contains(
             "**Failed:** 3 out of 100 sources (~3 %) ran out of memory with the latest version,"
                 + " above the 2 % threshold.");
+    assertThat(collector.generateLogString(/* reportOnly= */ true)).doesNotContain("**Failed:**");
   }
 
   @Test

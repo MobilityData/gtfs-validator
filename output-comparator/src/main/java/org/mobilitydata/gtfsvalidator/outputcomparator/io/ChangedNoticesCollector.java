@@ -115,13 +115,23 @@ public class ChangedNoticesCollector {
    * @param severityLevelName the name of the severity level
    */
   public String generateLogString(String severityLevelName) {
+    return generateLogString(severityLevelName, false);
+  }
+
+  /**
+   * Same as {@link #generateLogString(String)}, without the pass or fail markers and the threshold
+   * when {@code reportOnly} is true.
+   */
+  public String generateLogString(String severityLevelName, boolean reportOnly) {
     StringBuilder b = new StringBuilder();
     b.append("<details>\n<summary><strong>").append(severityLevelName).append("</strong> ");
     b.append(
         String.format(
             "(%d out of %d datasets, ~%.0f%%)",
             invalidDatasetCount, totalDatasetCount, computeInvalidDatasetPercentage()));
-    if (isAboveThreshold()) {
+    if (reportOnly) {
+      b.append("</summary>\n");
+    } else if (isAboveThreshold()) {
       b.append(" ❌</summary>\n");
     } else {
       b.append(" ✅</summary>\n");
@@ -129,14 +139,18 @@ public class ChangedNoticesCollector {
 
     List<ChangedNotice> changedNotices = getChangedNotices();
     if (!changedNotices.isEmpty()) {
-      if (isAboveThreshold()) {
+      if (reportOnly) {
+        b.append("<p>Details of the changes due to the code change.</p>\n");
+      } else if (isAboveThreshold()) {
         b.append("<p>Details of new errors due to code change, which is above");
       } else {
         b.append("<p>Details of new errors due to code change, which is less than");
       }
-      b.append(
-          String.format(
-              " the provided threshold of %.0f%%.</p>\n", this.percentInvalidDatasetsThreshold));
+      if (!reportOnly) {
+        b.append(
+            String.format(
+                " the provided threshold of %.0f%%.</p>\n", this.percentInvalidDatasetsThreshold));
+      }
       b.append("\n| Dataset | Notice Code |\n");
       b.append("|---------|-------------|\n");
       for (ChangedNotice notice : changedNotices) {

@@ -40,13 +40,18 @@ public class OutOfMemorySourcesCollector {
   }
 
   public String generateLogString() {
+    return generateLogString(false);
+  }
+
+  /** Same as {@link #generateLogString()}, without the failure line when {@code reportOnly}. */
+  public String generateLogString(boolean reportOnly) {
     StringBuilder b = new StringBuilder();
     b.append("### 💾 Out of Memory Check\n");
     if (oomSourceDetails.isEmpty()) {
       b.append("No datasets experienced an OutOfMemoryError.\n");
       return b.toString();
     }
-    if (isAboveThreshold()) {
+    if (!reportOnly && isAboveThreshold()) {
       b.append(
           String.format(
               "**Failed:** %d out of %d sources (~%.0f %%) ran out of memory with the latest"
