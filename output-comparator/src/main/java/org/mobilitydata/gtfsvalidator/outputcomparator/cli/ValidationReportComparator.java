@@ -168,14 +168,15 @@ public class ValidationReportComparator {
             validationPerformanceCollector.toReport());
 
     boolean failure =
-        newErrors.isAboveThreshold()
-            || droppedErrors.isAboveThreshold()
-            || newWarnings.isAboveThreshold()
-            || droppedWarnings.isAboveThreshold()
-            || newInfoNotices.isAboveThreshold()
-            || droppedInfoNotices.isAboveThreshold()
-            || corruptedSources.isAboveThreshold()
-            || oomSources.isAboveThreshold();
+        !args.isReportOnly()
+            && (newErrors.isAboveThreshold()
+                || droppedErrors.isAboveThreshold()
+                || newWarnings.isAboveThreshold()
+                || droppedWarnings.isAboveThreshold()
+                || newInfoNotices.isAboveThreshold()
+                || droppedInfoNotices.isAboveThreshold()
+                || corruptedSources.isAboveThreshold()
+                || oomSources.isAboveThreshold());
 
     String reportSummaryString =
         generateReportSummaryString(
@@ -269,8 +270,13 @@ public class ValidationReportComparator {
     StringBuilder b = new StringBuilder();
     b.append("## \uD83D\uDCDD Acceptance Test Report\n");
     b.append("### \uD83D\uDCCB Summary\n");
-    String status =
-        failure ? "❌ The rule acceptance test has failed" : "✅ The rule acceptance has passed";
+    String status;
+    if (args.isReportOnly()) {
+      status = "Comparison of the notices, without pass or fail";
+    } else {
+      status =
+          failure ? "❌ The rule acceptance test has failed" : "✅ The rule acceptance has passed";
+    }
     b.append(status);
     if (args.getCommitSha().isPresent()) {
       b.append(" for commit ").append(args.getCommitSha().get()).append('\n');
@@ -291,14 +297,17 @@ public class ValidationReportComparator {
     }
 
     b.append("### \uD83D\uDCCA Notices Comparison\n");
-    b.append(newErrors.generateLogString("New Errors")).append('\n');
-    b.append(droppedErrors.generateLogString("Dropped Errors")).append('\n');
-    b.append(newWarnings.generateLogString("New Warnings")).append('\n');
-    b.append(droppedWarnings.generateLogString("Dropped Warnings")).append('\n');
-    b.append(newInfoNotices.generateLogString("New Info Notices")).append('\n');
-    b.append(droppedInfoNotices.generateLogString("Dropped Info Notices")).append("\n\n");
+    b.append(newErrors.generateLogString("New Errors", args.isReportOnly())).append('\n');
+    b.append(droppedErrors.generateLogString("Dropped Errors", args.isReportOnly())).append('\n');
+    b.append(newWarnings.generateLogString("New Warnings", args.isReportOnly())).append('\n');
+    b.append(droppedWarnings.generateLogString("Dropped Warnings", args.isReportOnly()))
+        .append('\n');
+    b.append(newInfoNotices.generateLogString("New Info Notices", args.isReportOnly()))
+        .append('\n');
+    b.append(droppedInfoNotices.generateLogString("Dropped Info Notices", args.isReportOnly()))
+        .append("\n\n");
     b.append(corruptedSources.generateLogString()).append("\n").append("\n");
-    b.append(oomSources.generateLogString()).append("\n").append("\n");
+    b.append(oomSources.generateLogString(args.isReportOnly())).append("\n").append("\n");
     b.append(validationPerformanceCollector.generateLogString()).append("\n");
     return b.toString();
   }

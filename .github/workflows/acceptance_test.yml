@@ -355,7 +355,12 @@ jobs:
            --output_base acceptance-test-output \
            --commit_sha "${{ needs.pack-snapshot.outputs.latest_sha }}" \
            --reference_commit_sha "${{ needs.pack-master.outputs.master_sha }}" \
-           --run_id ${{github.run_id}}
+           --run_id ${{github.run_id}} \
+           $REPORT_ONLY
+        env:
+          # A manual run compares releases, where changes above the thresholds are expected: it
+          # reports the differences without pass or fail, and fails only if the comparator does.
+          REPORT_ONLY: ${{ github.event_name == 'workflow_dispatch' && '--report_only' || '' }}
       - name: Write a summary if the comparator wrote none
         if: always()
         run: |
