@@ -245,6 +245,7 @@ public class NoticeFieldsTest {
             "stopUrl",
             "suggestedExpirationDate",
             "tableName",
+            "threshold",
             "time",
             "timeframeGroupId",
             "toRouteId",
