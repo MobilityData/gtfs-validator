@@ -52,11 +52,11 @@ ext {
 }
 
 dependencies {
-  compileOnly 'org.projectlombok:lombok:1.18.24'
-  annotationProcessor 'org.projectlombok:lombok:1.18.24'
+  compileOnly 'org.projectlombok:lombok:1.18.48'
+  annotationProcessor 'org.projectlombok:lombok:1.18.48'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.24'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+  testCompileOnly 'org.projectlombok:lombok:1.18.48'
+  testAnnotationProcessor 'org.projectlombok:lombok:1.18.48'
   implementation project(':core')
   implementation project(':main')
   // Expose the BOMs as Gradle platforms so versionless dependencies below also resolve
@@ -66,8 +66,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.google.cloud:spring-cloud-gcp-starter'
 	implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
-  implementation 'org.projectlombok:lombok:1.18.22'
-  implementation 'org.projectlombok:lombok:1.18.22'
+  implementation 'org.projectlombok:lombok:1.18.48'
+  implementation 'org.projectlombok:lombok:1.18.48'
   implementation 'io.sentry:sentry-spring-boot-starter:8.65.1'
   implementation 'io.sentry:sentry-logback:8.65.1'
   implementation 'com.google.cloud:spring-cloud-gcp-starter-logging:3.7.9'

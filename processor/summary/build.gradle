@@ -30,14 +30,14 @@ repositories {
 dependencies {
     implementation project(':model')
     implementation project(':processor:notices')
-    annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
-    compileOnly 'com.google.auto.service:auto-service:1.0.1'
-    implementation 'org.apache.commons:commons-lang3:3.18.0'
-    implementation 'com.google.guava:guava:33.7.1-jre'
+    annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
+    compileOnly 'com.google.auto.service:auto-service:1.1.1'
+    implementation 'org.apache.commons:commons-lang3:3.22.0'
+    implementation 'com.google.guava:guava:33.8.0-jre'
     implementation libs.jspecify
-    implementation 'com.google.code.gson:gson:2.9.1'
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
-    testImplementation 'com.google.truth:truth:1.1.3'
+    implementation 'com.google.code.gson:gson:2.15.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation 'com.google.truth:truth:1.4.5'
 }
 
 test {
