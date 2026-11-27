@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.validator.ColumnInspector;
 public class CsvHeader implements ColumnInspector {
   private final HashMap<String, Integer> columnIndices = new HashMap<>();
   private final String[] columnNames;
+  private final CsvRow originalRow;
 
   public static final CsvHeader EMPTY = new CsvHeader(null);
 
@@ -34,7 +35,13 @@ public class CsvHeader implements ColumnInspector {
    * <p>Empty or null columns names are treated as {@code ""}.
    */
   public CsvHeader(@Nullable String[] columnNames) {
+    this(columnNames, columnNames, 1);
+  }
+
+  CsvHeader(@Nullable String[] columnNames, @Nullable String[] originalNames, long rowNumber) {
     this.columnNames = columnNames == null ? new String[] {} : columnNames;
+    this.originalRow =
+        new CsvRow(rowNumber, originalNames == null ? this.columnNames : originalNames);
     for (int i = 0; i < this.columnNames.length; ++i) {
       if (Strings.isNullOrEmpty(columnNames[i])) {
         this.columnNames[i] = "";
@@ -42,6 +49,11 @@ public class CsvHeader implements ColumnInspector {
         columnIndices.putIfAbsent(columnNames[i], i);
       }
     }
+  }
+
+  /** Returns the header values as written in the file, before column names are normalized. */
+  public CsvRow getOriginalRow() {
+    return originalRow;
   }
 
   /** Returns all columns in the table. */

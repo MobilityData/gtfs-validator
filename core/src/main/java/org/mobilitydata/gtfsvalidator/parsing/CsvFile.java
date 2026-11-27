@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.parsing;
 
+import com.univocity.parsers.common.ParsingContext;
 import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -87,9 +88,34 @@ public class CsvFile implements Iterable<CsvRow> {
     parser = new CsvParser(settings);
     parser.beginParsing(reader);
 
-    String[] columnNames = parser.getContext().headers();
+    ParsingContext context = parser.getContext();
+    String[] columnNames = context.headers();
     isEmpty = columnNames == null;
-    headers = new CsvHeader(columnNames);
+    headers =
+        new CsvHeader(columnNames, originalHeaderNames(context, settings), context.currentLine());
+  }
+
+  @Nullable
+  private static String[] originalHeaderNames(ParsingContext context, CsvParserSettings settings) {
+    String[] names = context.parsedHeaders();
+    if (names == null || names.length == 0) {
+      return names;
+    }
+    // With LF as the separator, Univocity includes the CR of CRLF in an unquoted last field.
+    // Match the serialized field so a CR inside quotes remains part of the name.
+    int last = names.length - 1;
+    String value = names[last];
+    if (value != null && value.endsWith("\r")) {
+      String record = context.currentParsedContent();
+      String ending = value + "\n";
+      if (record != null
+          && (last == 0
+              ? record.equals(ending)
+              : record.endsWith(settings.getFormat().getDelimiterString() + ending))) {
+        names[last] = value.substring(0, value.length() - 1);
+      }
+    }
+    return names;
   }
 
   /**
