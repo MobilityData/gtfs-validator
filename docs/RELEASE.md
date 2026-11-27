@@ -27,8 +27,28 @@ Update the [README.md](/README.md) to match the latest developments. The documen
 ![publish](https://user-images.githubusercontent.com/35747326/99821598-3ef31d00-2b20-11eb-9f5e-26f6583ad6c9.png)
 
 ### 5. Run analytics comparing the pre-release with the last release. 
-1. Generate analytics based on the acceptance tests to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
-2. Identify if any critical issues should be resolved before release. 
+1. Get the notice comparison CSV of the pre-release against the release to compare with, by running the acceptance tests manually:
+   1. Pick the two versions from the list of releases. Any tag, commit hash or branch works, so a minor release can be skipped:
+      ```
+      gh release list -R MobilityData/gtfs-validator -L 10
+      ```
+   1. In the Actions tab, open _Rule acceptance tests_ and click _Run workflow_ on `master`:
+      - `baseline_ref`: the release to compare with, for example `v8.0.0`;
+      - `latest_ref`: the pre-release, for example `v8.1.0`;
+      - `feed_list`: `non-deprecated`, to compare all the feeds of the Mobility Database catalog.
+
+      Or with the GitHub CLI:
+      ```
+      gh workflow run acceptance_test.yml -R MobilityData/gtfs-validator --ref master -f baseline_ref=v8.0.0 -f latest_ref=v8.1.0 -f feed_list=non-deprecated
+      ```
+   1. Check the first line of the run summary, which names both versions and the commits they resolved to.
+   1. Download the run's `acceptance_test_report` artifact, which holds `notice_comparison.csv` (see [Notice comparison CSV](ACCEPTANCE_TESTS.md#notice-comparison-csv)):
+      ```
+      gh run download <run ID> -R MobilityData/gtfs-validator -n acceptance_test_report
+      ```
+      Its `reference_report` and `latest_report` columns link to each feed's HTML reports.
+2. Generate analytics based on the acceptance tests and the CSV to identify any performance concerns or problems with new notices. [Example report here](https://docs.google.com/spreadsheets/d/1AH4fELPPIB3R3w_TPGUBzSn_T6cVuYpmekW-er1Xogg/edit#gid=0). 
+3. Identify if any critical issues should be resolved before release. 
 
 ### 6. Do the release
 1. While CI is running to create the artifacts, you can work on the release description. ![edit](https://user-images.githubusercontent.com/35747326/99821184-ba080380-2b1f-11eb-8efe-57be80a0bd29.png)
@@ -47,6 +67,8 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 
 4. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
 ![publish](https://user-images.githubusercontent.com/35747326/99821105-99d84480-2b1f-11eb-9661-493966904a11.png)
+
+Publishing the release (not the pre-release) deploys the web validator and notifies [mobility-feed-api](https://github.com/MobilityData/mobility-feed-api), which validates the latest dataset of every published feed with the new version 24 hours later.
 
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
 

@@ -49,6 +49,7 @@ import org.mobilitydata.gtfsvalidator.reportsummary.HtmlReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReport;
 import org.mobilitydata.gtfsvalidator.reportsummary.JsonReportGenerator;
 import org.mobilitydata.gtfsvalidator.reportsummary.model.FeedMetadata;
+import org.mobilitydata.gtfsvalidator.table.FeedLoadingException;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.util.ServiceIntervalCache;
@@ -160,6 +161,12 @@ public class ValidationRunner {
                 validatorLoader, feedLoader, noticeContainer, gtfsInput, validationContext);
       } catch (InterruptedException e) {
         logger.atSevere().withCause(e).log("Validation was interrupted");
+        return Status.EXCEPTION;
+      } catch (FeedLoadingException e) {
+        // A file present in the feed could not be loaded, so the validation results would be
+        // incomplete. No report is generated: callers must rely on the returned status.
+        logger.atSevere().withCause(e).log("Validation stopped: %s", e.getMessage());
+        closeGtfsInput(gtfsInput, noticeContainer);
         return Status.EXCEPTION;
       }
       try (var phase =
@@ -341,6 +348,7 @@ public class ValidationRunner {
    * @param validationContext the {@code ValidationContext} do be used during validation
    * @return the {@code GtfsFeedContainer} used in the validation process
    * @throws InterruptedException if validation process was interrupted
+   * @throws FeedLoadingException if a file present in the feed could not be loaded
    */
   public static GtfsFeedContainer loadAndValidate(
       ValidatorLoader validatorLoader,
