@@ -10,7 +10,7 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
-  env: {
+  expose: {
     PUBLIC_CLIENT_API_ROOT: "http://127.0.0.1:8080",
     PUBLIC_CLIENT_REPORTS_ROOT: "http://127.0.0.1:8080/reports"
   },

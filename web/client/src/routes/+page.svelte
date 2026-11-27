@@ -1,21 +1,21 @@
 <script>
-  import { browser } from '$app/environment';
+  import { browser } from '$app/env';
 
-  import Alert from '$lib/Alert.svelte';
-  import Button from '$lib/Button.svelte';
-  import DropTarget from '$lib/DropTarget.svelte';
-  import FileField from '$lib/forms/FileField.svelte';
-  import Form from '$lib/forms/Form.svelte';
-  import TextField from '$lib/forms/TextField.svelte';
-  import SelectField from '$lib/forms/SelectField.svelte';
-  import StatusModal from '$lib/StatusModal.svelte';
+  import Alert from '#lib/Alert.svelte';
+  import Button from '#lib/Button.svelte';
+  import DropTarget from '#lib/DropTarget.svelte';
+  import FileField from '#lib/forms/FileField.svelte';
+  import Form from '#lib/forms/Form.svelte';
+  import TextField from '#lib/forms/TextField.svelte';
+  import SelectField from '#lib/forms/SelectField.svelte';
+  import StatusModal from '#lib/StatusModal.svelte';
 
-  import countryCodes from '$lib/countryCodes';
+  import countryCodes from '#lib/countryCodes.js';
 
   import { fly } from 'svelte/transition';
   import { onMount, tick } from 'svelte';
   import { quintOut } from 'svelte/easing';
-  import { env } from '$env/dynamic/public';
+  import * as env from '$app/env/public';
 
   /**
    * @typedef CreateJobParameters

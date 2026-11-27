@@ -12,7 +12,7 @@ context('GTFS Validator - Core Workflow', () => {
     // Setup intercept aliases
     cy.intercept(
         'POST',
-        `${Cypress.env("PUBLIC_CLIENT_API_ROOT")}/create-job`,
+        `${Cypress.expose("PUBLIC_CLIENT_API_ROOT")}/create-job`,
         (req) => {
           req.reply({
             statusCode: 200,
@@ -31,7 +31,7 @@ context('GTFS Validator - Core Workflow', () => {
 
 
     cy.intercept('HEAD',
-      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
+      `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
       (req) => {
         if (numReportCalls > 0) {
           // return 200 code
@@ -60,7 +60,7 @@ context('GTFS Validator - Core Workflow', () => {
       });
 
     cy.intercept('HEAD',
-    `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`,
+    `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`,
     (req) => {
       if (numExecutionJsonCalls > 0) {
         // return 200 code
@@ -88,7 +88,7 @@ context('GTFS Validator - Core Workflow', () => {
       numExecutionJsonCalls++;
     });
 
-    cy.intercept('GET', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+    cy.intercept('GET', `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
       statusCode: 200,
       body: {
         status: 'success',

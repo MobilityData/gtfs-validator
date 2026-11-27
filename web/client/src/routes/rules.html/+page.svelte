@@ -1,12 +1,12 @@
 <script>
   import {marked} from 'marked';
-  import {page} from '$app/stores';
+  import { page } from '$app/state';
   import _ from 'lodash';
 
   import SectionRefLink from './SectionRefLink.svelte';
 
-  const rules = $page.data.rules || [];
-  const summaryMetadata = $page.data.summaryMetadata || [];
+  const rules = page.data.rules || [];
+  const summaryMetadata = page.data.summaryMetadata || [];
 
   // Group rules by severity level
   $: categories = _.chain(rules)
@@ -46,15 +46,15 @@
   </div>
 
   <div class="markdown mt-8 mb-16">
-    {#if $page.data.msgHeading}
-      <h1 class="h1">{$page.data.msgHeading}</h1>
+    {#if page.data.msgHeading}
+      <h1 class="h1">{page.data.msgHeading}</h1>
     {:else}
       <h1 class="h1">Validation Rules and Metadata</h1>
     {/if}
 
-    {#if $page.data.msgBody}
+    {#if page.data.msgBody}
       <p>
-        {$page.data.msgBody}
+        {page.data.msgBody}
       </p>
     {:else}
 

@@ -9,7 +9,7 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
-      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      `${Cypress.expose('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       { forceNetworkError: true }
     ).as('createJob');
 
@@ -42,7 +42,7 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     cy.intercept(
       'POST',
-      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      `${Cypress.expose('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
         expect(req.body.filename).to.equal('sample-feed.zip');
         req.reply({
@@ -85,7 +85,7 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
-      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      `${Cypress.expose('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
         req.reply({
           statusCode: 200,
@@ -104,7 +104,7 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     cy.intercept(
       'HEAD',
-      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`,
+      `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`,
       { forceNetworkError: true }
       )
       .as('awaitExecutionResults');
@@ -132,7 +132,7 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
-      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      `${Cypress.expose('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
         req.reply({
           statusCode: 200,
@@ -149,12 +149,12 @@ context('GTFS Validator - Confirm error messaging', () => {
       }
     ).as('createJob');
 
-    cy.intercept('HEAD', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+    cy.intercept('HEAD', `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
       statusCode: 200
     })
     .as('awaitExecutionResultsHead')
 
-    cy.intercept('GET', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+    cy.intercept('GET', `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
       statusCode: 200,
       body: {
         status: 'success',
@@ -164,7 +164,7 @@ context('GTFS Validator - Confirm error messaging', () => {
 
     cy.intercept(
       'HEAD',
-      `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
+      `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/report.html`,
       { forceNetworkError: true }
       )
       .as('awaitReportFailing');
@@ -195,7 +195,7 @@ context('GTFS Validator - Confirm error messaging', () => {
     // Setup intercept aliases
     cy.intercept(
       'POST',
-      `${Cypress.env('PUBLIC_CLIENT_API_ROOT')}/create-job`,
+      `${Cypress.expose('PUBLIC_CLIENT_API_ROOT')}/create-job`,
       (req) => {
         req.reply({
           statusCode: 200,
@@ -212,12 +212,12 @@ context('GTFS Validator - Confirm error messaging', () => {
       }
     ).as('createJob');
 
-    cy.intercept('HEAD', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+    cy.intercept('HEAD', `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
       statusCode: 200
     })
     .as('awaitExecutionResultsHead')
 
-    cy.intercept('GET', `${Cypress.env("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
+    cy.intercept('GET', `${Cypress.expose("PUBLIC_CLIENT_REPORTS_ROOT")}/*/${execution_result_json}`, {
       statusCode: 200,
       body: {
         status: 'error',
