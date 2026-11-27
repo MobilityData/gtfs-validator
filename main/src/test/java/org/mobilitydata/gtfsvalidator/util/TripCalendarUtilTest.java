@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.util;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.mobilitydata.gtfsvalidator.util.TripCalendarUtil.computeMajorityServiceCoverage;
 import static org.mobilitydata.gtfsvalidator.util.TripCalendarUtil.computeServiceCoverage;
 import static org.mobilitydata.gtfsvalidator.util.TripCalendarUtil.countTripsForEachServiceDate;

@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.app.gui;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.mockito.Mockito.verify;
 
 import com.google.common.collect.ImmutableMap;
