@@ -1,0 +1,11 @@
+stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station
+C,Shared bus and rail stop,-35.2800,149.1300,0,
+A,Shared tram and bus stop,-35.2810,149.1300,0,
+M,Shared monorail and rail stop,-35.2810,149.1310,0,
+P,Interchange station,-35.2820,149.1300,1,
+BUS_BAY,Bus bay,-35.2820,149.1300,0,P
+RAIL_BAY,Rail bay,-35.2820,149.1310,0,P
+BUS_END,Bus terminal,-35.2830,149.1300,0,
+RAIL_END,Rail terminal,-35.2830,149.1310,0,
+TRAM_END,Tram terminal,-35.2820,149.1320,0,
+MONO_END,Monorail terminal,-35.2820,149.1330,0,
