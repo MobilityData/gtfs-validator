@@ -30,7 +30,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'test-report-aggregation'
-    id "io.freefair.aggregate-javadoc" version "6.4.3"
+    id "io.freefair.aggregate-javadoc-legacy" version "9.8.3"
     id "pl.allegro.tech.build.axion-release" version "1.21.5"
     alias(libs.plugins.spotless)
 }
