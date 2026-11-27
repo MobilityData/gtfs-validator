@@ -63,7 +63,6 @@ dependencies {
 
     testImplementation libs.junit
     testImplementation libs.truth
-    testImplementation libs.truth.extension
     testImplementation libs.mockito.core
 }
 

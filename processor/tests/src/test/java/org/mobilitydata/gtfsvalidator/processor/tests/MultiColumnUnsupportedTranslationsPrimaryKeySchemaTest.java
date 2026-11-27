@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.processor.tests;
 
-import static com.google.common.truth.Truth8.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;

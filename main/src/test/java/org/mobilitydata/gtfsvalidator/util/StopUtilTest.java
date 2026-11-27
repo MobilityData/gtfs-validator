@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.util;
 
-import static com.google.common.truth.Truth8.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.BOARDING_AREA;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.ENTRANCE;
 import static org.mobilitydata.gtfsvalidator.table.GtfsLocationType.STATION;

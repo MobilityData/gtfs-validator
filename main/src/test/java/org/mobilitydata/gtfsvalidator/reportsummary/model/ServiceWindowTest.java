@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.reportsummary.model;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

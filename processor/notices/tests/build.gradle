@@ -15,7 +15,6 @@ dependencies {
     implementation libs.gson
     testImplementation libs.junit
     testImplementation libs.truth
-    testImplementation libs.truth.extension
 }
 
 test {

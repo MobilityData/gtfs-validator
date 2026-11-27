@@ -52,7 +52,6 @@ dependencies {
     implementation libs.location.tech
     testImplementation libs.junit
     testImplementation libs.truth
-    testImplementation libs.truth.extension
     testImplementation libs.mockito.core
     testImplementation libs.jackson.databind
     testImplementation project(':processor:summary')
