@@ -300,6 +300,36 @@ public class ValidationReportComparatorTest {
   }
 
   @Test
+  public void addedErrorNotice_aboveThresholds_reportOnly_noFailure() throws Exception {
+    Arguments args = defaultArgs();
+    args.setNewErrorThreshold(1);
+    args.setPercentInvalidDatasetsThreshold(25);
+    args.setReportOnly(true);
+
+    List<File> reportDirs =
+        ImmutableList.of(
+            constructBeforeAndAfterReports(
+                "feed-id-a",
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt")),
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt"))),
+            constructBeforeAndAfterReports(
+                "feed-id-b",
+                ImmutableList.of(),
+                ImmutableList.of(new MissingRequiredFileNotice("a.txt"))));
+
+    ValidationReportComparator comparator = new ValidationReportComparator();
+    Result result = comparator.compareValidationRuns(args, reportDirs, constructSourceUrls());
+
+    // The new error is still reported, but does not fail the comparison.
+    assertThat(result.failure()).isFalse();
+    assertThat(result.report().newErrors()).hasSize(1);
+    assertThat(result.reportSummary()).contains("without pass or fail");
+    assertThat(result.reportSummary()).doesNotContain("has failed");
+    assertThat(result.reportSummary()).doesNotContain("❌");
+    assertThat(result.reportSummary()).doesNotContain("threshold");
+  }
+
+  @Test
   public void droppedErrorNotice_aboveThresholds_failure() throws Exception {
     Arguments args = defaultArgs();
     args.setNewErrorThreshold(1);
@@ -455,6 +485,36 @@ public class ValidationReportComparatorTest {
 
     // 1 corrupted source out of 2 = 50% corrupted = above threshold.
     assertThat(result.failure()).isTrue();
+  }
+
+  @Test
+  public void truncatedReport_isCorruptedSource() throws Exception {
+    Arguments args = defaultArgs();
+    File truncatedDir =
+        constructBeforeAndAfterReports(
+            "feed-id-a",
+            ImmutableList.of(new MissingRequiredFileNotice("a.txt")),
+            ImmutableList.of(new MissingRequiredFileNotice("a.txt")));
+    // The latest report was cut short, as in a run whose report was not fully written.
+    Path latestReport = truncatedDir.toPath().resolve(LATEST_REPORT_NAME);
+    String content = Files.readString(latestReport);
+    Files.writeString(latestReport, content.substring(0, content.length() / 2));
+    File validDir =
+        constructBeforeAndAfterReports(
+            "feed-id-b",
+            ImmutableList.of(),
+            ImmutableList.of(new MissingRequiredFileNotice("b.txt")));
+
+    Result result =
+        new ValidationReportComparator()
+            .compareValidationRuns(
+                args, ImmutableList.of(truncatedDir, validDir), constructSourceUrls());
+
+    // The truncated report does not stop the comparison: it is reported as corrupted, and the
+    // other dataset is still compared.
+    assertThat(result.report().corruptedSources().corruptedSources()).containsExactly("feed-id-a");
+    assertThat(result.report().newErrors()).hasSize(1);
+    assertThat(result.report().newErrors().get(0).noticeCode()).isEqualTo("missing_required_file");
   }
 
   @Test

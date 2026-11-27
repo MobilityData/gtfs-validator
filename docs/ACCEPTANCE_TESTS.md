@@ -155,16 +155,86 @@ The _Out of Memory Check_ lists the datasets whose validation ran out of memory 
 1. Provide code changes by creating a new PR on the [GitHub repository](https://github.com/MobilityData/gtfs-validator);
 2. The acceptance test pipeline will run each time code is pushed on the newly created branch; **except if** the keyword `[acceptance test skip]` is included in the commit message.
 
-To validate every feed with both validators in the same job, for example to check a performance change, run the pipeline manually: in the Actions tab, open _Rule acceptance tests_, click _Run workflow_, pick the PR's branch and uncheck `reuse_master_reports`. The report is written to the run summary only, not posted on any PR. A manual run validates the branch as is, not merged with master, and is only available for branches of this repository.
+To validate every feed with both validators in the same job, for example to check a performance change, run the pipeline manually: in the Actions tab, open _Rule acceptance tests_, click _Run workflow_, pick the PR's branch and uncheck `reuse_master_reports`. The report is written to the run summary only, not posted on any PR. A manual run reports the differences without pass or fail: the thresholds are not checked, and the run fails only if the comparator itself fails. A manual run validates the branch as is, not merged with master, and is only available for branches of this repository.
 
 To compare the branch with another reference than master, for example the commit before a performance change or a release tag, fill in `baseline_ref` with a branch, tag or commit SHA when starting a manual run. The reference validator is then built from that commit, and the report says which commit it was built from. The reference reports of such a run are not saved for reuse. The baseline must be from March 2024 (#1683) or later: older validators lack the `--skip_validator_update` option, and the run stops before validating any feed.
+
+To test another version than the branch, for example a release tag, fill in `latest_ref` with a branch, tag or commit SHA. The validator under test is then built from that commit, while the workflow and the comparator still come from the branch the run starts on. The same March 2024 limit applies. The run summary names both versions and the commits they resolved to. To compare two releases, start the run on `master` with, for example, `baseline_ref` set to `v8.0.0` and `latest_ref` to `v8.1.0`.
+
+On a PR whose branch is in this repository, the acceptance test comment ends with the `gh workflow run` command that runs the PR's branch against the latest release on all the non-deprecated feeds. The report of that run is in its run summary, not in a new comment.
 
 By default, the pipeline validates a fixed list of about 1,000 feeds, committed in [`acceptance_test_feed_list.csv`](../scripts/mobility-database-harvester/acceptance_test_feed_list.csv). To validate more feeds, for example to investigate the differences between releases, set `feed_list` when starting a manual run:
 - `acceptance`: the fixed list (default);
 - `active`: the active GTFS feeds of the [Mobility Database catalog](https://files.mobilitydatabase.org/feeds_v2.csv) that have a latest dataset, about 2,800;
 - `non-deprecated`: the same, also with the inactive, future and development feeds, about 3,600.
 
-A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so the corrupted sources check may fail on its own.
+A run over the catalog takes longer and costs more, since more feeds need the large runner. More feeds also fail to download, so more of them are reported as corrupted sources.
+
+### Notice comparison CSV
+
+Every run writes `notice_comparison.csv` to the `acceptance_test_report` artifact. It compares the notices of the reference and latest reports of every feed, with one row per feed and notice code. Unlike the acceptance report, which only lists the codes that appear in or disappear from a feed, it also shows count changes of a code present in both reports.
+
+#### Columns
+
+| Column | Type | Description |
+|---|---|---|
+| `feed_id` | string | Mobility Database ID of the feed, for example `mdb-1000`. |
+| `code` | string | Notice code. For a `system_errors_*` row, the system error codes, separated by `;`. Empty for other failed feeds. |
+| `severity` | string | `ERROR`, `WARNING` or `INFO`: the severity in the latest report, or in the reference report for a dropped code. |
+| `previous_severity` | string | The severity in the reference report. Empty for a new code. |
+| `total_previous` | integer | Number of notices with this code in the reference report, 0 if the code is absent. |
+| `total_current` | integer | Number of notices with this code in the latest report, 0 if the code is absent. |
+| `new_notices` | integer | `total_current - total_previous` when positive, otherwise 0. `total_current` when the severity changed. |
+| `dropped_notices` | integer | `total_previous - total_current` when positive, otherwise 0. `total_previous` when the severity changed. |
+| `source_url` | string | URL the feed was downloaded from. |
+| `reference_report` | string | The feed's HTML validation report from the reference validator. On a manual run, a link to it (see [HTML report links](#html-report-links)), otherwise a path inside the `reports_all` artifact, for example `mdb-1/reference.html`. Empty if that validator wrote no report. |
+| `latest_report` | string | The same for the validator under test, for example `mdb-1/latest.html`. |
+| `status` | string | `ok` when both reports were compared, otherwise why the feed could not be compared (see below). |
+
+A code whose severity changed is counted as dropped at its previous severity and new at its current one, as in the acceptance report. The severities and counts are empty when `status` is not `ok`.
+
+#### Status
+
+A feed that could not be compared has a single row. Its status is checked in the same order as the acceptance report, and is followed by the report concerned: `_reference`, `_latest` or `_reference_latest`.
+
+| Status | Meaning |
+|---|---|
+| `ok` | Both reports were compared. |
+| `out_of_memory_*` | The validator ran out of memory. |
+| `missing_*` | The report was not written, for example when the feed could not be downloaded. |
+| `unreadable_*` | The report is not valid JSON, for example when it was cut short. |
+| `system_errors_*` | The report has no notices and the system errors report has some, for example when the feed could not be read. |
+
+#### Example
+
+```csv
+"feed_id","code","severity","previous_severity","total_previous","total_current","new_notices","dropped_notices","source_url","reference_report","latest_report","status"
+"mdb-1","duplicate_key","ERROR","ERROR",3,3,0,0,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
+"mdb-1","missing_recommended_field","WARNING","WARNING",5,0,0,5,"https://files.mobilitydatabase.org/mdb-1/latest.zip","mdb-1/reference.html","mdb-1/latest.html","ok"
+"mdb-2","foreign_key_violation","ERROR",,0,4,4,0,
+"mdb-2","translation_unknown_field_value","WARNING","ERROR",1,1,1,1,"https://files.mobilitydatabase.org/mdb-2/latest.zip","mdb-2/reference.html","mdb-2/latest.html","ok""https://files.mobilitydatabase.org/mdb-2/latest.zip","mdb-2/reference.html","mdb-2/latest.html","ok"
+"mdb-1114","i_o_error",,,,,,,"https://files.mobilitydatabase.org/mdb-1114/latest.zip","mdb-1114/reference.html","mdb-1114/latest.html","system_errors_reference_latest"
+```
+
+Rows are sorted by feed ID, in numeric order (`mdb-2` before `mdb-10`), then by notice code. Codes whose count and severity did not change are included with zeros. A feed whose reports both have no notices has no row.
+
+#### HTML report links
+
+A manual run uploads the feeds' HTML and JSON validation reports (`reference.html`, `latest.html`, `reference.json` and `latest.json`) to the `mobilitydata-validation-reports` bucket, under `acceptance/<run ID>-<attempt>/<feed ID>/`, and the report columns link to the HTML ones. A JSON report is at the same link, ending in `.json` instead of `.html`. Anyone can open a report from its link, but not list the bucket, and the reports are kept. PR runs do not upload them, and their report columns hold paths inside `reports_all`, as does a manual run whose upload failed.
+
+The upload uses the `GCP_ACCEPTANCE_REPORTS_SA_KEY` repository secret, the key of a service account allowed to create and read objects in that bucket, but not to delete them (`roles/storage.objectCreator` and `roles/storage.objectViewer`). Without the secret, the upload is skipped.
+
+#### Building it from a run
+
+Download the `reports_all` and `datasets_metadata` artifacts of the run, then:
+
+```sh
+scripts/export_notice_diff_csv.sh <reports_all folder> <datasets_metadata folder>/gtfs_latest_versions.json notice_comparison.csv [<reports URL>]
+```
+
+With a reports URL, where the `reports_all` folder is published, the report columns hold full links instead of paths.
+
+A failure of the CSV export does not fail the acceptance tests. If the comparator stops on an unexpected error before writing its report, the CSV is still written, and the PR comment and run summary link to the run logs.
 
 ## Instructions to verify the execution of the pipeline
 
