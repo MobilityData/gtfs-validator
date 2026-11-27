@@ -6,6 +6,12 @@ on:
       - master
     paths:
       - 'web/service/**'
+      - '.github/workflows/web_svc_pr.yml'
+
+# Pull requests build and test without secrets, so this also runs on fork and Dependabot
+# pull requests. Production secrets are only downloaded by the deploy workflows.
+permissions:
+  contents: read
 
 env:
     NODE_VERSION: "24"
@@ -20,7 +26,6 @@ jobs:
 
     env:
       ENV_NAME              : prd
-      CLOUDSDK_CORE_PROJECT : web-based-gtfs-validator
 
     steps:
 
@@ -43,16 +48,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: google-github-actions/auth@v3
-        with:
-          credentials_json: ${{ secrets.GCP_WEB_VALIDATOR_SA_KEY }}
-
-      - uses: google-github-actions/setup-gcloud@v3.0.1
-        with:
-          version: '>= 390.0.0'
-
+      # test and build, not webTest and webBuild: those first run webSecrets, which
+      # downloads the production secrets with gcloud. The tests use src/test/resources.
       - name: run gradle tasks
         shell: bash
         run: |
           ENV_FILE=web/pipeline/${ENV_NAME}.env source web/pipeline/env-file.sh
-          ./gradlew ':web:service:webTest' ':web:service:webBuild'
+          ./gradlew ':web:service:test' ':web:service:build'
