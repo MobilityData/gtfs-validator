@@ -19,7 +19,10 @@ package org.mobilitydata.gtfsvalidator.input;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.*;
 
+import com.sun.net.httpserver.HttpServer;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +31,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -38,11 +43,44 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 
 @RunWith(JUnit4.class)
 public class GtfsInputTest {
-  // Use String instead of URL since the URL() constructor throws MalformedURLException.
-  private static final String INVALID_URL = "https://openmobilitydata.org/invalid-feed.zip";
-  private static final String VALID_URL =
-      "https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/"
-          + "valid_zip_sample.zip";
+  // The URL tests download from a local HTTP server, so they don't depend on the network.
+  // /feed.zip serves a small GTFS zip; any other path answers 404 with an HTML body.
+  private HttpServer server;
+  private String validUrl;
+  private String invalidUrl;
+
+  @Before
+  public void startServer() throws IOException {
+    ByteArrayOutputStream zipBytes = new ByteArrayOutputStream();
+    try (ZipOutputStream out = new ZipOutputStream(zipBytes)) {
+      out.putNextEntry(new ZipEntry("stops.txt"));
+      out.closeEntry();
+    }
+    byte[] feed = zipBytes.toByteArray();
+    byte[] notFound = "<html><body>Not found</body></html>".getBytes(StandardCharsets.UTF_8);
+
+    server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
+    server.createContext(
+        "/",
+        exchange -> {
+          boolean found = exchange.getRequestURI().getPath().equals("/feed.zip");
+          byte[] body = found ? feed : notFound;
+          exchange.sendResponseHeaders(found ? 200 : 404, body.length);
+          try (OutputStream os = exchange.getResponseBody()) {
+            os.write(body);
+          }
+        });
+    server.start();
+    String base =
+        "http://" + server.getAddress().getHostString() + ":" + server.getAddress().getPort();
+    validUrl = base + "/feed.zip";
+    invalidUrl = base + "/invalid-feed.zip";
+  }
+
+  @After
+  public void stopServer() {
+    server.stop(0);
+  }
 
   public Path getZipStoreMethodPath() throws URISyntaxException {
     // A ZIP file with compression level 0 ("STORE" method).
@@ -129,11 +167,12 @@ public class GtfsInputTest {
   public void createFromUrl_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
         GtfsInput.createFromUrl(
-            new URL(VALID_URL),
+            new URL(validUrl),
             tmpDir.getRoot().toPath().resolve("storage"),
             noticeContainer,
             "1.0.1")) {
-      assertThat(underTest instanceof GtfsZipFileInput);
+      assertThat(underTest).isInstanceOf(GtfsZipFileInput.class);
+      assertThat(underTest.getFilenames()).containsExactly("stops.txt");
     }
   }
 
@@ -143,7 +182,7 @@ public class GtfsInputTest {
         IOException.class,
         () ->
             GtfsInput.createFromUrl(
-                new URL(INVALID_URL),
+                new URL(invalidUrl),
                 tmpDir.getRoot().toPath().resolve("storage"),
                 noticeContainer,
                 "1.0.1"));
@@ -152,8 +191,9 @@ public class GtfsInputTest {
   @Test
   public void createFromUrlInMemory_valid_success() throws IOException, URISyntaxException {
     try (GtfsInput underTest =
-        GtfsInput.createFromUrlInMemory(new URL(VALID_URL), noticeContainer, "1.0.1")) {
-      assertThat(underTest instanceof GtfsZipFileInput);
+        GtfsInput.createFromUrlInMemory(new URL(validUrl), noticeContainer, "1.0.1")) {
+      assertThat(underTest).isInstanceOf(GtfsZipFileInput.class);
+      assertThat(underTest.getFilenames()).containsExactly("stops.txt");
     }
   }
 
@@ -161,7 +201,7 @@ public class GtfsInputTest {
   public void createFromUrlInMemory_invalid_throwsException() {
     assertThrows(
         IOException.class,
-        () -> GtfsInput.createFromUrlInMemory(new URL(INVALID_URL), noticeContainer, "1.0.1"));
+        () -> GtfsInput.createFromUrlInMemory(new URL(invalidUrl), noticeContainer, "1.0.1"));
   }
 
   @Test
