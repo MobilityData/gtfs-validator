@@ -17,11 +17,13 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.notice.SeverityLevel.WARNING;
 import static org.mobilitydata.gtfsvalidator.table.GtfsTransferType.IMPOSSIBLE;
 import static org.mobilitydata.gtfsvalidator.table.GtfsTransferType.MINIMUM_TIME;
 import static org.mobilitydata.gtfsvalidator.table.GtfsTransferType.RECOMMENDED;
 import static org.mobilitydata.gtfsvalidator.table.GtfsTransferType.TIMED;
 
+import com.google.gson.JsonObject;
 import java.util.List;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldNotice;
@@ -64,6 +66,41 @@ public class TransferMinTransferTimeConditionalValidatorTest {
                     .setMinTransferTime(60)
                     .build()))
         .isEmpty();
+  }
+
+  @Test
+  public void threeHoursShouldNotGenerateNotice() {
+    assertThat(
+            validationNoticesFor(
+                new GtfsTransfer.Builder()
+                    .setTransferType(MINIMUM_TIME)
+                    .setMinTransferTime(10_800)
+                    .build()))
+        .isEmpty();
+  }
+
+  @Test
+  public void moreThanThreeHoursShouldGenerateOneWarning() {
+    for (int seconds : new int[] {10_801, 86_401}) {
+      List<ValidationNotice> notices =
+          validationNoticesFor(
+              new GtfsTransfer.Builder()
+                  .setCsvRowNumber(5)
+                  .setTransferType(MINIMUM_TIME)
+                  .setMinTransferTime(seconds)
+                  .build());
+
+      assertThat(notices).hasSize(1);
+      ValidationNotice notice = notices.get(0);
+      assertThat(notice.getCode()).isEqualTo("min_transfer_time_too_long");
+      assertThat(ValidationNotice.getDefaultSeverityLevel(notice.getClass())).isEqualTo(WARNING);
+      JsonObject sample = notice.toJsonTree().getAsJsonObject();
+      assertThat(sample.get("filename").getAsString()).isEqualTo("transfers.txt");
+      assertThat(sample.get("fieldName").getAsString()).isEqualTo("min_transfer_time");
+      assertThat(sample.get("csvRowNumber").getAsInt()).isEqualTo(5);
+      assertThat(sample.get("value").getAsInt()).isEqualTo(seconds);
+      assertThat(sample.get("threshold").getAsInt()).isEqualTo(10_800);
+    }
   }
 
   @Test
