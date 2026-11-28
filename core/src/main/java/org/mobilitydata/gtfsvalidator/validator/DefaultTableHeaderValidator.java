@@ -23,10 +23,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
+import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
+import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
 
 /** Default implementation of {@code TableHeaderValidator}. */
 public class DefaultTableHeaderValidator implements TableHeaderValidator {
@@ -46,7 +48,15 @@ public class DefaultTableHeaderValidator implements TableHeaderValidator {
     // We remove the columns that are properly present and well formed from that set, and at the
     // end only the missing required columns are left in the set.
     TreeSet<String> missingColumns = new TreeSet<>(requiredColumns);
+    CsvRow originalRow = actualHeader.getOriginalRow();
     for (int i = 0; i < actualHeader.getColumnCount(); ++i) {
+      String original = Strings.nullToEmpty(originalRow.asString(i));
+      String trimmed = original.trim();
+      if (!original.equals(trimmed)) {
+        noticeContainer.addValidationNotice(
+            new LeadingOrTrailingWhitespacesNotice(
+                filename, (int) originalRow.getRowNumber(), trimmed, original));
+      }
       String column = actualHeader.getColumnName(i);
       // Column indices are zero-based. We add 1 to make them 1-based.
       if (Strings.isNullOrEmpty(column)) {

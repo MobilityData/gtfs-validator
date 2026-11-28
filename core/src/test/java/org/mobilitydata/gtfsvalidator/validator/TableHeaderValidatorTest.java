@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.validator;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mobilitydata.gtfsvalidator.TestUtils.toInputStream;
 
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
@@ -24,13 +25,70 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.DuplicatedColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.EmptyColumnNameNotice;
+import org.mobilitydata.gtfsvalidator.notice.LeadingOrTrailingWhitespacesNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredColumnNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnknownColumnNotice;
+import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvHeader;
 
 @RunWith(JUnit4.class)
 public class TableHeaderValidatorTest {
+  @Test
+  public void warnsForWhitespaceInQuotedAndUnquotedColumnNames() {
+    for (String lineEnding : new String[] {"\n", "\r\n"}) {
+      CsvFile file =
+          new CsvFile(
+              toInputStream(
+                  "# comment"
+                      + lineEnding
+                      + " stop_id,\"stop_name \",stop_lat,\textra "
+                      + lineEnding
+                      + " S1 ,\" Stop \",1,2"
+                      + lineEnding),
+              "stops.txt");
+      NoticeContainer container = new NoticeContainer();
+      new DefaultTableHeaderValidator()
+          .validate(
+              "stops.txt",
+              file.getHeader(),
+              ImmutableSet.of("stop_id", "stop_name", "stop_lat"),
+              ImmutableSet.of("stop_id"),
+              container);
+
+      assertThat(container.getValidationNotices())
+          .containsExactly(
+              new LeadingOrTrailingWhitespacesNotice("stops.txt", 2, "stop_id", " stop_id"),
+              new LeadingOrTrailingWhitespacesNotice("stops.txt", 2, "stop_name", "stop_name "),
+              new LeadingOrTrailingWhitespacesNotice("stops.txt", 2, "extra", "\textra "),
+              new UnknownColumnNotice("stops.txt", "extra", 4));
+      var row = file.iterator().next();
+      assertThat(row.asString(file.getHeader().getColumnIndex("stop_id"))).isEqualTo("S1");
+      assertThat(row.asString(file.getHeader().getColumnIndex("stop_name"))).isEqualTo(" Stop ");
+    }
+  }
+
+  @Test
+  public void distinguishesCrLfFromWhitespaceInsideFinalQuotedHeader() {
+    assertThat(validateStopIdHeader("stop_id\r\n").getValidationNotices()).isEmpty();
+    assertThat(validateStopIdHeader("\"stop_id\r\"\r\n").getValidationNotices())
+        .containsExactly(
+            new LeadingOrTrailingWhitespacesNotice("stops.txt", 1, "stop_id", "stop_id\r"));
+  }
+
+  private static NoticeContainer validateStopIdHeader(String header) {
+    CsvFile file = new CsvFile(toInputStream(header), "stops.txt");
+    NoticeContainer container = new NoticeContainer();
+    new DefaultTableHeaderValidator()
+        .validate(
+            "stops.txt",
+            file.getHeader(),
+            ImmutableSet.of("stop_id"),
+            ImmutableSet.of("stop_id"),
+            container);
+    return container;
+  }
+
   @Test
   public void expectedColumns() {
     NoticeContainer container = new NoticeContainer();

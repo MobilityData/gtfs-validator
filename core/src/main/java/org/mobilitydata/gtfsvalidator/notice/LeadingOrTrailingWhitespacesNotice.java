@@ -22,10 +22,11 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidationNotice.SectionRefs;
 
 /**
- * The value in CSV file has leading or trailing whitespaces.
+ * A column name or field value in a CSV file has leading or trailing whitespace.
  *
- * <p>This notice is emitted for values protected with double quotes since whitespaces for
- * non-protected values are trimmed automatically by CSV parser.
+ * <p>For a header, the notice reports the trimmed column name and the original value, whether or
+ * not the name is quoted. In data rows the CSV parser automatically trims unquoted values, so this
+ * notice is emitted for quoted values.
  *
  * <p>The validator strips whitespaces from protected values. We do not see any use case when such a
  * whitespace may be needed. On the other hand, some real-world feeds use trailing whitespaces for
